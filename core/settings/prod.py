@@ -55,7 +55,7 @@ DATABASES = {
 
 # ── CORS (مقيّد للإنتاج) ──────────────────────────────────────────────────────
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS   = os.environ.get('CORS_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS   = [o for o in os.environ.get('CORS_ORIGINS', '').split(',') if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
 
 # ── الأمان — حماية من MITM وهجمات التنصت ────────────────────────────────────
