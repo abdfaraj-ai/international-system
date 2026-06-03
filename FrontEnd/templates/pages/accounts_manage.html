@@ -1,0 +1,1140 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}إدارة الحسابات - نظام انترناشونال الموحد{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260509b">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/accounts_manage.css' %}?v=1">
+{% endblock %}
+
+{% block content %}
+<div class="notification" id="notification"></div>
+
+<!-- FX Ticker -->
+<div id="fx-ticker-bar">
+  <div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div>
+  <div id="fx-ticker-track"><div id="fx-ticker-inner"><span id="fx-ticker-loading">جاري تحميل أسعار العملات...</span></div></div>
+  <button id="fx-ticker-refresh" title="تحديث الأسعار">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Header -->
+<div id="header">
+  <div class="logo-wrap">
+    <img class="logo-icon" src="{% static 'images/الشعار-01.png' %}" alt="شعار">
+    <div>
+      <div class="logo-title">نظام انترناشونال الموحد</div>
+      <div class="logo-sub">إدارة الحسابات والصناديق والخزينة</div>
+    </div>
+  </div>
+  <div id="header-section-name">
+    <span class="sec-icon">🏦</span>
+    <span id="header-sec-text">إدارة الحسابات</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="clock-toggle-wrap">
+      <div class="clock-box">
+        <div class="clock-time" id="clock">--:--:--</div>
+        <div class="clock-date" id="dateDisplay">جاري التحميل...</div>
+      </div>
+    </div>
+    <div class="user-dropdown" id="userDropdown" onclick="toggleUserDropdown(event)">
+      <div class="ud-avatar">👤</div>
+      <div class="ud-info">
+        <div class="ud-name" id="userDisplayName">م. عبدالرحمن</div>
+        <div class="ud-role" id="userDisplayRole">مدير النظام</div>
+      </div>
+      <svg class="ud-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="ud-menu">
+        <div class="ud-menu-header">
+          <div class="ud-menu-avatar">👤</div>
+          <div><div class="ud-menu-name" id="ud-menu-name">م. عبدالرحمن</div><div class="ud-menu-role" id="ud-menu-role">مدير النظام</div></div>
+        </div>
+        <div class="ud-menu-item danger" onclick="logout();event.stopPropagation()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-layout">
+{% include 'layout/sidebar.html' %}
+<main class="main-content">
+<div class="am-page">
+
+  <!-- ── Page Header ── -->
+  <div class="am-header">
+    <div class="am-header-left">
+      <div class="am-icon-wrap">🏦</div>
+      <div>
+        <div class="am-title">إدارة الحسابات</div>
+        <div class="am-sub">اختر أداة من الشريط أدناه للبدء</div>
+      </div>
+    </div>
+    <a href="/dashboard/" class="am-back-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+      العودة للوحة التحكم
+    </a>
+  </div>
+
+  <!-- ══ شريط الأدوات الأفقي ══ -->
+  <div class="am-toolbar" id="am-toolbar">
+
+    <!-- حركة جديدة -->
+    <button class="am-btn" id="btn-new-move" onclick="amSwitch('new-move')"
+      style="--btn-bg-h:rgba(245,158,11,0.1);--btn-bd-h:rgba(245,158,11,0.3);--btn-bg-a:rgba(245,158,11,0.13);--btn-bd-a:rgba(245,158,11,0.4);--btn-clr:#fbbf24;--btn-dot:#f59e0b;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg>
+      </div>
+      <span class="am-btn-lbl">حركة جديدة</span>
+    </button>
+
+    <!-- تبديل عملات -->
+    <button class="am-btn" id="btn-exchange" onclick="amSwitch('exchange')"
+      style="--btn-bg-h:rgba(16,185,129,0.1);--btn-bd-h:rgba(16,185,129,0.3);--btn-bg-a:rgba(16,185,129,0.13);--btn-bd-a:rgba(16,185,129,0.4);--btn-clr:#34d399;--btn-dot:#10b981;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#10b981,#059669);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      </div>
+      <span class="am-btn-lbl">تبديل عملات</span>
+    </button>
+
+    <!-- قص وإغلاق -->
+    <button class="am-btn" id="btn-cut" onclick="amSwitch('cut')"
+      style="--btn-bg-h:rgba(6,182,212,0.1);--btn-bd-h:rgba(6,182,212,0.3);--btn-bg-a:rgba(6,182,212,0.13);--btn-bd-a:rgba(6,182,212,0.4);--btn-clr:#22d3ee;--btn-dot:#06b6d4;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+      </div>
+      <span class="am-btn-lbl">قص وإغلاق</span>
+    </button>
+
+    <!-- سند قص -->
+    <button class="am-btn" id="btn-receipt" onclick="amSwitch('receipt')"
+      style="--btn-bg-h:rgba(59,130,246,0.1);--btn-bd-h:rgba(59,130,246,0.3);--btn-bg-a:rgba(59,130,246,0.13);--btn-bd-a:rgba(59,130,246,0.4);--btn-clr:#60a5fa;--btn-dot:#3b82f6;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+      </div>
+      <span class="am-btn-lbl">سند قص</span>
+    </button>
+
+    <div class="am-tb-sep"></div>
+
+    <!-- قيد تسوية -->
+    <button class="am-btn" id="btn-settle" onclick="amSwitch('settle')"
+      style="--btn-bg-h:rgba(139,92,246,0.1);--btn-bd-h:rgba(139,92,246,0.3);--btn-bg-a:rgba(139,92,246,0.13);--btn-bd-a:rgba(139,92,246,0.4);--btn-clr:#a78bfa;--btn-dot:#8b5cf6;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <span class="am-btn-lbl">قيد تسوية</span>
+    </button>
+
+    <!-- قيد متقدم -->
+    <button class="am-btn" id="btn-adv-entry" onclick="amSwitch('adv-entry')"
+      style="--btn-bg-h:rgba(236,72,153,0.1);--btn-bd-h:rgba(236,72,153,0.3);--btn-bg-a:rgba(236,72,153,0.13);--btn-bd-a:rgba(236,72,153,0.4);--btn-clr:#f472b6;--btn-dot:#ec4899;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#ec4899,#db2777);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <span class="am-btn-lbl">قيد متقدم</span>
+    </button>
+
+    <!-- قيد جديد -->
+    <button class="am-btn" id="btn-entry" onclick="amSwitch('entry')"
+      style="--btn-bg-h:rgba(239,68,68,0.1);--btn-bd-h:rgba(239,68,68,0.3);--btn-bg-a:rgba(239,68,68,0.13);--btn-bd-a:rgba(239,68,68,0.4);--btn-clr:#f87171;--btn-dot:#ef4444;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#ef4444,#dc2626);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>
+      <span class="am-btn-lbl">قيد جديد</span>
+    </button>
+
+    <div class="am-tb-sep"></div>
+
+    <!-- غير مستلمة -->
+    <button class="am-btn" id="btn-unreceived" onclick="amSwitch('unreceived')"
+      style="--btn-bg-h:rgba(248,113,113,0.1);--btn-bd-h:rgba(248,113,113,0.3);--btn-bg-a:rgba(248,113,113,0.13);--btn-bd-a:rgba(248,113,113,0.4);--btn-clr:#fca5a5;--btn-dot:#f87171;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#f87171,#ef4444);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <span class="am-btn-lbl">غير مستلمة</span>
+    </button>
+
+    <!-- مستلمة -->
+    <button class="am-btn" id="btn-received" onclick="amSwitch('received')"
+      style="--btn-bg-h:rgba(74,222,128,0.1);--btn-bd-h:rgba(74,222,128,0.3);--btn-bg-a:rgba(74,222,128,0.13);--btn-bd-a:rgba(74,222,128,0.4);--btn-clr:#4ade80;--btn-dot:#22c55e;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#4ade80,#16a34a);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <span class="am-btn-lbl">مستلمة</span>
+    </button>
+
+    <!-- جميع الحوالات -->
+    <button class="am-btn" id="btn-all" onclick="amSwitch('all')"
+      style="--btn-bg-h:rgba(96,165,250,0.1);--btn-bd-h:rgba(96,165,250,0.3);--btn-bg-a:rgba(96,165,250,0.13);--btn-bd-a:rgba(96,165,250,0.4);--btn-clr:#93c5fd;--btn-dot:#60a5fa;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#60a5fa,#2563eb);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <span class="am-btn-lbl">جميع الحوالات</span>
+    </button>
+
+    <!-- كشف حساب -->
+    <button class="am-btn" id="btn-statement" onclick="amSwitch('statement')"
+      style="--btn-bg-h:rgba(29,78,216,0.12);--btn-bd-h:rgba(29,78,216,0.35);--btn-bg-a:rgba(29,78,216,0.16);--btn-bd-a:rgba(29,78,216,0.5);--btn-clr:#93c5fd;--btn-dot:#1d4ed8;">
+      <div class="am-btn-ico" style="background:linear-gradient(135deg,#1d4ed8,#1e3a8a);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <span class="am-btn-lbl">كشف حساب</span>
+    </button>
+
+  </div><!-- /am-toolbar -->
+
+  <!-- ══ منطقة المحتوى ══ -->
+  <div class="am-content-area" id="am-content-area">
+
+    <!-- placeholder -->
+    <div class="am-placeholder" id="pane-none">
+      <div class="am-placeholder-icon">🏦</div>
+      <div class="am-placeholder-text">اختر أداة من الشريط أعلاه</div>
+      <div class="am-placeholder-sub">اضغط على أي أيقونة لعرض أداة العمل هنا</div>
+    </div>
+
+    <!-- ══ قيد جديد ══ -->
+    <div id="pane-entry" style="display:none;">
+      <!-- قوالب -->
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:700;color:#5a7090;white-space:nowrap;">قوالب سريعة:</span>
+        <div id="entr-templates" style="display:flex;gap:7px;flex-wrap:wrap;"></div>
+      </div>
+      <!-- لوحتان -->
+      <div class="am-dual">
+        <div class="am-dual-panel green">
+          <div class="am-dual-head" style="color:#4ade80;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            من — لنا
+          </div>
+          <div class="am-field">
+            <label>الحساب (مصدر)</label>
+            <select id="entr-from-account"><option value="">اختر حساباً</option></select>
+          </div>
+          <div class="am-field">
+            <label>المبلغ</label>
+            <input id="entr-from-amount" type="number" placeholder="0.00" oninput="entr_calc()"
+              style="color:#4ade80;font-size:16px;font-weight:800;border-color:rgba(34,197,94,0.3);">
+          </div>
+          <div class="am-field">
+            <label>العملة</label>
+            <select id="entr-from-cur" onchange="entr_calc()">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+            </select>
+          </div>
+        </div>
+        <div class="am-dual-panel red">
+          <div class="am-dual-head" style="color:#f87171;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            إلى — علينا
+          </div>
+          <div class="am-field">
+            <label>الحساب (وجهة)</label>
+            <select id="entr-to-account"><option value="">اختر حساباً</option></select>
+          </div>
+          <div class="am-field">
+            <label>المبلغ المُحوَّل</label>
+            <input id="entr-to-amount" type="number" placeholder="0.00" readonly
+              style="color:#f87171;font-size:16px;font-weight:800;border-color:rgba(239,68,68,0.3);cursor:not-allowed;opacity:.7;">
+          </div>
+          <div class="am-field">
+            <label>العملة</label>
+            <select id="entr-to-cur" onchange="entr_calc()">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- القص -->
+      <div style="padding:14px 20px;border-top:1px solid rgba(255,255,255,0.06);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;align-items:end;">
+        <div class="am-field">
+          <label>سعر القص</label>
+          <input id="entr-cut-rate" type="number" step="0.0001" placeholder="1.0000" oninput="entr_calc()"
+            style="color:#fbbf24;font-weight:700;">
+        </div>
+        <div class="am-field">
+          <label>اتجاه القص</label>
+          <select id="entr-cut-dir" onchange="entr_calc()">
+            <option value="mul">× ضرب</option><option value="div">÷ قسمة</option>
+          </select>
+        </div>
+        <div class="am-field">
+          <label>الربح المتوقع</label>
+          <div id="entr-profit-display" style="padding:9px 12px;border-radius:9px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:#4ade80;font-size:14px;font-weight:800;text-align:center;">—</div>
+        </div>
+        <div class="am-field">
+          <label>ملاحظات</label>
+          <input id="entr-notes" type="text" placeholder="ملاحظات اختيارية...">
+        </div>
+      </div>
+      <div class="am-actions">
+        <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
+        <button class="am-btn-cancel" onclick="entr_saveTemplate()" style="color:#818cf8;">💾 حفظ قالب</button>
+        <button class="am-btn-submit" onclick="entr_save()" style="background:linear-gradient(135deg,#ef4444,#dc2626);">✅ تنفيذ القيد</button>
+      </div>
+    </div>
+
+    <!-- ══ قيد متقدم ══ -->
+    <div id="pane-adv-entry" style="display:none;">
+      <!-- شريط الربح -->
+      <div class="am-profit-bar">
+        <div class="am-profit-kpi">
+          <div class="am-profit-kpi-val" id="adv-profit-bar" style="color:#4ade80;">—</div>
+          <div class="am-profit-kpi-lbl">الربح الصافي</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+          <span style="color:#4a6280;">إرسال:</span>
+          <span id="adv-from-display" style="color:#4ade80;font-weight:700;">—</span>
+          <span style="color:#4a6280;">←</span>
+          <span style="color:#4a6280;">استلام:</span>
+          <span id="adv-to-display" style="color:#f87171;font-weight:700;">—</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="am-profit-kpi" style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:8px 14px;">
+            <div class="am-profit-kpi-val" id="adv-sum-from-fee" style="font-size:14px;color:#4ade80;">—</div>
+            <div class="am-profit-kpi-lbl">أجور إرسال</div>
+          </div>
+          <div class="am-profit-kpi" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:10px;padding:8px 14px;">
+            <div class="am-profit-kpi-val" id="adv-sum-to-fee" style="font-size:14px;color:#f87171;">—</div>
+            <div class="am-profit-kpi-lbl">أجور تسليم</div>
+          </div>
+          <div class="am-profit-kpi" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:8px 14px;">
+            <div class="am-profit-kpi-val" id="adv-sum-cut-diff" style="font-size:14px;color:#fbbf24;">—</div>
+            <div class="am-profit-kpi-lbl">فارق القص</div>
+          </div>
+        </div>
+      </div>
+      <!-- لوحتان -->
+      <div class="am-dual">
+        <!-- من لنا -->
+        <div class="am-dual-panel green">
+          <div class="am-dual-head" style="color:#4ade80;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            من — لنا
+            <span style="margin-right:auto;font-size:10px;color:#166534;background:rgba(34,197,94,0.15);padding:2px 8px;border-radius:20px;">مصدر</span>
+          </div>
+          <div class="am-field">
+            <label>المركز المُرسل</label>
+            <select id="adv-from-center" onchange="adv_calc()">
+              <option value="">— اختر المركز —</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+          <div class="am-field">
+            <label>اسم المُرسِل</label>
+            <input id="adv-from-name" type="text" placeholder="الاسم الكامل...">
+          </div>
+          <div class="am-field">
+            <label>العملة</label>
+            <select id="adv-from-cur" onchange="adv_calc()">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+              <option value="SYP">🇸🇾 SYP</option>
+            </select>
+          </div>
+          <div class="am-field">
+            <label>القص</label>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+              <input id="adv-cut-rate" type="number" step="0.0001" placeholder="1.0000" oninput="adv_calc()"
+                style="color:#fbbf24;font-weight:700;">
+              <select id="adv-cut-dir" onchange="adv_calc()" style="width:90px;">
+                <option value="mul">× ضرب</option><option value="div">÷ قسمة</option>
+              </select>
+            </div>
+          </div>
+          <div class="am-field">
+            <label>المبلغ المُرسَل</label>
+            <input id="adv-from-amount" type="number" placeholder="0.00" oninput="adv_calc()"
+              style="color:#4ade80;font-size:18px;font-weight:800;border-color:rgba(34,197,94,0.35);">
+          </div>
+          <div class="am-field">
+            <label>أجور تصدير</label>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+              <input id="adv-from-fee" type="number" placeholder="0.00" oninput="adv_calc()">
+              <select id="adv-from-fee-cur" style="width:80px;">
+                <option value="USD">USD</option><option value="JOD">JOD</option>
+                <option value="ILS">ILS</option><option value="SYP">SYP</option>
+              </select>
+            </div>
+          </div>
+          <div class="am-field">
+            <label>ملاحظات</label>
+            <textarea id="adv-from-notes" placeholder="ملاحظات جانب الإرسال..."></textarea>
+          </div>
+        </div>
+        <!-- إلى علينا -->
+        <div class="am-dual-panel red">
+          <div class="am-dual-head" style="color:#f87171;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            إلى — علينا أرباح
+            <span style="margin-right:auto;font-size:10px;color:#7f1d1d;background:rgba(239,68,68,0.15);padding:2px 8px;border-radius:20px;">وجهة</span>
+          </div>
+          <div class="am-field">
+            <label>المركز المستلم</label>
+            <select id="adv-to-center" onchange="adv_calc()">
+              <option value="">— اختر المركز —</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+          <div class="am-field">
+            <label>المستفيد</label>
+            <input id="adv-to-beneficiary" type="text" placeholder="اسم المستفيد...">
+          </div>
+          <div class="am-field">
+            <label>العملة</label>
+            <select id="adv-to-cur" onchange="adv_calc()">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+              <option value="SYP">🇸🇾 SYP</option>
+            </select>
+          </div>
+          <div class="am-field">
+            <label>القص (محسوب)</label>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+              <div id="adv-cut-display" style="padding:9px 12px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);color:#fbbf24;font-weight:700;text-align:center;">—</div>
+              <div id="adv-cut-dir-display" style="width:80px;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);color:#5a7090;font-size:11px;text-align:center;">—</div>
+            </div>
+          </div>
+          <div class="am-field">
+            <label>المبلغ المستلَم</label>
+            <input id="adv-to-amount" type="number" placeholder="0.00" readonly
+              style="color:#f87171;font-size:18px;font-weight:800;border-color:rgba(239,68,68,0.35);cursor:not-allowed;opacity:.7;">
+          </div>
+          <div class="am-field">
+            <label>أجور تسليم</label>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+              <input id="adv-to-fee" type="number" placeholder="0.00" oninput="adv_calc()">
+              <select id="adv-to-fee-cur" style="width:80px;">
+                <option value="USD">USD</option><option value="JOD">JOD</option>
+                <option value="ILS">ILS</option><option value="SYP">SYP</option>
+              </select>
+            </div>
+          </div>
+          <div class="am-field">
+            <label>ملاحظات</label>
+            <textarea id="adv-to-notes" placeholder="ملاحظات جانب الاستلام..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="am-actions">
+        <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
+        <button class="am-btn-cancel" onclick="adv_reset()" style="color:#6366f1;">🔄 إعادة تعيين</button>
+        <button class="am-btn-submit" onclick="adv_save()" style="background:linear-gradient(135deg,#ec4899,#db2777);">✅ تنفيذ القيد المتقدم</button>
+      </div>
+    </div>
+
+    <!-- ══ الحوالات (غير مستلمة / مستلمة / الكل) ══ -->
+    <div id="pane-transfers" style="display:none;">
+      <!-- فلتر -->
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <input id="tr-search" type="text" placeholder="🔍 بحث..." oninput="trFilter()"
+          style="flex:1;min-width:180px;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+        <input id="tr-date-from" type="date" onchange="trFilter()"
+          style="padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+        <input id="tr-date-to" type="date" onchange="trFilter()"
+          style="padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+        <select id="tr-status-filter" onchange="trFilter()" style="padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;cursor:pointer;display:none;">
+          <option value="">كل الحالات</option>
+          <option value="received">مستلمة</option>
+          <option value="unreceived">غير مستلمة</option>
+        </select>
+      </div>
+      <!-- إحصاء -->
+      <div class="am-stat-row">
+        <div class="am-stat-card"><div class="am-stat-val" id="tr-count">—</div><div class="am-stat-lbl">العدد الكلي</div></div>
+        <div class="am-stat-card"><div class="am-stat-val" id="tr-total" style="color:#60a5fa;">—</div><div class="am-stat-lbl">إجمالي المبالغ</div></div>
+        <div class="am-stat-card"><div class="am-stat-val" id="tr-profit" style="color:#4ade80;">—</div><div class="am-stat-lbl">إجمالي الأرباح</div></div>
+      </div>
+      <!-- جدول -->
+      <div class="am-table-wrap" style="padding:0 4px;">
+        <table class="am-table">
+          <thead>
+            <tr>
+              <th>#</th><th>التاريخ</th><th>المُرسِل</th><th>المُستفيد</th>
+              <th>الوجهة</th><th style="text-align:center;">المبلغ</th>
+              <th style="text-align:center;">العملة</th><th style="text-align:center;">الربح</th>
+              <th style="text-align:center;">الحالة</th><th style="text-align:center;">إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="tr-tbody">
+            <tr><td colspan="10" style="padding:40px;text-align:center;color:#2d4060;">لا توجد بيانات</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:center;gap:8px;padding:14px;" id="tr-pagination"></div>
+    </div>
+
+    <!-- ══ كشف الحساب ══ -->
+    <div id="pane-statement" style="display:none;">
+      <!-- شريط الفلتر -->
+      <div style="padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+
+        <!-- بحث المركز -->
+        <div style="flex:2;min-width:200px;position:relative;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">المركز / الوكيل</div>
+          <div style="position:relative;">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#4a6280;font-size:12px;pointer-events:none;">🔍</span>
+            <input id="stm-search" type="text" placeholder="ابحث عن مركز..." oninput="stmSearch(this.value)"
+              style="width:100%;box-sizing:border-box;padding:8px 12px 8px 32px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+            <div id="stm-dd" style="display:none;position:absolute;top:calc(100% + 4px);right:0;left:0;background:#0d1f35;border:1px solid rgba(255,255,255,0.12);border-radius:10px;z-index:200;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.5);"></div>
+          </div>
+          <div id="stm-selected" style="display:none;margin-top:6px;padding:7px 12px;background:rgba(29,78,216,0.1);border:1px solid rgba(29,78,216,0.3);border-radius:9px;align-items:center;justify-content:space-between;">
+            <span id="stm-sel-name" style="font-size:12px;font-weight:700;color:#93c5fd;">—</span>
+            <button onclick="stmClear()" style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:13px;padding:0 4px;">✕</button>
+          </div>
+        </div>
+
+        <!-- الفترة -->
+        <div style="min-width:140px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">الفترة</div>
+          <select id="stm-period" onchange="stmSetPeriod(this.value)"
+            style="width:100%;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;cursor:pointer;">
+            <option value="">— اختر —</option>
+            <option value="today">اليوم</option>
+            <option value="week">آخر أسبوع</option>
+            <option value="month">آخر شهر</option>
+            <option value="3months">آخر 3 أشهر</option>
+            <option value="year">هذه السنة</option>
+          </select>
+        </div>
+
+        <!-- من / إلى -->
+        <div style="min-width:120px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">من تاريخ</div>
+          <input type="date" id="stm-date-from"
+            style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+        </div>
+        <div style="min-width:120px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">إلى تاريخ</div>
+          <input type="date" id="stm-date-to"
+            style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
+        </div>
+
+        <!-- العملة -->
+        <div style="min-width:130px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">العملة</div>
+          <select id="stm-currency"
+            style="width:100%;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;cursor:pointer;">
+            <option value="">الكل</option>
+            <option value="USD">🇺🇸 USD</option>
+            <option value="JOD">🇯🇴 JOD</option>
+            <option value="ILS">🇵🇸 ILS</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="TRY">🇹🇷 TRY</option>
+            <option value="SYP">🇸🇾 SYP</option>
+          </select>
+        </div>
+
+        <!-- تضمين غير مستلمة -->
+        <div style="display:flex;align-items:center;gap:6px;padding-bottom:2px;">
+          <input type="checkbox" id="stm-include-unreceived" style="width:15px;height:15px;accent-color:#1d4ed8;cursor:pointer;">
+          <label for="stm-include-unreceived" style="font-size:11px;color:#8696a0;cursor:pointer;white-space:nowrap;">غير مستلمة</label>
+        </div>
+
+        <!-- زر كشف -->
+        <button onclick="stmGenerate()"
+          style="padding:9px 22px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#1e3a8a);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
+          📋 كشف حساب
+        </button>
+        <button onclick="stmPrint()"
+          style="padding:9px 16px;border-radius:9px;background:rgba(255,255,255,0.05);color:#60a5fa;border:1px solid rgba(96,165,250,0.2);font-size:12px;cursor:pointer;font-family:inherit;">
+          🖨️
+        </button>
+      </div>
+
+      <!-- بطاقات الملخص -->
+      <div id="stm-summary" style="display:none;padding:12px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:none;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:130px;padding:12px 16px;background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);border-radius:12px;text-align:center;">
+          <div id="stm-total-in" style="font-size:18px;font-weight:800;color:#4ade80;">—</div>
+          <div style="font-size:10px;color:#5a7090;margin-top:3px;">إجمالي الوارد</div>
+        </div>
+        <div style="flex:1;min-width:130px;padding:12px 16px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:12px;text-align:center;">
+          <div id="stm-total-out" style="font-size:18px;font-weight:800;color:#f87171;">—</div>
+          <div style="font-size:10px;color:#5a7090;margin-top:3px;">إجمالي الصادر</div>
+        </div>
+        <div style="flex:1;min-width:130px;padding:12px 16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.2);border-radius:12px;text-align:center;">
+          <div id="stm-total-fee" style="font-size:18px;font-weight:800;color:#fbbf24;">—</div>
+          <div style="font-size:10px;color:#5a7090;margin-top:3px;">إجمالي الأجور</div>
+        </div>
+        <div style="flex:1;min-width:130px;padding:12px 16px;background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.2);border-radius:12px;text-align:center;">
+          <div id="stm-net-balance" style="font-size:18px;font-weight:800;color:#60a5fa;">—</div>
+          <div style="font-size:10px;color:#5a7090;margin-top:3px;">الرصيد الصافي</div>
+        </div>
+        <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;text-align:center;">
+          <div id="stm-count" style="font-size:18px;font-weight:800;color:#e9edef;">—</div>
+          <div style="font-size:10px;color:#5a7090;margin-top:3px;">عدد الحركات</div>
+        </div>
+      </div>
+
+      <!-- جدول الحركات -->
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.07);">
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;white-space:nowrap;">#</th>
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;white-space:nowrap;">التاريخ</th>
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;">النوع</th>
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;">المرجع</th>
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;">الجهة المقابلة</th>
+              <th style="padding:10px 14px;text-align:right;color:#5a7090;font-weight:600;">ملاحظات</th>
+              <th style="padding:10px 14px;text-align:center;color:#4ade80;font-weight:600;">وارد ↑</th>
+              <th style="padding:10px 14px;text-align:center;color:#f87171;font-weight:600;">صادر ↓</th>
+              <th style="padding:10px 14px;text-align:center;color:#fbbf24;font-weight:600;">أجور</th>
+              <th style="padding:10px 14px;text-align:center;color:#5a7090;font-weight:600;">عملة</th>
+              <th style="padding:10px 14px;text-align:center;color:#5a7090;font-weight:600;">الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="stm-tbody">
+            <tr><td colspan="11" style="padding:60px;text-align:center;color:#2d4060;">اختر مركزاً واضغط كشف حساب</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ حوالة جديدة ══ -->
+    <div id="pane-new-move" style="display:none;">
+
+      <!-- عنوان الفورم -->
+      <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span style="font-size:14px;font-weight:800;color:#e9edef;">حوالة جديدة</span>
+      </div>
+
+      <!-- جسم الفورم -->
+      <div style="padding:18px 22px;display:flex;flex-direction:column;gap:13px;">
+
+        <!-- المصدر -->
+        <div style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">المصدر</span>
+          <select class="am-field input" id="nm-source" style="padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;width:100%;box-sizing:border-box;">
+            <option value="">اختر المركز</option>
+            <option value="main">المركز الرئيسي</option>
+            <option value="branch1">فرع 1</option>
+            <option value="agent">وكيل خارجي</option>
+          </select>
+        </div>
+
+        <!-- اسم المستفيد + هاتفه -->
+        <div style="display:grid;grid-template-columns:120px 1fr 140px 160px;align-items:center;gap:12px;">
+          <span class="nm-lbl">اسم المستفيد</span>
+          <input id="nm-benef-name" type="text" placeholder="اسم المستفيد" class="nm-input">
+          <span class="nm-lbl" style="text-align:center;">هاتف المستفيد</span>
+          <input id="nm-benef-phone" type="tel" placeholder="هاتف المستفيد" class="nm-input" style="direction:ltr;">
+        </div>
+
+        <!-- الوجهة -->
+        <div style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">الوجهة</span>
+          <select id="nm-dest" class="nm-input" style="cursor:pointer;">
+            <option value="">اختر المركز</option>
+            <option value="main">المركز الرئيسي</option>
+            <option value="branch1">فرع 1</option>
+            <option value="agent">وكيل خارجي</option>
+          </select>
+        </div>
+
+        <!-- العنوان -->
+        <div style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">العنوان</span>
+          <input id="nm-address" type="text" placeholder="العنوان التفصيلي (اختياري)" class="nm-input">
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.06);margin:2px 0;"></div>
+
+        <!-- عملة الإرسال + مبلغ الإرسال -->
+        <div style="display:grid;grid-template-columns:120px 140px 130px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">عملة الإرسال</span>
+          <select id="nm-send-cur" class="nm-input" onchange="nm_calc()" style="cursor:pointer;">
+            <option value="">اختر العملة</option>
+            <option value="USD">🇺🇸 USD</option>
+            <option value="JOD">🇯🇴 JOD</option>
+            <option value="ILS">🇵🇸 ILS</option>
+            <option value="TRY">🇹🇷 TRY</option>
+            <option value="SYP">🇸🇾 SYP</option>
+          </select>
+          <span class="nm-lbl" style="text-align:center;">مبلغ الإرسال</span>
+          <input id="nm-send-amt" type="number" placeholder="0" class="nm-input" oninput="nm_calc()" style="color:#4ade80;font-weight:800;">
+        </div>
+
+        <!-- عملة التسليم + مبلغ التسليم -->
+        <div style="display:grid;grid-template-columns:120px 140px 130px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">عملة التسليم</span>
+          <select id="nm-recv-cur" class="nm-input" onchange="nm_calc()" style="cursor:pointer;">
+            <option value="">اختر العملة</option>
+            <option value="USD">🇺🇸 USD</option>
+            <option value="JOD">🇯🇴 JOD</option>
+            <option value="ILS">🇵🇸 ILS</option>
+            <option value="TRY">🇹🇷 TRY</option>
+            <option value="SYP">🇸🇾 SYP</option>
+          </select>
+          <span class="nm-lbl" style="text-align:center;">مبلغ التسليم</span>
+          <input id="nm-recv-amt" type="number" placeholder="0" class="nm-input" oninput="nm_calc()" style="color:#f87171;font-weight:800;">
+        </div>
+
+        <!-- أجور تصدير + أجور تسليم -->
+        <div style="display:grid;grid-template-columns:120px 1fr 120px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">أجور تصدير</span>
+          <input id="nm-fee-export" type="number" placeholder="0" class="nm-input" value="0" oninput="nm_calc()">
+          <span class="nm-lbl" style="text-align:center;">أجور تسليم</span>
+          <input id="nm-fee-delivery" type="number" placeholder="0" class="nm-input" value="0" oninput="nm_calc()">
+        </div>
+
+        <!-- الصرف + المجموع -->
+        <div style="display:grid;grid-template-columns:120px 1fr 120px 1fr;align-items:center;gap:12px;">
+          <span class="nm-lbl">الصرف</span>
+          <input id="nm-rate" type="number" step="0.0001" placeholder="1" class="nm-input" value="1" oninput="nm_calc()" style="color:#fbbf24;font-weight:800;">
+          <span class="nm-lbl" style="text-align:center;">المجموع</span>
+          <div id="nm-total" style="padding:8px 12px;border-radius:9px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);color:#a5b4fc;font-size:14px;font-weight:800;text-align:center;">0</div>
+        </div>
+
+        <!-- ملاحظات -->
+        <div style="display:grid;grid-template-columns:120px 1fr;align-items:start;gap:12px;">
+          <span class="nm-lbl" style="padding-top:9px;">ملاحظات</span>
+          <textarea id="nm-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea>
+        </div>
+
+      </div><!-- /body -->
+
+      <!-- أزرار -->
+      <div class="am-actions">
+        <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
+        <button class="am-btn-submit" onclick="nm_send()" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-left:6px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          إرسال
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ تبديل عملات ══ -->
+    <div id="pane-exchange" style="display:none;">
+
+      <!-- عنوان -->
+      <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        <span style="font-size:14px;font-weight:800;color:#e9edef;">تبديل عملة</span>
+      </div>
+
+      <!-- لوحتان جانبيتان -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+        <!-- اليمين: المركز الأول (أخضر) -->
+        <div style="padding:22px 24px;background:rgba(34,197,94,0.04);border-left:1px solid rgba(34,197,94,0.12);display:flex;flex-direction:column;gap:14px;">
+          <!-- رأس اللوحة -->
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid rgba(34,197,94,0.1);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:13px;font-weight:800;color:#4ade80;">المركز الأول</span>
+          </div>
+
+          <!-- المركز -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المركز الأول</span>
+            <select id="ex-center1" class="nm-input" style="cursor:pointer;">
+              <option value="">اختر المركز</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+
+          <!-- العملة الأولى -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">العملة الأولى</span>
+            <select id="ex-cur1" class="nm-input" onchange="ex_calc()" style="cursor:pointer;">
+              <option value="USD">دولار</option>
+              <option value="JOD">دينار</option>
+              <option value="ILS">شيكل</option>
+              <option value="EUR">يورو</option>
+              <option value="TRY">ليرة</option>
+              <option value="SYP">سوري</option>
+            </select>
+          </div>
+
+          <!-- المبلغ الأول -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ الأول</span>
+            <input id="ex-amt1" type="number" placeholder="0" class="nm-input" oninput="ex_calc()" style="color:#4ade80;font-weight:800;font-size:15px;">
+          </div>
+
+          <!-- ملاحظات -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:start;gap:10px;">
+            <span class="nm-lbl" style="padding-top:9px;">ملاحظات</span>
+            <textarea id="ex-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea>
+          </div>
+        </div>
+
+        <!-- اليسار: المركز الثاني (أحمر) -->
+        <div style="padding:22px 24px;background:rgba(239,68,68,0.04);display:flex;flex-direction:column;gap:14px;">
+          <!-- رأس اللوحة -->
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid rgba(239,68,68,0.1);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:13px;font-weight:800;color:#f87171;">المركز الثاني</span>
+          </div>
+
+          <!-- المركز -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المركز الثاني</span>
+            <select id="ex-center2" class="nm-input" style="cursor:pointer;">
+              <option value="">اختر المركز</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+
+          <!-- العملة الثانية -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">العملة الثانية</span>
+            <select id="ex-cur2" class="nm-input" onchange="ex_calc()" style="cursor:pointer;">
+              <option value="EUR">يورو</option>
+              <option value="USD">دولار</option>
+              <option value="JOD">دينار</option>
+              <option value="ILS">شيكل</option>
+              <option value="TRY">ليرة</option>
+              <option value="SYP">سوري</option>
+            </select>
+          </div>
+
+          <!-- المبلغ الثاني -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ الثاني</span>
+            <input id="ex-amt2" type="number" placeholder="0" class="nm-input" readonly
+              style="color:#f87171;font-weight:800;font-size:15px;opacity:.8;cursor:not-allowed;">
+          </div>
+
+          <!-- سعر الصرف -->
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">سعر الصرف</span>
+            <input id="ex-rate" type="number" step="0.0001" placeholder="1" value="1" class="nm-input" oninput="ex_calc()" style="color:#fbbf24;font-weight:800;">
+          </div>
+        </div>
+
+      </div><!-- /dual -->
+
+      <!-- شريط الموافقة -->
+      <div class="am-actions">
+        <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
+        <button class="am-btn-submit" onclick="ex_submit()" style="background:linear-gradient(135deg,#10b981,#059669);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px;"><path d="M20 6L9 17l-5-5"/></svg>
+          موافق
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ قص وإغلاق ══ -->
+    <div id="pane-cut" style="display:none;">
+
+      <!-- عنوان -->
+      <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+        <span style="font-size:14px;font-weight:800;color:#e9edef;">سند قص مع إغلاق</span>
+      </div>
+
+      <!-- لوحتان -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+        <!-- اليمين: شراء من (أخضر) -->
+        <div style="padding:22px 24px;background:rgba(34,197,94,0.04);border-left:1px solid rgba(34,197,94,0.12);display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid rgba(34,197,94,0.1);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:13px;font-weight:800;color:#4ade80;">شراء من</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">شراء من</span>
+            <select id="cut-buy-center" class="nm-input" style="cursor:pointer;">
+              <option value="">اختر المركز</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">العملة</span>
+            <select id="cut-buy-cur" class="nm-input" onchange="cut_calc()" style="cursor:pointer;">
+              <option value="AED">درهم إماراتي</option>
+              <option value="USD">دولار</option>
+              <option value="JOD">دينار</option>
+              <option value="ILS">شيكل</option>
+              <option value="EUR">يورو</option>
+              <option value="TRY">ليرة</option>
+              <option value="SYP">سوري</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ — لنا</span>
+            <input id="cut-buy-amt" type="number" placeholder="0" class="nm-input" oninput="cut_calc()" style="color:#4ade80;font-weight:800;font-size:14px;">
+          </div>
+
+          <!-- القص -->
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">القص</span>
+            <div style="display:grid;grid-template-columns:1fr 110px;gap:8px;">
+              <input id="cut-buy-rate" type="number" step="0.0001" placeholder="0" class="nm-input" oninput="cut_calc()" style="color:#fbbf24;font-weight:800;">
+              <select id="cut-buy-dir" class="nm-input" onchange="cut_calc()" style="cursor:pointer;">
+                <option value="div">قسمة</option>
+                <option value="mul">ضرب</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ بالدولار — لنا</span>
+            <div id="cut-buy-usd" style="padding:8px 12px;border-radius:9px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:#4ade80;font-size:14px;font-weight:800;text-align:center;">—</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:start;gap:10px;">
+            <span class="nm-lbl" style="padding-top:9px;">ملاحظات ←</span>
+            <textarea id="cut-buy-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea>
+          </div>
+        </div>
+
+        <!-- اليسار: بيع إلى (أحمر) -->
+        <div style="padding:22px 24px;background:rgba(239,68,68,0.04);display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid rgba(239,68,68,0.1);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:13px;font-weight:800;color:#f87171;">بيع إلى</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">بيع إلى</span>
+            <select id="cut-sell-center" class="nm-input" style="cursor:pointer;">
+              <option value="">اختر المركز</option>
+              <option value="main">المركز الرئيسي</option>
+              <option value="branch1">فرع 1</option>
+              <option value="agent">وكيل خارجي</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">العملة</span>
+            <select id="cut-sell-cur" class="nm-input" onchange="cut_calc()" style="cursor:pointer;">
+              <option value="AED">درهم إماراتي</option>
+              <option value="USD">دولار</option>
+              <option value="JOD">دينار</option>
+              <option value="ILS">شيكل</option>
+              <option value="EUR">يورو</option>
+              <option value="TRY">ليرة</option>
+              <option value="SYP">سوري</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ — علينا</span>
+            <input id="cut-sell-amt" type="number" placeholder="0" class="nm-input" oninput="cut_calc()" style="color:#f87171;font-weight:800;font-size:14px;">
+          </div>
+
+          <!-- القص -->
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">القص</span>
+            <div style="display:grid;grid-template-columns:1fr 110px;gap:8px;">
+              <input id="cut-sell-rate" type="number" step="0.0001" placeholder="0" class="nm-input" oninput="cut_calc()" style="color:#fbbf24;font-weight:800;">
+              <select id="cut-sell-dir" class="nm-input" onchange="cut_calc()" style="cursor:pointer;">
+                <option value="div">قسمة</option>
+                <option value="mul">ضرب</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:center;gap:10px;">
+            <span class="nm-lbl">المبلغ بالدولار — علينا</span>
+            <div id="cut-sell-usd" style="padding:8px 12px;border-radius:9px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;font-size:14px;font-weight:800;text-align:center;">—</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:130px 1fr;align-items:start;gap:10px;">
+            <span class="nm-lbl" style="padding-top:9px;">ملاحظات ←</span>
+            <textarea id="cut-sell-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea>
+          </div>
+        </div>
+
+      </div><!-- /dual -->
+
+      <!-- شريط الربح -->
+      <div style="padding:12px 22px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">فارق القص (USD):</span>
+          <span id="cut-profit" style="font-size:16px;font-weight:800;color:#4ade80;">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">لنا بالدولار:</span>
+          <span id="cut-buy-usd-bar" style="font-size:13px;font-weight:700;color:#4ade80;">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">علينا بالدولار:</span>
+          <span id="cut-sell-usd-bar" style="font-size:13px;font-weight:700;color:#f87171;">—</span>
+        </div>
+      </div>
+
+      <!-- أزرار -->
+      <div class="am-actions">
+        <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
+        <button class="am-btn-submit" onclick="cut_submit()" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px;"><path d="M20 6L9 17l-5-5"/></svg>
+          موافق وإغلاق
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ قيد تسوية ══ -->
+    <div id="pane-settle" style="display:none;">
+
+      <!-- عنوان + المركز المرسل -->
+      <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span style="font-size:14px;font-weight:800;color:#e9edef;">قيد تسوية</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-right:auto;">
+          <span style="font-size:11px;font-weight:700;color:#5a7090;white-space:nowrap;">المركز المرسل :</span>
+          <select id="stl-center" class="nm-input" style="min-width:200px;cursor:pointer;">
+            <option value="">اختر المركز</option>
+            <option value="main">المركز الرئيسي</option>
+            <option value="branch1">فرع 1</option>
+            <option value="agent">وكيل خارجي</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- جدول الإدخال -->
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:860px;">
+          <!-- رأس الجدول -->
+          <thead>
+            <tr style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);">
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">العملة</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">المبلغ</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">أجور</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">المستفيد</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">ملاحظات</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">الوجهة</th>
+              <th style="padding:11px 14px;color:#fff;font-weight:700;text-align:right;white-space:nowrap;">أجور</th>
+              <th style="padding:11px 6px;color:#fff;font-weight:700;text-align:center;white-space:nowrap;width:40px;"></th>
+            </tr>
+          </thead>
+          <!-- صفوف الإدخال -->
+          <tbody id="stl-tbody">
+            <!-- صف أول افتراضي -->
+            <tr class="stl-row" data-idx="0">
+              <td style="padding:6px 8px;">
+                <select class="nm-input stl-cur" onchange="stl_calc()" style="min-width:90px;cursor:pointer;">
+                  <option value="USD">دولار</option>
+                  <option value="JOD">دينار</option>
+                  <option value="ILS">شيكل</option>
+                  <option value="EUR">يورو</option>
+                  <option value="TRY">ليرة</option>
+                  <option value="AED">درهم</option>
+                  <option value="SYP">سوري</option>
+                </select>
+              </td>
+              <td style="padding:6px 8px;">
+                <input type="number" class="nm-input stl-amt" placeholder="0" oninput="stl_calc()" style="min-width:100px;color:#e9edef;font-weight:700;">
+              </td>
+              <td style="padding:6px 8px;">
+                <input type="number" class="nm-input stl-fee" placeholder="0" oninput="stl_calc()" style="min-width:70px;color:#fbbf24;">
+              </td>
+              <td style="padding:6px 8px;">
+                <input type="text" class="nm-input stl-benef" placeholder="اسم المستفيد" style="min-width:130px;">
+              </td>
+              <td style="padding:6px 8px;">
+                <input type="text" class="nm-input stl-notes" placeholder="ملاحظات..." style="min-width:130px;">
+              </td>
+              <td style="padding:6px 8px;">
+                <select class="nm-input stl-dest" style="min-width:110px;cursor:pointer;">
+                  <option value="">الوجهة</option>
+                  <option value="main">المركز الرئيسي</option>
+                  <option value="branch1">فرع 1</option>
+                  <option value="agent">وكيل خارجي</option>
+                </select>
+              </td>
+              <td style="padding:6px 8px;">
+                <input type="number" class="nm-input stl-del-fee" placeholder="0" oninput="stl_calc()" style="min-width:70px;color:#f87171;">
+              </td>
+              <td style="padding:6px 8px;text-align:center;">
+                <button onclick="stl_removeRow(this)" title="حذف"
+                  style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;border-radius:7px;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;">×</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- زر إضافة صف -->
+      <div style="padding:10px 16px;border-top:1px solid rgba(255,255,255,0.05);">
+        <button onclick="stl_addRow()"
+          style="display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:9px;
+          background:rgba(139,92,246,0.08);border:1px dashed rgba(139,92,246,0.3);
+          color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة صف
+        </button>
+      </div>
+
+      <!-- شريط الملخص -->
+      <div style="padding:12px 22px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:0;flex-wrap:wrap;">
+        <!-- لنا -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-left:1px solid rgba(255,255,255,0.07);">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">لنا :</span>
+          <span id="stl-sum-us" style="font-size:15px;font-weight:800;color:#4ade80;">0.00</span>
+        </div>
+        <!-- علينا -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-left:1px solid rgba(255,255,255,0.07);">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">علينا :</span>
+          <span id="stl-sum-them" style="font-size:15px;font-weight:800;color:#f87171;">0.00</span>
+        </div>
+        <!-- الربح -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 20px;">
+          <span style="font-size:11px;color:#4a6280;font-weight:700;">الربح :</span>
+          <span id="stl-profit" style="font-size:15px;font-weight:800;color:#fbbf24;">0.00</span>
+        </div>
+        <!-- زر موافق -->
+        <div style="margin-right:auto;">
+          <button onclick="stl_submit()"
+            style="padding:10px 32px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);
+            border:none;color:#fff;font-family:inherit;font-size:13px;font-weight:800;
+            cursor:pointer;box-shadow:0 4px 14px rgba(139,92,246,0.4);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px;"><path d="M20 6L9 17l-5-5"/></svg>
+            موافق
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ placeholder للأدوات قيد التطوير ══ -->
+    <div id="pane-wip" style="display:none;">
+      <div class="am-placeholder">
+        <div class="am-placeholder-icon">🔧</div>
+        <div class="am-placeholder-text">قيد التطوير</div>
+        <div class="am-placeholder-sub">هذه الأداة ستكون متاحة قريباً</div>
+      </div>
+    </div>
+
+  </div><!-- /am-content-area -->
+
+</div><!-- /am-page -->
+</main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/accounts_manage.js' %}?v=7"></script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+{% endblock %}

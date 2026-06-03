@@ -1,0 +1,796 @@
+/* ══════════════════════════════════════════
+   accounts_panel.css  —  Full-Screen Panel v3
+   ══════════════════════════════════════════ */
+
+/* ── زر الفتح العائم ── */
+.ap-fab {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 6px 24px rgba(29,78,216,0.45);
+  transition: transform .18s, box-shadow .18s;
+  direction: rtl;
+}
+.ap-fab:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(29,78,216,0.55); }
+.ap-fab .ap-fab-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 6px #4ade80;
+  animation: apPulse 1.4s ease infinite;
+}
+@keyframes apPulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.5; transform:scale(1.4); }
+}
+
+/* ── Overlay ── */
+.ap-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  z-index: 1300;
+}
+.ap-overlay.open { display: block; }
+
+/* ══════════════════════════════════════════
+   الدرج — Full Screen
+   ══════════════════════════════════════════ */
+.ap-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  background: #07111e;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .36s cubic-bezier(.22,.61,.36,1);
+  direction: rtl;
+  overflow: hidden;
+  font-family: inherit;
+}
+.ap-drawer.open { transform: translateY(0); }
+
+/* ═══════════════════════════════════════
+   رأس الدرج
+   ═══════════════════════════════════════ */
+.ap-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  height: 54px;
+  background: linear-gradient(90deg, #0a1628 0%, #0d1f38 50%, #091523 100%);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+  position: relative;
+}
+.ap-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,.4), rgba(124,58,237,.3), transparent);
+}
+.ap-header-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(99,102,241,.3);
+}
+.ap-header-title { font-size: 13px; font-weight: 800; color: #e9edef; letter-spacing: .3px; }
+.ap-header-sub   { font-size: 10px; color: #3d5a7a; margin-top: 1px; letter-spacing: .2px; }
+.ap-close-btn {
+  margin-right: auto;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  color: #4a6280;
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.ap-close-btn:hover { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); color: #f87171; }
+
+/* ═══════════════════════════════════════
+   شريط الأدوات
+   ═══════════════════════════════════════ */
+.ap-toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 7px 14px;
+  background: #060d18;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  justify-content: center;
+}
+.ap-toolbar::-webkit-scrollbar { display: none; }
+
+.ap-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px 7px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.06);
+  color: #3d5a7a;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+  letter-spacing: .2px;
+}
+.ap-btn:hover  {
+  background: var(--btn-bg-h, rgba(255,255,255,.06));
+  border-color: var(--btn-bd-h, rgba(255,255,255,.14));
+  color: var(--btn-clr, #e9edef);
+  transform: translateY(-1px);
+}
+.ap-btn.active {
+  background: var(--btn-bg-a, rgba(255,255,255,.08));
+  border-color: var(--btn-bd-a, rgba(255,255,255,.2));
+  color: var(--btn-clr, #e9edef);
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.ap-btn-ico {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.ap-tb-sep { width: 1px; background: rgba(255,255,255,.06); flex-shrink: 0; margin: 4px 3px; }
+
+/* ═══════════════════════════════════════
+   تخطيط الجسم الرئيسي
+   ═══════════════════════════════════════ */
+.ap-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  grid-template-rows: 1fr 148px;
+  grid-template-areas:
+    "calc  tool"
+    "log   log";
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ═══════════════════════════════════════
+   الآلة الحاسبة — يسار
+   ═══════════════════════════════════════ */
+.ap-calc-col {
+  grid-area: calc;
+  border-left: 1px solid rgba(255,255,255,.05);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #080e1a 0%, #060c17 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* شريط عنوان الحاسبة */
+.ap-calc-title {
+  padding: 9px 14px 8px;
+  font-size: 10px; font-weight: 800;
+  color: #2d4060;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+.ap-calc-title button {
+  background: none; border: none;
+  color: #1e3050; cursor: pointer;
+  font-size: 10px; font-weight: 700;
+  font-family: inherit; padding: 2px 6px;
+  border-radius: 5px; transition: color .12s;
+}
+.ap-calc-title button:hover { color: #f87171; }
+
+/* شاشة الحاسبة */
+.ap-calc-screen {
+  margin: 0 10px 6px;
+  background: #030810;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 12px 16px 10px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.ap-calc-screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,.35), transparent);
+}
+.ap-calc-history {
+  font-size: 11px;
+  color: #1e3050;
+  min-height: 18px;
+  text-align: left;
+  direction: ltr;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+}
+.ap-calc-display {
+  font-size: 32px;
+  font-weight: 300;
+  color: #e2e8f0;
+  text-align: left;
+  direction: ltr;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  font-family: 'SF Pro Display', -apple-system, 'Segoe UI', sans-serif;
+  transition: color .15s;
+}
+.ap-calc-display.zero { color: #2d4060; }
+
+/* زر النقل */
+.ap-calc-transfer {
+  margin: 2px 10px 8px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: rgba(99,102,241,.08);
+  border: 1px solid rgba(99,102,241,.2);
+  color: #5a7090;
+  font-size: 10px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  width: calc(100% - 20px);
+  transition: all .15s;
+  flex-shrink: 0;
+  letter-spacing: .2px;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.ap-calc-transfer:hover {
+  background: rgba(99,102,241,.18);
+  border-color: rgba(99,102,241,.4);
+  color: #a5b4fc;
+}
+
+/* شبكة أزرار الحاسبة */
+.ap-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 48px;
+  gap: 6px;
+  padding: 4px 10px 10px;
+  flex: 1;
+  align-content: start;
+}
+
+.ap-calc-btn {
+  height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 11px;
+  font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  border: none;
+  transition: all .1s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ap-calc-btn > span { display: contents; }
+.ap-calc-btn:active { transform: scale(.92); }
+
+/* أزرار الأرقام */
+.ap-calc-btn.num {
+  background: #111927;
+  color: #d1d9e6;
+  box-shadow: 0 2px 0 #070d15, 0 1px 4px rgba(0,0,0,.4);
+}
+.ap-calc-btn.num:hover { background: #162030; }
+
+/* أزرار العمليات */
+.ap-calc-btn.op {
+  background: #1a1505;
+  color: #f59e0b;
+  box-shadow: 0 2px 0 #0d0b02, 0 1px 4px rgba(0,0,0,.4);
+}
+.ap-calc-btn.op:hover { background: #231c07; }
+
+/* زر يساوي */
+.ap-calc-btn.eq {
+  background: linear-gradient(160deg, #4f46e5, #7c3aed);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 3px 0 #2d1f8a, 0 2px 12px rgba(99,102,241,.35);
+}
+.ap-calc-btn.eq:hover { filter: brightness(1.1); }
+.ap-calc-btn.eq:active { box-shadow: 0 1px 0 #2d1f8a; transform: scale(.93) translateY(2px); }
+
+/* زر المسح */
+.ap-calc-btn.clr {
+  background: #180a0a;
+  color: #f87171;
+  font-weight: 700;
+  box-shadow: 0 2px 0 #0d0303, 0 1px 4px rgba(0,0,0,.4);
+}
+.ap-calc-btn.clr:hover { background: #220e0e; }
+.ap-calc-btn.clr.ac { color: #ff4d4d; font-weight: 800; }
+
+/* زر الصفر — يمتد عمودين */
+.ap-calc-btn.zero { grid-column: span 2; }
+
+/* زر النسبة المئوية */
+.ap-calc-btn.pct {
+  background: #0f1a2a;
+  color: #94a3b8;
+  box-shadow: 0 2px 0 #070d15, 0 1px 4px rgba(0,0,0,.4);
+}
+.ap-calc-btn.pct:hover { background: #162030; }
+
+/* ═══════════════════════════════════════
+   الأداة النشطة — يمين
+   ═══════════════════════════════════════ */
+.ap-tool-col {
+  grid-area: tool;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.07) transparent;
+  min-width: 0;
+  background: #07111e;
+}
+.ap-tool-col::-webkit-scrollbar { width: 4px; }
+.ap-tool-col::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 4px; }
+
+/* ═══════════════════════════════════════
+   سجل العمليات — أسفل
+   ═══════════════════════════════════════ */
+.ap-log-row {
+  grid-area: log;
+  border-top: 1px solid rgba(255,255,255,.05);
+  background: #050c16;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ap-log-head {
+  padding: 6px 14px;
+  font-size: 10px; font-weight: 800; color: #1e3050;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  flex-shrink: 0;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.ap-log-head button {
+  margin-right: auto;
+  background: none; border: none;
+  color: #1a2d40; cursor: pointer;
+  font-size: 10px; font-weight: 700; font-family: inherit;
+  padding: 2px 6px; border-radius: 5px;
+  transition: color .12s;
+}
+.ap-log-head button:hover { color: #f87171; }
+.ap-log-body {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.05) transparent;
+}
+.ap-log-table {
+  width: 100%; border-collapse: collapse; font-size: 11px;
+  min-width: 560px;
+}
+.ap-log-table th {
+  padding: 5px 12px;
+  color: #1a2d40; font-weight: 700;
+  text-align: right; white-space: nowrap;
+  font-size: 10px;
+}
+.ap-log-table td {
+  padding: 6px 12px;
+  border-top: 1px solid rgba(255,255,255,.025);
+  color: #4a6280; white-space: nowrap; vertical-align: middle;
+}
+.ap-log-table tr:hover td { background: rgba(255,255,255,.015); }
+.ap-log-empty {
+  padding: 20px; text-align: center;
+  color: #111e2e; font-size: 11px;
+}
+
+/* ═══════════════════════════════════════
+   Placeholder
+   ═══════════════════════════════════════ */
+.ap-placeholder {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; min-height: 260px; gap: 10px;
+}
+.ap-placeholder-icon { font-size: 52px; opacity: .12; }
+.ap-placeholder-text { font-size: 15px; font-weight: 800; color: #1e3050; }
+.ap-placeholder-sub  { font-size: 11px; color: #131e2d; }
+
+/* ═══════════════════════════════════════
+   حقول مشتركة
+   ═══════════════════════════════════════ */
+.ap-field        { display:flex; flex-direction:column; gap:5px; }
+.ap-field label  { font-size:10px; font-weight:700; color:#3d5a7a; letter-spacing:.2px; }
+.ap-field input, .ap-field select, .ap-field textarea {
+  padding:8px 12px; border-radius:9px;
+  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08);
+  color:#e9edef; font-size:12px; outline:none;
+  font-family:inherit; width:100%; box-sizing:border-box;
+  transition:border-color .15s, background .15s;
+}
+.ap-field input:focus, .ap-field select:focus, .ap-field textarea:focus {
+  border-color:rgba(99,102,241,.45);
+  background:rgba(99,102,241,.04);
+}
+
+.ap-dual        { display:grid; grid-template-columns:1fr 1fr; }
+.ap-dual-panel  { padding:16px 18px; display:flex; flex-direction:column; gap:11px; }
+.ap-dual-panel.green { background:rgba(34,197,94,.03); border-left:1px solid rgba(34,197,94,.1); }
+.ap-dual-panel.red   { background:rgba(239,68,68,.03); }
+.ap-dual-head   { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:800; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.05); }
+
+.ap-actions {
+  display:flex; gap:8px; padding:12px 16px; justify-content:flex-end;
+  border-top:1px solid rgba(255,255,255,.05); flex-shrink:0;
+  background:rgba(255,255,255,.008);
+}
+.ap-btn-cancel {
+  padding:8px 16px; border-radius:9px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09);
+  color:#4a6280; font-size:12px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.ap-btn-cancel:hover { background:rgba(255,255,255,.08); color:#e9edef; }
+.ap-btn-submit {
+  padding:8px 22px; border-radius:9px;
+  background:linear-gradient(135deg,#1d4ed8,#7c3aed);
+  border:none; color:#fff; font-size:12px; font-weight:800;
+  cursor:pointer; font-family:inherit;
+  box-shadow:0 4px 14px rgba(29,78,216,.3); transition:opacity .15s, transform .1s;
+}
+.ap-btn-submit:hover { opacity:.88; transform:translateY(-1px); }
+.ap-btn-submit:active { transform:translateY(0); }
+
+.ap-stat-row  { display:flex; gap:8px; padding:10px 14px; flex-wrap:wrap; }
+.ap-stat-card {
+  flex:1; min-width:80px; padding:9px 12px;
+  background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.06);
+  border-radius:10px; text-align:center;
+}
+.ap-stat-val  { font-size:15px; font-weight:800; color:#e9edef; }
+.ap-stat-lbl  { font-size:10px; color:#3d5a7a; margin-top:3px; }
+
+.ap-table-wrap { overflow-x:auto; }
+.ap-table { width:100%; border-collapse:collapse; font-size:11px; }
+.ap-table th { padding:8px 12px; background:rgba(255,255,255,.025); color:#3d5a7a; font-weight:700; text-align:right; white-space:nowrap; border-bottom:1px solid rgba(255,255,255,.05); }
+.ap-table td { padding:7px 12px; border-bottom:1px solid rgba(255,255,255,.03); color:#8696a0; vertical-align:middle; }
+.ap-table tr:hover td { background:rgba(255,255,255,.02); }
+
+.ap-profit-bar { display:flex; align-items:center; gap:12px; padding:10px 16px; background:rgba(34,197,94,.03); border-bottom:1px solid rgba(34,197,94,.08); flex-wrap:wrap; }
+.ap-profit-kpi { text-align:center; }
+.ap-profit-kpi-val { font-size:18px; font-weight:800; }
+.ap-profit-kpi-lbl { font-size:10px; color:#3d5a7a; margin-top:2px; }
+
+.nm-lbl { font-size:11px; font-weight:700; color:#3d5a7a; white-space:nowrap; }
+.nm-input {
+  padding:8px 11px; border-radius:9px;
+  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08);
+  color:#e9edef; font-size:12px; outline:none;
+  font-family:inherit; width:100%; box-sizing:border-box; transition:border-color .15s;
+}
+.nm-input:focus { border-color:rgba(99,102,241,.45); background:rgba(99,102,241,.04); }
+
+.ap-tpl-btn {
+  padding:4px 10px; border-radius:20px;
+  background:rgba(99,102,241,.08); border:1px solid rgba(99,102,241,.2);
+  color:#6366f1; font-size:11px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.ap-tpl-btn:hover { background:rgba(99,102,241,.18); color:#a5b4fc; }
+
+/* ═══════════════════════════════════════
+   لوحة واتساب — يمين (تظهر فقط عند تفعيلها)
+   ═══════════════════════════════════════ */
+.ap-body.wa-enabled {
+  grid-template-columns: 270px 1fr 300px;
+  grid-template-areas:
+    "calc  tool  wa"
+    "log   log   log";
+}
+
+.ap-wa-col {
+  grid-area: wa;
+  display: none;
+  flex-direction: column;
+  background: #040c16;
+  border-right: 1px solid rgba(37,211,102,.1);
+  overflow: hidden;
+  position: relative;
+}
+.ap-body.wa-enabled .ap-wa-col { display: flex; }
+
+/* رأس لوحة الواتساب */
+.ap-wa-head {
+  padding: 9px 12px 8px;
+  background: linear-gradient(90deg,rgba(37,211,102,.06),rgba(37,211,102,.02));
+  border-bottom: 1px solid rgba(37,211,102,.1);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ap-wa-head-title {
+  font-size: 11px; font-weight: 800;
+  color: #1a9e52;
+  text-transform: uppercase; letter-spacing: .5px;
+  flex: 1;
+}
+.ap-wa-status {
+  font-size: 10px; font-weight: 700;
+  white-space: nowrap;
+}
+.ap-wa-status.on  { color: #25d366; }
+.ap-wa-status.off { color: #f87171; }
+
+/* فلتر المجموعات */
+.ap-wa-groups {
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.ap-wa-groups::-webkit-scrollbar { display: none; }
+.ap-wa-grp-btn {
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  color: #3d5a7a;
+  font-size: 10px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  white-space: nowrap;
+  transition: all .14s;
+  flex-shrink: 0;
+}
+.ap-wa-grp-btn:hover { background: rgba(37,211,102,.08); color: #25d366; border-color: rgba(37,211,102,.25); }
+.ap-wa-grp-btn.active { background: rgba(37,211,102,.12); color: #25d366; border-color: rgba(37,211,102,.3); }
+
+/* قائمة الرسائل */
+.ap-wa-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(37,211,102,.1) transparent;
+}
+.ap-wa-list::-webkit-scrollbar { width: 3px; }
+.ap-wa-list::-webkit-scrollbar-thumb { background: rgba(37,211,102,.15); border-radius: 3px; }
+
+/* بطاقة رسالة */
+.ap-wa-msg {
+  background: #081420;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+  padding: 9px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color .15s, background .15s;
+  cursor: default;
+}
+.ap-wa-msg:hover { background: #0a1a2a; }
+.ap-wa-msg.hawala { border-color: rgba(37,211,102,.2); }
+.ap-wa-msg.hawala:hover { border-color: rgba(37,211,102,.4); }
+.ap-wa-msg.pending { border-color: rgba(245,158,11,.15); }
+.ap-wa-msg.pending:hover { border-color: rgba(245,158,11,.3); }
+
+/* رأس البطاقة */
+.ap-wa-msg-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ap-wa-msg-sender {
+  font-size: 11px; font-weight: 800;
+  color: #e2e8f0;
+  flex: 1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ap-wa-msg-time { font-size: 10px; color: #1e3050; flex-shrink: 0; }
+.ap-wa-msg-badge {
+  font-size: 9px; font-weight: 800;
+  padding: 1px 6px; border-radius: 10px;
+  flex-shrink: 0;
+}
+.ap-wa-msg-badge.hawala { background: rgba(37,211,102,.12); color: #25d366; }
+.ap-wa-msg-badge.pending { background: rgba(245,158,11,.12); color: #f59e0b; }
+
+/* نص الرسالة */
+.ap-wa-msg-text {
+  font-size: 11px;
+  color: #4a6280;
+  line-height: 1.5;
+  word-break: break-word;
+  direction: rtl;
+  max-height: 56px;
+  overflow: hidden;
+  position: relative;
+}
+.ap-wa-msg-text.expanded { max-height: none; }
+
+/* بيانات مستخرجة */
+.ap-wa-msg-parsed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ap-wa-chip {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  color: #5a7090;
+  display: flex; align-items: center; gap: 3px;
+}
+.ap-wa-chip.amount { background: rgba(34,197,94,.07); border-color: rgba(34,197,94,.15); color: #4ade80; }
+.ap-wa-chip.name   { background: rgba(96,165,250,.07); border-color: rgba(96,165,250,.15); color: #60a5fa; }
+.ap-wa-chip.phone  { background: rgba(251,191,36,.07); border-color: rgba(251,191,36,.15); color: #fbbf24; }
+.ap-wa-chip.cur    { background: rgba(167,139,250,.07); border-color: rgba(167,139,250,.15); color: #a78bfa; }
+
+/* أزرار الاستخدام */
+.ap-wa-msg-actions {
+  display: flex;
+  gap: 5px;
+}
+.ap-wa-use-btn {
+  flex: 1;
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: none;
+  background: linear-gradient(135deg, rgba(37,211,102,.15), rgba(16,185,129,.1));
+  border: 1px solid rgba(37,211,102,.25);
+  color: #25d366;
+  font-size: 10px; font-weight: 800;
+  cursor: pointer; font-family: inherit;
+  transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.ap-wa-use-btn:hover { background: linear-gradient(135deg,rgba(37,211,102,.25),rgba(16,185,129,.18)); border-color: rgba(37,211,102,.5); }
+.ap-wa-expand-btn {
+  padding: 5px 7px;
+  border-radius: 7px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.03);
+  color: #3d5a7a;
+  font-size: 10px; cursor: pointer; font-family: inherit;
+  transition: all .14s;
+}
+.ap-wa-expand-btn:hover { background: rgba(255,255,255,.07); color: #8696a0; }
+
+/* شريط البحث */
+.ap-wa-search {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  flex-shrink: 0;
+}
+.ap-wa-search input {
+  width: 100%; box-sizing: border-box;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  color: #8696a0;
+  font-size: 11px; outline: none;
+  font-family: inherit;
+  transition: border-color .14s;
+}
+.ap-wa-search input:focus { border-color: rgba(37,211,102,.3); color: #e9edef; }
+
+/* empty state */
+.ap-wa-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #1a2d40;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.ap-wa-empty-icon { font-size: 36px; opacity: .2; margin-bottom: 8px; }
+
+/* زر واتساب بجانب حقل الهاتف */
+.ap-wa-phone-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+.ap-wa-phone-wrap input { flex: 1; width: auto !important; }
+.ap-wa-phone-btn {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: rgba(37,211,102,.1);
+  border: 1px solid rgba(37,211,102,.25);
+  color: #25d366;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.ap-wa-phone-btn:hover { background: rgba(37,211,102,.22); border-color: rgba(37,211,102,.5); transform: scale(1.08); }
+.ap-wa-phone-btn:active { transform: scale(.95); }
+
+/* زر واتساب في صف أزرار البطاقة */
+.ap-wa-open-btn {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  background: rgba(37,211,102,.1);
+  border: 1px solid rgba(37,211,102,.2);
+  color: #25d366;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.ap-wa-open-btn:hover { background: rgba(37,211,102,.22); border-color: rgba(37,211,102,.45); }
+
+/* highlight animation على حقول مملوءة من واتساب */
+@keyframes apWaFill {
+  0%   { box-shadow: 0 0 0 3px rgba(37,211,102,.5); }
+  100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+}
+.ap-wa-filled { animation: apWaFill .7s ease forwards; }
+
+/* ── Responsive ── */
+@media (max-width: 1000px) {
+  .ap-body.wa-enabled {
+    grid-template-columns: 1fr 280px;
+    grid-template-areas:
+      "tool  wa"
+      "log   log";
+  }
+  .ap-body.wa-enabled .ap-calc-col { display: none; }
+}
+@media (max-width: 700px) {
+  .ap-body,
+  .ap-body.wa-enabled {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 140px;
+    grid-template-areas: "tool" "log";
+  }
+  .ap-calc-col { display: none; }
+  .ap-wa-col   { display: none !important; }
+  .ap-dual { grid-template-columns: 1fr; }
+}

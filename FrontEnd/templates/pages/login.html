@@ -1,0 +1,212 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}نظام انترناشونال الموحد - نسخة مطورة{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}?v=20260415">
+{% endblock %}
+
+{% block content %}
+
+<canvas class="particles-canvas" id="particles"></canvas>
+
+<!-- ─── الهيدر ─── -->
+<header class="custom-header">
+    <div class="header-right">
+        <div class="header-brand">
+            <img src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال" class="header-logo">
+            <div>
+                <div class="main-title">نظام انترناشونال الموحد</div>
+                <div class="header-subtitle">
+                    <span class="status-dot"></span>
+                    نظام الرقابة اللحظية نشط الآن
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="header-left">
+        <div class="clock-toggle-wrap">
+            <div><div class="time-display" id="clock">--:--:--</div><div class="sub-date" id="date">جاري التحميل...</div></div>
+        </div>
+    </div>
+</header>
+
+<!-- ─── كارت تسجيل الدخول ─── -->
+<div class="login-container">
+    <div class="login-card" id="loginCard" style="background: linear-gradient(145deg, #0b2340 0%, #0f3460 55%, #0a1f38 100%) !important; border: 1px solid rgba(50,130,220,0.30) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(15,52,96,0.5) !important;">
+        
+        <div class="card-title-section">
+            <img src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال" class="card-logo" id="cardLogo">
+            <h1 class="card-title">دخول النظام</h1>
+            <p class="card-subtitle">أدخل بيانات الاعتماد الخاصة بك للمتابعة</p>
+        </div>
+
+        <!-- اختيار الدور -->
+        <div class="roles-section">
+            <div class="roles-label">اختر صلاحيتك في النظام</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="setRole(this, 'M01')">
+                    <span class="role-icon">👔</span>
+                    M01
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'M02')">
+                    <span class="role-icon">📋</span>
+                    M02
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'M03')">
+                    <span class="role-icon">🌐</span>
+                    M03
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'T01')">
+                    <span class="role-icon">💰</span>
+                    T01
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'T02')">
+                    <span class="role-icon">🏦</span>
+                    T02
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'T03')">
+                    <span class="role-icon">🌍</span>
+                    T03
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'IM01')">
+                    <span class="role-icon">⚙️</span>
+                    IM01
+                </button>
+                <button class="role-btn" onclick="setRole(this, 'P01')">
+                    <span class="role-icon">👨‍💻</span>
+                    P01
+                </button>
+            </div>
+        </div>
+
+        <!-- اسم المستخدم -->
+        <div class="input-group">
+            <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username">
+            <span class="input-icon">🆔</span>
+        </div>
+        
+        <!-- كلمة المرور -->
+        <div class="input-group">
+            <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password">
+            <span class="input-icon">🔑</span>
+            <button class="toggle-pass" onclick="togglePassword()" type="button" aria-label="إظهار كلمة المرور">👁️</button>
+        </div>
+
+        <!-- خيارات -->
+        <div class="form-options" id="loginOptions">
+            <label class="remember-me" onclick="toggleRemember()">
+                <div class="custom-checkbox" id="rememberCheck">✓</div>
+                تذكرني
+            </label>
+            <a class="forgot-link" onclick="showForgotModal()">نسيت كلمة المرور؟</a>
+        </div>
+
+        <!-- زر الدخول -->
+        <button class="btn-primary" id="mainBtn" onclick="handleSubmit()" style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #1e40af 100%) !important; box-shadow: 0 4px 20px rgba(37,99,235,0.45) !important;">
+            <span class="btn-content">
+                <span class="spinner"></span>
+                <span class="btn-text">تأكيد الدخول</span>
+                <span class="btn-loading-text">جاري التحقق...</span>
+            </span>
+        </button>
+
+        <div class="online-count">
+            <span class="online-dot"></span>
+            <span id="onlineText">24 مستخدم نشط حالياً في النظام</span>
+        </div>
+
+        <div class="keyboard-hint">
+            <div class="kbd-item"><kbd>Enter</kbd> للدخول</div>
+            <div class="kbd-item"><kbd>Tab</kbd> للتنقل</div>
+            <div class="kbd-item"><kbd>Esc</kbd> للإلغاء</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ─── نافذة استعادة كلمة المرور ─── -->
+<div class="modal-overlay" id="forgotModal">
+    <div class="modal-box">
+        <h3>🔓 استعادة كلمة المرور</h3>
+        <p>أدخل اسم المستخدم الخاص بك وسيتم إرسال رابط إعادة التعيين إلى بريدك المسجل في النظام</p>
+        <div class="input-group">
+            <input type="text" id="forgotUsername" placeholder="اسم المستخدم">
+            <span class="input-icon">🆔</span>
+        </div>
+        <button class="btn-primary" style="margin-top:8px;background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#1e40af 100%) !important;box-shadow:0 4px 20px rgba(37,99,235,0.45) !important;color:#ffffff !important;" onclick="handleForgot()">
+            <span class="btn-content">
+                <span class="btn-text">إرسال رابط الاستعادة</span>
+            </span>
+        </button>
+        <div style="margin-top:14px">
+            <a class="forgot-link" onclick="closeForgotModal()">العودة لتسجيل الدخول</a>
+        </div>
+    </div>
+</div>
+
+<!-- ─── الفوتر ─── -->
+<footer class="app-footer">
+    نظام انترناشونال الموحد © 2026 — الإصدار 3.0 — 
+    <a href="#">الدعم الفني</a> · <a href="#">سياسة الخصوصية</a>
+</footer>
+
+<!-- ─── الإشعارات ─── -->
+<div class="toast-container" id="toastContainer"></div>
+
+ 
+<!-- ─── نافذة المصادقة الثنائية (Google Authenticator) ─── -->
+<div class="modal-overlay" id="twoFAModal" style="display:none;align-items:center;justify-content:center">
+    <div class="modal-box" style="max-width:420px;text-align:center;padding:36px 32px">
+
+        <!-- خطوة مسح QR (أول مرة) -->
+        <div id="qrSetupStep" style="display:none">
+            <div style="font-size:52px;margin-bottom:14px">📲</div>
+            <h3 style="font-size:20px;font-weight:800;margin-bottom:8px">إعداد Google Authenticator</h3>
+            <p style="font-size:13px;color:#8b9bb4;margin-bottom:22px;line-height:1.7">
+                افتح تطبيق <strong>Google Authenticator</strong> على هاتفك<br>
+                ثم اضغط <strong>+</strong> ومسح رمز QR التالي
+            </p>
+            <div style="margin:0 auto 16px;width:210px;height:210px;border-radius:14px;overflow:hidden;background:#fff;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+                <img id="qrImg" src="" style="width:100%;height:100%" alt="QR Code" />
+            </div>
+            <p style="font-size:11px;color:#8b9bb4;margin-bottom:6px">أو أدخل الكود يدوياً في التطبيق:</p>
+            <div id="manualSecretBox" style="font-family:monospace;font-size:13px;background:#0d1421;padding:10px 14px;border-radius:10px;letter-spacing:3px;margin-bottom:22px;word-break:break-all;color:#32b8c6;border:1px solid rgba(50,184,198,0.3)"></div>
+            <button class="btn-primary" onclick="confirmQRScanned()" style="width:100%;background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#1e40af 100%) !important;color:#ffffff !important;">
+                <span class="btn-content"><span class="btn-text">✅ تم المسح — أدخل رمز التحقق</span></span>
+            </button>
+        </div>
+
+        <!-- خطوة إدخال رمز التحقق -->
+        <div id="codeInputStep" style="display:none">
+            <div style="font-size:52px;margin-bottom:14px">🔐</div>
+            <h3 style="font-size:20px;font-weight:800;margin-bottom:8px">التحقق بخطوتين</h3>
+            <p style="font-size:13px;color:#8b9bb4;margin-bottom:22px;line-height:1.7">
+                أدخل رمز التحقق المكوّن من <strong>6 أرقام</strong><br>
+                من تطبيق <strong>Google Authenticator</strong>
+            </p>
+            <div class="input-group" style="margin-bottom:18px">
+                <input type="text" id="totpInput" placeholder="000000" maxlength="6"
+                    inputmode="numeric" autocomplete="one-time-code"
+                    style="text-align:center;font-size:30px;font-weight:900;letter-spacing:10px;direction:ltr;padding:14px"
+                    oninput="this.value=this.value.replace(/\D/g,'')"
+                    onkeydown="if(event.key==='Enter')verify2FA()">
+            </div>
+            <button class="btn-primary" id="verifyBtn" onclick="verify2FA()" style="width:100%;margin-bottom:12px;background:#2563eb;border-color:#2563eb;">
+                <span class="btn-content">
+                    <span class="spinner"></span>
+                    <span class="btn-text">تحقق من الرمز</span>
+                    <span class="btn-loading-text">جاري التحقق...</span>
+                </span>
+            </button>
+            <a class="forgot-link" onclick="close2FAModal()">إلغاء والعودة</a>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/login.js' %}?v=20260511a"></script>
+
+{% endblock content %}

@@ -1,0 +1,440 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}نظام انترناشونال — لوحة وكلاء التنفيذ{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/transactions-supervisor.css' %}">
+<link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+
+<header class="custom-header">
+  <div class="header-right">
+    <div class="header-brand">
+      <img src="{% static 'images/الشعار-01.png' %}" alt="logo"
+           style="width:60px;height:60px;border-radius:0;object-fit:contain;
+                  box-shadow:0 4px 16px rgba(50,184,198,0.3),0 0 0 2px rgba(50,184,198,0.15);">
+      <div>
+        <div class="main-title">نظام انترناشونال الموحد - الحوالات</div>
+        <div class="header-subtitle">
+          <span class="status-dot"></span>
+          لوحة وكلاء التنفيذ
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-center-group">
+    <div class="sv-header-center-info">
+      <div class="sv-header-role"><i class="fas fa-handshake"></i> مشرف الحوالات</div>
+      <div class="sv-header-name" id="ag-center-name">—</div>
+    </div>
+  </div>
+  <div class="header-left">
+    <div class="header-left-top">
+      <button onclick="location.href='/transactions/supervisor/'" class="hdr-btn"
+              style="background:rgba(50,184,198,0.08);color:#32b8c6;border:1px solid rgba(50,184,198,0.2);">
+        <i class="fa-solid fa-arrow-right-to-bracket" style="font-size:11px;"></i> لوحة المشرف
+      </button>
+    </div>
+  </div>
+  {% include 'layout/navbar.html' with page_name="agent-dashboard" page_title="وكلاء التنفيذ" %}
+</header>
+
+<div class="sv-wrap">
+
+  <!-- ══ Sidebar ══════════════════════════════════════════════════════════════ -->
+  <aside class="sv-sidebar">
+
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">القائمة</div>
+      <a class="sv-nav-item active" onclick="agNav(this,'overview')">
+        <i class="fa-solid fa-gauge-high"></i>نظرة عامة
+      </a>
+      <a class="sv-nav-item" onclick="agNav(this,'transfers')">
+        <i class="fa-solid fa-right-left"></i>الحوالات
+        <span class="sv-nav-badge" id="ag-nav-pending-badge" style="background:rgba(239,68,68,0.15);color:#f87171;display:none;">0</span>
+      </a>
+      <a class="sv-nav-item" onclick="agNav(this,'balance')">
+        <i class="fa-solid fa-wallet"></i>سجل الرصيد
+      </a>
+    </div>
+
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">إجراءات سريعة</div>
+      <a class="sv-nav-item" onclick="openDepositModal()">
+        <i class="fa-solid fa-circle-plus" style="color:#34d399;"></i>إيداع رصيد USDT
+      </a>
+      <a class="sv-nav-item" href="/transactions/supervisor/">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>لوحة المشرف
+      </a>
+    </div>
+
+    <!-- بطاقة الوكيل المختار -->
+    <div class="ag-sidebar-card" id="ag-sidebar-card" style="display:none;">
+      <div class="ag-sidebar-avatar" id="ag-sidebar-avatar">و</div>
+      <div class="ag-sidebar-name"   id="ag-sidebar-name">—</div>
+      <div class="ag-sidebar-sub"    id="ag-sidebar-country">—</div>
+      <div class="ag-sidebar-bal-row">
+        <span class="ag-sidebar-bal-lbl">الرصيد المتاح</span>
+        <span class="ag-sidebar-bal-val" id="ag-sidebar-available">0.0000</span>
+      </div>
+      <div class="sv-prog-bar" style="margin-top:6px;">
+        <div class="sv-prog-fill" id="ag-sidebar-prog"
+             style="background:linear-gradient(90deg,#32b8c6,#6366f1);width:0%;"></div>
+      </div>
+      <div style="font-size:9px;color:#475569;margin-top:4px;text-align:center;">
+        معدل الإنجاز: <span id="ag-sidebar-rate-pct">0%</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══ Main Content ══════════════════════════════════════════════════════════ -->
+  <main class="sv-content">
+
+    <!-- شريط اختيار الوكيل -->
+    <div class="ag-picker-bar">
+      <div class="ag-picker-label">
+        <i class="fa-solid fa-handshake"></i>
+        وكيل التنفيذ
+      </div>
+      <select class="ag-picker-select" id="ag-select" onchange="selectAgent(this.value)">
+        <option value="">— اختر وكيلاً —</option>
+      </select>
+      <button class="ag-picker-refresh" onclick="loadAgents(true)">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+
+    <!-- ══ قسم: نظرة عامة ════════════════════════════════════════════ -->
+    <div id="ag-sec-overview" class="ag-section active">
+
+      <!-- حالة فارغة -->
+      <div class="ag-empty" id="ag-empty">
+        <div class="ag-empty-icon"><i class="fa-solid fa-handshake"></i></div>
+        <h3>اختر وكيل تنفيذ</h3>
+        <p>حدد وكيلاً من القائمة أعلاه لعرض لوحة بياناته</p>
+      </div>
+
+      <!-- محتوى الداشبورد -->
+      <div id="ag-dash" style="display:none;">
+
+        <div class="sv-page-title">
+          <div>
+            <h1 id="ag-title">📊 لوحة وكيل التنفيذ</h1>
+            <p id="ag-subtitle">بيانات الوكيل المحدد</p>
+          </div>
+          <div class="sv-date-badge">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span id="ag-date">—</span>
+          </div>
+        </div>
+
+        <!-- بطاقات الإحصاء -->
+        <div class="sv-cards ag-cards-3">
+          <div class="sv-card c-cyan">
+            <div class="sv-card-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-balance">0.0000</div>
+              <div class="sv-card-lbl">إجمالي الرصيد (USDT)</div>
+              <div class="sv-card-delta delta-same">الرصيد الكلي</div>
+            </div>
+          </div>
+          <div class="sv-card c-yellow">
+            <div class="sv-card-icon"><i class="fa-solid fa-lock"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-frozen">0.0000</div>
+              <div class="sv-card-lbl">رصيد مجمّد (USDT)</div>
+              <div class="sv-card-delta delta-same">قيد التحقق</div>
+            </div>
+          </div>
+          <div class="sv-card c-green">
+            <div class="sv-card-icon"><i class="fa-solid fa-unlock"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-available">0.0000</div>
+              <div class="sv-card-lbl">رصيد متاح (USDT)</div>
+              <div class="sv-card-delta delta-up">للتنفيذ الفوري</div>
+            </div>
+          </div>
+          <div class="sv-card c-yellow">
+            <div class="sv-card-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-pending">0</div>
+              <div class="sv-card-lbl">حوالات معلّقة</div>
+              <div class="sv-card-delta delta-same">بانتظار التنفيذ</div>
+            </div>
+          </div>
+          <div class="sv-card c-red">
+            <div class="sv-card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-urgent">0</div>
+              <div class="sv-card-lbl">مستعجلة</div>
+              <div class="sv-card-delta delta-down">أولوية عالية</div>
+            </div>
+          </div>
+          <div class="sv-card c-purple">
+            <div class="sv-card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="sv-card-body">
+              <div class="sv-card-num" id="c-commission">0.0000</div>
+              <div class="sv-card-lbl">إجمالي العمولات</div>
+              <div class="sv-card-delta delta-up">نسبة 2.5%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- بيانات الوكيل + آخر الحوالات -->
+        <div class="sv-panels-row">
+
+          <!-- بيانات الوكيل -->
+          <div class="sv-panel">
+            <div class="sv-panel-hdr">
+              <h3><i class="fa-solid fa-id-card" style="color:#32b8c6;margin-left:7px;"></i>بيانات الوكيل</h3>
+              <button class="sv-btn sv-btn-edit" onclick="openDepositModal()">
+                <i class="fa-solid fa-plus"></i> إيداع رصيد
+              </button>
+            </div>
+            <div class="sv-panel-body">
+              <div class="ag-info-grid">
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-user"></i> الاسم الكامل</span>
+                  <span class="ag-info-val" id="inf-name">—</span>
+                </div>
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-globe"></i> الدولة</span>
+                  <span class="ag-info-val" id="inf-country">—</span>
+                </div>
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-phone"></i> الهاتف</span>
+                  <span class="ag-info-val" id="inf-phone">—</span>
+                </div>
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-envelope"></i> البريد الإلكتروني</span>
+                  <span class="ag-info-val" id="inf-email">—</span>
+                </div>
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-calendar-check"></i> تاريخ الانضمام</span>
+                  <span class="ag-info-val" id="inf-joined">—</span>
+                </div>
+                <div class="ag-info-row">
+                  <span class="ag-info-lbl"><i class="fa-solid fa-circle-dot"></i> الحالة</span>
+                  <span id="inf-status">—</span>
+                </div>
+              </div>
+              <div style="margin-top:16px;">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#475569;margin-bottom:6px;">
+                  <span>معدل إنجاز الحوالات</span>
+                  <span id="inf-rate-pct" style="color:#32b8c6;font-weight:700;">0%</span>
+                </div>
+                <div class="sv-prog-bar" style="height:7px;">
+                  <div class="sv-prog-fill" id="inf-rate-fill"
+                       style="background:linear-gradient(90deg,#32b8c6,#6366f1);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- آخر الحوالات -->
+          <div class="sv-panel">
+            <div class="sv-panel-hdr">
+              <h3><i class="fa-solid fa-clock-rotate-left" style="color:#fcd34d;margin-left:7px;"></i>آخر الحوالات</h3>
+              <button class="sv-btn sv-btn-view" onclick="agNav(document.querySelectorAll('.sv-nav-item')[1],'transfers')">
+                <i class="fa-solid fa-arrow-left"></i> عرض الكل
+              </button>
+            </div>
+            <div class="sv-panel-body" style="padding:0;">
+              <table class="sv-table">
+                <thead>
+                  <tr>
+                    <th>المرجع</th>
+                    <th>المستفيد</th>
+                    <th>USDT</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody id="ag-recent-tbody">
+                  <tr><td colspan="4" class="ag-empty-row">لا توجد حوالات</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ قسم: الحوالات ════════════════════════════════════════════ -->
+    <div id="ag-sec-transfers" class="ag-section">
+      <div class="sv-page-title">
+        <div><h1>📋 حوالات الوكيل</h1><p id="tf-agent-name">اختر وكيلاً أولاً</p></div>
+      </div>
+      <div class="sv-table-wrap">
+        <div class="sv-table-toolbar">
+          <div style="display:flex;gap:7px;flex-wrap:wrap;">
+            <button class="sv-filter-btn active" onclick="filterTf('all',this)">الكل</button>
+            <button class="sv-filter-btn" onclick="filterTf('pending',this)">
+              معلّق <span id="tf-badge-pending" class="sv-nav-badge cyan" style="margin:0 0 0 3px;"></span>
+            </button>
+            <button class="sv-filter-btn" onclick="filterTf('processing',this)">قيد التنفيذ</button>
+            <button class="sv-filter-btn" onclick="filterTf('completed',this)">منجز</button>
+            <button class="sv-filter-btn ag-btn-urgent" onclick="filterTf('urgent',this)">
+              <i class="fa-solid fa-triangle-exclamation"></i> مستعجل
+            </button>
+          </div>
+          <input class="sv-search" id="tf-search"
+                 placeholder="🔍 بحث بالمرجع أو المستفيد..."
+                 oninput="searchTf(this.value)">
+        </div>
+        <table class="sv-table">
+          <thead>
+            <tr>
+              <th>المرجع</th>
+              <th>المُرسِل</th>
+              <th>المستفيد</th>
+              <th>المبلغ (USDT)</th>
+              <th>الدولة</th>
+              <th>الأولوية</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="ag-tf-tbody">
+            <tr><td colspan="9" class="ag-empty-row">اختر وكيلاً لعرض الحوالات</td></tr>
+          </tbody>
+        </table>
+        <div class="ag-tbl-footer" id="ag-tf-footer"></div>
+      </div>
+    </div>
+
+    <!-- ══ قسم: سجل الرصيد ══════════════════════════════════════════ -->
+    <div id="ag-sec-balance" class="ag-section">
+      <div class="sv-page-title">
+        <div><h1>💰 سجل الرصيد</h1><p>الإيداعات والخصومات والعمولات</p></div>
+        <button class="sv-export-btn" onclick="openDepositModal()">
+          <i class="fa-solid fa-plus"></i> إيداع رصيد جديد
+        </button>
+      </div>
+      <div class="sv-table-wrap">
+        <div class="sv-table-toolbar">
+          <div style="display:flex;gap:7px;">
+            <button class="sv-filter-btn active" onclick="filterBal('all',this)">الكل</button>
+            <button class="sv-filter-btn" onclick="filterBal('deposit',this)">إيداع</button>
+            <button class="sv-filter-btn" onclick="filterBal('deduction',this)">خصم</button>
+            <button class="sv-filter-btn" onclick="filterBal('commission',this)">عمولة</button>
+          </div>
+          <div class="ag-bal-summary" id="ag-bal-summary"></div>
+        </div>
+        <table class="sv-table">
+          <thead>
+            <tr>
+              <th>النوع</th>
+              <th>المبلغ (USDT)</th>
+              <th>الرصيد بعد العملية</th>
+              <th>ملاحظات</th>
+              <th>المنفّذ</th>
+              <th>التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="ag-bal-tbody">
+            <tr><td colspan="6" class="ag-empty-row">اختر وكيلاً لعرض السجل</td></tr>
+          </tbody>
+        </table>
+        <div class="ag-tbl-footer" id="ag-bal-footer"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<!-- ══ Modal: إيداع رصيد ════════════════════════════════════════════════════ -->
+<div class="sv-modal-overlay" id="ag-deposit-overlay">
+  <div class="sv-modal" style="max-width:440px;">
+    <div class="ag-modal-hdr">
+      <h2><i class="fa-solid fa-circle-plus" style="color:#34d399;"></i> إيداع رصيد USDT</h2>
+      <button class="ag-modal-close" onclick="closeModal('ag-deposit-overlay')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ag-modal-agent-tag" id="dep-agent-tag">
+      <i class="fa-solid fa-handshake"></i> <span id="dep-agent-name">—</span>
+    </div>
+    <div class="ag-form-group">
+      <label class="ag-form-label">المبلغ (USDT) <span style="color:#f87171;">*</span></label>
+      <input type="number" class="ag-form-input" id="dep-amount" placeholder="0.0000" min="0.01" step="0.0001">
+    </div>
+    <div class="ag-form-group">
+      <label class="ag-form-label">ملاحظات</label>
+      <textarea class="ag-form-input" id="dep-notes" rows="3" placeholder="سبب الإيداع..."></textarea>
+    </div>
+    <div class="ag-modal-actions">
+      <button class="ag-btn-primary" onclick="submitDeposit()">
+        <i class="fa-solid fa-check"></i> تأكيد الإيداع
+      </button>
+      <button class="ag-btn-cancel" onclick="closeModal('ag-deposit-overlay')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ Modal: تأكيد تنفيذ حوالة ════════════════════════════════════════════ -->
+<div class="sv-modal-overlay" id="ag-confirm-overlay">
+  <div class="sv-modal" style="max-width:500px;">
+    <div class="ag-modal-hdr">
+      <h2><i class="fa-solid fa-circle-check" style="color:#34d399;"></i> تأكيد تنفيذ الحوالة</h2>
+      <button class="ag-modal-close" onclick="closeModal('ag-confirm-overlay')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ag-transfer-card" id="confirm-transfer-card"></div>
+    <div class="ag-form-group" style="margin-top:14px;">
+      <label class="ag-form-label">صورة الإيصال <span style="color:#f87171;">*</span></label>
+      <div class="ag-file-zone" id="ag-file-zone" onclick="document.getElementById('ag-file-input').click()">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span id="ag-file-label">اضغط لرفع صورة الإيصال</span>
+        <small>PNG, JPG, PDF — حجم أقصى 5MB</small>
+      </div>
+      <input type="file" id="ag-file-input" accept="image/*,.pdf" style="display:none;" onchange="onFileSelect(this)">
+    </div>
+    <div class="ag-form-group">
+      <label class="ag-form-label">ملاحظات</label>
+      <input type="text" class="ag-form-input" id="confirm-notes" placeholder="ملاحظات التنفيذ...">
+    </div>
+    <div class="ag-modal-actions">
+      <button class="ag-btn-primary" onclick="submitConfirm()">
+        <i class="fa-solid fa-check"></i> تأكيد التنفيذ
+      </button>
+      <button class="ag-btn-cancel" onclick="closeModal('ag-confirm-overlay')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ Modal: التحقق من إيصال ══════════════════════════════════════════════ -->
+<div class="sv-modal-overlay" id="ag-verify-overlay">
+  <div class="sv-modal" style="max-width:460px;">
+    <div class="ag-modal-hdr">
+      <h2><i class="fa-solid fa-shield-check" style="color:#a78bfa;"></i> التحقق من الإيصال</h2>
+      <button class="ag-modal-close" onclick="closeModal('ag-verify-overlay')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ag-verify-card" id="verify-card"></div>
+    <div class="ag-modal-actions" style="margin-top:18px;">
+      <button class="ag-btn-purple" onclick="submitVerify()">
+        <i class="fa-solid fa-shield-check"></i> تأكيد وخصم الرصيد
+      </button>
+      <button class="ag-btn-cancel" onclick="closeModal('ag-verify-overlay')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast Container -->
+<div id="ag-toast-wrap" class="sv-toast-wrap"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/agent-dashboard.js' %}?v=1"></script>
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+{% endblock %}

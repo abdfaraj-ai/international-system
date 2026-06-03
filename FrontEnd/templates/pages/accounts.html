@@ -1,0 +1,745 @@
+﻿{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}التحويل البنكي - نظام انترناشونال الموحد{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/accounts_panel.css' %}?v=6">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+
+
+<div class="notification" id="notification"></div>
+
+<!-- ═══ Header ═══ -->
+<div id="header">
+
+
+  <div class="logo-wrap">
+    <img src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال" class="logo-icon" style="width:62px;height:62px;border-radius:0;object-fit:contain;">
+    <div>
+      <div class="logo-title">نظام انترناشونال الموحد</div>
+      <div class="logo-sub">قسم التحويل البنكي</div>
+    </div>
+  </div>
+  <div id="header-section">
+    <span class="hsi" id="hsi">🏦</span>
+    <span id="hst">لوحة التحكم</span>
+  </div>
+    {% include 'layout/navbar.html' with report_fn="acntOpenReportModal" page_name="accounts" page_title="قسم التحويل البنكي" %}
+
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="app-layout">
+  <!-- ═══ Sidebar ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-icon">🏦</div>
+      <div class="sb-brand-title">التحويل البنكي</div>
+      <div class="sb-brand-sub">Bank Transfer System</div>
+    </div>
+
+    <div class="sb-label">الأقسام الرئيسية</div>
+    <div class="nav-item active" data-tab="0" onclick="switchTab(0)">
+      <div class="nav-icon">📊</div><span>لوحة التحكم</span>
+    </div>
+    <div class="nav-item" data-tab="1" onclick="switchTab(1)">
+      <div class="nav-icon">📨</div><span>الحوالات الواردة</span>
+      <span class="nav-badge nav-badge-red" id="sb-pending">0</span>
+    </div>
+    <div class="nav-item" data-tab="2" onclick="switchTab(2)">
+      <div class="nav-icon">💸</div><span>تنفيذ تحويل جديد</span>
+    </div>
+    <div class="nav-item" data-tab="3" onclick="switchTab(3)">
+      <div class="nav-icon">🔄</div><span>بيع وشراء عبر البنك</span>
+    </div>
+    <div class="nav-item" data-tab="4" onclick="switchTab(4)">
+      <div class="nav-icon">📋</div><span>سجل العمليات</span>
+      <span class="nav-badge nav-badge-gold" id="sb-ops">0</span>
+    </div>
+    <div class="nav-item" data-tab="5" onclick="switchTab(5);loadMyPortalReceipts()">
+      <div class="nav-icon">📬</div><span>إشعارات البوابة</span>
+      <span class="nav-badge nav-badge-blue" id="sb-portal-notif" style="display:none">0</span>
+    </div>
+
+    <div class="sb-label">أدوات سريعة</div>
+    <div class="nav-item" onclick="openModal('quick-transfer-modal')">
+      <div class="nav-icon">⚡</div><span>تحويل سريع</span>
+    </div>
+
+    <div class="nav-item" onclick="toggleCalc()">
+      <div class="nav-icon">🧮</div><span>الحاسبة</span>
+    </div>
+
+    <a class="nav-item" href="/accounts/manage/" style="text-decoration:none;color:inherit;">
+      <div class="nav-icon">📒</div><span>إدارة الحسابات</span>
+    </a>
+
+    <!-- Quick stats -->
+    <div class="sb-stats">
+      <div class="sb-stat-grid">
+        <div class="sb-stat-box"><div class="sb-stat-val text-green" id="sf-done">0</div><div class="sb-stat-lbl">تم التنفيذ</div></div>
+        <div class="sb-stat-box"><div class="sb-stat-val text-red" id="sf-pend">0</div><div class="sb-stat-lbl">بانتظار</div></div>
+        <div class="sb-stat-box"><div class="sb-stat-val text-blue" id="sf-buy">0</div><div class="sb-stat-lbl">عمليات شراء</div></div>
+        <div class="sb-stat-box"><div class="sb-stat-val text-purple" id="sf-sell">0</div><div class="sb-stat-lbl">عمليات بيع</div></div>
+      </div>
+    </div>
+
+    <div class="sb-footer">
+      <div class="sb-status"><div class="pulse-dot"></div>متصل — البنك متاح للتحويلات</div>
+    </div>
+  </aside>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="main-content">
+
+    <!-- Tab 0: Dashboard -->
+    <div class="tab-pane active" id="pane-0">
+      <div class="stats-row" id="stats-row"></div>
+      <!-- Workflow Visualization -->
+      <div class="card mb20" style="--card-accent:#D4AF37">
+        <div class="card-title"><span class="cti">🔄</span> مسار التحويل البنكي</div>
+        <div class="wf-steps">
+          <div class="wf-step done"><div class="wf-step-icon">🧑‍💼</div><div class="wf-step-label">التلر</div></div>
+          <div class="wf-arrow">◀</div>
+          <div class="wf-step active"><div class="wf-step-icon">📨</div><div class="wf-step-label">إرسال الحوالة</div></div>
+          <div class="wf-arrow">◀</div>
+          <div class="wf-step active"><div class="wf-step-icon">👤</div><div class="wf-step-label">موظف التحويل</div></div>
+          <div class="wf-arrow">◀</div>
+          <div class="wf-step"><div class="wf-step-icon">🏦</div><div class="wf-step-label">البنك</div></div>
+          <div class="wf-arrow">◀</div>
+          <div class="wf-step"><div class="wf-step-icon">✅</div><div class="wf-step-label">تم التنفيذ</div></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <!-- Buy/Sell Summary -->
+        <div class="card" style="--card-accent:#5CB85C" id="dash-buysell"></div>
+        <!-- Recent operations -->
+        <div class="card" style="--card-accent:#5BC0DE" id="dash-recent"></div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Incoming Transfers -->
+    <div class="tab-pane" id="pane-1">
+
+      <!-- Page Header -->
+      <div class="iq-page-hdr">
+        <div>
+          <div class="iq-page-title">📨 الحوالات الواردة</div>
+          <div class="iq-page-sub">من التلرات — في انتظار التنفيذ</div>
+        </div>
+        <button class="iq-refresh-btn" onclick="renderQueue()" title="تحديث القائمة">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          تحديث
+        </button>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="iq-stats-bar">
+        <div class="iq-stat">
+          <span class="iq-stat-dot iq-dot-all"></span>
+          <div class="iq-stat-val" id="iq-s-total">0</div>
+          <div class="iq-stat-lbl">الإجمالي</div>
+        </div>
+        <div class="iq-stat">
+          <span class="iq-stat-dot iq-dot-urgent"></span>
+          <div class="iq-stat-val iq-sv-urgent" id="iq-s-urgent">0</div>
+          <div class="iq-stat-lbl">مستعجل</div>
+        </div>
+        <div class="iq-stat">
+          <span class="iq-stat-dot iq-dot-pending"></span>
+          <div class="iq-stat-val iq-sv-pending" id="iq-s-pending">0</div>
+          <div class="iq-stat-lbl">بانتظار</div>
+        </div>
+        <div class="iq-stat">
+          <span class="iq-stat-dot iq-dot-proc"></span>
+          <div class="iq-stat-val iq-sv-proc" id="iq-s-proc">0</div>
+          <div class="iq-stat-lbl">قيد التنفيذ</div>
+        </div>
+        <div class="iq-stat iq-stat-amt">
+          <div class="iq-stat-val iq-sv-amt" id="iq-s-amt">$0</div>
+          <div class="iq-stat-lbl">إجمالي المبالغ</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="iq-toolbar">
+        <div class="iq-ftabs">
+          <button class="iq-ftab iq-ftab-active" id="iqft-all"        onclick="filterQueue('all')">الكل</button>
+          <button class="iq-ftab"                 id="iqft-pending"    onclick="filterQueue('pending')">⏰ بانتظار</button>
+          <button class="iq-ftab"                 id="iqft-processing" onclick="filterQueue('processing')">⚡ قيد التنفيذ</button>
+          <button class="iq-ftab iq-ftab-urg"     id="iqft-urgent"     onclick="filterQueue('urgent')">🔴 مستعجل</button>
+        </div>
+        <div class="iq-search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="iq-search" class="iq-search-input" placeholder="بحث بالاسم أو الرقم المرجعي أو البنك..." oninput="renderQueue()">
+        </div>
+      </div>
+
+      <!-- Queue List -->
+      <div id="queue-list"></div>
+
+    </div>
+
+    <!-- Tab 2: New Transfer -->
+    <div class="tab-pane" id="pane-2">
+
+      <!-- Header -->
+      <div class="ntf-hdr">
+        <div class="ntf-hdr-icon">💸</div>
+        <div class="ntf-hdr-text">
+          <div class="ntf-hdr-title">تنفيذ تحويل بنكي جديد</div>
+          <div class="ntf-hdr-sub">أدخل بيانات الحوالة وأرسلها مباشرةً للبنك</div>
+        </div>
+        <div class="ntf-stepper">
+          <div class="ntf-step ntf-step-active">
+            <div class="ntf-step-dot"></div><span>تعبئة البيانات</span>
+          </div>
+          <div class="ntf-step-connector"></div>
+          <div class="ntf-step">
+            <div class="ntf-step-dot"></div><span>مراجعة</span>
+          </div>
+          <div class="ntf-step-connector"></div>
+          <div class="ntf-step">
+            <div class="ntf-step-dot"></div><span>إرسال للبنك</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="ntf-card">
+
+        <!-- Zone 1: Sender -->
+        <div class="ntf-zone">
+          <div class="ntf-zone-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            بيانات المُرسِل
+          </div>
+          <div class="ntf-row">
+            <div class="ntf-field">
+              <label class="ntf-label">اسم المُرسِل <span class="ntf-req">*</span></label>
+              <input class="ntf-input" id="nf-sender" placeholder="اسم العميل المُرسِل"/>
+            </div>
+            <div class="ntf-field">
+              <label class="ntf-label">رقم الهوية</label>
+              <input class="ntf-input" id="nf-sender-id" placeholder="رقم الهوية الوطنية"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="ntf-sep"></div>
+
+        <!-- Zone 2: Receiver -->
+        <div class="ntf-zone">
+          <div class="ntf-zone-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            بيانات المستفيد
+          </div>
+          <div class="ntf-row">
+            <div class="ntf-field">
+              <label class="ntf-label">اسم المستفيد <span class="ntf-req">*</span></label>
+              <input class="ntf-input" id="nf-receiver" placeholder="الاسم كما في البنك"/>
+            </div>
+            <div class="ntf-field">
+              <label class="ntf-label">رقم الحساب / IBAN <span class="ntf-req">*</span></label>
+              <input class="ntf-input ntf-ltr" id="nf-account" placeholder="PS92ARAB0000000012345678"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="ntf-sep"></div>
+
+        <!-- Zone 3: Transfer Details -->
+        <div class="ntf-zone">
+          <div class="ntf-zone-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            تفاصيل الحوالة
+          </div>
+          <div class="ntf-row">
+            <div class="ntf-field ntf-field-lg">
+              <label class="ntf-label">البنك المستقبل <span class="ntf-req">*</span></label>
+              <select class="ntf-input ntf-select" id="nf-bank">
+                <option value="">اختر البنك...</option>
+                <option>البنك العربي</option>
+                <option>بنك فلسطين</option>
+                <option>البنك الوطني</option>
+                <option>بنك القاهرة عمان</option>
+                <option>بنك الأردن</option>
+                <option>البنك الإسلامي العربي</option>
+                <option>بنك الاستثمار الفلسطيني</option>
+                <option>أخرى</option>
+              </select>
+            </div>
+            <div class="ntf-field">
+              <label class="ntf-label">المبلغ <span class="ntf-req">*</span></label>
+              <input class="ntf-input ntf-ltr" id="nf-amount" type="number" placeholder="0.00"/>
+            </div>
+            <div class="ntf-field ntf-field-sm">
+              <label class="ntf-label">العملة <span class="ntf-req">*</span></label>
+              <select class="ntf-input ntf-select" id="nf-currency">
+                <option value="USD">🇺🇸 USD</option>
+                <option value="ILS">🇵🇸 ILS</option>
+                <option value="JOD">🇯🇴 JOD</option>
+              </select>
+            </div>
+          </div>
+          <div class="ntf-row" style="margin-top:10px">
+            <div class="ntf-field">
+              <label class="ntf-label">التلر المُرسِل</label>
+              <select class="ntf-input ntf-select" id="nf-teller">
+                <option value="">اختر التلر...</option>
+              </select>
+            </div>
+            <div class="ntf-field ntf-field-sm">
+              <label class="ntf-label">الأولوية</label>
+              <select class="ntf-input ntf-select" id="nf-priority">
+                <option value="normal">⚪ عادي</option>
+                <option value="urgent">🔴 مستعجل</option>
+              </select>
+            </div>
+            <div class="ntf-field ntf-field-lg">
+              <label class="ntf-label">ملاحظات</label>
+              <input class="ntf-input" id="nf-notes" placeholder="أي ملاحظات إضافية على الحوالة..."/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="ntf-actions">
+          <button class="ntf-btn-clear" onclick="clearNewForm()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            مسح
+          </button>
+          <button class="ntf-btn-submit" onclick="submitNewTransfer()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            إرسال التحويل للبنك
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tab 3: Buy/Sell Bank -->
+    <div class="tab-pane" id="pane-3">
+      <div class="flex-between mb20">
+        <div class="card-title" style="margin-bottom:0;font-size:18px"><span class="cti">🔄</span> عمليات البيع والشراء عبر البنك</div>
+        <button class="btn btn-gold" onclick="openModal('buysell-modal')">+ عملية جديدة</button>
+      </div>
+      <!-- Buy/Sell Summary Cards -->
+      <div class="three-col mb20" id="bs-summary"></div>
+      <!-- Buy/Sell Table -->
+      <div class="card" style="--card-accent:#C39BD3" id="bs-table-wrap"></div>
+    </div>
+
+    <!-- Tab 4: Operations Log -->
+    <div class="tab-pane" id="pane-4">
+      <div class="flex-between mb20">
+        <div class="card-title" style="margin-bottom:0;font-size:18px"><span class="cti">📋</span> سجل جميع العمليات</div>
+        <div class="flex-gap">
+          <select class="field-input" style="width:150px;padding:6px 12px;font-size:12px" id="filter-type" onchange="renderOpsLog()">
+            <option value="all">جميع الأنواع</option>
+            <option value="transfer">تحويل بنكي</option>
+            <option value="buy">شراء عبر البنك</option>
+            <option value="sell">بيع عبر البنك</option>
+          </select>
+          <select class="field-input" style="width:130px;padding:6px 12px;font-size:12px" id="filter-status" onchange="renderOpsLog()">
+            <option value="all">جميع الحالات</option>
+            <option value="completed">مكتمل</option>
+            <option value="pending">بانتظار</option>
+            <option value="processing">قيد التنفيذ</option>
+          </select>
+          <select class="field-input" style="width:120px;padding:6px 12px;font-size:12px" id="filter-cur" onchange="renderOpsLog()">
+            <option value="all">جميع العملات</option>
+            <option value="USD">دولار</option>
+            <option value="ILS">شيكل</option>
+            <option value="JOD">دينار</option>
+          </select>
+        </div>
+      </div>
+      <div class="card" style="--card-accent:#5BC0DE" id="ops-log-wrap"></div>
+    </div>
+
+    <!-- Tab 5: إشعارات البوابة الخارجية -->
+    <div class="tab-pane" id="pane-5">
+      <div class="iq-page-hdr">
+        <div>
+          <div class="iq-page-title">📬 إشعارات البوابة الخارجية</div>
+          <div class="iq-page-sub">إيصالات موجَّهة إليك من الإدارة لتنفيذ تحويل بنكي</div>
+        </div>
+        <button class="iq-refresh-btn" onclick="loadMyPortalReceipts()" title="تحديث">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          تحديث
+        </button>
+      </div>
+
+      <!-- filter bar -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8696a0;cursor:pointer;">
+          <input type="checkbox" id="portal-show-done" onchange="loadMyPortalReceipts()" style="cursor:pointer;">
+          عرض المنجزة أيضاً
+        </label>
+        <span id="portal-notif-count" style="font-size:12px;color:#8696a0;margin-right:auto;">—</span>
+      </div>
+
+      <div id="portal-notif-list">
+        <div style="text-align:center;padding:60px 0;color:#8696a0;">اضغط تحديث لتحميل الإشعارات</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ Quick Transfer Modal ═══ -->
+<div class="modal-bg" id="quick-transfer-modal" onclick="closeModalOut(event,'quick-transfer-modal')">
+  <div class="modal">
+    <div class="modal-title">⚡ تحويل سريع</div>
+    <div class="modal-sub">لإرسال تحويل بنكي سريع بأقل بيانات</div>
+    <div class="form-group">
+      <div class="form-row">
+        <div><label class="field-label">المستفيد *</label><input class="field-input" id="qf-recv" placeholder="اسم المستفيد"/></div>
+        <div><label class="field-label">رقم الحساب *</label><input class="field-input" id="qf-acc" placeholder="IBAN" style="direction:ltr;text-align:left"/></div>
+      </div>
+      <div class="form-row-3">
+        <div><label class="field-label">البنك</label>
+          <select class="field-input" id="qf-bank">
+            <option>البنك العربي</option><option>بنك فلسطين</option><option>البنك الوطني</option><option>بنك القاهرة عمان</option>
+          </select>
+        </div>
+        <div><label class="field-label">المبلغ</label><input class="field-input" id="qf-amt" type="number" placeholder="0" style="direction:ltr;text-align:left"/></div>
+        <div><label class="field-label">العملة</label>
+          <select class="field-input" id="qf-cur"><option value="USD">🇺🇸 دولار</option><option value="ILS">🇵🇸 شيكل</option><option value="JOD">🇯🇴 دينار</option></select>
+        </div>
+      </div>
+      <div class="form-btn-row">
+        <button class="btn btn-gold" onclick="doQuickTransfer()">⚡ إرسال</button>
+        <button class="btn btn-gray" onclick="closeModal('quick-transfer-modal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Buy/Sell Modal ═══ -->
+<div class="modal-bg" id="buysell-modal" onclick="closeModalOut(event,'buysell-modal')">
+  <div class="modal">
+    <div class="modal-title">🔄 عملية بيع / شراء عبر البنك</div>
+    <div class="modal-sub">تسجيل عملية بيع أو شراء عملات عبر الحساب البنكي</div>
+    <div class="form-group">
+      <div class="form-row">
+        <div><label class="field-label">نوع العملية *</label>
+          <select class="field-input" id="bs-type"><option value="buy">🟢 شراء (إيداع في البنك)</option><option value="sell">🔴 بيع (سحب من البنك)</option></select>
+        </div>
+        <div><label class="field-label">العملة *</label>
+          <select class="field-input" id="bs-cur"><option value="USD">🇺🇸 دولار</option><option value="ILS">🇵🇸 شيكل</option><option value="JOD">🇯🇴 دينار</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div><label class="field-label">المبلغ *</label><input class="field-input" id="bs-amt" type="number" placeholder="0" style="direction:ltr;text-align:left"/></div>
+        <div><label class="field-label">سعر الصرف (اختياري)</label><input class="field-input" id="bs-rate" type="number" step="0.001" placeholder="سعر الصرف" style="direction:ltr;text-align:left"/></div>
+      </div>
+      <div class="form-row">
+        <div><label class="field-label">اسم الطرف الآخر</label><input class="field-input" id="bs-party" placeholder="اسم الجهة / الشخص"/></div>
+        <div><label class="field-label">رقم المرجع البنكي</label><input class="field-input" id="bs-ref" placeholder="Ref#" style="direction:ltr;text-align:left"/></div>
+      </div>
+      <div><label class="field-label">ملاحظات</label><textarea class="field-input" id="bs-notes" placeholder="ملاحظات إضافية..."></textarea></div>
+      <div class="form-btn-row">
+        <button class="btn btn-gold" onclick="submitBuySell()">تسجيل العملية</button>
+        <button class="btn btn-gray" onclick="closeModal('buysell-modal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Process Transfer Modal ═══ -->
+<div class="modal-bg" id="process-modal" onclick="closeModalOut(event,'process-modal')">
+  <div class="modal" id="process-modal-content"></div>
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script src="{% static 'js/accounts.js' %}"></script>
+<script src="{% static 'js/calculator.js' %}"></script>
+
+<!-- ══════════ نافذة رفع التقارير ══════════ -->
+<div id="acntReportOverlay" onclick="if(event.target===this)acntCloseReportModal()" style="display:none;position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#0f1623,#111a2a);border:1px solid rgba(212,175,55,0.22);border-radius:22px;padding:30px 28px;width:500px;max-width:94vw;box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(212,175,55,0.07);direction:rtl;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(212,175,55,0.12);border:1.5px solid rgba(212,175,55,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 22px rgba(212,175,55,0.12);">📤</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;letter-spacing:-0.2px;">رفع تقرير للإدارة</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:3px;font-weight:600;">يصل مباشرةً إلى لوحة الإدارة العامة</div>
+        </div>
+      </div>
+      <button onclick="acntCloseReportModal()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:10px;color:#8696a0;cursor:pointer;font-size:16px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.12)';this.style.color='#f87171'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#8696a0'">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">عنوان التقرير <span style="color:#f87171;">*</span></label>
+        <input id="acntRptTitle" type="text" placeholder="مثال: تقرير تحويلات اليوم، كشف الأرصدة البنكية..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.16);border-radius:12px;padding:11px 14px;color:rgba(255,255,255,0.85);font-size:13px;font-weight:700;font-family:inherit;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(212,175,55,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">
+      </div>
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">الملف المرفق <span style="color:#f87171;">*</span></label>
+        <input type="file" id="acntRptFileInput" accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="acntRptFileChosen(this)">
+        <div id="acntRptDropZone" onclick="document.getElementById('acntRptFileInput').click()" ondragover="event.preventDefault();this.style.borderColor='rgba(212,175,55,0.6)';this.style.background='rgba(212,175,55,0.06)'" ondragleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)'" ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)';acntRptFileDrop(event)" style="border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.22s;background:rgba(255,255,255,0.02);">
+          <div style="font-size:30px;margin-bottom:8px;opacity:0.4;">📂</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.38);">انقر لاختيار ملف أو اسحبه هنا</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.18);margin-top:5px;font-weight:600;">PDF · Excel · Word · صورة — حتى 10 MB</div>
+        </div>
+        <div id="acntRptFilePreview" style="display:none;margin-top:10px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:11px 14px;align-items:center;gap:12px;">
+          <div id="acntRptFileIcon" style="font-size:24px;flex-shrink:0;">📄</div>
+          <div style="flex:1;min-width:0;">
+            <div id="acntRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="acntRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
+          </div>
+          <button onclick="acntRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✕ إزالة</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">القسم</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);">التحويل البنكي</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">المرسل</div>
+          <div style="font-size:13px;font-weight:800;color:#D4AF37;" id="acntRptSenderDisplay">موظف البنك</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button onclick="acntSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(212,175,55,0.92),rgba(251,191,36,0.82));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(212,175,55,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="acntCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function toggleUserDropdown(e){e.stopPropagation();document.getElementById("userDropdown").classList.toggle("open");}
+document.addEventListener("click",function(){var d=document.getElementById("userDropdown");if(d)d.classList.remove("open");});
+document.addEventListener("DOMContentLoaded",function(){var obs=new MutationObserver(function(){var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");var mn=document.getElementById("ud-menu-name"),mr=document.getElementById("ud-menu-role");if(n&&mn)mn.textContent=n.textContent;if(r&&mr)mr.textContent=r.textContent;});var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");if(n)obs.observe(n,{childList:true,characterData:true,subtree:true});if(r)obs.observe(r,{childList:true,characterData:true,subtree:true});});
+function acntOpenReportModal(){var o=document.getElementById('acntReportOverlay');if(!o)return;try{var t=document.getElementById('acntRptTitle');if(t)t.value='';var p=document.getElementById('acntRptFilePreview');var dz=document.getElementById('acntRptDropZone');if(p)p.style.display='none';if(dz)dz.style.display='';}catch(e){}o.style.setProperty('display','flex','important');}
+function acntCloseReportModal(){var o=document.getElementById('acntReportOverlay');if(o)o.style.setProperty('display','none','important');}
+</script>
+
+<!-- ══ نافذة طلب التعديل البرمجي ══ -->
+<style>
+.dr-modal-box{background:var(--card-bg,#1e2b33);border-radius:18px;padding:28px 28px 22px;max-width:500px;width:95%;text-align:right;border:1px solid rgba(50,184,198,0.15);box-shadow:0 24px 64px rgba(0,0,0,0.6);}
+.dr-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.dr-hdr-icon{width:46px;height:46px;background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.dr-hdr-title{font-size:17px;font-weight:900;color:var(--text-main,#e9edef);}
+.dr-hdr-sub{font-size:11px;color:var(--text-sub,#8696a0);margin-top:2px;}
+.dr-field{margin-bottom:14px;}
+.dr-label{font-size:11px;font-weight:700;color:var(--text-sub,#8696a0);margin-bottom:6px;display:block;letter-spacing:.3px;}
+.dr-input,.dr-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;color:var(--text-main,#e9edef);outline:none;transition:border .2s;direction:rtl;}
+.dr-input:focus,.dr-textarea:focus{border-color:rgba(50,184,198,0.5);}
+.dr-textarea{resize:vertical;min-height:90px;}
+.dr-type-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dr-type-btn{flex:1;min-width:120px;padding:9px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-sub,#8696a0);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.dr-type-btn.active-improve{border-color:rgba(34,197,94,0.5);background:rgba(34,197,94,0.1);color:#22c55e;}
+.dr-type-btn.active-feature{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.1);color:#818cf8;}
+.dr-type-btn.active-bug{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.1);color:#f87171;}
+.dr-attach-lbl{display:flex;align-items:center;gap:8px;padding:10px 13px;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text-sub,#8696a0);transition:border .2s;}
+.dr-attach-lbl:hover{border-color:rgba(50,184,198,0.4);}
+.dr-attach-files{font-size:11px;color:#32b8c6;margin-top:5px;min-height:14px;}
+.dr-footer{display:flex;gap:10px;margin-top:6px;}
+.dr-btn-send{flex:1;padding:11px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;transition:opacity .2s;}
+.dr-btn-send:hover{opacity:.85;}
+.dr-btn-cancel{padding:11px 18px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:var(--text-sub,#8696a0);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.dr-btn-cancel:hover{background:rgba(255,255,255,0.1);}
+html:not([data-theme="dark"]) body .dr-modal-box{background:#ffffff;border-color:rgba(50,184,198,0.2);box-shadow:0 24px 64px rgba(0,0,0,0.12);}
+html:not([data-theme="dark"]) body .dr-input,html:not([data-theme="dark"]) body .dr-textarea{background:#f8fbfd;border-color:rgba(0,0,0,0.12);color:#0f172a;}
+html:not([data-theme="dark"]) body .dr-type-btn{background:#f1f5f9;border-color:#e2e8f0;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-attach-lbl{background:#f8fbfd;border-color:#cbd5e1;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-color:#e2e8f0;color:#475569;}
+</style>
+<div class="modal-overlay" id="devRequestModal" style="display:none;z-index:9500" onclick="if(event.target===this)closeDevRequestModal()">
+  <div class="dr-modal-box">
+    <div class="dr-hdr">
+      <div class="dr-hdr-icon">🛠️</div>
+      <div>
+        <div class="dr-hdr-title">طلب تعديل برمجي</div>
+        <div class="dr-hdr-sub">سيتم إرسال الطلب مباشرة إلى الإدارة</div>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">عنوان الطلب</label>
+      <input class="dr-input" id="drTitle" type="text" placeholder="اكتب عنواناً موجزاً للطلب...">
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">نوع الطلب</label>
+      <div class="dr-type-btns">
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">وصف الطلب بالتفصيل</label>
+      <textarea class="dr-textarea" id="drDesc" rows="4" placeholder="اشرح المشكلة أو التحسين المطلوب بوضوح..."></textarea>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">مرفقات (اختياري)</label>
+      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
+      <div class="dr-attach-files" id="drAttachFiles"></div>
+    </div>
+    <div class="dr-footer">
+      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _drType=null;
+function openDevRequestModal(){
+  _drType=null;
+  document.getElementById('drTitle').value='';
+  document.getElementById('drDesc').value='';
+  document.getElementById('drAttach').value='';
+  document.getElementById('drAttachFiles').textContent='';
+  ['improve','feature','bug'].forEach(function(t){document.getElementById('drType-'+t).className='dr-type-btn';});
+  document.getElementById('devRequestModal').style.display='flex';
+}
+function closeDevRequestModal(){document.getElementById('devRequestModal').style.display='none';}
+function selectDrType(t){
+  _drType=t;
+  ['improve','feature','bug'].forEach(function(x){document.getElementById('drType-'+x).className='dr-type-btn';});
+  document.getElementById('drType-'+t).className='dr-type-btn active-'+t;
+}
+function updateDrAttachLabel(){
+  var files=document.getElementById('drAttach').files;
+  var names=[];for(var i=0;i<files.length;i++)names.push(files[i].name);
+  document.getElementById('drAttachFiles').textContent=names.length?names.join(' • '):'';
+}
+async function submitDevRequest(){
+  var title=document.getElementById('drTitle').value.trim();
+  var desc=document.getElementById('drDesc').value.trim();
+  if(!title){alert('يرجى كتابة عنوان الطلب');return;}
+  if(!_drType){alert('يرجى اختيار نوع الطلب');return;}
+  if(!desc){alert('يرجى كتابة وصف الطلب');return;}
+  var csrf=(document.cookie.split(';').find(function(c){return c.trim().startsWith('csrftoken=');})||'').split('=')[1]||'';
+  try{
+    var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'accounts'})});
+    var data=await res.json();
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    else{alert(data.error||'حدث خطأ أثناء الإرسال');}
+  }catch(e){alert('تعذّر الاتصال بالخادم');}
+}
+</script>
+
+<!-- ═══ Portal Notifications (إشعارات البوابة) ═══ -->
+<script>
+(function(){
+  var PR_STATUS_LABEL = { new:'🔵 جديد', reviewing:'⚡ قيد المراجعة', done:'✅ منفّذ', rejected:'🚫 مرفوض' };
+
+  window.loadMyPortalReceipts = function() {
+    var listEl  = document.getElementById('portal-notif-list');
+    var countEl = document.getElementById('portal-notif-count');
+    var showDone = document.getElementById('portal-show-done');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:#8696a0;">جاري التحميل...</div>';
+
+    var url = '/api/my-portal-receipts/' + (showDone && showDone.checked ? '?done=1' : '');
+    fetch(url, { credentials: 'include' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var receipts = data.receipts || [];
+
+        // update sidebar badge
+        var badge = document.getElementById('sb-portal-notif');
+        var unread = receipts.filter(function(r) { return r.status !== 'done' && r.status !== 'rejected'; }).length;
+        if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none'; }
+        if (countEl) countEl.textContent = receipts.length + ' إشعار';
+
+        if (!receipts.length) {
+          listEl.innerHTML = '<div style="text-align:center;padding:60px;color:#8696a0;font-size:14px;">لا توجد إشعارات واردة</div>';
+          return;
+        }
+
+        listEl.innerHTML = receipts.map(function(r) {
+          var imgHtml = r.receipt
+            ? '<a href="' + r.receipt + '" target="_blank" rel="noopener" style="display:block;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid #2a3942;flex-shrink:0">'
+              + '<img src="' + r.receipt + '" style="width:100%;height:100%;object-fit:cover;" alt="إيصال"></a>'
+            : '<div style="width:80px;height:80px;border-radius:10px;background:#0d1825;border:1px solid #2a3942;display:flex;align-items:center;justify-content:center;color:#8696a0;font-size:24px;flex-shrink:0">🖼️</div>';
+
+          var statusTag = '<span style="font-size:11px;padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);color:#8696a0;border:1px solid #2a3942;">' + (PR_STATUS_LABEL[r.status] || r.status) + '</span>';
+
+          var noteRow = r.forwardedNote ? '<div style="font-size:12px;color:#8696a0;margin-top:4px;">📝 ' + r.forwardedNote + '</div>' : '';
+
+          // Pre-fill button: opens new transfer form with client name pre-filled
+          var safeName    = (r.clientName  || '').replace(/"/g,'&quot;');
+          var safeCountry = (r.countryName || '').replace(/"/g,'&quot;');
+          var preFillBtn = '<button onclick="preFillFromPortal(\'' + r.id + '\',\'' + safeName + '\',\'' + (r.currency||'USD') + '\',\'' + safeCountry + '\')" '
+            + 'style="background:linear-gradient(135deg,#48c78e,#3aad76);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">'
+            + '📋 إنشاء حوالة من هذا الإشعار</button>';
+
+          return '<div style="display:flex;gap:14px;align-items:flex-start;background:#0d1825;border:1px solid #1e2d3d;border-radius:12px;padding:16px;margin-bottom:12px;">'
+            + imgHtml
+            + '<div style="flex:1;min-width:0;">'
+            +   '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">'
+            +     '<span style="font-weight:800;color:#e9edef;font-size:15px;">' + (r.clientName || '—') + '</span>'
+            +     statusTag
+            +   '</div>'
+            +   '<div style="font-size:12px;color:#8696a0;margin-bottom:4px;">'
+            +     '🌍 ' + (r.countryName || '—') + ' &nbsp;|&nbsp; 💰 ' + (r.currency || '—') + ' &nbsp;|&nbsp; 🔑 ' + (r.trackingCode || '—')
+            +   '</div>'
+            +   noteRow
+            +   '<div style="margin-top:10px">' + preFillBtn + '</div>'
+            + '</div>'
+            + '<div style="font-size:10px;color:#8696a0;flex-shrink:0">'
+            +   (r.forwardedAt ? new Date(r.forwardedAt).toLocaleDateString('ar-SA') : '')
+            + '</div>'
+            + '</div>';
+        }).join('');
+      })
+      .catch(function() {
+        if (listEl) listEl.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">فشل في تحميل الإشعارات</div>';
+      });
+  };
+
+  // Pre-fill the new-transfer form (pane-2) from a portal receipt
+  window.preFillFromPortal = function(receiptId, clientName, currency, country) {
+    // Switch to "تنفيذ تحويل جديد" tab
+    if (typeof switchTab === 'function') switchTab(2);
+    // Pre-fill beneficiary name
+    var nfReceiver = document.getElementById('nf-receiver');
+    if (nfReceiver) nfReceiver.value = clientName;
+    // Pre-fill notes
+    var nfNotes = document.getElementById('nf-notes');
+    if (nfNotes) nfNotes.value = 'من إشعار بوابة رقم #' + receiptId + ' — ' + country;
+    // Try to select currency
+    var nfCur = document.getElementById('nf-currency');
+    if (nfCur) {
+      for (var i = 0; i < nfCur.options.length; i++) {
+        if (nfCur.options[i].value === currency) { nfCur.selectedIndex = i; break; }
+      }
+    }
+  };
+
+  // Background badge refresh on page load
+  fetch('/api/my-portal-receipts/', { credentials: 'include' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var receipts = data.receipts || [];
+      var unread = receipts.filter(function(r) { return r.status !== 'done' && r.status !== 'rejected'; }).length;
+      var badge = document.getElementById('sb-portal-notif');
+      if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none'; }
+    })
+    .catch(function() {});
+
+})();
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+<script src="{% static 'js/accounts_panel.js' %}?v=7"></script>
+
+{% include 'layout/accounts_panel.html' %}
+{% endblock content %}

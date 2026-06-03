@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الوكيل — انترناشونال للصرافة</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;background:#0a1520;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Tahoma,sans-serif;padding:20px}
+  .card{background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.2);border-radius:20px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .logo{text-align:center;margin-bottom:28px}
+  .logo img{width:72px;height:72px;object-fit:contain;border-radius:12px;box-shadow:0 4px 20px rgba(50,184,198,.3)}
+  .logo h1{color:#e2e8f0;font-size:1.3rem;margin-top:12px;font-weight:700}
+  .logo p{color:#64748b;font-size:.85rem;margin-top:4px}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(50,184,198,.1);border:1px solid rgba(50,184,198,.25);color:#32b8c6;font-size:.78rem;padding:4px 12px;border-radius:20px;margin-bottom:28px}
+  .field-lbl{display:block;color:#94a3b8;font-size:.82rem;margin-bottom:6px;margin-top:18px}
+  .inp-wrap{position:relative}
+  .inp-wrap i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#475569;font-size:.9rem}
+  .txt-input{
+    width:100%;background:#0a1520;border:1px solid rgba(50,184,198,.2);
+    border-radius:10px;padding:12px 40px 12px 14px;
+    color:#e2e8f0;font-size:.95rem;transition:border .2s;outline:none;
+    font-family:inherit;direction:rtl;
+  }
+  .txt-input:focus{border-color:rgba(50,184,198,.6);box-shadow:0 0 0 3px rgba(50,184,198,.08)}
+  .txt-input::placeholder{color:#334155}
+
+  /* ── PIN boxes ── */
+  .pin-row{display:flex;gap:10px;justify-content:center;margin-top:6px;direction:ltr}
+  .pin-cell{
+    width:52px;height:56px;
+    background:#0a1520;
+    border:1.5px solid rgba(50,184,198,.25);
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.6rem;font-weight:900;
+    color:#e2e8f0;
+    font-family:monospace;
+    cursor:text;
+    position:relative;
+    transition:border .15s,box-shadow .15s;
+    user-select:none;
+  }
+  .pin-cell.active{border-color:#32b8c6;box-shadow:0 0 0 3px rgba(50,184,198,.15)}
+  .pin-cell .cursor{
+    display:inline-block;width:2px;height:1.4rem;
+    background:#32b8c6;animation:blink .9s step-end infinite;
+    vertical-align:middle;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  /* hidden real input that captures typing */
+  #pin-capture{
+    position:fixed;left:-9999px;top:-9999px;
+    opacity:0;width:1px;height:1px;
+    font-size:16px; /* prevent iOS zoom */
+  }
+
+  .btn{width:100%;margin-top:28px;padding:14px;background:linear-gradient(135deg,#32b8c6,#1a9db0);border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity .2s;font-family:inherit}
+  .btn:hover{opacity:.88}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;border-radius:8px;padding:10px 14px;font-size:.85rem;margin-top:16px;display:none}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-left:8px;vertical-align:middle}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .footer{text-align:center;margin-top:24px;color:#334155;font-size:.78rem}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <img src="{% static 'images/الشعار-01.png' %}" alt="logo" onerror="this.style.display='none'">
+    <h1>انترناشونال للصرافة</h1>
+    <p>بوابة وكلاء التنفيذ</p>
+  </div>
+
+  <div style="text-align:center">
+    <span class="badge"><i class="fa-solid fa-handshake"></i> دخول الوكيل الخارجي</span>
+  </div>
+
+  <label class="field-lbl">المعرّف (الاسم أو الإيميل أو الهاتف)</label>
+  <div class="inp-wrap">
+    <i class="fa-solid fa-user"></i>
+    <input type="text" class="txt-input" id="identifier" placeholder="أدخل اسمك أو بريدك أو هاتفك" autocomplete="off">
+  </div>
+
+  <label class="field-lbl">رمز PIN</label>
+  <div class="pin-row" id="pin-row" onclick="activatePin()">
+    <div class="pin-cell" id="pc0"></div>
+    <div class="pin-cell" id="pc1"></div>
+    <div class="pin-cell" id="pc2"></div>
+    <div class="pin-cell" id="pc3"></div>
+    <div class="pin-cell" id="pc4"></div>
+    <div class="pin-cell" id="pc5"></div>
+  </div>
+
+  <!-- hidden input that actually captures keystrokes -->
+  <input id="pin-capture" type="tel" inputmode="numeric" autocomplete="off" maxlength="6">
+
+  <div class="err" id="err-msg"></div>
+
+  <button class="btn" id="login-btn" onclick="doLogin()">
+    <i class="fa-solid fa-right-to-bracket"></i> دخول
+  </button>
+
+  <div class="footer">انترناشونال للصرافة &copy; 2025</div>
+</div>
+
+<script>
+const digits   = ['','','','','',''];
+let   focusIdx = 0;
+let   pinActive = false;
+
+const capture = document.getElementById('pin-capture');
+
+function renderPin() {
+  for (let i = 0; i < 6; i++) {
+    const cell = document.getElementById('pc' + i);
+    cell.classList.toggle('active', pinActive && i === focusIdx);
+    if (digits[i]) {
+      cell.textContent = digits[i];
+    } else if (pinActive && i === focusIdx) {
+      cell.innerHTML = '<span class="cursor"></span>';
+    } else {
+      cell.textContent = '';
+    }
+  }
+}
+
+function activatePin() {
+  pinActive = true;
+  capture.focus();
+  renderPin();
+}
+
+function getPin() {
+  return digits.join('');
+}
+
+function clearPin() {
+  for (let i = 0; i < 6; i++) digits[i] = '';
+  focusIdx = 0;
+  renderPin();
+}
+
+capture.addEventListener('focus', () => { pinActive = true; renderPin(); });
+capture.addEventListener('blur',  () => { pinActive = false; renderPin(); });
+
+capture.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { doLogin(); e.preventDefault(); return; }
+
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (digits[focusIdx]) {
+      digits[focusIdx] = '';
+    } else if (focusIdx > 0) {
+      focusIdx--;
+      digits[focusIdx] = '';
+    }
+    renderPin();
+    return;
+  }
+
+  if (/^[0-9]$/.test(e.key)) {
+    e.preventDefault();
+    digits[focusIdx] = e.key;
+    if (focusIdx < 5) focusIdx++;
+    renderPin();
+    // auto-submit when all 6 filled
+    if (digits.every(d => d !== '')) {
+      const id = document.getElementById('identifier').value.trim();
+      if (id) setTimeout(doLogin, 120);
+    }
+    return;
+  }
+});
+
+// also handle mobile soft-keyboard via input event
+capture.addEventListener('input', () => {
+  const val = capture.value.replace(/[^0-9]/g, '');
+  capture.value = '';
+  for (const ch of val) {
+    if (focusIdx > 5) break;
+    digits[focusIdx] = ch;
+    focusIdx++;
+  }
+  if (focusIdx > 5) focusIdx = 5;
+  renderPin();
+});
+
+document.getElementById('identifier').addEventListener('keydown', e => {
+  if (e.key === 'Enter') activatePin();
+});
+
+// click on individual cell sets cursor position
+for (let i = 0; i < 6; i++) {
+  document.getElementById('pc' + i).addEventListener('click', e => {
+    e.stopPropagation();
+    focusIdx = digits[i] ? i : Math.min(i, digits.filter(Boolean).length);
+    activatePin();
+  });
+}
+
+function showErr(msg) {
+  const el = document.getElementById('err-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function hideErr() {
+  document.getElementById('err-msg').style.display = 'none';
+}
+function getCsrf() {
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : '';
+}
+
+async function doLogin() {
+  hideErr();
+  const identifier = document.getElementById('identifier').value.trim();
+  const pin        = getPin();
+
+  if (!identifier) { showErr('يرجى إدخال المعرّف'); return; }
+  if (pin.length < 6) { showErr('يرجى إدخال رمز PIN كاملاً (6 أرقام)'); return; }
+
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> جارٍ التحقق...';
+
+  try {
+    const r = await fetch('/api/agent/login/', {
+      method:  'POST',
+      headers: {'Content-Type':'application/json','X-CSRFToken': getCsrf()},
+      body:    JSON.stringify({ identifier, pin }),
+    });
+    const data = await r.json();
+    if (data.success) {
+      window.location.href = '/agent/portal/';
+    } else {
+      showErr(data.error || 'بيانات غير صحيحة');
+      clearPin();
+      activatePin();
+    }
+  } catch(e) {
+    showErr('حدث خطأ في الاتصال، حاول مجدداً');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> دخول';
+  }
+}
+</script>
+</body>
+</html>

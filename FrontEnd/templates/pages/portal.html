@@ -1,0 +1,1477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الحوالات — انترناشونال للصرافة</title>
+    <style>
+        :root {
+            --bg-1: #070e1c;
+            --card: rgba(8, 17, 38, 0.92);
+            --card-border: rgba(30, 144, 255, 0.14);
+            --primary: #1e8fff;
+            --cyan: #00c6ff;
+            --green: #00c970;
+            --red: #ff4757;
+            --text: #e4eeff;
+            --text-2: #7da8c8;
+            --text-3: #3d607e;
+            --border: rgba(30, 144, 255, 0.11);
+            --input-bg: rgba(4, 12, 30, 0.85);
+            --radius: 18px;
+            --radius-sm: 11px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+            background: var(--bg-1);
+            color: var(--text);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* ── Background ─────────────────────────────────────────────────── */
+        .bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+        .bg::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 90% 55% at 15% -5%,  rgba(30,144,255,.13) 0%, transparent 55%),
+                radial-gradient(ellipse 65% 45% at 85% 105%, rgba(0,198,255,.09)  0%, transparent 50%),
+                linear-gradient(165deg, #070e1c 0%, #0b1730 50%, #080f20 100%);
+        }
+        .bg::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(30,144,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30,144,255,.025) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+
+        /* ── Header ─────────────────────────────────────────────────────── */
+        .header {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(6,12,28,.88);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+            display: flex; align-items: center;
+            padding: 0 20px;
+        }
+        .header-inner {
+            max-width: 680px; margin: 0 auto; width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { display: flex; align-items: center; gap: 11px; }
+        .logo-box {
+            width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: transparent;
+        }
+        .logo-box img {
+            width: 40px; height: 40px; object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(30,144,255,.4));
+        }
+        .logo h1 { font-size: 14.5px; font-weight: 800; color: #fff; line-height: 1.15; }
+        .logo p  { font-size: 10.5px; color: var(--text-2); }
+        .badge {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(0,201,112,.1); border: 1px solid rgba(0,201,112,.22);
+            border-radius: 20px; padding: 5px 12px;
+            font-size: 11.5px; font-weight: 600; color: var(--green);
+        }
+        .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--green); box-shadow: 0 0 7px var(--green);
+            animation: blink 2.2s ease-in-out infinite; flex-shrink: 0;
+        }
+        @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.65;transform:scale(.8)} }
+
+        /* ── Main ───────────────────────────────────────────────────────── */
+        .main { position: relative; z-index: 1; padding: 28px 16px 56px; }
+
+        /* ── Card ───────────────────────────────────────────────────────── */
+        .card {
+            max-width: 520px; margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(28px);
+            box-shadow:
+                0 24px 70px rgba(0,0,0,.55),
+                0 0 0 1px rgba(30,144,255,.04),
+                inset 0 1px 0 rgba(255,255,255,.035);
+            overflow: hidden;
+        }
+        .card-head {
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 13px;
+        }
+        .head-icon {
+            width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 21px;
+        }
+        .hi-blue  { background: rgba(30,144,255,.14); }
+        .hi-green { background: rgba(0,201,112,.12);  }
+        .hi-gold  { background: rgba(245,197,24,.12); }
+        .hi-cyan  { background: rgba(0,198,255,.12);  }
+        .card-head h2 { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 3px; }
+        .card-head p  { font-size: 12px; color: var(--text-2); }
+        .card-body { padding: 24px; }
+
+        /* ── Screens ────────────────────────────────────────────────────── */
+        .scr { display: none; }
+        .scr.on { display: block; animation: fadeUp .38s cubic-bezier(.4,0,.2,1); }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── Gate: Google sign-in ───────────────────────────────────────── */
+        @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+        /* Company branding */
+        .intl-logo-wrap {
+            display: flex; align-items: center; gap: 11px;
+            background: rgba(30,144,255,.07);
+            border: 1px solid rgba(30,144,255,.16);
+            border-radius: 50px;
+            padding: 7px 18px 7px 7px;
+            margin-bottom: 26px;
+        }
+        .intl-logo-img {
+            width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+            object-fit: contain;
+            background: rgba(255,255,255,.06);
+            padding: 2px;
+        }
+        .gate-logo-big {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .gate-logo-img {
+            width: 68px; height: 68px; object-fit: contain;
+            filter: drop-shadow(0 6px 22px rgba(30,144,255,.45));
+        }
+        .intl-logo-text { display: flex; flex-direction: column; text-align: right; }
+        .intl-name { font-size: 14px; font-weight: 900; color: #fff; letter-spacing: .3px; }
+        .intl-sub  { font-size: 10.5px; color: var(--text-2); }
+
+        .gate-wrap {
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            padding: 8px 0 4px;
+        }
+
+        .gate-logo-big {
+            width: 72px; height: 72px; border-radius: 20px; margin-bottom: 22px;
+            background: linear-gradient(135deg, #1350d8, #00c6ff);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 34px;
+            box-shadow: 0 8px 30px rgba(30,144,255,.4), 0 0 60px rgba(30,144,255,.12);
+            animation: popIn .6s cubic-bezier(.34,1.56,.64,1);
+        }
+
+        .gate-title {
+            font-size: 22px; font-weight: 900; color: #fff;
+            margin-bottom: 8px; line-height: 1.3;
+        }
+
+        .gate-sub {
+            font-size: 13px; color: var(--text-2); line-height: 1.7;
+            max-width: 320px; margin: 0 auto 30px;
+        }
+
+        /* Google button */
+        .g-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; width: 100%;
+            background: #fff; color: #3c4043;
+            border: none; border-radius: 12px;
+            padding: 13px 20px; font-size: 15px; font-weight: 600;
+            font-family: inherit; cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0,0,0,.2), 0 0 0 1px rgba(255,255,255,.08);
+            transition: all .22s ease;
+            position: relative; overflow: hidden;
+        }
+        .g-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 20px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.1);
+            transform: translateY(-1px);
+        }
+        .g-btn:active { transform: translateY(0); }
+        .g-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+        .g-btn .g-logo {
+            width: 22px; height: 22px; flex-shrink: 0;
+        }
+
+        .g-btn .g-spinner {
+            display: none; width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid rgba(0,0,0,.15); border-top-color: #4285f4;
+            animation: spin .7s linear infinite; flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .g-btn.loading .g-logo    { display: none; }
+        .g-btn.loading .g-spinner { display: block; }
+
+        .gate-privacy {
+            font-size: 11px; color: var(--text-3);
+            margin-top: 20px; line-height: 1.6;
+        }
+
+        /* ── Company banner (wizard) ────────────────────────────────────── */
+        .intl-banner {
+            max-width: 560px; margin: 0 auto 22px;
+            display: flex; align-items: center; gap: 13px;
+            background: rgba(30,144,255,.06);
+            border: 1px solid rgba(30,144,255,.14);
+            border-radius: 14px; padding: 13px 18px;
+        }
+        .intl-banner-img {
+            width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+            object-fit: contain;
+            background: rgba(255,255,255,.06);
+            padding: 3px;
+            filter: drop-shadow(0 3px 10px rgba(30,144,255,.3));
+        }
+        .intl-banner-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 3px; }
+        .intl-banner-tag  { font-size: 11px; color: var(--text-2); }
+
+        /* ── Wizard wrapper ─────────────────────────────────────────────── */
+        #wizard { display: none; }
+        #wizard.on { display: block; animation: fadeUp .4s ease; }
+
+        /* ── Progress bar ───────────────────────────────────────────────── */
+        .prog-wrap { max-width: 560px; margin: 0 auto 24px; }
+        .steps { display: flex; align-items: flex-start; }
+        .s-item {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 8px; flex: 1; z-index: 1;
+        }
+        .s-circle {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800;
+            border: 2px solid var(--text-3);
+            background: rgba(10,18,40,.9); color: var(--text-3);
+            transition: all .45s cubic-bezier(.4,0,.2,1);
+        }
+        .s-circle.active {
+            background: linear-gradient(135deg,#1555e8,#00c6ff);
+            border-color: transparent; color: #fff;
+            box-shadow: 0 0 0 4px rgba(30,144,255,.18), 0 0 22px rgba(30,144,255,.45);
+        }
+        .s-circle.done {
+            background: linear-gradient(135deg,#00995a,#00c970);
+            border-color: transparent; color: #fff;
+            box-shadow: 0 0 0 4px rgba(0,201,112,.15), 0 0 16px rgba(0,201,112,.35);
+        }
+        .s-label {
+            font-size: 10px; color: var(--text-3); text-align: center;
+            transition: color .3s; white-space: nowrap; font-weight: 500;
+        }
+        .s-item.active .s-label, .s-item.done .s-label { color: var(--text-2); }
+        .s-line {
+            flex: 1; height: 2px;
+            background: rgba(61,96,126,.4);
+            margin-top: 19px; border-radius: 2px; overflow: hidden; position: relative;
+        }
+        .s-line::after {
+            content: ''; position: absolute; inset-block: 0; left: 0;
+            width: 0; background: linear-gradient(90deg,#1e8fff,#00c6ff);
+            border-radius: 2px; transition: width .7s cubic-bezier(.4,0,.2,1);
+        }
+        .s-line.filled::after { width: 100%; }
+
+        /* ── Wizard card (same styles as gate card) ─────────────────────── */
+        .w-card {
+            max-width: 560px; margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(28px);
+            box-shadow: 0 24px 70px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.035);
+            overflow: hidden;
+        }
+
+        /* ── Search ─────────────────────────────────────────────────────── */
+        .search-rel { position: relative; margin-bottom: 15px; }
+        .search-rel input {
+            width: 100%; background: var(--input-bg);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 11px 42px 11px 14px; color: var(--text);
+            font-size: 13.5px; font-family: inherit; outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .search-rel input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,144,255,.11); }
+        .search-rel input::placeholder { color: var(--text-3); }
+        .search-icon { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 14px; pointer-events: none; }
+
+        /* ── Country grid ───────────────────────────────────────────────── */
+        .c-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
+            max-height: 330px; overflow-y: auto; padding-left: 2px;
+        }
+        .c-grid::-webkit-scrollbar { width: 3px; }
+        .c-grid::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 4px; }
+        .c-tile {
+            background: rgba(12,22,50,.7); border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); padding: 13px 14px;
+            cursor: pointer; transition: all .22s; display: flex;
+            align-items: center; gap: 11px; position: relative; overflow: hidden; user-select: none;
+        }
+        .c-tile:hover { border-color: rgba(30,144,255,.38); transform: translateY(-1px); background: rgba(30,144,255,.06); }
+        .c-tile.sel { border-color: var(--primary); background: rgba(30,144,255,.1); box-shadow: 0 0 0 1px rgba(30,144,255,.2); }
+        .chk { display:none; position:absolute; top:7px; left:8px; width:18px; height:18px; border-radius:50%; background:var(--primary); color:#fff; font-size:9px; font-weight:900; align-items:center; justify-content:center; }
+        .c-tile.sel .chk { display: flex; }
+        .c-flag { font-size: 28px; line-height: 1; flex-shrink: 0; }
+        .c-name { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+        .c-meth { font-size: 10.5px; color: var(--text-2); }
+        .no-res { text-align:center; padding:28px; color:var(--text-3); font-size:13px; grid-column:1/-1; }
+
+        /* ── Country banner ─────────────────────────────────────────────── */
+        .c-banner {
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(30,144,255,.08); border: 1px solid rgba(30,144,255,.18);
+            border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 18px;
+        }
+        .b-flag { font-size: 38px; line-height: 1; }
+        .b-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+        .b-meth { font-size: 12px; color: var(--text-2); }
+
+        /* ── Detail block ───────────────────────────────────────────────── */
+        .d-block {
+            background: var(--input-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 13px 15px; margin-bottom: 10px;
+        }
+        .d-lbl { font-size: 10.5px; font-weight: 700; color: var(--text-3); letter-spacing:.6px; text-transform:uppercase; margin-bottom:8px; }
+        .d-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .d-val { font-size:14px; font-weight:600; color:var(--text); font-family:'Courier New',monospace; direction:ltr; letter-spacing:.4px; word-break:break-all; }
+        .d-val.plain { font-family:inherit; letter-spacing:0; }
+        .copy-btn {
+            background: rgba(30,144,255,.1); border: 1px solid rgba(30,144,255,.22);
+            border-radius: 7px; padding: 6px 11px; cursor: pointer;
+            color: var(--primary); font-size: 12px; font-weight: 600; font-family: inherit;
+            transition: all .2s; white-space: nowrap; flex-shrink: 0;
+        }
+        .copy-btn:hover { background: rgba(30,144,255,.2); transform: scale(1.04); }
+        .copy-btn.copied { background: rgba(0,201,112,.12); border-color: rgba(0,201,112,.25); color: var(--green); }
+
+        /* ── Info note ──────────────────────────────────────────────────── */
+        .note {
+            background: rgba(0,201,112,.06); border: 1px solid rgba(0,201,112,.18);
+            border-radius: var(--radius-sm); padding: 12px 14px;
+            display: flex; align-items: flex-start; gap: 10px; margin-top: 6px;
+        }
+        .note .ni { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .note p { font-size: 12.5px; color: #6dddb0; line-height: 1.65; }
+
+        /* ── Form ───────────────────────────────────────────────────────── */
+        .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        textarea.f-input { resize: vertical; min-height: 72px; direction: rtl; }
+        select.f-input {
+            cursor: pointer; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%237da8c8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: left 12px center; padding-left: 34px;
+        }
+        .amt-rel { position: relative; }
+        .cur-tag {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            background: rgba(30,144,255,.14); border: 1px solid rgba(30,144,255,.22);
+            border-radius: 6px; padding: 3px 8px; font-size: 10.5px; font-weight: 800;
+            color: var(--primary); pointer-events: none;
+        }
+        .amt-rel .f-input { padding-left: 68px; direction: ltr; text-align: right; }
+
+        /* ── Upload zone ────────────────────────────────────────────────── */
+        .upload-zone {
+            border: 2px dashed rgba(30,144,255,.22); border-radius: var(--radius-sm);
+            padding: 26px 20px; text-align: center; cursor: pointer;
+            transition: all .3s; background: rgba(30,144,255,.025); position: relative;
+        }
+        .upload-zone:hover, .upload-zone.drag { border-color: var(--primary); background: rgba(30,144,255,.07); }
+        .upload-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+        .uz-icon { font-size: 30px; display: block; margin-bottom: 9px; }
+        .uz-t { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .uz-s { font-size: 11px; color: var(--text-3); }
+        .f-card {
+            display:none; align-items:center; gap:12px;
+            background:rgba(0,201,112,.07); border:1px solid rgba(0,201,112,.18);
+            border-radius:9px; padding:11px 13px; margin-top:10px;
+        }
+        .f-card.on { display:flex; }
+        .fc-th {
+            width:44px;height:44px;border-radius:7px;border:1px solid rgba(0,201,112,.2);
+            background:rgba(0,201,112,.08);display:flex;align-items:center;justify-content:center;
+            font-size:20px;flex-shrink:0;overflow:hidden;
+        }
+        .fc-th img { width:100%;height:100%;object-fit:cover; }
+        .fc-name { font-size:12px;font-weight:700;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+        .fc-size { font-size:11px;color:var(--text-3);margin-top:2px; }
+        .fc-rm { background:none;border:none;color:#ff6b6b;cursor:pointer;font-size:17px;line-height:1;padding:3px;flex-shrink:0; }
+
+        /* ── Success screen ─────────────────────────────────────────────── */
+        .ok-wrap { text-align:center; padding:12px 0 8px; }
+        .ok-circle {
+            width:90px;height:90px;border-radius:50%;
+            background:linear-gradient(135deg,#009950,#00c970);
+            display:flex;align-items:center;justify-content:center;
+            font-size:40px;margin:0 auto 22px;
+            box-shadow:0 0 0 12px rgba(0,201,112,.1),0 0 40px rgba(0,201,112,.38);
+            animation:popIn .65s cubic-bezier(.34,1.56,.64,1);
+        }
+        .ok-title { font-size:20px;font-weight:900;color:#fff;margin-bottom:10px; }
+        .ok-sub { font-size:13px;color:var(--text-2);line-height:1.7;max-width:370px;margin:0 auto 24px; }
+        .track-box { background:rgba(30,144,255,.07);border:1px solid rgba(30,144,255,.18);border-radius:var(--radius-sm);padding:16px 20px;margin-bottom:24px; }
+        .track-lbl { font-size:10.5px;font-weight:700;color:var(--text-3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:9px; }
+        .track-code { font-size:24px;font-weight:900;color:var(--primary);letter-spacing:4px;font-family:'Courier New',monospace;direction:ltr;display:inline-block; }
+        .track-hint { font-size:11px;color:var(--text-3);margin-top:7px; }
+
+        /* ── Buttons ────────────────────────────────────────────────────── */
+        .btn {
+            display:inline-flex;align-items:center;justify-content:center;gap:7px;
+            width:100%;padding:13px 20px;border-radius:var(--radius-sm);
+            font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:none;
+            transition:all .25s cubic-bezier(.4,0,.2,1);
+        }
+        .btn-pri  { background:linear-gradient(135deg,#1755f0,#00c6ff);color:#fff;box-shadow:0 4px 20px rgba(30,144,255,.32); }
+        .btn-pri:hover  { transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,144,255,.42); }
+        .btn-ghost { background:transparent;color:var(--text-2);border:1px solid var(--border); }
+        .btn-ghost:hover { border-color:rgba(30,144,255,.38);color:var(--primary);background:rgba(30,144,255,.05); }
+        .btn-share {
+            display:flex; align-items:center; justify-content:center; gap:7px;
+            background:rgba(0,201,112,.1); color:#00c970;
+            border:1px solid rgba(0,201,112,.25);
+            flex:0 0 auto; width:auto; padding:13px 16px;
+        }
+        .btn-share:hover { background:rgba(0,201,112,.18); border-color:rgba(0,201,112,.4); transform:translateY(-1px); }
+        .btn-row { display:flex;gap:10px; }
+        .btn-row .btn-ghost { flex:0 0 auto;width:auto;padding:13px 18px; }
+        .btn-row .btn-pri { flex:1; }
+        .btn:disabled { opacity:.55;cursor:not-allowed;transform:none !important; }
+
+        .divider { height:1px;background:var(--border);margin:18px 0; }
+
+        /* ── Session strip (shown in header when authenticated) ─────────── */
+        .session-strip {
+            display: none;
+            align-items: center; gap: 8px;
+            font-size: 11.5px; color: var(--text-2);
+        }
+        .session-strip.on { display: flex; }
+        .session-email { color: var(--text); font-weight: 600; direction: ltr; }
+        .logout-btn {
+            background: rgba(255,71,87,.1); border: 1px solid rgba(255,71,87,.2);
+            border-radius: 7px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+            color: #ff7b85; cursor: pointer; font-family: inherit; transition: all .2s;
+        }
+        .logout-btn:hover { background: rgba(255,71,87,.18); }
+
+        /* ── Toast ──────────────────────────────────────────────────────── */
+        #toasts { position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column-reverse;align-items:center;gap:8px;pointer-events:none; }
+        .toast { background:rgba(8,16,36,.96);backdrop-filter:blur(12px);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;border:1px solid;animation:tIn .3s cubic-bezier(.4,0,.2,1);pointer-events:all;transition:opacity .35s,transform .35s; }
+        .toast.ok  { border-color:rgba(0,201,112,.28);color:#6de8ad; }
+        .toast.err { border-color:rgba(255,71,87,.28);color:#ff9eaa; }
+        .toast.inf { border-color:rgba(30,144,255,.28);color:#88c8ff; }
+        .toast.out { opacity:0;transform:translateY(8px); }
+        @keyframes tIn { from{opacity:0;transform:translateY(12px) scale(.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+        /* ── Mobile ─────────────────────────────────────────────────────── */
+        @media (max-width:500px) {
+            .main { padding:20px 12px 44px; }
+            .card-body, .w-card .card-body { padding:18px 14px; }
+            .card-head { padding:16px 14px; }
+            .c-grid { grid-template-columns:1fr; }
+            .f-row  { grid-template-columns:1fr; }
+            .s-circle { width:32px;height:32px;font-size:11px; }
+            .s-label  { font-size:9px; }
+            .s-line   { margin-top:16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-inner">
+        <div class="logo">
+            <div class="logo-box">
+                <img src="{% static 'images/الشعار-01.png' %}" alt="انترناشونال">
+            </div>
+            <div>
+                <h1>نظام انترناشونال — بوابة الحوالات</h1>
+                <p>انترناشونال للصرافة وتحويل الأموال</p>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+            <div class="session-strip" id="session-strip">
+                <span class="session-email" id="session-email"></span>
+                <button class="logout-btn" onclick="doLogout()">خروج</button>
+            </div>
+            <div class="badge">
+                <span class="dot"></span> خدمة متاحة
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- GATE — shown before authentication                                       -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="gate">
+
+    <!-- Screen G1: Google sign-in -->
+    <div class="card scr on" id="g1" style="max-width:420px;margin:0 auto">
+        <div class="card-body" style="padding:32px 28px">
+            <div class="gate-wrap">
+
+                <!-- Company logo -->
+                <div class="intl-logo-wrap">
+                    <img src="{% static 'images/الشعار-01.png' %}" alt="انترناشونال" class="intl-logo-img">
+                    <div class="intl-logo-text">
+                        <span class="intl-name">انترناشونال</span>
+                        <span class="intl-sub">للصرافة وتحويل الأموال</span>
+                    </div>
+                </div>
+
+                <div class="gate-logo-big">
+                    <img src="{% static 'images/الشعار-01.png' %}" alt="انترناشونال" class="gate-logo-img">
+                </div>
+
+                <div class="gate-title">أهلاً بك في بوابة الحوالات</div>
+                <div class="gate-sub">
+                    سجّل دخولك باستخدام حساب Google
+                    للوصول إلى خدمات تحويل الأموال
+                </div>
+
+                <!-- Google sign-in button -->
+                <button class="g-btn" id="g-btn" onclick="signInWithGoogle()">
+                    <svg class="g-logo" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    </svg>
+                    <span class="g-spinner"></span>
+                    <span id="g-btn-text">الدخول باستخدام بريد Google</span>
+                </button>
+
+                <div class="gate-privacy">
+                    🔒 نستخدم Google للتحقق من هويتك فقط — لا نخزّن كلمات المرور
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen G3: token error -->
+    <div class="card scr" id="g3" style="max-width:420px;margin:0 auto">
+        <div class="card-body" style="padding:32px 28px">
+            <div class="note" style="background:rgba(255,71,87,.06);border-color:rgba(255,71,87,.18);margin-bottom:22px">
+                <span class="ni">⚠️</span>
+                <p style="color:#ff9eaa" id="g3-msg">الرابط غير صالح أو انتهت صلاحيته.</p>
+            </div>
+            <button class="btn btn-pri" onclick="showGate()">← العودة لتسجيل الدخول</button>
+        </div>
+    </div>
+
+</div><!-- /gate -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- WIZARD — shown after authentication                                      -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="wizard">
+
+    <!-- Company banner inside wizard -->
+    <div class="intl-banner">
+        <img src="{% static 'images/الشعار-01.png' %}" alt="انترناشونال" class="intl-banner-img">
+        <div>
+            <div class="intl-banner-name">انترناشونال للصرافة وتحويل الأموال</div>
+            <div class="intl-banner-tag">بوابة طلبات الحوالات الخارجية</div>
+        </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="prog-wrap">
+        <div class="steps">
+            <div class="s-item active" id="si-1"><div class="s-circle active" id="sc-1">1</div><span class="s-label">اختر الدولة</span></div>
+            <div class="s-line" id="sl-1"></div>
+            <div class="s-item" id="si-2"><div class="s-circle" id="sc-2">2</div><span class="s-label">بيانات الإيداع</span></div>
+            <div class="s-line" id="sl-2"></div>
+            <div class="s-item" id="si-3"><div class="s-circle" id="sc-3">3</div><span class="s-label">أرسل الإشعار</span></div>
+            <div class="s-line" id="sl-3"></div>
+            <div class="s-item" id="si-4"><div class="s-circle" id="sc-4">4</div><span class="s-label">تأكيد الإرسال</span></div>
+        </div>
+    </div>
+
+    <div class="w-card">
+
+        <!-- Step 1: Country -->
+        <div class="card-head scr on" id="wh-1">
+            <div class="head-icon hi-blue">🌍</div>
+            <div><h2>اختر الدولة المستقبِلة</h2><p>حدد الدولة التي تريد إرسال الحوالة إليها</p></div>
+        </div>
+        <div class="card-body scr on" id="wb-1">
+            <div class="search-rel">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="s-inp" placeholder="ابحث عن دولة...">
+            </div>
+            <div class="c-grid" id="c-grid"></div>
+            <div class="divider"></div>
+            <button class="btn btn-pri" onclick="toStep2()">متابعة ←</button>
+        </div>
+
+        <!-- Step 2: Account details -->
+        <div class="card-head scr" id="wh-2">
+            <div class="head-icon hi-gold">🏦</div>
+            <div><h2>بيانات الإيداع</h2><p>أرسل المبلغ إلى الحساب التالي ثم أرسل لنا إشعاراً</p></div>
+        </div>
+        <div class="card-body scr" id="wb-2">
+            <div class="c-banner"><div class="b-flag" id="b-flag">🏳</div>
+                <div><div class="b-name" id="b-name">—</div><div class="b-meth" id="b-meth">—</div></div>
+            </div>
+            <div id="method-picker" style="display:none;margin-bottom:16px"></div>
+            <div id="acct"></div>
+            <div class="note"><span class="ni">ℹ️</span>
+                <p>بعد إتمام التحويل، احتفظ بصورة الإيصال وانتقل للخطوة التالية لإرسال الإشعار.</p>
+            </div>
+            <div class="divider"></div>
+            <div class="btn-row">
+                <button class="btn btn-ghost" onclick="goW(1)">← رجوع</button>
+                <button class="btn btn-share" onclick="shareAccountDetails()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+                        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                    مشاركة
+                </button>
+                <button class="btn btn-pri"   onclick="goW(3)">متابعة →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Notification form -->
+        <div class="card-head scr" id="wh-3">
+            <div class="head-icon hi-cyan">📋</div>
+            <div><h2>أرسل الإشعار</h2><p>أدخل بياناتك وأرفق صورة إيصال التحويل</p></div>
+        </div>
+        <div class="card-body scr" id="wb-3">
+            <div class="f-group">
+                <label class="f-label">صورة الإيصال <span style="color:#ff6b6b">*</span></label>
+                <div class="upload-zone" id="upzone">
+                    <input type="file" accept="image/*,.pdf" id="f-file" onchange="onFile(this)">
+                    <span class="uz-icon">📎</span>
+                    <div class="uz-t">اسحب الملف هنا أو انقر للاختيار</div>
+                    <div class="uz-s">PNG · JPG · PDF — أقصى 10 MB</div>
+                </div>
+                <div class="f-card" id="f-card">
+                    <div class="fc-th" id="fc-th">📄</div>
+                    <div style="flex:1;overflow:hidden">
+                        <div class="fc-name" id="fc-name">—</div>
+                        <div class="fc-size" id="fc-size">—</div>
+                    </div>
+                    <button class="fc-rm" onclick="clearFile()">✕</button>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-ghost" onclick="goW(2)">← رجوع</button>
+                <button class="btn btn-pri"   onclick="submitForm()">إرسال الإشعار 📤</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div class="card-head scr" id="wh-4" style="display:none"></div>
+        <div class="card-body scr" id="wb-4">
+            <div class="ok-wrap">
+                <div class="ok-circle">✓</div>
+                <div class="ok-title">تم إرسال الإشعار بنجاح!</div>
+                <div class="ok-sub">
+                    تم استلام إشعارك وسيتم مراجعة الحوالة خلال أوقات الدوام.
+                    يمكنك متابعة الحالة برمز التتبع أدناه.
+                </div>
+                <div class="track-box">
+                    <div class="track-lbl">رمز التتبع</div>
+                    <div class="track-code" id="track-code">—</div>
+                    <div class="track-hint">احتفظ بهذا الرمز للاستعلام عن حالة حوالتك</div>
+                </div>
+                <button class="btn btn-ghost" onclick="resetWizard()" style="max-width:260px;margin:0 auto">
+                    ↺ إرسال حوالة جديدة
+                </button>
+            </div>
+        </div>
+
+    </div><!-- /w-card -->
+</div><!-- /wizard -->
+
+</main>
+
+<div id="toasts"></div>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script>
+const GOOGLE_CLIENT_ID = '{{ google_client_id }}';
+
+// ══ Data — loaded from API ════════════════════════════════════════════════════
+let COUNTRIES = [];
+
+async function loadConfig() {
+    try {
+        const r = await fetch('/api/portal/config/');
+        if (!r.ok) return;
+        const d = await r.json();
+        if (d.success && d.countries.length) {
+            // normalise: add method label = first active method name + currency
+            COUNTRIES = d.countries.map(c => ({
+                ...c,
+                method: c.methods.length
+                    ? `${c.methods[0].name} — ${c.currency}`
+                    : c.currency,
+            }));
+        }
+    } catch { /* سيبقى COUNTRIES فارغاً */ }
+}
+
+// ══ State ══════════════════════════════════════════════════════════════════════
+let chosen = null, chosenMethod = null, curW = 1;
+
+// ══ Init ═══════════════════════════════════════════════════════════════════════
+(async function init() {
+    await loadConfig();
+
+    const p = new URLSearchParams(location.search);
+
+    if (p.get('err') === 'expired') {
+        showG('g3');
+        document.getElementById('g3-msg').textContent = 'انتهت صلاحية الرابط (15 دقيقة). اضغط أدناه للعودة.';
+        return;
+    }
+    if (p.get('err') === 'invalid') {
+        showG('g3');
+        document.getElementById('g3-msg').textContent = 'هذا الرابط غير صحيح أو تم استخدامه مسبقاً.';
+        return;
+    }
+    if (p.get('ok') === '1') {
+        const r = await fetch('/api/portal/session/');
+        if (r.ok) {
+            const d = await r.json();
+            startWizard(d.email, d.name, d.picture);
+            toast('مرحباً بك في البوابة! 👋', 'ok');
+            history.replaceState({}, '', '/portal/');
+            return;
+        }
+    }
+
+    const r = await fetch('/api/portal/session/');
+    if (r.ok) {
+        const d = await r.json();
+        startWizard(d.email, d.name, d.picture);
+        return;
+    }
+
+    initGoogle();
+})();
+
+// ══ Google Sign-In ═════════════════════════════════════════════════════════════
+let _hiddenGBtn = null;
+
+function initGoogle() {
+    if (!GOOGLE_CLIENT_ID) {
+        // No Google configured — disable button
+        const btn = document.getElementById('g-btn');
+        btn.disabled = true;
+        document.getElementById('g-btn-text').textContent = 'تسجيل الدخول غير متاح حالياً';
+        return;
+    }
+
+    // Wait for GSI to load
+    const tryInit = () => {
+        if (!window.google) { setTimeout(tryInit, 150); return; }
+
+        google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: onGoogleCredential,
+            ux_mode: 'popup',
+        });
+
+        // Render a hidden Google button (needed to trigger the popup reliably)
+        _hiddenGBtn = document.createElement('div');
+        _hiddenGBtn.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;';
+        document.body.appendChild(_hiddenGBtn);
+        google.accounts.id.renderButton(_hiddenGBtn, { size: 'large' });
+    };
+    tryInit();
+}
+
+function signInWithGoogle() {
+    const btn = document.getElementById('g-btn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    // Try One Tap first; fall back to the hidden rendered button
+    if (window.google) {
+        google.accounts.id.prompt(notification => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                // One Tap blocked — click the hidden Google button
+                const inner = _hiddenGBtn && _hiddenGBtn.querySelector('div[role=button]');
+                if (inner) inner.click();
+                else { btn.disabled = false; btn.classList.remove('loading'); toast('افتح النافذة المنبثقة من Google للمتابعة', 'inf'); }
+            }
+        });
+    } else {
+        btn.disabled = false; btn.classList.remove('loading');
+        toast('جارٍ تحميل Google، حاول مجدداً', 'inf');
+    }
+}
+
+async function onGoogleCredential(response) {
+    const btn = document.getElementById('g-btn');
+    try {
+        const r = await fetch('/api/portal/google-auth/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body: JSON.stringify({ credential: response.credential }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            startWizard(d.email, d.name, d.picture);
+            toast(`أهلاً ${d.name || d.email}! 👋`, 'ok');
+        } else {
+            toast(d.message || 'تعذّر التحقق من الهوية', 'err');
+            btn.disabled = false; btn.classList.remove('loading');
+        }
+    } catch {
+        toast('تعذّر الاتصال، حاول مجدداً', 'err');
+        btn.disabled = false; btn.classList.remove('loading');
+    }
+}
+
+// ══ Gate helpers ═══════════════════════════════════════════════════════════════
+function showG(id) {
+    ['g1','g3'].forEach(i => document.getElementById(i).classList.toggle('on', i===id));
+}
+
+function showGate() {
+    showG('g1');
+}
+
+// ══ Wizard ═════════════════════════════════════════════════════════════════════
+function startWizard(email, name, picture) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('wizard').classList.add('on');
+    document.getElementById('session-strip').classList.add('on');
+
+    const strip = document.getElementById('session-email');
+    if (picture) {
+        strip.innerHTML = `<img src="${picture}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0"> <span style="color:#fff">${name || email}</span>`;
+    } else {
+        strip.textContent = name || email;
+    }
+
+    if (!COUNTRIES.length) {
+        document.getElementById('c-grid').innerHTML =
+            '<div class="no-res" style="grid-column:1/-1;padding:30px 0;color:var(--text-3)">لا توجد دول متاحة حالياً — يرجى التواصل مع المشرف</div>';
+    } else {
+        renderGrid(COUNTRIES);
+    }
+}
+
+async function doLogout() {
+    await fetch('/api/portal/logout/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCsrf() },
+    });
+    document.getElementById('wizard').classList.remove('on');
+    document.getElementById('wizard').style.display = '';
+    document.getElementById('gate').style.display = '';
+    document.getElementById('session-strip').classList.remove('on');
+    showGate();
+    toast('تم تسجيل الخروج', 'inf');
+}
+
+// ── Country grid ───────────────────────────────────────────────────────────
+function renderGrid(list) {
+    const g = document.getElementById('c-grid');
+    if (!list.length) { g.innerHTML = '<div class="no-res" style="grid-column:1/-1;padding:20px 0;color:var(--text-3)">لا توجد نتائج</div>'; return; }
+    g.innerHTML = list.map(c => `
+        <div class="c-tile ${chosen?.id===c.id?'sel':''}" onclick="pick('${c.id}')">
+            <span class="chk">✓</span>
+            <span class="c-flag">${c.flag}</span>
+            <div><div class="c-name">${c.name}</div><div class="c-meth">${c.method}</div></div>
+        </div>`).join('');
+}
+
+function pick(id) {
+    chosen = COUNTRIES.find(c=>c.id===id);
+    chosenMethod = chosen?.methods?.length ? chosen.methods[0] : null;
+    renderGrid(COUNTRIES);
+}
+
+document.getElementById('s-inp').addEventListener('input', function() {
+    const q = this.value.trim();
+    renderGrid(q ? COUNTRIES.filter(c=>c.name.includes(q)||c.method.toLowerCase().includes(q.toLowerCase())) : COUNTRIES);
+});
+
+// ── Step 1.5: اختيار طريقة الاستقبال (إذا كان للدولة أكثر من طريقة) ──────
+function renderMethodPicker() {
+    const wrap = document.getElementById('method-picker');
+    if (!wrap) return;
+    const methods = chosen?.methods || [];
+    if (methods.length <= 1) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+        <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">اختر طريقة الاستقبال</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+        ${methods.map((m,i) => `
+            <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;
+                           border-radius:10px;border:1.5px solid ${chosenMethod?.id===m.id?'var(--primary)':'var(--border)'};
+                           background:${chosenMethod?.id===m.id?'rgba(30,144,255,.08)':'rgba(10,18,40,.5)'};
+                           cursor:pointer;transition:all .2s">
+                <input type="radio" name="recv-method" value="${i}" ${chosenMethod?.id===m.id?'checked':''} onchange="pickMethod(${i})"
+                       style="accent-color:var(--primary)">
+                <span style="font-size:13px;font-weight:600;color:#fff">${m.name}</span>
+                ${m.bank ? `<span style="font-size:11px;color:var(--text-2);margin-right:auto">${m.bank}</span>` : ''}
+            </label>`).join('')}
+        </div>`;
+}
+
+function pickMethod(idx) {
+    chosenMethod = chosen.methods[idx];
+    renderMethodPicker();
+}
+
+// ── Step 2 ─────────────────────────────────────────────────────────────────
+function toStep2() {
+    if (!chosen) { toast('يرجى اختيار دولة أولاً', 'err'); return; }
+
+    // اختر الطريقة الأولى إن لم تُختر بعد
+    if (!chosenMethod && chosen.methods?.length) chosenMethod = chosen.methods[0];
+
+    document.getElementById('b-flag').textContent = chosen.flag;
+    document.getElementById('b-name').textContent = chosen.name;
+    document.getElementById('b-meth').textContent = chosenMethod?.name
+        ? `${chosenMethod.name} — ${chosen.currency}`
+        : chosen.currency;
+
+    const mk = (lbl, val, copyable=true) => `
+        <div class="d-block">
+            <div class="d-lbl">${lbl}</div>
+            <div class="d-row">
+                <div class="d-val ${lbl.includes('بنك')||lbl.includes('فيد')?'plain':''}">${val}</div>
+                ${copyable?`<button class="copy-btn" onclick="doCopy('${val.replace(/'/g,"\\'")}',this)">📋 نسخ</button>`:''}
+            </div>
+        </div>`;
+
+    let html = '';
+    if (chosen.rate && chosen.rate !== 1) {
+        const note = chosen.rateNote || `1 USD = ${chosen.rate} ${chosen.currency}`;
+        html += `<div style="background:rgba(0,201,112,.07);border:1px solid rgba(0,201,112,.18);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--green)">💱 سعر الصرف: ${note}</div>`;
+    }
+    if (chosenMethod) {
+        if (chosenMethod.bank)        html += mk('اسم البنك / الجهة', chosenMethod.bank, false);
+        if (chosenMethod.iban)        html += mk('رقم الحساب / IBAN', chosenMethod.iban);
+        if (chosenMethod.beneficiary) html += mk('اسم المستفيد', chosenMethod.beneficiary);
+        if (chosenMethod.extra)       html += mk(chosenMethod.extra.label, chosenMethod.extra.value);
+    } else {
+        html += `<div style="color:var(--text-3);font-size:13px;padding:20px 0;text-align:center">لا تتوفر بيانات إيداع لهذه الدولة</div>`;
+    }
+    document.getElementById('acct').innerHTML = html;
+
+
+    renderMethodPicker();
+    goW(2);
+}
+
+// ── Wizard navigation ──────────────────────────────────────────────────────
+function goW(n) {
+    for (let i=1;i<=4;i++) {
+        const hEl = document.getElementById(`wh-${i}`);
+        const bEl = document.getElementById(`wb-${i}`);
+        hEl.classList.remove('on'); bEl.classList.remove('on');
+        if (i===4) hEl.style.display = 'none';
+    }
+    document.getElementById(`wh-${n}`).classList.add('on');
+    document.getElementById(`wb-${n}`).classList.add('on');
+    if (n===4) document.getElementById(`wh-4`).style.display = '';
+
+    for (let i=1;i<=4;i++) {
+        const ci=document.getElementById(`sc-${i}`); const si=document.getElementById(`si-${i}`);
+        ci.classList.remove('active','done'); si.classList.remove('active','done');
+        if(i<n){ci.classList.add('done');si.classList.add('done');ci.textContent='✓';}
+        else if(i===n){ci.classList.add('active');si.classList.add('active');ci.textContent=i;}
+        else{ci.textContent=i;}
+    }
+    for(let i=1;i<=3;i++) document.getElementById(`sl-${i}`).classList.toggle('filled',i<n);
+    curW=n; window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Submit ─────────────────────────────────────────────────────────────────
+async function submitForm() {
+    const file = document.getElementById('f-file').files[0];
+    if (!file) { toast('يرجى إرفاق صورة الإيصال','err'); return; }
+
+    const btn = document.querySelector('#wizard-step-3 .btn-pri');
+    if (btn) { btn.disabled = true; btn.textContent = 'جارٍ الإرسال…'; }
+
+    try {
+        const fd = new FormData();
+        fd.append('receipt',    file);
+        fd.append('countryId',  chosen?.id    || '');
+        fd.append('methodName', chosenMethod?.name || '');
+        fd.append('currency',   chosen?.currency   || '');
+
+        const res  = await fetch('/api/portal/submit/', { method: 'POST', body: fd });
+        const data = await res.json();
+
+        if (data.success) {
+            document.getElementById('track-code').textContent = data.trackingCode;
+            goW(4);
+            toast('تم إرسال إشعارك بنجاح! ✓','ok');
+        } else {
+            toast(data.error || 'حدث خطأ أثناء الإرسال','err');
+        }
+    } catch(e) {
+        toast('تعذّر الاتصال بالخادم','err');
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'إرسال الإشعار 📤'; }
+    }
+}
+
+function resetWizard() {
+    chosen = null; chosenMethod = null;
+    clearFile(); renderGrid(COUNTRIES); goW(1);
+}
+
+
+// ── File ────────────────────────────────────────────────────────────────────
+function onFile(inp) {
+    const f=inp.files[0]; if(!f) return;
+    if(f.size>10*1024*1024){toast('حجم الملف أكبر من 10 MB','err');inp.value='';return;}
+    document.getElementById('fc-name').textContent=(f.name.length>30?f.name.slice(0,30)+'…':f.name);
+    document.getElementById('fc-size').textContent=(f.size/1024/1024).toFixed(2)+' MB';
+    const th=document.getElementById('fc-th');
+    if(f.type.startsWith('image/')){const r=new FileReader();r.onload=e=>{th.innerHTML=`<img src="${e.target.result}">`};r.readAsDataURL(f);}
+    else th.textContent='📄';
+    document.getElementById('f-card').classList.add('on');
+    toast('تم اختيار الملف','ok');
+}
+function clearFile(){document.getElementById('f-file').value='';document.getElementById('f-card').classList.remove('on');document.getElementById('fc-th').textContent='📄';}
+
+// ── Share account details ───────────────────────────────────────────────────
+function shareAccountDetails() {
+    if (!chosenMethod && !chosen) { toast('لم يتم اختيار طريقة استقبال', 'err'); return; }
+
+    const country = chosen?.name || '';
+    const method  = chosenMethod?.name || '';
+    const bank    = chosenMethod?.bank || '';
+    const iban    = chosenMethod?.iban || '';
+    const benef   = chosenMethod?.beneficiary || '';
+    const rate    = (chosen?.rate && chosen.rate !== 1)
+        ? `\n💱 سعر الصرف: 1 USD = ${chosen.rate} ${chosen.currency}`
+        : '';
+
+    const lines = [
+        `🏦 بيانات التحويل — انترناشونال للصرافة`,
+        `🌍 الدولة: ${country}`,
+        method  ? `📋 الطريقة: ${method}`      : '',
+        bank    ? `🏛 البنك: ${bank}`           : '',
+        iban    ? `💳 الحساب / IBAN: ${iban}`   : '',
+        benef   ? `👤 المستفيد: ${benef}`        : '',
+        rate,
+        ``,
+        `⚠️ بعد التحويل، أرسل لنا صورة الإيصال عبر البوابة.`,
+    ].filter(l => l !== '').join('\n');
+
+    // Web Share API (mobile native)
+    if (navigator.share) {
+        navigator.share({ title: 'بيانات التحويل — انترناشونال', text: lines })
+            .catch(() => {});
+        return;
+    }
+
+    // Fallback: WhatsApp Web
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(lines)}`;
+    window.open(waUrl, '_blank');
+}
+
+// ── Copy ────────────────────────────────────────────────────────────────────
+function doCopy(text, btn) {
+    navigator.clipboard.writeText(text).then(()=>{
+        const o=btn.innerHTML; btn.innerHTML='✓ تم'; btn.classList.add('copied');
+        setTimeout(()=>{btn.innerHTML=o;btn.classList.remove('copied');},2000);
+        toast('تم النسخ','inf');
+    }).catch(()=>toast('تعذّر النسخ','err'));
+}
+
+// ── Drag & drop ─────────────────────────────────────────────────────────────
+const uz=document.getElementById('upzone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');if(e.dataTransfer.files.length){document.getElementById('f-file').files=e.dataTransfer.files;onFile(document.getElementById('f-file'));}});
+
+// ── Toast ────────────────────────────────────────────────────────────────────
+function toast(msg, type='inf') {
+    const icons={ok:'✓',err:'✕',inf:'ℹ'};
+    const el=document.createElement('div');
+    el.className=`toast ${type}`;
+    el.innerHTML=`<span>${icons[type]||'ℹ'}</span>${msg}`;
+    document.getElementById('toasts').prepend(el);
+    setTimeout(()=>el.classList.add('out'),2600);
+    setTimeout(()=>el.remove(),3000);
+}
+
+// ── CSRF ─────────────────────────────────────────────────────────────────────
+function getCsrf() {
+    return document.cookie.split(';').map(c=>c.trim())
+        .find(c=>c.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+</script>
+
+<!-- ══ شات بوت AI ══════════════════════════════════════════════════════════ -->
+<style>
+#ai-chat-btn {
+    position: fixed; left: 24px; bottom: 24px; z-index: 9000;
+    width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #1e8fff, #00c6ff);
+    box-shadow: 0 4px 20px rgba(30,143,255,.45);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s, box-shadow .2s;
+}
+#ai-chat-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(30,143,255,.6); }
+#ai-chat-btn svg { width: 26px; height: 26px; fill: #fff; }
+#ai-chat-btn .chat-badge {
+    position: absolute; top: -2px; right: -2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #00c970; border: 2px solid #070e1c;
+}
+
+#ai-chat-box {
+    position: fixed; left: 24px; bottom: 90px; z-index: 9001;
+    width: 360px; max-height: 520px;
+    background: rgba(8,17,38,.97);
+    border: 1px solid rgba(30,144,255,.2);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    display: none; flex-direction: column;
+    overflow: hidden;
+    animation: chatIn .2s ease;
+}
+@keyframes chatIn { from { opacity:0; transform: translateY(12px) scale(.97) } to { opacity:1; transform: none } }
+#ai-chat-box.open { display: flex; }
+
+.chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(30,144,255,.12), rgba(0,198,255,.06));
+    border-bottom: 1px solid rgba(30,144,255,.12);
+    flex-shrink: 0;
+}
+.chat-header-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #1e8fff, #00c6ff);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.chat-header-avatar svg { width: 18px; height: 18px; fill: #fff; }
+.chat-header-info { flex: 1; }
+.chat-header-name { font-size: 13px; font-weight: 700; color: #e4eeff; }
+.chat-header-status { font-size: 11px; color: #00c970; }
+.chat-close-btn {
+    background: none; border: none; cursor: pointer;
+    color: #7da8c8; font-size: 18px; line-height: 1;
+    padding: 2px 6px; border-radius: 6px;
+    transition: color .2s;
+}
+.chat-close-btn:hover { color: #e4eeff; }
+
+#chat-messages {
+    flex: 1; overflow-y: auto; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    scrollbar-width: thin; scrollbar-color: rgba(30,144,255,.2) transparent;
+}
+
+.chat-msg {
+    max-width: 85%; padding: 10px 13px;
+    border-radius: 14px; font-size: 13px; line-height: 1.6;
+    white-space: pre-wrap; word-break: break-word;
+}
+.chat-msg.bot {
+    background: rgba(30,144,255,.1);
+    border: 1px solid rgba(30,144,255,.15);
+    color: #e4eeff; align-self: flex-start;
+    border-bottom-right-radius: 4px;
+}
+.chat-msg.user {
+    background: linear-gradient(135deg, #1e8fff, #0077dd);
+    color: #fff; align-self: flex-end;
+    border-bottom-left-radius: 4px;
+}
+.chat-msg.tool-indicator {
+    background: rgba(0,198,255,.06);
+    border: 1px dashed rgba(0,198,255,.2);
+    color: #7da8c8; font-size: 11px; align-self: flex-start;
+    padding: 6px 10px; border-radius: 8px;
+}
+.chat-typing {
+    display: flex; gap: 4px; padding: 10px 13px;
+    background: rgba(30,144,255,.08);
+    border: 1px solid rgba(30,144,255,.12);
+    border-radius: 14px; border-bottom-right-radius: 4px;
+    align-self: flex-start;
+}
+.chat-typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #1e8fff; animation: typing .9s infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: .15s; }
+.chat-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 0%,60%,100% { transform: translateY(0) } 30% { transform: translateY(-6px) } }
+
+.chat-suggestions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 14px 10px;
+}
+.chat-suggest-btn {
+    background: rgba(30,144,255,.08);
+    border: 1px solid rgba(30,144,255,.2);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; color: #7da8c8; cursor: pointer;
+    font-family: inherit; transition: all .2s;
+}
+.chat-suggest-btn:hover { background: rgba(30,144,255,.18); color: #e4eeff; }
+
+.chat-input-row {
+    display: flex; gap: 8px; padding: 12px 14px;
+    border-top: 1px solid rgba(30,144,255,.1);
+    flex-shrink: 0;
+}
+#chat-input {
+    flex: 1; background: rgba(4,12,30,.8);
+    border: 1px solid rgba(30,144,255,.18);
+    border-radius: 10px; padding: 9px 12px;
+    font-size: 13px; color: #e4eeff;
+    font-family: inherit; outline: none; resize: none;
+    transition: border-color .2s;
+}
+#chat-input:focus { border-color: rgba(30,144,255,.45); }
+#chat-input::placeholder { color: #3d607e; }
+#chat-send-btn {
+    width: 38px; height: 38px; border-radius: 10px; border: none;
+    background: linear-gradient(135deg, #1e8fff, #0077dd);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: opacity .2s;
+}
+#chat-send-btn:disabled { opacity: .4; cursor: not-allowed; }
+#chat-send-btn svg { width: 16px; height: 16px; fill: #fff; }
+</style>
+
+<!-- زر فتح الشات -->
+<button id="ai-chat-btn" onclick="toggleChat()" title="مساعد ذكي">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 14H7v-2h4v2zm6 0h-4v-2h4v2zm0-4H7V8h10v4z"/></svg>
+    <span class="chat-badge"></span>
+</button>
+
+<!-- نافذة الشات -->
+<div id="ai-chat-box">
+    <div class="chat-header">
+        <div class="chat-header-avatar">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        </div>
+        <div class="chat-header-info">
+            <div class="chat-header-name">مساعد انترناشونال</div>
+            <div class="chat-header-status">● متاح الآن</div>
+        </div>
+        <button type="button" class="chat-close-btn" onclick="toggleChat()">✕</button>
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <div class="chat-suggestions" id="chat-suggestions">
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي الدول المتاحة للتحويل؟')">🌍 الدول المتاحة</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('كيف أتتبع حوالتي؟')">🔍 تتبع حوالة</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('احسب لي مبلغ تحويل')">💱 احسب المبلغ</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي أوقات العمل؟')">🕐 أوقات العمل</button>
+    </div>
+
+    <div class="chat-input-row">
+        <textarea id="chat-input" placeholder="اكتب سؤالك هنا..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
+            oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+        <button type="button" id="chat-send-btn" onclick="sendChat()">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+    </div>
+</div>
+
+<script>
+// ── شات بوت AI ───────────────────────────────────────────────────────────────
+const _chatHistory = [];
+let   _chatOpen    = false;
+let   _chatBusy    = false;
+
+function toggleChat() {
+    _chatOpen = !_chatOpen;
+    const box = document.getElementById('ai-chat-box');
+    box.classList.toggle('open', _chatOpen);
+    if (_chatOpen && _chatHistory.length === 0) {
+        appendBotMsg('مرحباً! 👋 أنا مساعد انترناشونال الذكي.\nكيف يمكنني مساعدتك اليوم؟');
+    }
+    if (_chatOpen) setTimeout(()=>document.getElementById('chat-input').focus(), 100);
+}
+
+function appendBotMsg(text) {
+    const msgs = document.getElementById('chat-messages');
+    const div  = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+}
+
+function appendUserMsg(text) {
+    const msgs = document.getElementById('chat-messages');
+    const div  = document.createElement('div');
+    div.className = 'chat-msg user';
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+    const msgs = document.getElementById('chat-messages');
+    const div  = document.createElement('div');
+    div.className = 'chat-typing'; div.id = 'chat-typing';
+    div.innerHTML  = '<span></span><span></span><span></span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+    document.getElementById('chat-typing')?.remove();
+}
+
+function hideSuggestions() {
+    document.getElementById('chat-suggestions').style.display = 'none';
+}
+
+function sendSuggestion(text) {
+    document.getElementById('chat-input').value = text;
+    sendChat();
+}
+
+async function sendChat() {
+    if (_chatBusy) return;
+    const inp  = document.getElementById('chat-input');
+    const text = inp.value.trim();
+    if (!text) return;
+
+    inp.value = '';
+    inp.style.height = 'auto';
+    hideSuggestions();
+    appendUserMsg(text);
+
+    _chatHistory.push({ role: 'user', content: text });
+    _chatBusy = true;
+    document.getElementById('chat-send-btn').disabled = true;
+    showTyping();
+
+    try {
+        const resp = await fetch('/api/portal/chat/', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body:    JSON.stringify({ messages: _chatHistory }),
+        });
+
+        if (!resp.ok) {
+            let errMsg = 'حاول لاحقاً';
+            try { const e = await resp.json(); errMsg = e.error || errMsg; } catch (_) {}
+            removeTyping();
+            appendBotMsg('عذراً، حدث خطأ: ' + errMsg);
+            _chatBusy = false;
+            document.getElementById('chat-send-btn').disabled = false;
+            return;
+        }
+
+        if (!resp.body) {
+            removeTyping();
+            appendBotMsg('عذراً، متصفحك لا يدعم الاستجابة المتدفقة. حاول تحديث الصفحة.');
+            _chatBusy = false;
+            document.getElementById('chat-send-btn').disabled = false;
+            return;
+        }
+
+        const reader  = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let   botDiv  = null;
+        let   botText = '';
+        let   sseBuffer = '';
+
+        removeTyping();
+
+        const toolNames = {
+            get_countries_and_rates: 'جاري جلب الدول والأسعار...',
+            track_transfer:          'جاري البحث عن الحوالة...',
+            calculate_amount:        'جاري حساب المبلغ...',
+        };
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            sseBuffer += decoder.decode(value, { stream: true });
+            const lines = sseBuffer.split('\n');
+            sseBuffer = lines.pop(); // الجزء الأخير قد يكون غير مكتمل
+
+            for (const line of lines) {
+                if (!line.startsWith('data: ')) continue;
+                try {
+                    const data = JSON.parse(line.slice(6));
+
+                    if (data.type === 'text') {
+                        if (!botDiv) {
+                            botDiv = appendBotMsg('');
+                            botText = '';
+                        }
+                        botText += data.text;
+                        botDiv.textContent = botText;
+                        document.getElementById('chat-messages').scrollTop = 9999;
+
+                    } else if (data.type === 'tool') {
+                        removeTyping();
+                        const ind = document.createElement('div');
+                        ind.className = 'chat-msg tool-indicator';
+                        ind.textContent = '⚙️ ' + (toolNames[data.name] || 'جاري المعالجة...');
+                        document.getElementById('chat-messages').appendChild(ind);
+                        document.getElementById('chat-messages').scrollTop = 9999;
+                        setTimeout(() => ind.remove(), 3000);
+
+                    } else if (data.type === 'done') {
+                        if (botText && botText.trim()) {
+                            _chatHistory.push({ role: 'assistant', content: botText.trim() });
+                        }
+                    }
+                } catch (_) {}
+            }
+        }
+    } catch (e) {
+        removeTyping();
+        appendBotMsg('عذراً، تعذّر الاتصال. تحقق من اتصالك وحاول مجدداً.');
+    } finally {
+        _chatBusy = false;
+        document.getElementById('chat-send-btn').disabled = false;
+    }
+}
+</script>
+</body>
+</html>

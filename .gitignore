@@ -1,0 +1,56 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Django ────────────────────────────────────────────────────────────────────
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+/logs/
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+.env.prod
+*.env
+!.env.example
+!.env.prod.example
+nginx/ssl/
+nginx/certbot/
+
+# ── ملفات مؤقتة ───────────────────────────────────────────────────────────────
+_tmp_content.json
+backup.json
+data_backup.json
+data_clean.json
+test_output.json
+test_zk.py
+*.docx
+
+# ── Migrations (اختياري — احذف هذا السطر إن أردت تتبع الـ migrations) ────────
+# apps/pages/migrations/
+
+# ── IDEs & tools ─────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Uploads ───────────────────────────────────────────────────────────────────
+/media/uploads/
+
+# ── Node (إن وُجد) ────────────────────────────────────────────────────────────
+node_modules/

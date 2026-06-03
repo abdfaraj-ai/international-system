@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}نظام انترناشونال الموحد{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=20260514a">
+    <link rel="stylesheet" href="{% static 'css/brand-override.css' %}?v=20260516x">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=20260517">
+    <link rel="stylesheet" href="{% static 'css/ui-enhancements.css' %}?v=20260415">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    {% block extra_css %}{% endblock %}
+
+    <!--
+      Theme System v5.0 — Strict Black / White
+      :root                = LIGHT MODE  (white bg · black text)
+      [data-theme="dark"]  = DARK MODE   (black bg · white text)
+      Default: DARK (applied below unless user chose light)
+      Storage key: 'theme'  →  'light' | 'dark'
+    -->
+    {% block theme_init %}
+    <script>
+      (function() {
+        document.documentElement.classList.add('theme-initializing');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        document.addEventListener('DOMContentLoaded', function() {
+          document.documentElement.classList.remove('theme-initializing');
+        });
+      })();
+    </script>
+    {% endblock %}
+</head>
+<body>
+
+{% block body_open %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block extra_modals %}{% endblock %}
+
+<script src="{% static 'js/visual-editor.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+<script>
+/* ── UI Enhancements: Stat number bounce on DOM change ── */
+(function() {
+  function flashUpdated(el) {
+    el.classList.remove('updated');
+    void el.offsetWidth; // reflow
+    el.classList.add('updated');
+    setTimeout(() => el.classList.remove('updated'), 500);
+  }
+  if (typeof MutationObserver !== 'undefined') {
+    const statSelectors = '.stat-value,.stat-num,.main-box-val,[class*="stat-val"],[class*="val-num"]';
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll(statSelectors).forEach(function(el) {
+        new MutationObserver(function(mutations) {
+          mutations.forEach(function(m) {
+            if (m.type === 'characterData' || m.type === 'childList') flashUpdated(el);
+          });
+        }).observe(el, { characterData: true, childList: true, subtree: true });
+      });
+    });
+  }
+})();
+</script>
+
+<!-- ════ زر الدعم الفني العائم ════ -->
+<button id="supportBtn" onclick="openSupportModal()" title="الدعم الفني"
+  style="position:fixed;bottom:24px;left:24px;z-index:99990;width:52px;height:52px;border-radius:50%;background:#2563eb;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.5);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;"
+  onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 20px rgba(37,99,235,.7)'"
+  onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(37,99,235,.5)'">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- ════ Modal: الدعم الفني ════ -->
+<div id="modalSupport" onclick="if(event.target===this)closeSupportModal()" style="display:none;position:fixed;inset:0;z-index:99995;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:#1a2234;border:1px solid #2d3f5a;border-radius:16px;padding:28px;width:420px;max-width:95vw;direction:rtl;position:relative;">
+    <button onclick="closeSupportModal()" style="position:absolute;top:12px;left:12px;background:none;border:none;color:#8899aa;font-size:20px;cursor:pointer;">✕</button>
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:6px;">🛠️</div>
+      <h3 style="color:#e8eaf0;margin:0;font-size:18px;">الدعم الفني</h3>
+      <p style="color:#8899aa;font-size:12px;margin:4px 0 0;">سنرد عليك في أقرب وقت ممكن</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <input id="sup-name" type="text" placeholder="اسمك"
+        style="background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px 12px;color:#e8eaf0;font-size:14px;outline:none;" />
+      <input id="sup-email" type="email" placeholder="بريدك الإلكتروني (اختياري)"
+        style="background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px 12px;color:#e8eaf0;font-size:14px;outline:none;direction:ltr;text-align:right;" />
+      <input id="sup-subject" type="text" placeholder="موضوع المشكلة"
+        style="background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px 12px;color:#e8eaf0;font-size:14px;outline:none;" />
+      <textarea id="sup-message" placeholder="اشرح مشكلتك بالتفصيل..." rows="4"
+        style="background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px 12px;color:#e8eaf0;font-size:14px;outline:none;resize:vertical;font-family:inherit;"></textarea>
+      <div id="sup-feedback" style="font-size:13px;text-align:center;display:none;padding:8px;border-radius:6px;"></div>
+      <button id="sup-send-btn" onclick="sendSupportMessage()"
+        style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">
+        إرسال الرسالة
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function csrf(){ return (document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))||'').split('=')[1]||''; }
+
+  function openSupportModal(){
+    document.getElementById('modalSupport').style.display='flex';
+    // تعبئة الاسم تلقائياً إن كان المستخدم مسجلاً
+    const nameEl = document.getElementById('userDisplayName');
+    if(nameEl && nameEl.textContent !== '---')
+      document.getElementById('sup-name').value = nameEl.textContent;
+  }
+
+  function closeSupportModal(){
+    document.getElementById('modalSupport').style.display='none';
+    document.getElementById('sup-feedback').style.display='none';
+    document.getElementById('sup-feedback').textContent='';
+  }
+
+  async function sendSupportMessage(){
+    const btn = document.getElementById('sup-send-btn');
+    const feedback = document.getElementById('sup-feedback');
+    const message = document.getElementById('sup-message').value.trim();
+    if(!message){
+      feedback.style.display='block';
+      feedback.style.background='rgba(231,76,60,.15)';
+      feedback.style.color='#e74c3c';
+      feedback.textContent='يرجى كتابة رسالتك';
+      return;
+    }
+    btn.disabled=true; btn.textContent='جاري الإرسال...';
+    try {
+      const res = await fetch('/api/support/', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},
+        body: JSON.stringify({
+          name:    document.getElementById('sup-name').value.trim(),
+          email:   document.getElementById('sup-email').value.trim(),
+          subject: document.getElementById('sup-subject').value.trim(),
+          message: message,
+        })
+      });
+      const d = await res.json();
+      feedback.style.display='block';
+      if(d.success){
+        feedback.style.background='rgba(46,204,113,.15)';
+        feedback.style.color='#2ecc71';
+        feedback.textContent='✅ '+d.message;
+        document.getElementById('sup-message').value='';
+        document.getElementById('sup-subject').value='';
+        setTimeout(closeSupportModal, 2500);
+      } else {
+        feedback.style.background='rgba(231,76,60,.15)';
+        feedback.style.color='#e74c3c';
+        feedback.textContent='❌ '+d.message;
+      }
+    } catch(e){
+      feedback.style.display='block';
+      feedback.style.background='rgba(231,76,60,.15)';
+      feedback.style.color='#e74c3c';
+      feedback.textContent='❌ تعذّر الاتصال بالسيرفر';
+    }
+    btn.disabled=false; btn.textContent='إرسال الرسالة';
+  }
+
+  window.openSupportModal  = openSupportModal;
+  window.closeSupportModal = closeSupportModal;
+  window.sendSupportMessage= sendSupportMessage;
+})();
+</script>
+
+<!-- ════ Modal: إعداد المصادقة الثنائية 2FA ════ -->
+<div id="modal2FA" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:#1a2234;border:1px solid #2d3f5a;border-radius:16px;padding:32px;width:360px;max-width:95vw;direction:rtl;text-align:center;position:relative;">
+    <button onclick="close2FASettings()" style="position:absolute;top:12px;left:12px;background:none;border:none;color:#8899aa;font-size:20px;cursor:pointer;">✕</button>
+    <div id="twofa-setup-panel">
+      <div style="font-size:32px;margin-bottom:8px;">🔐</div>
+      <h3 style="color:#e8eaf0;margin:0 0 8px;">تفعيل المصادقة الثنائية</h3>
+      <p style="color:#8899aa;font-size:13px;margin:0 0 20px;">امسح رمز QR بتطبيق Google Authenticator</p>
+      <div style="display:flex;justify-content:center;margin-bottom:16px;">
+        <img id="twofa-qr-img" src="" style="width:180px;height:180px;border-radius:8px;background:#fff;padding:4px;" />
+      </div>
+      <div style="background:#0d1829;border-radius:8px;padding:10px;margin-bottom:16px;">
+        <div style="color:#8899aa;font-size:11px;margin-bottom:4px;">أو أدخل المفتاح يدوياً:</div>
+        <div id="twofa-secret-text" style="color:#3b9eff;font-family:monospace;font-size:13px;letter-spacing:2px;word-break:break-all;"></div>
+      </div>
+      <input id="twofa-confirm-code" type="text" inputmode="numeric" maxlength="6" placeholder="أدخل الكود للتأكيد"
+        style="width:100%;box-sizing:border-box;background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px;color:#e8eaf0;font-size:18px;text-align:center;direction:ltr;letter-spacing:6px;margin-bottom:12px;" />
+      <button onclick="confirm2FASetup()" style="width:100%;background:#2563eb;color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;cursor:pointer;font-weight:700;">تفعيل</button>
+    </div>
+    <div id="twofa-disable-panel" style="display:none;">
+      <div style="font-size:32px;margin-bottom:8px;">✅</div>
+      <h3 style="color:#2ecc71;margin:0 0 8px;">المصادقة الثنائية مفعّلة</h3>
+      <p style="color:#8899aa;font-size:13px;margin:0 0 20px;">لإلغاء التفعيل أدخل كلمة مرورك</p>
+      <input id="twofa-disable-pw" type="password" placeholder="كلمة المرور"
+        style="width:100%;box-sizing:border-box;background:#0d1829;border:1px solid #2d3f5a;border-radius:8px;padding:10px;color:#e8eaf0;font-size:14px;margin-bottom:12px;" />
+      <button onclick="disable2FA()" style="width:100%;background:#c0392b;color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;cursor:pointer;font-weight:700;">إلغاء التفعيل</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function csrf(){ return (document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))||'').split('=')[1]||''; }
+
+  async function open2FASettings(){
+    const res = await fetch('/api/2fa/status/');
+    const d   = await res.json();
+    const modal = document.getElementById('modal2FA');
+    modal.style.display = 'flex';
+    if(d.enabled){
+      document.getElementById('twofa-setup-panel').style.display='none';
+      document.getElementById('twofa-disable-panel').style.display='block';
+    } else {
+      document.getElementById('twofa-disable-panel').style.display='none';
+      document.getElementById('twofa-setup-panel').style.display='block';
+      const r  = await fetch('/api/2fa/setup/',{method:'POST',headers:{'X-CSRFToken':csrf()}});
+      const sd = await r.json();
+      if(sd.success){
+        document.getElementById('twofa-qr-img').src = sd.qr;
+        document.getElementById('twofa-secret-text').textContent = sd.secret.match(/.{1,4}/g).join(' ');
+      }
+    }
+  }
+
+  async function confirm2FASetup(){
+    const code = document.getElementById('twofa-confirm-code').value.trim();
+    if(code.length!==6){ alert('أدخل 6 أرقام من التطبيق'); return; }
+    const r = await fetch('/api/2fa/confirm/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},body:JSON.stringify({code})});
+    const d = await r.json();
+    if(d.success){
+      document.getElementById('modal2FA').style.display='none';
+      const lbl = document.getElementById('nav2faLabel');
+      if(lbl) lbl.textContent='2FA: مفعّل ✅';
+      alert('✅ ' + d.message);
+    } else { alert(d.message||'الكود غير صحيح'); }
+  }
+
+  async function disable2FA(){
+    const pw = document.getElementById('twofa-disable-pw').value;
+    if(!pw){ alert('أدخل كلمة المرور'); return; }
+    const r = await fetch('/api/2fa/disable/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},body:JSON.stringify({password:pw})});
+    const d = await r.json();
+    if(d.success){
+      document.getElementById('modal2FA').style.display='none';
+      const lbl = document.getElementById('nav2faLabel');
+      if(lbl) lbl.textContent='المصادقة الثنائية';
+      alert(d.message);
+    } else { alert(d.message||'كلمة المرور غير صحيحة'); }
+  }
+
+  function close2FASettings(){ document.getElementById('modal2FA').style.display='none'; }
+
+  window.open2FASettings  = open2FASettings;
+  window.confirm2FASetup  = confirm2FASetup;
+  window.disable2FA       = disable2FA;
+  window.close2FASettings = close2FASettings;
+})();
+</script>
+
+<script>
+// توجيه زر المهام حسب دور المستخدم
+function goToTasks() {
+    fetch('/api/me/').then(r=>r.json()).then(d=>{
+        if (d.success) {
+            window.location.href = d.role === 'M01' ? '/tasks/admin/' : '/tasks/my/';
+        }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2033 @@
+﻿{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}إنترناشونال - مركز التحكم والعمليات الذكي{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/accounts_panel.css' %}?v=6">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+
+<!-- TOP HEADER -->
+<header class="custom-header" style="
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 24px;min-height:60px;
+  background:#FFFFFF;border-bottom:3px solid #2563EB;
+  box-shadow:0 4px 20px rgba(37,99,235,0.10);
+  position:sticky;top:0;z-index:1000;gap:16px;
+">
+
+  <!-- اليمين: الشعار + العنوان -->
+  <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    <img src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال"
+         style="width:46px;height:46px;object-fit:contain;border-radius:0;">
+    <div>
+      <div style="font-size:15px;font-weight:800;color:#1E3A5F;line-height:1.2;">مركز الحوالات الذكية</div>
+      <div style="font-size:11px;color:#475569;display:flex;align-items:center;gap:5px;margin-top:2px;">
+        <span class="status-dot"></span>
+        نظام انترناشونال الموحد
+      </div>
+    </div>
+  </div>
+
+  <!-- الوسط: وضع التشغيل -->
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="mode-badge mode-manual" id="modeToggle" onclick="toggleMode()"
+      style="border-radius:999px !important;padding:6px 18px !important;font-size:12px !important;font-weight:800 !important;cursor:pointer;">✋ وضع يدوي</span>
+    <span id="stat-done" style="display:none">0</span>
+    <span id="stat-pending" style="display:none">0</span>
+    <span id="stat-total" style="display:none">0</span>
+    <span id="stat-new" style="display:none">0</span>
+  </div>
+
+  <!-- اليسار: الأزرار -->
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+    <button class="calc-trigger-btn" onclick="toggleCalc()" title="الحاسبة">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+      الحاسبة
+    </button>
+    <button class="calc-trigger-btn" onclick="openPortalNotifPanel()" title="إشعارات البوابة"
+      style="position:relative;background:rgba(37,99,235,0.07);border-color:rgba(37,99,235,0.20);color:#1E40AF;">
+      📬 البوابة
+      <span id="trx-portal-badge" style="position:absolute;top:-5px;left:-5px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;line-height:1;display:none">0</span>
+    </button>
+    {% include 'layout/navbar.html' with report_fn="trxOpenReportModal" page_name="transactions" page_title="قسم الحوالات" %}
+  </div>
+
+</header>
+
+<!-- MAIN 3-COLUMN LAYOUT -->
+<div class="main-container">
+
+  <!-- RIGHT (VISUAL): WHATSAPP INCOMING SOURCE MESSAGES -->
+  <div id="sourceMsgsPanel" class="panel-left" style="background:#0b141a;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+
+    <!-- WA header -->
+    <div style="background:#1f2c34;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(37,211,102,0.15)">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📲</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:#e9edef">💬 رسائل المصدر</div>
+        <div id="sourceBotStatus" style="font-size:10px;color:#25D366">🟢 البوت نشط • <span id="incomingCount">8</span> رسالة</div>
+      </div>
+      <!-- زر مراسلة المصدر -->
+      <button onclick="openMsgModal()" title="مراسلة المصدر" style="
+        display:flex;align-items:center;gap:5px;padding:6px 10px;
+        background:linear-gradient(135deg,#25D366,#128C7E);
+        border:none;border-radius:20px;cursor:pointer;
+        color:#fff;font-size:11px;font-weight:700;
+        box-shadow:0 2px 8px rgba(37,211,102,0.4);
+        transition:all .25s;white-space:nowrap;flex-shrink:0;font-family:inherit;
+      " onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 4px 14px rgba(37,211,102,0.55)'"
+         onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(37,211,102,0.4)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        مراسلة المصدر
+      </button>
+    </div>
+
+    <!-- Search bar -->
+    <input id="transferSearch" class="transfer-search" placeholder="🔍 بحث بالاسم أو المبلغ..." oninput="searchTransfers(this.value)">
+
+    <!-- حالة اتصال واتساب -->
+    <div style="background:#111b21;padding:4px 10px;border-bottom:1px solid rgba(50,184,198,0.1);display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <span id="wa-bridge-status" style="font-size:11px;color:#f87171;">🔴 واتساب غير متصل</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#556570;">يتجدد كل 3 ثوانٍ</span>
+        <!-- زر الانتظار -->
+        <button onclick="waBridgeOpenPending()" title="رسائل تحتاج مراجعة"
+          style="position:relative;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:3px 8px;cursor:pointer;font-size:11px;color:#c9a84c;font-family:inherit;display:flex;align-items:center;gap:4px">
+          ⏳ انتظار
+          <span id="wa-pending-badge"
+            style="display:none;background:#ff4d6a;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:800;align-items:center;justify-content:center;flex-shrink:0">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Source group tabs -->
+    <div style="background:#1f2c34;display:flex;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid rgba(50,184,198,0.11)">
+      <button class="wa-src-tab active" id="gtab-all" onclick="filterGroup('all',this)">الكل</button>
+      <!-- تبويبات المجموعات الحقيقية تُضاف هنا تلقائياً -->
+      <div id="wa-dynamic-tabs" style="display:contents;"></div>
+    </div>
+
+    <!-- WhatsApp chat bubbles -->
+    <div id="transfersList" style="flex:1;overflow-y:auto;padding:10px 8px;scroll-behavior:smooth;">
+    </div>
+  </div>
+
+  <!-- CENTER: SOURCE VERIFICATION + FORM (2-column) -->
+  <div class="panel-center" style="padding:0;display:flex;flex-direction:column;overflow:hidden;">
+
+    <!-- body -->
+    <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:12px;">
+
+      <!-- ── بطاقة مدمجة: بيانات الحوالة + سياق المحادثة ── -->
+      <div class="form-card" style="padding:0;overflow:hidden;display:flex;height:650px;max-height:650px;flex-shrink:0;background:linear-gradient(145deg,#0f1923,#0a1520) !important;border:1px solid rgba(50,184,198,0.15) !important;">
+
+        <!-- ══ قسم بيانات الحوالة (يمين) ══ -->
+        <div style="flex:1;width:0;height:100%;padding:18px 20px;display:flex;flex-direction:column;gap:2px;background:transparent;overflow:hidden;box-sizing:border-box;">
+
+          <!-- رأس القسم -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-shrink:0;">
+            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,rgba(50,184,198,.2),rgba(50,184,198,.05));border:1px solid rgba(50,184,198,.25);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">💰</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:700;color:#e2e8f0;letter-spacing:.3px;">بيانات الحوالة</div>
+              <div style="font-size:9px;color:#4d6f80;margin-top:1px;">أدخل أو راجع البيانات المستخرجة</div>
+            </div>
+            <!-- رمز الحوالة -->
+            <button class="sec-code-chip" id="secCodeChip" onclick="copySecCode()" title="نسخ رمز الحوالة" style="flex-shrink:0;">
+              🔐 <span id="secCode">847-291</span> <span class="chip-copy">⧉</span>
+            </button>
+            <!-- عداد التنفيذ التلقائي -->
+            <div id="fcBadge" style="
+              display:flex;align-items:center;gap:6px;
+              padding:4px 10px 4px 8px;border-radius:20px;
+              background:rgba(255,255,255,0.03);
+              border:1px solid rgba(50,184,198,0.15);
+              position:relative;overflow:hidden;
+              transition:background 0.5s ease, border-color 0.5s ease;
+              min-width:72px;flex-shrink:0;
+            ">
+              <div id="fcBar" style="position:absolute;left:0;top:0;bottom:0;background:rgba(37,211,102,0.1);width:0%;transition:width 1s linear,background 0.5s ease;pointer-events:none;border-radius:20px;"></div>
+              <span id="fcDot" style="width:6px;height:6px;border-radius:50%;background:#2d3f4a;flex-shrink:0;position:relative;transition:background 0.4s ease;"></span>
+              <span id="fcSeconds" style="font-size:12px;font-weight:800;font-family:monospace;color:#374151;line-height:1;position:relative;transition:color 0.4s ease;letter-spacing:0.5px;min-width:14px;text-align:center;">--</span>
+              <span id="fcLabel" style="font-size:9px;color:#374151;position:relative;transition:color 0.4s;">ث</span>
+              <button id="fcStopBtn" onclick="setFormMode('manual')" style="position:relative;background:none;border:none;color:#2d3f4a;cursor:pointer;font-size:11px;padding:0;line-height:1;transition:color 0.2s,opacity 0.3s;opacity:0;pointer-events:none;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'" title="إيقاف التنفيذ التلقائي">⏹</button>
+            </div>
+          </div>
+
+          <!-- شريط الوضع -->
+          <div id="formModeStrip" style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;margin-bottom:10px;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid rgba(245,158,11,0.15);transition:background 0.3s,border-color 0.3s;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span id="formModeIcon" style="font-size:14px;line-height:1;">✋</span>
+              <div>
+                <div id="formModeLabel" style="font-size:11px;font-weight:700;color:#fbbf24;transition:color 0.3s;">وضع يدوي</div>
+                <div id="formModeSub"  style="font-size:9px;color:#8696a0;margin-top:1px;transition:color 0.3s;">أنت تتحكم بالبيانات</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:5px;align-items:center;">
+              <button id="formBtnManual" onclick="setFormMode('manual')" style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.35);transition:all 0.25s;">✋ يدوي</button>
+              <button id="formBtnSmart"  onclick="setFormMode('smart')"  style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(255,255,255,0.05);color:#4d6080;border:1px solid rgba(50,184,198,0.15);transition:all 0.25s;">🤖 ذكي</button>
+            </div>
+          </div>
+
+          <!-- مؤشر AI -->
+          <div class="ai-indicator" id="aiStatus" style="display:none;margin-bottom:8px;flex-shrink:0;">
+            <span class="ai-dot"></span>
+            <span>بيانات مستخرجة تلقائياً</span>
+          </div>
+
+          <!-- حقول النموذج -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;flex-shrink:0;">
+            <div class="form-group">
+              <label>💵 المبلغ</label>
+              <input type="number" id="mainAmount" placeholder="0.00" oninput="calculateNet()">
+            </div>
+            <div class="form-group">
+              <label>💲 العملة</label>
+              <select id="currency" onchange="calculateNet()">
+                <option value="USD">USD — دولار 🇺🇸</option>
+                <option value="ILS">ILS — شيكل 🇮🇱</option>
+                <option value="JOD">JOD — دينار 🇯🇴</option>
+                <option value="EUR">EUR — يورو 🇪🇺</option>
+                <option value="EGP">EGP — جنيه 🇪🇬</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>👤 اسم الزبون</label>
+              <input type="text" id="clientName" placeholder="الاسم الكامل...">
+            </div>
+            <div class="form-group">
+              <label>🏷️ العمولة ($)</label>
+              <input type="number" id="commission" placeholder="0" oninput="calculateNet()">
+            </div>
+            <div class="form-group">
+              <label>📡 المجموعة المصدر</label>
+              <select id="sourceGroup">
+                <option value="">— تُحدَّد من الرسالة —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>🎯 جهة التنفيذ</label>
+              <select id="execAgent">
+                <option value="">— اختر وكيل التنفيذ —</option>
+              </select>
+            </div>
+            <div class="form-group" id="walletRow">
+              <label id="walletTypeLabel">💳 نوع الحساب</label>
+              <select id="walletType" disabled class="wallet-type-select">
+                <option value="">— لا يوجد رقم في الرسالة —</option>
+                <option value="ewallet">📱 محفظة إلكترونية</option>
+                <option value="bank">🏦 حساب بنكي</option>
+                <option value="iban">🔢 IBAN</option>
+                <option value="phone">📞 هاتف (تحويل)</option>
+              </select>
+            </div>
+            <div class="form-group" style="position:relative;">
+              <label>رقم الحساب / المحفظة
+                <button class="wallet-copy-inline" id="walletCopyBtn" onclick="copyWalletNumber()" title="نسخ" tabindex="-1">⧉</button>
+              </label>
+              <input type="text" id="walletNumber" placeholder="يُحدَّد تلقائياً من الرسالة..."
+                     disabled dir="ltr" class="wallet-number-input" oninput="validateWallet()">
+            </div>
+          </div>
+
+          <!-- صافي المبلغ -->
+          <div class="net-strip" style="margin-top:10px;flex-shrink:0;">
+            <span class="net-strip-label">صافي المبلغ:</span>
+            <span class="net-strip-amount" id="netAmount">$ 0.00</span>
+            <span class="net-strip-detail" id="netDetail">المبلغ: $0 | العمولة: $0</span>
+          </div>
+
+          <!-- أزرار الإجراءات -->
+          <div class="action-buttons" style="margin-top:12px;flex-shrink:0;">
+            <button class="btn btn-sm btn-execute" onclick="executeTransfer()" title="Ctrl+Enter">⚡ تنفيذ</button>
+            <button class="btn btn-sm btn-edit"    onclick="editTransfer()"    title="Ctrl+E">✏️ تعديل</button>
+            <button class="btn btn-sm btn-full"    onclick="sendReceipt()">📨 وصل</button>
+            <button class="btn btn-sm btn-clear"   onclick="clearForm()"       title="Ctrl+D">🗑️ مسح</button>
+          </div>
+        </div>
+
+        <!-- ══ فاصل عمودي دائم ══ -->
+        <div style="width:1px;background:linear-gradient(to bottom,transparent,rgba(50,184,198,0.2) 20%,rgba(50,184,198,0.2) 80%,transparent);flex-shrink:0;"></div>
+
+        <!-- ══ لوحة سياق المحادثة (يسار — تظهر عند الضغط على حوالة) ══ -->
+        <div id="ctxPanel" style="flex:1;width:0;height:100%;display:none;flex-direction:column;min-width:0;overflow:hidden;background:#060d14;box-sizing:border-box;">
+
+          <!-- رأس اللوحة -->
+          <div style="padding:13px 16px 11px;display:flex;align-items:center;gap:10px;flex-shrink:0;background:linear-gradient(180deg,#0c1a26,#091420);border-bottom:1px solid rgba(99,102,241,0.18);position:relative;overflow:hidden;">
+            <!-- خلفية زخرفية -->
+            <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+            <!-- أيقونة -->
+            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,rgba(99,102,241,.3),rgba(99,102,241,.06));border:1px solid rgba(99,102,241,.35);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;position:relative;">💬</div>
+            <div style="flex:1;min-width:0;position:relative;">
+              <div style="font-size:12px;font-weight:700;color:#c4b5fd;letter-spacing:.3px;">سياق المحادثة</div>
+              <div id="ctxGroupLabel" style="font-size:9px;color:#4d5e80;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">اضغط على حوالة لعرض المحادثة</div>
+            </div>
+            <button onclick="_ctxPanelFill()"
+              style="background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(37,99,235,.08));color:#93c5fd;border:1px solid rgba(37,99,235,.35);border-radius:9px;padding:6px 14px;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0;position:relative;"
+              onmouseover="this.style.background='linear-gradient(135deg,rgba(37,99,235,.35),rgba(37,99,235,.15))';this.style.color='#bfdbfe'"
+              onmouseout="this.style.background='linear-gradient(135deg,rgba(37,99,235,.2),rgba(37,99,235,.08))';this.style.color='#93c5fd'"
+              title="تعبئة النموذج من السياق">✏️ تعبئة</button>
+            <button onclick="_closeCtxPanel()"
+              style="background:rgba(255,255,255,.04);color:#374151;border:1px solid rgba(255,255,255,.07);border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;position:relative;"
+              onmouseover="this.style.background='rgba(239,68,68,.12)';this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.25)'"
+              onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#374151';this.style.borderColor='rgba(255,255,255,.07)'"
+              title="إغلاق">✕</button>
+          </div>
+
+          <!-- جسم الرسائل — يملأ الارتفاع المتبقي ويسكرول -->
+          <div id="ctxPanelBody"
+            style="flex:1;overflow-y:auto;padding:14px 14px;display:flex;flex-direction:column;gap:8px;
+                   scrollbar-width:thin;scrollbar-color:#1e3045 transparent;
+                   background:radial-gradient(ellipse at top right,rgba(99,102,241,0.04) 0%,transparent 60%),#060d14;">
+            <div style="color:#2a3f55;font-size:11px;text-align:center;padding:40px 0;">اضغط على حوالة لعرض سياق المحادثة</div>
+          </div>
+        </div>
+
+        <!-- placeholder عندما تكون اللوحة مخفية -->
+        <div id="ctxPlaceholder" style="flex:1;width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#060d14;box-sizing:border-box;">
+          <div style="width:56px;height:56px;border-radius:16px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.12);display:flex;align-items:center;justify-content:center;font-size:24px;opacity:.5;">💬</div>
+          <div style="font-size:12px;font-weight:600;color:#1e3040;">اضغط على حوالة</div>
+          <div style="font-size:10px;color:#142030;">لعرض ساعتين من المحادثة قبلها</div>
+        </div>
+
+        <!-- عنصر مخفي للحفاظ على rawMsgBox في DOM (يستخدمه JS) -->
+        <div id="rawMsgBox" style="display:none;"></div>
+        <span id="sourceChatGroup" style="display:none;"></span>
+
+      </div><!-- end merged card -->
+
+    </div><!-- end body -->
+  </div><!-- end panel-center -->
+
+  <!-- LEFT (VISUAL): EXECUTION PANEL -->
+  <div class="panel-right" style="background:#0b141a;display:flex;flex-direction:column;overflow:hidden;">
+
+    <!-- Header -->
+    <div style="background:#1f2c34;padding:9px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(50,184,198,0.15);">
+      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#32b8c6,#0e6b7a);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">⚡</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:700;color:#e9edef;">⚡ حوالات التنفيذ</div>
+        <div style="font-size:9px;color:#32b8c6;">🟦 جاهز • <span id="execCount">0</span> حوالة</div>
+      </div>
+      <!-- زر مراسلة المنفذ -->
+      <button onclick="openExecMsgModal()" title="مراسلة المنفذ" style="
+        display:flex;align-items:center;gap:5px;padding:5px 9px;
+        background:linear-gradient(135deg,#32b8c6,#0e6b7a);
+        border:none;border-radius:20px;cursor:pointer;
+        color:#fff;font-size:10px;font-weight:700;
+        box-shadow:0 2px 8px rgba(50,184,198,0.4);
+        transition:all .25s;white-space:nowrap;flex-shrink:0;font-family:inherit;
+      " onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 4px 14px rgba(50,184,198,0.55)'"
+         onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(50,184,198,0.4)'">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        مراسلة المنفذ
+      </button>
+      <button onclick="execChatClear()" title="مسح" style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:14px;padding:0;">🗑️</button>
+    </div>
+
+    <!-- Search -->
+    <input id="execSearch" class="transfer-search" placeholder="🔍 بحث..." oninput="searchExecBubbles(this.value)" style="margin:5px 6px;width:calc(100% - 12px);">
+
+    <!-- Agent tabs -->
+    <div style="background:#1f2c34;display:flex;flex-shrink:0;border-bottom:1px solid rgba(50,184,198,0.11);">
+      <button class="wa-src-tab active" id="etab-all"     onclick="filterExec('all',this)"    >الكل</button>
+      <button class="wa-src-tab"        id="etab-barhoum" onclick="filterExec('barhoum',this)" >🔵 برهوم <span id="load-barhoum" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+      <button class="wa-src-tab"        id="etab-agent2"  onclick="filterExec('agent2',this)"  >🟢 2 <span id="load-agent2" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+      <button class="wa-src-tab"        id="etab-agent3"  onclick="filterExec('agent3',this)"  >🟡 3 <span id="load-agent3" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+    </div>
+
+    <!-- Stats bar -->
+    <div id="execStatsBar" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:5px 10px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(50,184,198,0.07);font-size:10px;color:#8696a0;"></div>
+
+    <!-- Bubbles list -->
+    <div id="execBubblesList" style="flex:1;overflow-y:auto;padding:8px 6px;scroll-behavior:smooth;">
+      <div style="text-align:center;color:#4d6080;font-size:10px;padding:20px 6px;">⚡ نفّذ حوالة لتظهر هنا</div>
+    </div>
+
+    <!-- Hidden: legacy compatibility -->
+    <div id="waChatMessages" style="display:none;"></div>
+    <div id="waChatTitle"    style="display:none;"></div>
+
+  </div><!-- end panel-right -->
+
+</div><!-- end main-container -->
+
+<!-- ═══ Portal Notifications Drawer ═══ -->
+<div id="portal-notif-overlay" onclick="if(event.target===this)closePortalNotifPanel()" style="
+  display:none;position:fixed;inset:0;z-index:9500;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
+  <div id="portal-notif-drawer" style="
+    position:absolute;top:0;left:0;width:420px;max-width:96vw;height:100%;
+    background:linear-gradient(160deg,#0d1825 0%,#0a1520 40%,#0c1a28 100%);
+    border-left:1px solid #1e2d3d;display:flex;flex-direction:column;
+    animation:prDrawerIn 0.25s ease;">
+    <!-- Header -->
+    <div style="background:#0a1520;border-bottom:1px solid #1e2d3d;padding:16px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <div style="font-size:22px">📬</div>
+      <div style="flex:1">
+        <div style="font-weight:800;color:#e9edef;font-size:15px;">إشعارات البوابة الخارجية</div>
+        <div id="trx-portal-stats" style="font-size:11px;color:#8696a0;">—</div>
+      </div>
+      <button onclick="closePortalNotifPanel()" style="background:rgba(255,255,255,0.05);border:1px solid #2a3942;border-radius:8px;padding:6px 10px;color:#8696a0;cursor:pointer;font-size:14px;">✕</button>
+    </div>
+    <!-- Filter -->
+    <div style="padding:12px 20px;border-bottom:1px solid #1e2d3d;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#8696a0;cursor:pointer;">
+        <input type="checkbox" id="trx-portal-show-done" onchange="loadTrxPortalReceipts()" style="cursor:pointer;">
+        عرض المنجزة
+      </label>
+      <span id="trx-portal-count" style="font-size:12px;color:#8696a0;margin-right:auto;">—</span>
+      <button onclick="loadTrxPortalReceipts()" style="background:rgba(255,255,255,0.04);border:1px solid #2a3942;border-radius:6px;padding:4px 10px;color:#8696a0;cursor:pointer;font-size:11px;">↻ تحديث</button>
+    </div>
+    <!-- List -->
+    <div id="trx-portal-list" style="flex:1;overflow-y:auto;padding:12px 16px;">
+      <div style="text-align:center;padding:40px;color:#8696a0;">جاري التحميل...</div>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes prDrawerIn { from { transform:translateX(-100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+</style>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MIGRATION MODAL -->
+<div id="migrationOverlay" onclick="if(event.target===this)closeMigrationModal()" style="
+  display:none;position:fixed;inset:0;z-index:50000;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+">
+  <div style="
+    background:linear-gradient(160deg,#131d30,#0f1923);
+    border:1px solid rgba(232,192,74,0.25);border-radius:20px;
+    padding:28px 30px;width:520px;max-width:94vw;
+    box-shadow:0 24px 64px rgba(0,0,0,0.6);
+    animation:mcSlideUp 0.28s ease;
+    direction:rtl;
+  ">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="
+          width:42px;height:42px;border-radius:12px;
+          background:rgba(232,192,74,0.12);border:1px solid rgba(232,192,74,0.3);
+          display:flex;align-items:center;justify-content:center;font-size:20px;
+        ">📦</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#e8c04a;">ترحيل السجل</div>
+          <div style="font-size:11px;color:#4d6080;margin-top:2px;">تصدير وأرشفة الحوالات المنجزة</div>
+        </div>
+      </div>
+      <button onclick="closeMigrationModal()" style="
+        background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);
+        border-radius:8px;color:#8696a0;cursor:pointer;font-size:16px;
+        width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+      ">✕</button>
+    </div>
+
+    <!-- Summary cards -->
+    <div id="migrationSummary" style="
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;
+    "></div>
+
+    <!-- Date range -->
+    <div id="migrationDateRange" style="
+      background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);
+      border-radius:10px;padding:10px 14px;margin-bottom:20px;
+      font-size:11px;color:#8696a0;
+    "></div>
+
+    <!-- Format selection -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:#7b96be;margin-bottom:10px;letter-spacing:.5px;">صيغة التصدير</div>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="migFmt" value="json" checked style="display:none;">
+          <div class="mig-fmt-btn" data-val="json" onclick="selectMigFormat('json')" style="
+            padding:10px;border-radius:10px;border:1px solid rgba(232,192,74,0.4);
+            background:rgba(232,192,74,0.08);text-align:center;
+          ">
+            <div style="font-size:18px;margin-bottom:4px;">{ }</div>
+            <div style="font-size:11px;font-weight:700;color:#e8c04a;">JSON</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">للبرامج والأنظمة</div>
+          </div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="migFmt" value="csv" style="display:none;">
+          <div class="mig-fmt-btn" data-val="csv" onclick="selectMigFormat('csv')" style="
+            padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);
+            background:rgba(255,255,255,0.03);text-align:center;
+          ">
+            <div style="font-size:18px;margin-bottom:4px;">📊</div>
+            <div style="font-size:11px;font-weight:700;color:#8696a0;">CSV</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">للجداول والإكسيل</div>
+          </div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="migFmt" value="txt" style="display:none;">
+          <div class="mig-fmt-btn" data-val="txt" onclick="selectMigFormat('txt')" style="
+            padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);
+            background:rgba(255,255,255,0.03);text-align:center;
+          ">
+            <div style="font-size:18px;margin-bottom:4px;">📄</div>
+            <div style="font-size:11px;font-weight:700;color:#8696a0;">TXT</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">ملف نصي بسيط</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Clear after migration toggle -->
+    <div style="
+      display:flex;align-items:center;justify-content:space-between;
+      background:rgba(255,80,80,0.05);border:1px solid rgba(255,80,80,0.15);
+      border-radius:10px;padding:12px 14px;margin-bottom:22px;
+    ">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#e9edef;">مسح السجل بعد الترحيل</div>
+        <div style="font-size:10px;color:#4d6080;margin-top:2px;">يُفرّغ السجل الحالي بعد التصدير</div>
+      </div>
+      <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;">
+        <input type="checkbox" id="migClearAfter" style="opacity:0;width:0;height:0;">
+        <span onclick="document.getElementById('migClearAfter').click()" style="
+          position:absolute;inset:0;border-radius:11px;
+          background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.25);
+          transition:background 0.3s;cursor:pointer;
+        " id="migToggleTrack">
+          <span id="migToggleThumb" style="
+            position:absolute;top:3px;right:3px;width:16px;height:16px;
+            border-radius:50%;background:#4d6080;transition:all 0.3s;
+          "></span>
+        </span>
+      </label>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:10px;">
+      <button onclick="executeMigration()" style="
+        flex:1;padding:12px;border-radius:12px;
+        background:linear-gradient(135deg,#b8860b,#e8c04a);
+        border:none;color:#000;font-size:13px;font-weight:800;
+        cursor:pointer;transition:opacity 0.2s;
+      " onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        📦 تنفيذ الترحيل
+      </button>
+      <button onclick="closeMigrationModal()" style="
+        padding:12px 20px;border-radius:12px;
+        background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);
+        color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;
+      ">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h3>⚡ تأكيد التنفيذ الفوري</h3>
+    <p id="confirmText">هل تريد إرسال الحوالة إلى <b>برهوم تونس</b> للتنفيذ؟</p>
+    <div class="modal-btns">
+      <button class="btn btn-execute" onclick="confirmExecution()">✅ نعم، نفّذ</button>
+      <button class="btn" style="background:var(--bg-input);border:1px solid var(--border);" onclick="closeModal()">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     WhatsApp Bot Simulator — Frontend Only Simulation
+══════════════════════════════════════════════════ -->
+
+<!-- waBotBtn removed — badge preserved for JS compatibility -->
+<span id="waBotIcon" style="display:none;"></span>
+<span id="waBotBadge" style="display:none;">0</span>
+
+<!-- WhatsApp Simulator Panel -->
+<div id="waPanel" style="
+  position:fixed; bottom:100px; left:28px; z-index:8999;
+  width:380px; height:620px;
+  background:#0b141a; border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  display:none; flex-direction:column; overflow:hidden;
+  border:1px solid rgba(37,211,102,0.2);
+  font-family:'Segoe UI', sans-serif;
+">
+
+  <!-- WA Header -->
+  <div style="
+    background:#1f2c34; padding:12px 16px;
+    display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid rgba(50,184,198,0.11);
+  ">
+    <div style="font-size:28px">📱</div>
+    <div style="flex:1">
+      <div style="font-weight:700; color:#e9edef; font-size:14px">WhatsApp Bot Simulator</div>
+      <div id="waBotStatus" style="font-size:11px; color:#25D366">🟢 البوت نشط — يراقب الجروبات</div>
+    </div>
+    <div style="display:flex; gap:8px">
+      <button onclick="triggerRandomMessage()" style="
+        background:rgba(37,211,102,0.15); border:1px solid rgba(37,211,102,0.3);
+        color:#25D366; border-radius:8px; padding:5px 10px; cursor:pointer;
+        font-size:11px; font-weight:700;
+      ">⚡ رسالة عشوائية</button>
+      <button onclick="toggleWAPanel()" style="
+        background:none; border:none; color:#8696a0; cursor:pointer; font-size:18px;
+      ">✕</button>
+    </div>
+  </div>
+
+  <!-- Group Tabs — تُملأ ديناميكياً من wa-bridge.js -->
+  <div style="background:#0f1923; display:flex; gap:0; border-bottom:1px solid rgba(50,184,198,0.11);" id="wa-group-tabs-bar">
+    <button class="wa-grp-tab active" id="wgt-all"
+      style="flex:1; padding:8px 4px; border:none; background:transparent;
+             color:#32b8c6; font-size:11px; font-weight:700; cursor:pointer;
+             border-bottom:2px solid #32b8c6;">
+      📥 الكل
+    </button>
+    <button class="wa-grp-tab" id="wgt-agent" onclick="switchWAGroup('agent', this)"
+      style="flex:1; padding:8px 4px; border:none; background:transparent;
+             color:#8696a0; font-size:11px; font-weight:700; cursor:pointer;
+             border-bottom:2px solid transparent;">
+      📤 صادر
+    </button>
+  </div>
+
+  <!-- Chat Messages -->
+  <div id="waChatBox" style="
+    flex:1; overflow-y:auto; padding:12px 10px;
+    background:#0b141a;
+    background-image: url('data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%230b141a'/><circle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.02)'/></svg>');
+    scroll-behavior:smooth;
+  "></div>
+
+  <!-- Typing indicator -->
+  <div id="waTyping" style="
+    padding:6px 16px; font-size:11px; color:#25D366;
+    background:#1f2c34; display:none;
+  ">🤖 البوت يحلل الرسالة...</div>
+
+  <!-- Quick messages -->
+  <div style="
+    background:#1f2c34; padding:8px 10px;
+    border-top:1px solid rgba(50,184,198,0.11);
+  ">
+    <div style="font-size:10px; color:#8696a0; margin-bottom:6px">💡 رسائل محاكاة سريعة:</div>
+    <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px">
+      <button onclick="sendSimMsg('text_simple')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">💵 حوالة نصية</button>
+      <button onclick="sendSimMsg('text_complex')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">📝 طلب مفصّل</button>
+      <button onclick="sendSimMsg('image_receipt')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">📷 صورة إيصال</button>
+      <button onclick="sendSimMsg('inquiry')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">❓ استفسار سعر</button>
+      <button onclick="sendSimMsg('confirm')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">✅ تأكيد تنفيذ</button>
+    </div>
+
+    <!-- Input row -->
+    <div style="display:flex; gap:8px; align-items:center">
+      <input id="waInput" placeholder="اكتب رسالة للمحاكاة..."
+        style="flex:1; background:#2a3942; border:1px solid rgba(50,184,198,0.15);
+               border-radius:20px; padding:8px 14px; color:#e9edef;
+               font-size:12px; outline:none; direction:rtl;"
+        onkeydown="if(event.key==='Enter')sendCustomWAMsg()">
+      <button onclick="sendCustomWAMsg()" style="
+        width:36px; height:36px; border-radius:50%; border:none;
+        background:#25D366; color:#fff; cursor:pointer; font-size:16px;
+        display:flex; align-items:center; justify-content:center;
+        flex-shrink:0;
+      ">➤</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Hidden message container for html2canvas screenshot ── -->
+<div id="wa-screenshot-source" style="
+  position:fixed; left:-9999px; top:0;
+  width:340px; background:#1f2c34; border-radius:12px;
+  padding:14px 16px; font-family:'Segoe UI',sans-serif;
+  color:#e9edef; direction:rtl;
+">
+  <div style="font-size:10px;color:#25D366;margin-bottom:6px" id="ss-group">—</div>
+  <div style="font-size:11px;color:#8696a0;margin-bottom:4px" id="ss-sender"></div>
+  <div style="background:#2a3942;border-radius:10px;padding:10px;font-size:13px" id="ss-text"></div>
+  <div style="font-size:10px;color:#8696a0;margin-top:6px;text-align:left" id="ss-time"></div>
+</div>
+
+<!-- ── Simulated WhatsApp Chat Log (sent messages) ── -->
+<div id="wa-chat-log" style="
+  position:fixed; bottom:100px; right:24px; z-index:8000;
+  width:320px; max-height:400px; display:none; flex-direction:column;
+  background:#0b141a; border-radius:16px; overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,0.6); border:1px solid rgba(37,211,102,0.2);
+">
+  <div style="background:#1f2c34;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+    <span style="color:#25D366;font-size:13px;font-weight:700">📤 الرسائل المرسلة</span>
+    <button onclick="document.getElementById('wa-chat-log').style.display='none'"
+      style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:16px">✕</button>
+  </div>
+  <div id="chat-log-messages" style="flex:1;overflow-y:auto;padding:10px;max-height:300px"></div>
+</div>
+
+<!-- ── Correction Input Bar ── -->
+<div id="correction-bar" style="
+  position:fixed; bottom:24px; right:24px; z-index:8001;
+  display:none; gap:8px; align-items:center;
+  background:#1f2c34; border:1px solid rgba(255,165,0,0.3);
+  border-radius:14px; padding:8px 12px; width:340px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+">
+  <span style="font-size:14px">⚠️</span>
+  <input id="correction-input" placeholder="اكتب التصحيح للجروب..."
+    style="flex:1;background:#2a3942;border:1px solid rgba(50,184,198,0.15);
+           border-radius:10px;padding:7px 12px;color:#e9edef;font-size:12px;
+           outline:none;direction:rtl;"
+    onkeydown="if(event.key==='Enter')sendCorrectionMessage(currentGroupId, this.value)">
+  <button onclick="sendCorrectionMessage(currentGroupId, document.getElementById('correction-input').value)"
+    style="background:rgba(255,165,0,0.2);border:1px solid rgba(255,165,0,0.3);
+           color:#FFA500;border-radius:10px;padding:6px 12px;cursor:pointer;
+           font-size:12px;font-weight:700;white-space:nowrap;">إرسال</button>
+  <button onclick="document.getElementById('correction-bar').style.display='none'"
+    style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:16px">✕</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PORTAL REQUESTS PANEL — طلبات البوابة الإلكترونية
+══════════════════════════════════════════════════════════════ -->
+<div id="portalReqPanel" style="padding:24px 28px 32px;background:#07111e;border-top:2px solid rgba(21,85,232,0.25)">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="font-size:18px;font-weight:800;color:#a5c8ff">🌐 طلبات البوابة الإلكترونية</div>
+      <span id="portalReqCount" style="background:rgba(30,144,255,0.15);color:#60a5fa;border:1px solid rgba(30,144,255,0.3);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;">0</span>
+    </div>
+    <button onclick="loadPortalRequests()" style="background:rgba(30,144,255,0.1);border:1px solid rgba(30,144,255,0.25);color:#60a5fa;border-radius:10px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;">🔄 تحديث</button>
+  </div>
+
+  <!-- Stat badges -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+    <button class="pr-tab active" id="pr-tab-all"       onclick="filterPortalReqs('',this)">الكل <span id="pr-cnt-all">0</span></button>
+    <button class="pr-tab new"    id="pr-tab-new"       onclick="filterPortalReqs('new',this)">🔵 جديد <span id="pr-cnt-new">0</span></button>
+    <button class="pr-tab rev"    id="pr-tab-reviewing" onclick="filterPortalReqs('reviewing',this)">🟡 قيد المراجعة <span id="pr-cnt-rev">0</span></button>
+    <button class="pr-tab done"   id="pr-tab-done"      onclick="filterPortalReqs('done',this)">🟢 منفّذ <span id="pr-cnt-done">0</span></button>
+    <button class="pr-tab rej"    id="pr-tab-rejected"  onclick="filterPortalReqs('rejected',this)">🔴 مرفوض <span id="pr-cnt-rej">0</span></button>
+  </div>
+
+  <!-- Table -->
+  <div style="overflow-x:auto;border-radius:14px;border:1px solid rgba(30,144,255,0.13)">
+    <table id="portalReqTable" style="width:100%;border-collapse:collapse;font-size:12px;background:linear-gradient(135deg,#0a1422,#0d1c35)">
+      <thead>
+        <tr style="background:rgba(0,0,0,0.35)">
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right;white-space:nowrap">رمز التتبع</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right">البريد الإلكتروني</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right">الدولة</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right">طريقة الاستقبال</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right">الحالة</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:right;white-space:nowrap">وقت الإرسال</th>
+          <th style="padding:12px 14px;color:#5a80a8;font-weight:700;text-align:center">إجراء</th>
+        </tr>
+      </thead>
+      <tbody id="portalReqBody">
+        <tr><td colspan="7" style="padding:30px;text-align:center;color:#2d4060">لا توجد طلبات بعد</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ PORTAL REQUEST DETAIL MODAL ══ -->
+<div id="portalReqModal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.78);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="width:min(560px,96vw);max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#07111e,#0b1c30);border-radius:20px;border:1px solid rgba(30,144,255,0.2);box-shadow:0 24px 80px rgba(0,0,0,0.8);padding:0;">
+    <!-- Modal header -->
+    <div style="padding:18px 22px;border-bottom:1px solid rgba(30,144,255,0.15);display:flex;align-items:center;justify-content:space-between;background:rgba(10,24,50,0.6);">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#a5c8ff">🌐 تفاصيل طلب البوابة</div>
+        <div id="prm-code" style="font-size:11px;color:#60a5fa;margin-top:2px;font-family:monospace"></div>
+      </div>
+      <button onclick="closePortalReqModal()" style="background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;color:#8696a0;font-size:16px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.color='#ef4444'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8696a0'">✕</button>
+    </div>
+    <!-- Modal body -->
+    <div style="padding:20px 22px;display:flex;flex-direction:column;gap:14px;">
+      <!-- Client info -->
+      <div style="background:rgba(30,144,255,0.05);border:1px solid rgba(30,144,255,0.12);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#5a80a8;margin-bottom:10px;font-weight:700;">بيانات العميل</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><div style="font-size:10px;color:#5a80a8">الاسم</div><div id="prm-name" style="font-size:13px;color:#c9dfff;font-weight:600;margin-top:2px">—</div></div>
+          <div><div style="font-size:10px;color:#5a80a8">البريد</div><div id="prm-email" style="font-size:12px;color:#c9dfff;margin-top:2px;word-break:break-all">—</div></div>
+          <div><div style="font-size:10px;color:#5a80a8">الدولة</div><div id="prm-country" style="font-size:13px;color:#c9dfff;margin-top:2px">—</div></div>
+          <div><div style="font-size:10px;color:#5a80a8">طريقة الاستقبال</div><div id="prm-method" style="font-size:13px;color:#c9dfff;margin-top:2px">—</div></div>
+          <div><div style="font-size:10px;color:#5a80a8">العملة</div><div id="prm-currency" style="font-size:13px;color:#c9dfff;margin-top:2px">—</div></div>
+          <div><div style="font-size:10px;color:#5a80a8">وقت الإرسال</div><div id="prm-created" style="font-size:11px;color:#c9dfff;margin-top:2px">—</div></div>
+        </div>
+      </div>
+
+      <!-- Receipt -->
+      <div id="prm-receipt-wrap" style="display:none">
+        <div style="font-size:11px;color:#5a80a8;margin-bottom:6px;font-weight:700;">صورة الإيصال</div>
+        <a id="prm-receipt-link" href="#" target="_blank" style="display:block;text-align:center;">
+          <img id="prm-receipt-img" src="" alt="الإيصال" style="max-width:100%;border-radius:10px;border:1px solid rgba(30,144,255,0.2);cursor:pointer;">
+        </a>
+      </div>
+
+      <!-- Status update -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;color:#5a80a8;margin-bottom:10px;font-weight:700;">تحديث الحالة</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <button class="prs-btn" data-status="reviewing" onclick="setPRStatus('reviewing')">🟡 قيد المراجعة</button>
+          <button class="prs-btn" data-status="done"      onclick="setPRStatus('done')">🟢 منفّذ</button>
+          <button class="prs-btn" data-status="new"       onclick="setPRStatus('new')">🔵 جديد</button>
+          <button class="prs-btn" data-status="rejected"  onclick="setPRStatus('rejected')">🔴 مرفوض</button>
+        </div>
+        <textarea id="prm-notes" rows="3" placeholder="ملاحظات (اختياري)…" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(30,144,255,0.15);border-radius:10px;color:#c9dfff;font-size:12px;padding:9px 12px;resize:vertical;outline:none;direction:rtl;font-family:inherit;box-sizing:border-box;"></textarea>
+        <button onclick="savePortalReqStatus()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#1555e8,#00c6ff);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:11px;cursor:pointer;">حفظ التغييرات</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.pr-tab{padding:5px 14px;border-radius:20px;border:1px solid rgba(30,144,255,0.2);background:rgba(30,144,255,0.05);color:#5a80a8;font-size:12px;cursor:pointer;font-weight:700;transition:all .2s;font-family:inherit;}
+.pr-tab.active,.pr-tab:hover{background:rgba(30,144,255,0.18);border-color:rgba(30,144,255,0.4);color:#60a5fa;}
+.pr-tab.new{border-color:rgba(96,165,250,0.3);}
+.pr-tab.rev{border-color:rgba(250,189,21,0.3);}
+.pr-tab.done{border-color:rgba(34,197,94,0.3);}
+.pr-tab.rej{border-color:rgba(239,68,68,0.3);}
+.prs-btn{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#a0b4cc;font-size:12px;cursor:pointer;transition:all .2s;font-weight:700;font-family:inherit;}
+.prs-btn:hover,.prs-btn.active-status{background:rgba(30,144,255,0.15);border-color:rgba(30,144,255,0.4);color:#c9dfff;}
+</style>
+
+<!-- ── Transfer History Panel ── -->
+<div class="hist-section">
+  <style>
+    .hist-section {
+      padding: 28px 32px 48px;
+      background: #070e16;
+      border-top: 1px solid rgba(50,184,198,0.1);
+      direction: rtl;
+    }
+    /* ── Header ── */
+    .hist-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hist-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hist-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #e8c04a;
+      letter-spacing: .3px;
+    }
+    .hist-badge {
+      background: rgba(232,192,74,0.12);
+      color: #e8c04a;
+      border: 1px solid rgba(232,192,74,0.28);
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    /* stats strip */
+    .hist-stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .hist-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 6px 16px;
+      min-width: 72px;
+    }
+    .hist-stat-val { font-size: 15px; font-weight: 800; }
+    .hist-stat-lbl { font-size: 9px; color: #4d6080; margin-top: 1px; white-space: nowrap; }
+    .hist-stat.gold  .hist-stat-val { color: #e8c04a; }
+    .hist-stat.green .hist-stat-val { color: #25D366; }
+    .hist-stat.cyan  .hist-stat-val { color: #32b8c6; }
+    /* ── Toolbar ── */
+    .hist-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .hist-search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 380px;
+    }
+    .hist-search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8696a0;
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .hist-search-input {
+      width: 100%;
+      padding: 9px 36px 9px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(50,184,198,0.18);
+      color: #e9edef;
+      font-size: 12px;
+      outline: none;
+      direction: rtl;
+      transition: border-color .2s;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .hist-search-input:focus { border-color: rgba(232,192,74,0.45); }
+    .hist-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(50,184,198,0.18);
+      background: rgba(255,255,255,0.04);
+      color: #8696a0;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .hist-btn:hover { background: rgba(255,255,255,0.08); color: #c9d1de; }
+    .hist-btn.cyan  { border-color: rgba(50,184,198,0.3); color: #32b8c6; background: rgba(50,184,198,0.07); }
+    .hist-btn.cyan:hover  { background: rgba(50,184,198,0.15); }
+    .hist-btn.purple{ border-color: rgba(139,92,246,0.3); color: #a78bfa; background: rgba(139,92,246,0.07); }
+    .hist-btn.purple:hover{ background: rgba(139,92,246,0.15); }
+    .hist-btn.red   { border-color: rgba(255,80,80,0.3); color: #ff6b6b; background: rgba(255,80,80,0.07); }
+    .hist-btn.red:hover   { background: rgba(255,80,80,0.15); }
+    /* ── Table container ── */
+    .hist-table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(50,184,198,0.12);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+    }
+    .hist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: linear-gradient(180deg,#0d1825 0%,#091320 100%);
+    }
+    /* ── thead ── */
+    .hist-table thead tr {
+      background: linear-gradient(135deg,#0f1e30,#152840);
+      border-bottom: 2px solid rgba(50,184,198,0.18);
+    }
+    .hist-table thead th {
+      padding: 13px 14px;
+      color: #5a80a8;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .4px;
+      white-space: nowrap;
+      text-align: right;
+      border-bottom: none;
+      position: relative;
+    }
+    .hist-table thead th:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; height: 60%;
+      width: 1px;
+      background: rgba(255,255,255,0.05);
+    }
+    .hist-table thead th.center { text-align: center; }
+    /* ── tbody ── */
+    .hist-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.035);
+      transition: background .15s;
+    }
+    .hist-table tbody tr:hover { background: rgba(50,184,198,0.05) !important; }
+    .hist-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+    .hist-table tbody td {
+      padding: 11px 14px;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    /* cell types */
+    .hc-num   { font-family: monospace; font-weight: 900; color: #32b8c6; font-size: 12px; text-align: center; }
+    .hc-time  { color: #5a7090; font-size: 11px; }
+    .hc-name  { font-weight: 700; color: #d8e8f8; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+    .hc-phone { color: #94a3b8; font-family: monospace; font-size: 11px; }
+    .hc-amount{ font-weight: 900; color: #e8c04a; font-size: 13px; }
+    .hc-currency { color: #32b8c6; font-weight: 700; font-size: 11px; }
+    .hc-source{ color: #c084fc; font-weight: 600; max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
+    .hc-agent { font-weight: 700; }
+    .hc-center{ text-align: center; }
+    /* status badge */
+    .hst-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .hst-done    { background: rgba(40,167,69,0.12); color: #4ade80; border: 1px solid rgba(40,167,69,0.25); }
+    .hst-pending { background: rgba(251,146,60,0.12); color: #fb923c; border: 1px solid rgba(251,146,60,0.25); }
+    /* receipt cell */
+    .hrc-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(37,211,102,0.06);
+      border: 1px solid rgba(37,211,102,0.18);
+      border-radius: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+    .hrc-cell:hover { border-color: rgba(37,211,102,0.45); background: rgba(37,211,102,0.12); }
+    .hrc-thumb { width: 32px; height: 32px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(37,211,102,0.25); flex-shrink: 0; }
+    .hrc-label { font-size: 10px; font-weight: 700; color: #25D366; }
+    .hrc-sub   { font-size: 9px; color: #4d8060; margin-top: 1px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* verified badge */
+    .hrc-verified { background: rgba(37,211,102,0.15); color: #4ade80; border: 1px solid rgba(37,211,102,0.3); border-radius: 12px; padding: 2px 8px; font-size: 9px; font-weight: 700; }
+    .hrc-mismatch { background: rgba(255,80,80,0.12); color: #f87171; border: 1px solid rgba(255,80,80,0.3); border-radius: 12px; padding: 2px 8px; font-size: 9px; font-weight: 700; }
+    /* print btn */
+    .hist-print-btn {
+      background: none;
+      border: 1px solid rgba(50,184,198,0.15);
+      border-radius: 7px;
+      color: #8696a0;
+      cursor: pointer;
+      padding: 4px 10px;
+      font-size: 11px;
+      transition: all .2s;
+    }
+    .hist-print-btn:hover { border-color: rgba(50,184,198,0.4); color: #32b8c6; }
+    /* empty row */
+    .hist-empty { padding: 40px; text-align: center; color: #2d4060; font-size: 13px; }
+    /* search info */
+    .hist-search-info { font-size: 11px; color: #475569; }
+  </style>
+
+  <!-- Header -->
+  <div class="hist-header">
+    <div class="hist-title-group">
+      <div class="hist-title">📜 سجل الحوالات</div>
+      <span id="historyCount" class="hist-badge">0</span>
+    </div>
+    <span id="histStatTotal" style="display:none">0</span>
+    <span id="histStatAmount" style="display:none">0</span>
+    <span id="histStatReceipts" style="display:none">0</span>
+    <!-- Action buttons -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="exportNotificationsFile()" class="hist-btn purple">📄 إشعارات التحويل</button>
+      <button onclick="exportHistory()"           class="hist-btn cyan">📥 تصدير CSV</button>
+      <button onclick="clearHistory()"            class="hist-btn red">🗑️ مسح السجل</button>
+    </div>
+  </div>
+
+  <!-- Toolbar: Search -->
+  <div class="hist-toolbar">
+    <div class="hist-search-wrap">
+      <span class="hist-search-icon">🔍</span>
+      <input id="historySearchInput" type="text" class="hist-search-input"
+             placeholder="ابحث بالاسم أو المبلغ أو الوكيل أو الرقم..."
+             oninput="searchHistory(this.value)">
+    </div>
+    <button onclick="clearHistorySearch()" class="hist-btn">✕ مسح</button>
+    <div id="historySearchInfo" class="hist-search-info"></div>
+  </div>
+
+  <!-- Table -->
+  <div class="hist-table-wrap">
+    <table id="transferHistoryTable" class="hist-table">
+      <thead>
+        <tr>
+          <th class="center" style="width:46px">#</th>
+          <th style="width:90px">⏱ الوقت</th>
+          <th>👤 المُرسِل</th>
+          <th>📱 رقم المستفيد</th>
+          <th class="center">💰 المبلغ</th>
+          <th class="center">العملة</th>
+          <th>📤 مصدر الحوالة</th>
+          <th>⚡ الوكيل المنفّذ</th>
+          <th class="center">الحالة</th>
+          <th>🧾 الإيصال</th>
+          <th class="center" style="width:60px">🖨</th>
+        </tr>
+      </thead>
+      <tbody id="transferHistoryBody">
+        <tr><td colspan="11" class="hist-empty">لا توجد حوالات في السجل بعد</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL: مراسلة المنفذ
+══════════════════════════════════════════════════════════════ -->
+<div id="execMsgModal" style="
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,0.78);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+">
+  <!-- EXEC MODAL CARD -->
+  <div style="width:min(560px,95vw);max-height:92vh;display:flex;flex-direction:column;background:linear-gradient(170deg,#08121c 0%,#0c1e2e 60%,#0d2234 100%);border-radius:24px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,0.85),0 0 0 1px rgba(50,184,198,0.22),inset 0 1px 0 rgba(50,184,198,0.08);animation:mcSlideUp .35s cubic-bezier(.34,1.56,.64,1);">
+
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#091b2a 0%,#0d2a3a 100%);padding:16px 18px 13px;display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;overflow:hidden;border-bottom:1px solid rgba(50,184,198,0.18);">
+      <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(50,184,198,0.18) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:-30px;left:60px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(50,184,198,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+      <!-- avatar + pulse -->
+      <div style="position:relative;flex-shrink:0;">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#32b8c6,#0a5f70);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 0 3px rgba(50,184,198,0.2),0 0 22px rgba(50,184,198,0.28);">⚡</div>
+        <div style="position:absolute;bottom:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #09141f;animation:onlinePulse 2.5s ease-in-out infinite;"></div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:800;color:#e9edef;letter-spacing:.3px;">مراسلة المنفذ</div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+          <span style="font-size:10px;color:#32b8c6;">⚡ تعليمات مباشرة لوكيل التنفيذ</span>
+          <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(50,184,198,0.15);color:#32b8c6;border:1px solid rgba(50,184,198,0.3);font-weight:700;">متصل</span>
+        </div>
+      </div>
+      <!-- sent counter -->
+      <div style="text-align:center;padding:0 8px;border-left:1px solid rgba(50,184,198,0.15);margin-left:4px;">
+        <div style="font-size:16px;font-weight:800;color:#32b8c6;" id="execSentTodayCount">0</div>
+        <div style="font-size:9px;color:#8696a0;white-space:nowrap;">مُرسل اليوم</div>
+      </div>
+      <button onclick="closeExecMsgModal()" style="width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,0.07);color:#aebac1;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.color='#ef4444'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='#aebac1'">✕</button>
+    </div>
+
+    <!-- TAB BAR -->
+    <div style="display:flex;background:rgba(0,0,0,0.28);border-bottom:1px solid rgba(50,184,198,0.1);flex-shrink:0;">
+      <button class="mc-tab" id="exec-tab-send" onclick="mcSwitchTab('exec','send',this)" style="color:#32b8c6;border-bottom-color:#32b8c6;">✉️ إرسال</button>
+      <button class="mc-tab" id="exec-tab-history" onclick="mcSwitchTab('exec','history',this)">📜 السجل</button>
+      <button class="mc-tab" id="exec-tab-schedule" onclick="mcSwitchTab('exec','schedule',this)">⏰ جدولة</button>
+    </div>
+
+    <!-- BODY PANELS -->
+    <div style="flex:1;overflow:hidden;position:relative;">
+
+      <!-- ── PANEL: إرسال ── -->
+      <div id="exec-panel-send" class="mc-panel" style="height:100%;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+
+        <!-- Agent selector -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <label style="font-size:11px;font-weight:700;color:#8696a0;letter-spacing:.6px;text-transform:uppercase;">الوكيل المستهدف</label>
+            <span id="wa-exec-agents-count" style="font-size:10px;color:#32b8c6;background:rgba(50,184,198,0.1);padding:2px 8px;border-radius:20px;border:1px solid rgba(50,184,198,0.2);">جارٍ التحميل...</span>
+          </div>
+          <!-- تُملأ ديناميكياً من DB عند تحميل الصفحة -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;" id="execAgentSelector">
+            <div id="wa-no-exec-agents-hint" style="grid-column:1/-1;text-align:center;color:#4d6080;font-size:11px;padding:10px;">
+              ⏳ جارٍ تحميل الوكلاء...
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority + Type -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:130px;">
+            <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">الأولوية</label>
+            <div style="display:flex;gap:5px;" id="execPriorityBar">
+              <button class="mc-pri-btn exec-pri-active" onclick="setExecPriority(this,'normal','عادي','rgba(50,184,198,0.15)','#32b8c6','rgba(50,184,198,0.35)')" style="flex:1;">عادي</button>
+              <button class="mc-pri-btn" onclick="setExecPriority(this,'urgent','🔴 عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">🔴 عاجل</button>
+              <button class="mc-pri-btn" onclick="setExecPriority(this,'critical','🚨 حرج','rgba(239,68,68,0.2)','#ff2020','rgba(239,68,68,0.5)')" style="flex:1;">🚨 حرج</button>
+            </div>
+          </div>
+          <div style="flex:1;min-width:130px;">
+            <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">نوع الرسالة</label>
+            <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px;" class="no-scrollbar" id="execMsgTypeBar">
+              <button class="exec-type-chip exec-type-active" onclick="setExecMsgType(this,'instruction')" style="white-space:nowrap;flex-shrink:0;">📋 تعليمات</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'confirm')" style="white-space:nowrap;flex-shrink:0;">✅ تأكيد</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'cancel')" style="white-space:nowrap;flex-shrink:0;">❌ إلغاء</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'query')" style="white-space:nowrap;flex-shrink:0;">❓ استفسار</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick chips -->
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:7px;letter-spacing:.5px;">رسائل سريعة</label>
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;" class="no-scrollbar">
+            <button onclick="insertExecQuickMsg('⚡ نفّذ الحوالة فوراً')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⚡ نفّذ فوراً</button>
+            <button onclick="insertExecQuickMsg('⏸️ أوقف التنفيذ مؤقتاً حتى إشعار آخر')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⏸️ وقف مؤقت</button>
+            <button onclick="insertExecQuickMsg('✅ تم التأكيد، أكمل التنفيذ')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">✅ تأكيد</button>
+            <button onclick="insertExecQuickMsg('❌ ألغِ الحوالة، هناك مشكلة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">❌ إلغاء</button>
+            <button onclick="insertExecQuickMsg('🔄 أعد الإرسال مرة أخرى')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">🔄 إعادة</button>
+            <button onclick="insertExecQuickMsg('📞 تواصل مع المستفيد للتحقق')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">📞 تحقق</button>
+            <button onclick="insertExecQuickMsg('💰 أرسل المبلغ كاملاً دون خصم')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">💰 كامل</button>
+            <button onclick="insertExecQuickMsg('⚠️ انتبه، الحوالة حساسة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⚠️ تنبيه</button>
+          </div>
+        </div>
+
+        <!-- Emoji picker row (hidden by default) -->
+        <div id="execEmojiRow" style="display:none;flex-wrap:wrap;gap:3px;padding:8px 10px;background:rgba(50,184,198,0.04);border-radius:12px;border:1px solid rgba(50,184,198,0.15);">
+          <span class="mc-emoji" onclick="mcInsertEmoji('exec','✅')">✅</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','❌')">❌</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','⚡')">⚡</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','⏸️')">⏸️</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🔄')">🔄</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','⚠️')">⚠️</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','📋')">📋</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','💰')">💰</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','📞')">📞</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🚨')">🚨</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🔴')">🔴</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🟢')">🟢</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','👍')">👍</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🙏')">🙏</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','✍️')">✍️</span><span class="mc-emoji" onclick="mcInsertEmoji('exec','🕐')">🕐</span>
+        </div>
+
+        <!-- Compose box -->
+        <div id="execComposeBox" style="background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:16px;overflow:hidden;transition:border-color .2s,box-shadow .2s;">
+          <!-- Toolbar -->
+          <div style="display:flex;align-items:center;gap:4px;padding:7px 10px;border-bottom:1px solid rgba(50,184,198,0.1);">
+            <button class="mc-fmt-btn" onclick="mcFormat('exec','bold')" title="غامق" style="background:rgba(50,184,198,0.08);color:#32b8c6;" onmouseover="this.style.background='rgba(50,184,198,0.22)'" onmouseout="this.style.background='rgba(50,184,198,0.08)'"><b>B</b></button>
+            <button class="mc-fmt-btn" onclick="mcFormat('exec','italic')" title="مائل" style="background:rgba(50,184,198,0.08);color:#32b8c6;" onmouseover="this.style.background='rgba(50,184,198,0.22)'" onmouseout="this.style.background='rgba(50,184,198,0.08)'"><i style="font-style:italic;">I</i></button>
+            <button class="mc-fmt-btn" onclick="mcToggleEmoji('exec')" title="إيموجي" id="execEmojiToggleBtn" style="background:rgba(50,184,198,0.08);color:#32b8c6;font-size:14px;" onmouseover="this.style.background='rgba(50,184,198,0.22)'" onmouseout="this.style.background='rgba(50,184,198,0.08)'">😊</button>
+            <div style="flex:1;"></div>
+            <kbd style="font-size:9px;color:#8696a0;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.18);border-radius:4px;padding:2px 6px;font-family:monospace;">Ctrl+↵</kbd>
+          </div>
+          <!-- Textarea -->
+          <textarea id="execMsgText" placeholder="اكتب تعليمات التنفيذ هنا..." style="width:100%;box-sizing:border-box;background:transparent;border:none;padding:10px 13px 8px;color:#e9edef;font-size:13px;font-family:inherit;resize:none;outline:none;line-height:1.7;min-height:80px;max-height:160px;display:block;" oninput="mcTextInput('exec',this)" onkeydown="mcKeyDown('exec',event)" onfocus="document.getElementById('execComposeBox').style.borderColor='#32b8c6';document.getElementById('execComposeBox').style.boxShadow='0 0 0 3px rgba(50,184,198,0.1)'" onblur="document.getElementById('execComposeBox').style.borderColor='rgba(50,184,198,0.18)';document.getElementById('execComposeBox').style.boxShadow='none'"></textarea>
+          <!-- Char progress bar -->
+          <div style="padding:4px 12px 8px;display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;">
+              <div id="execCharBar" style="height:100%;width:0%;background:linear-gradient(90deg,#32b8c6,#0e6b7a);border-radius:3px;transition:width .25s,background .25s;"></div>
+            </div>
+            <span id="execCharCount" style="font-size:10px;color:#8696a0;min-width:46px;text-align:left;">0 / 500</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div id="execLivePreview" style="display:none;animation:mcFadeIn .3s ease;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;">
+            <div style="flex:1;height:1px;background:rgba(50,184,198,0.15);"></div>
+            <span style="font-size:10px;font-weight:700;color:#8696a0;letter-spacing:.5px;">معاينة الرسالة</span>
+            <div style="flex:1;height:1px;background:rgba(50,184,198,0.15);"></div>
+          </div>
+          <div style="background:rgba(50,184,198,0.06);border-radius:14px;padding:12px 14px;border:1px solid rgba(50,184,198,0.18);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#32b8c6,#0e6b7a);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🤖</div>
+              <span style="font-size:11px;font-weight:700;color:#32b8c6;">بوت إنترناشونال</span>
+            </div>
+            <div id="execLivePreviewText" style="background:rgba(50,184,198,0.1);border-radius:4px 14px 14px 14px;padding:9px 12px;font-size:12px;color:#e9edef;line-height:1.7;border-right:3px solid #32b8c6;white-space:pre-wrap;word-break:break-word;"></div>
+            <div id="execLivePreviewMeta" style="font-size:10px;color:#8696a0;margin-top:6px;text-align:left;"></div>
+          </div>
+        </div>
+
+      </div><!-- end send panel -->
+
+      <!-- ── PANEL: السجل ── -->
+      <div id="exec-panel-history" class="mc-panel" style="display:none;height:100%;overflow-y:auto;padding:14px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#8696a0;letter-spacing:.5px;">آخر الرسائل المُرسلة</span>
+          <button onclick="clearExecHistory()" style="font-size:10px;color:#8696a0;background:none;border:1px solid rgba(50,184,198,0.15);border-radius:8px;cursor:pointer;padding:3px 9px;transition:all .2s;" onmouseover="this.style.color='#ef4444';this.style.borderColor='rgba(239,68,68,0.3)'" onmouseout="this.style.color='#8696a0';this.style.borderColor='rgba(255,255,255,0.08)'">مسح الكل</button>
+        </div>
+        <div id="execHistoryList">
+          <div class="mc-history-item">
+            <div class="mc-hi-meta"><span class="mc-hi-group">🔵 برهوم</span><span class="mc-hi-time">10:24</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">⚡ نفّذ الحوالة فوراً</div>
+            <div class="mc-hi-status"><span class="mc-ticks read">✓✓</span> تمت القراءة</div>
+          </div>
+          <div class="mc-history-item">
+            <div class="mc-hi-meta"><span class="mc-hi-group">📢 الكل</span><span class="mc-hi-time">09:58</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">✅ تم التأكيد، أكمل التنفيذ</div>
+            <div class="mc-hi-status"><span class="mc-ticks delivered">✓✓</span> تم التسليم</div>
+          </div>
+          <div class="mc-history-item">
+            <div class="mc-hi-meta"><span class="mc-hi-group">🟢 وكيل 2</span><span class="mc-hi-time">09:30</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">⚠️ انتبه، الحوالة حساسة</div>
+            <div class="mc-hi-status"><span class="mc-ticks sent">✓</span> مُرسل</div>
+          </div>
+        </div>
+      </div><!-- end history panel -->
+
+      <!-- ── PANEL: جدولة ── -->
+      <div id="exec-panel-schedule" class="mc-panel" style="display:none;height:100%;overflow-y:auto;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(50,184,198,0.07);border-radius:14px;border:1px solid rgba(50,184,198,0.2);margin-bottom:14px;">
+          <span style="font-size:22px;">⏰</span>
+          <div><div style="font-size:12px;font-weight:700;color:#e9edef;">جدولة رسالة تنفيذ</div><div style="font-size:10px;color:#8696a0;margin-top:2px;">اختر التوقيت لإرسال التعليمات تلقائياً</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">نص الرسالة المجدولة</label><textarea id="execScheduleText" placeholder="اكتب الرسالة المجدولة..." rows="3" style="width:100%;box-sizing:border-box;background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:12px;padding:10px 12px;color:#e9edef;font-size:12px;font-family:inherit;resize:none;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#32b8c6'" onblur="this.style.borderColor='rgba(50,184,198,0.18)'"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">التاريخ</label><input type="date" id="execScheduleDate" style="width:100%;box-sizing:border-box;background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#32b8c6'" onblur="this.style.borderColor='rgba(50,184,198,0.18)'"></div>
+            <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">الوقت</label><input type="time" id="execScheduleTime" style="width:100%;box-sizing:border-box;background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#32b8c6'" onblur="this.style.borderColor='rgba(50,184,198,0.18)'"></div>
+          </div>
+          <button onclick="addExecScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#32b8c6,#0e6b7a);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(50,184,198,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(50,184,198,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(50,184,198,0.3)'">⏰ جدولة الإرسال</button>
+          <div id="execScheduledList"><div style="font-size:11px;font-weight:700;color:#8696a0;margin-bottom:8px;letter-spacing:.5px;">الرسائل المجدولة</div><div style="text-align:center;padding:20px;color:#4d6080;font-size:11px;">لا توجد رسائل مجدولة</div></div>
+        </div>
+      </div><!-- end schedule panel -->
+
+    </div><!-- end body -->
+
+    <!-- FOOTER -->
+    <div style="padding:12px 18px;background:rgba(0,0,0,0.35);flex-shrink:0;border-top:1px solid rgba(50,184,198,0.1);display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#8696a0;flex-wrap:wrap;">
+        <div id="execSendingDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#32b8c6;box-shadow:0 0 8px #32b8c6;animation:pulseDot 1s ease-in-out infinite;flex-shrink:0;"></div>
+        <span>إلى: <span id="execSelectedAgentLabel" style="color:#32b8c6;font-weight:700;">الكل</span></span>
+        <span id="execPriorityLabel" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(50,184,198,0.12);color:#32b8c6;border:1px solid rgba(50,184,198,0.25);">عادي</span>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <button onclick="closeExecMsgModal()" style="padding:8px 16px;border-radius:20px;border:1px solid rgba(50,184,198,0.20);background:rgba(255,255,255,0.05);color:#aebac1;cursor:pointer;font-size:11px;font-family:inherit;font-weight:600;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">إلغاء</button>
+        <button onclick="sendExecMsg()" id="sendExecMsgBtn" style="padding:8px 20px;border-radius:20px;border:none;cursor:pointer;background:linear-gradient(135deg,#32b8c6,#0e6b7a);color:#fff;font-size:11px;font-family:inherit;font-weight:700;box-shadow:0 3px 12px rgba(50,184,198,0.4);display:flex;align-items:center;gap:6px;transition:all .25s;overflow:hidden;position:relative;" onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 5px 18px rgba(50,184,198,0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 12px rgba(50,184,198,0.4)'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <span id="sendExecMsgLabel">إرسال التعليمات</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end modal card -->
+</div><!-- end exec overlay -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL: مراسلة المصدر
+══════════════════════════════════════════════════════════════ -->
+<div id="msgModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.78);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+
+  <!-- SOURCE MODAL CARD -->
+  <div style="width:min(560px,95vw);max-height:92vh;display:flex;flex-direction:column;background:linear-gradient(170deg,#0a1410 0%,#0d1f18 60%,#0f2620 100%);border-radius:24px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,0.85),0 0 0 1px rgba(37,211,102,0.2),inset 0 1px 0 rgba(37,211,102,0.08);animation:mcSlideUp .35s cubic-bezier(.34,1.56,.64,1);">
+
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#0d2118 0%,#152e22 100%);padding:16px 18px 13px;display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;overflow:hidden;border-bottom:1px solid rgba(37,211,102,0.18);">
+      <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(37,211,102,0.18) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:-30px;left:60px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(37,211,102,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+      <!-- avatar + pulse -->
+      <div style="position:relative;flex-shrink:0;">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#25D366,#075E54);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 0 3px rgba(37,211,102,0.2),0 0 22px rgba(37,211,102,0.28);">💬</div>
+        <div style="position:absolute;bottom:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#25D366;border:2px solid #0a1410;animation:onlinePulse 2.5s ease-in-out infinite;"></div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:800;color:#e9edef;letter-spacing:.3px;">مراسلة المصدر</div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+          <span style="font-size:10px;color:#25D366;">💬 رسالة مباشرة لمجموعة المصدر</span>
+          <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);font-weight:700;">🟢 نشط</span>
+        </div>
+      </div>
+      <!-- sent counter -->
+      <div style="text-align:center;padding:0 8px;border-left:1px solid rgba(37,211,102,0.15);margin-left:4px;">
+        <div style="font-size:16px;font-weight:800;color:#25D366;" id="srcSentTodayCount">0</div>
+        <div style="font-size:9px;color:#8696a0;white-space:nowrap;">مُرسل اليوم</div>
+      </div>
+      <button onclick="closeMsgModal()" style="width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,0.07);color:#aebac1;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.color='#ef4444'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='#aebac1'">✕</button>
+    </div>
+
+    <!-- TAB BAR -->
+    <div style="display:flex;background:rgba(0,0,0,0.28);border-bottom:1px solid rgba(37,211,102,0.1);flex-shrink:0;">
+      <button class="mc-tab" id="src-tab-send" onclick="mcSwitchTab('src','send',this)" style="color:#25D366;border-bottom-color:#25D366;">✉️ إرسال</button>
+      <button class="mc-tab" id="src-tab-history" onclick="mcSwitchTab('src','history',this)">📜 السجل</button>
+      <button class="mc-tab" id="src-tab-schedule" onclick="mcSwitchTab('src','schedule',this)">⏰ جدولة</button>
+    </div>
+
+    <!-- BODY PANELS -->
+    <div style="flex:1;overflow:hidden;position:relative;">
+
+      <!-- ── PANEL: إرسال ── -->
+      <div id="src-panel-send" class="mc-panel" style="height:100%;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+
+        <!-- Group selector -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <label style="font-size:11px;font-weight:700;color:#8696a0;letter-spacing:.6px;text-transform:uppercase;">الوكيل المستهدف</label>
+            <span id="wa-agents-count" style="font-size:10px;color:#32b8c6;background:rgba(50,184,198,0.1);padding:2px 8px;border-radius:20px;border:1px solid rgba(50,184,198,0.2);">جارٍ التحميل...</span>
+          </div>
+          <!-- تُملأ ديناميكياً من DB عند تحميل الصفحة -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;" id="groupSelector">
+            <div id="wa-no-agents-hint" style="grid-column:1/-1;text-align:center;color:#4d6080;font-size:11px;padding:10px;">
+              ⏳ جارٍ تحميل الوكلاء...
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority -->
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">الأولوية</label>
+          <div style="display:flex;gap:6px;" id="srcPriorityBar">
+            <button class="mc-pri-btn src-pri-active" onclick="setSrcPriority(this,'normal','عادي','rgba(37,211,102,0.15)','#25D366','rgba(37,211,102,0.35)')" style="flex:1;">عادي</button>
+            <button class="mc-pri-btn" onclick="setSrcPriority(this,'urgent','🔴 عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">🔴 عاجل</button>
+            <button class="mc-pri-btn" onclick="setSrcPriority(this,'info','ℹ️ معلومة','rgba(59,130,246,0.12)','#3b82f6','rgba(59,130,246,0.3)')" style="flex:1;">ℹ️ معلومة</button>
+          </div>
+        </div>
+
+        <!-- Quick chips -->
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:7px;letter-spacing:.5px;">رسائل سريعة</label>
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;" class="no-scrollbar">
+            <button onclick="insertQuickMsg('✅ تم استلام الحوالة بنجاح')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">✅ تم الاستلام</button>
+            <button onclick="insertQuickMsg('⏳ الرجاء الانتظار، جاري المعالجة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">⏳ جاري المعالجة</button>
+            <button onclick="insertQuickMsg('❌ الحوالة مرفوضة، يرجى المراجعة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">❌ مرفوضة</button>
+            <button onclick="insertQuickMsg('💰 يرجى إرسال مبلغ الحوالة كاملاً')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">💰 إرسال المبلغ</button>
+            <button onclick="insertQuickMsg('📋 يرجى إرسال بيانات المستفيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">📋 بيانات</button>
+            <button onclick="insertQuickMsg('🔄 تم التحديث، شكراً لتعاملكم')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">🔄 تحديث</button>
+            <button onclick="insertQuickMsg('📲 يرجى إرسال صورة الإيصال')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">📲 إيصال</button>
+            <button onclick="insertQuickMsg('✔️ تم التحويل بنجاح، الرجاء التأكيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">✔️ تحويل ناجح</button>
+          </div>
+        </div>
+
+        <!-- Emoji picker row -->
+        <div id="srcEmojiRow" style="display:none;flex-wrap:wrap;gap:3px;padding:8px 10px;background:rgba(37,211,102,0.04);border-radius:12px;border:1px solid rgba(37,211,102,0.15);">
+          <span class="mc-emoji" onclick="mcInsertEmoji('src','✅')">✅</span><span class="mc-emoji" onclick="mcInsertEmoji('src','❌')">❌</span><span class="mc-emoji" onclick="mcInsertEmoji('src','⏳')">⏳</span><span class="mc-emoji" onclick="mcInsertEmoji('src','💰')">💰</span><span class="mc-emoji" onclick="mcInsertEmoji('src','📋')">📋</span><span class="mc-emoji" onclick="mcInsertEmoji('src','🔄')">🔄</span><span class="mc-emoji" onclick="mcInsertEmoji('src','📲')">📲</span><span class="mc-emoji" onclick="mcInsertEmoji('src','✔️')">✔️</span><span class="mc-emoji" onclick="mcInsertEmoji('src','⚠️')">⚠️</span><span class="mc-emoji" onclick="mcInsertEmoji('src','🔴')">🔴</span><span class="mc-emoji" onclick="mcInsertEmoji('src','🟢')">🟢</span><span class="mc-emoji" onclick="mcInsertEmoji('src','👍')">👍</span><span class="mc-emoji" onclick="mcInsertEmoji('src','🙏')">🙏</span><span class="mc-emoji" onclick="mcInsertEmoji('src','💬')">💬</span><span class="mc-emoji" onclick="mcInsertEmoji('src','📞')">📞</span><span class="mc-emoji" onclick="mcInsertEmoji('src','🕐')">🕐</span>
+        </div>
+
+        <!-- Compose box -->
+        <div id="srcComposeBox" style="background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:16px;overflow:hidden;transition:border-color .2s,box-shadow .2s;">
+          <!-- Toolbar -->
+          <div style="display:flex;align-items:center;gap:4px;padding:7px 10px;border-bottom:1px solid rgba(37,211,102,0.1);">
+            <button class="mc-fmt-btn" onclick="mcFormat('src','bold')" title="غامق" style="background:rgba(37,211,102,0.08);color:#25D366;" onmouseover="this.style.background='rgba(37,211,102,0.22)'" onmouseout="this.style.background='rgba(37,211,102,0.08)'"><b>B</b></button>
+            <button class="mc-fmt-btn" onclick="mcFormat('src','italic')" title="مائل" style="background:rgba(37,211,102,0.08);color:#25D366;" onmouseover="this.style.background='rgba(37,211,102,0.22)'" onmouseout="this.style.background='rgba(37,211,102,0.08)'"><i style="font-style:italic;">I</i></button>
+            <button class="mc-fmt-btn" onclick="mcToggleEmoji('src')" title="إيموجي" id="srcEmojiToggleBtn" style="background:rgba(37,211,102,0.08);color:#25D366;font-size:14px;" onmouseover="this.style.background='rgba(37,211,102,0.22)'" onmouseout="this.style.background='rgba(37,211,102,0.08)'">😊</button>
+            <div style="flex:1;"></div>
+            <kbd style="font-size:9px;color:#8696a0;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.18);border-radius:4px;padding:2px 6px;font-family:monospace;">Ctrl+↵</kbd>
+          </div>
+          <!-- Textarea -->
+          <textarea id="msgText" placeholder="اكتب رسالتك هنا..." style="width:100%;box-sizing:border-box;background:transparent;border:none;padding:10px 13px 8px;color:#e9edef;font-size:13px;font-family:inherit;resize:none;outline:none;line-height:1.7;min-height:80px;max-height:160px;display:block;" oninput="mcTextInput('src',this)" onkeydown="mcKeyDown('src',event)" onfocus="document.getElementById('srcComposeBox').style.borderColor='#25D366';document.getElementById('srcComposeBox').style.boxShadow='0 0 0 3px rgba(37,211,102,0.1)'" onblur="document.getElementById('srcComposeBox').style.borderColor='rgba(37,211,102,0.18)';document.getElementById('srcComposeBox').style.boxShadow='none'"></textarea>
+          <!-- Char progress bar -->
+          <div style="padding:4px 12px 8px;display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;">
+              <div id="srcCharBar" style="height:100%;width:0%;background:linear-gradient(90deg,#25D366,#075E54);border-radius:3px;transition:width .25s,background .25s;"></div>
+            </div>
+            <span id="charCount" style="font-size:10px;color:#8696a0;min-width:46px;text-align:left;">0 / 500</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div id="srcLivePreview" style="display:none;animation:mcFadeIn .3s ease;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;">
+            <div style="flex:1;height:1px;background:rgba(37,211,102,0.15);"></div>
+            <span style="font-size:10px;font-weight:700;color:#8696a0;letter-spacing:.5px;">معاينة الرسالة</span>
+            <div style="flex:1;height:1px;background:rgba(37,211,102,0.15);"></div>
+          </div>
+          <div style="background:rgba(37,211,102,0.06);border-radius:14px;padding:12px 14px;border:1px solid rgba(37,211,102,0.18);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#25D366,#075E54);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🤖</div>
+              <span style="font-size:11px;font-weight:700;color:#25D366;">بوت إنترناشونال</span>
+            </div>
+            <div id="srcLivePreviewText" style="background:rgba(37,211,102,0.1);border-radius:4px 14px 14px 14px;padding:9px 12px;font-size:12px;color:#e9edef;line-height:1.7;border-right:3px solid #25D366;white-space:pre-wrap;word-break:break-word;"></div>
+            <div id="srcLivePreviewMeta" style="font-size:10px;color:#8696a0;margin-top:6px;text-align:left;"></div>
+          </div>
+        </div>
+
+      </div><!-- end send panel -->
+
+      <!-- ── PANEL: السجل ── -->
+      <div id="src-panel-history" class="mc-panel" style="display:none;height:100%;overflow-y:auto;padding:14px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#8696a0;letter-spacing:.5px;">آخر الرسائل المُرسلة</span>
+          <button onclick="clearSrcHistory()" style="font-size:10px;color:#8696a0;background:none;border:1px solid rgba(50,184,198,0.15);border-radius:8px;cursor:pointer;padding:3px 9px;transition:all .2s;" onmouseover="this.style.color='#ef4444';this.style.borderColor='rgba(239,68,68,0.3)'" onmouseout="this.style.color='#8696a0';this.style.borderColor='rgba(255,255,255,0.08)'">مسح الكل</button>
+        </div>
+        <div id="srcHistoryList">
+          <div style="text-align:center;padding:30px;color:#4d6080;font-size:11px;">
+            📭 لا توجد رسائل مُرسلة بعد
+          </div>
+        </div>
+      </div><!-- end history panel -->
+
+      <!-- ── PANEL: جدولة ── -->
+      <div id="src-panel-schedule" class="mc-panel" style="display:none;height:100%;overflow-y:auto;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(37,211,102,0.07);border-radius:14px;border:1px solid rgba(37,211,102,0.2);margin-bottom:14px;">
+          <span style="font-size:22px;">⏰</span>
+          <div><div style="font-size:12px;font-weight:700;color:#e9edef;">جدولة رسالة مصدر</div><div style="font-size:10px;color:#8696a0;margin-top:2px;">اختر التوقيت لإرسال الرسالة تلقائياً</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">نص الرسالة المجدولة</label><textarea id="srcScheduleText" placeholder="اكتب الرسالة المجدولة..." rows="3" style="width:100%;box-sizing:border-box;background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:12px;padding:10px 12px;color:#e9edef;font-size:12px;font-family:inherit;resize:none;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='rgba(37,211,102,0.18)'"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">التاريخ</label><input type="date" id="srcScheduleDate" style="width:100%;box-sizing:border-box;background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='rgba(37,211,102,0.18)'"></div>
+            <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">الوقت</label><input type="time" id="srcScheduleTime" style="width:100%;box-sizing:border-box;background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='rgba(37,211,102,0.18)'"></div>
+          </div>
+          <button onclick="addSrcScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#075E54);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(37,211,102,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(37,211,102,0.3)'">⏰ جدولة الإرسال</button>
+          <div id="srcScheduledList"><div style="font-size:11px;font-weight:700;color:#8696a0;margin-bottom:8px;letter-spacing:.5px;">الرسائل المجدولة</div><div style="text-align:center;padding:20px;color:#4d6080;font-size:11px;">لا توجد رسائل مجدولة</div></div>
+        </div>
+      </div><!-- end schedule panel -->
+
+    </div><!-- end body -->
+
+    <!-- FOOTER -->
+    <div style="padding:12px 18px;background:rgba(0,0,0,0.35);flex-shrink:0;border-top:1px solid rgba(37,211,102,0.1);display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#8696a0;flex-wrap:wrap;">
+        <div id="srcSendingDot" style="display:none;width:7px;height:7px;border-radius:50%;background:#25D366;box-shadow:0 0 8px #25D366;animation:pulseDot 1s ease-in-out infinite;flex-shrink:0;"></div>
+        <span>إلى: <span id="selectedGroupLabel" style="color:#25D366;font-weight:700;">الكل</span></span>
+        <span id="srcPriorityLabel" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(37,211,102,0.12);color:#25D366;border:1px solid rgba(37,211,102,0.25);">عادي</span>
+        <button onclick="debugCheckSrcNumber()" title="تحقق من صحة الرقم"
+          style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:2px 8px;color:#8696a0;font-size:10px;cursor:pointer;font-family:inherit">
+          🔍 فحص الرقم
+        </button>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <button onclick="closeMsgModal()" style="padding:8px 16px;border-radius:20px;border:1px solid rgba(50,184,198,0.20);background:rgba(255,255,255,0.05);color:#aebac1;cursor:pointer;font-size:11px;font-family:inherit;font-weight:600;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">إلغاء</button>
+        <button onclick="sendMsgToGroup()" id="sendMsgBtn" style="padding:8px 20px;border-radius:20px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#075E54);color:#fff;font-size:11px;font-family:inherit;font-weight:700;box-shadow:0 3px 12px rgba(37,211,102,0.4);display:flex;align-items:center;gap:6px;transition:all .25s;overflow:hidden;position:relative;" onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 5px 18px rgba(37,211,102,0.58)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 3px 12px rgba(37,211,102,0.4)'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <span id="sendMsgLabel">إرسال</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end modal card -->
+</div><!-- end src overlay -->
+
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script src="{% static 'js/transactions-modal.js' %}"></script>
+<script src="{% static 'js/calculator.js' %}"></script>
+<script src="{% static 'js/transactions.js' %}"></script>
+<script src="{% static 'js/wa-bridge.js' %}"></script>
+<script src="{% static 'js/bot-extension.js' %}"></script>
+<script src="{% static 'js/transactions-bot-panel.js' %}"></script>
+
+<!-- ══════════ نافذة رفع التقارير ══════════ -->
+<div id="trxReportOverlay" onclick="if(event.target===this)trxCloseReportModal()" style="display:none;position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#131d30,#0f1923);border:1px solid rgba(232,192,74,0.22);border-radius:22px;padding:30px 28px;width:500px;max-width:94vw;box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(232,192,74,0.07);direction:rtl;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(232,192,74,0.12);border:1.5px solid rgba(232,192,74,0.28);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 22px rgba(232,192,74,0.12);">📤</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;letter-spacing:-0.2px;">رفع تقرير للإدارة</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:3px;font-weight:600;">يصل مباشرةً إلى لوحة الإدارة العامة</div>
+        </div>
+      </div>
+      <button onclick="trxCloseReportModal()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:10px;color:#8696a0;cursor:pointer;font-size:16px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.12)';this.style.color='#f87171'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#8696a0'">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">عنوان التقرير <span style="color:#f87171;">*</span></label>
+        <input id="trxRptTitle" type="text" placeholder="مثال: تقرير حوالات اليوم، كشف الأرصدة..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.16);border-radius:12px;padding:11px 14px;color:rgba(255,255,255,0.85);font-size:13px;font-weight:700;font-family:inherit;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(232,192,74,0.45)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">
+      </div>
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">الملف المرفق <span style="color:#f87171;">*</span></label>
+        <input type="file" id="trxRptFileInput" accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="trxRptFileChosen(this)">
+        <div id="trxRptDropZone" onclick="document.getElementById('trxRptFileInput').click()" ondragover="event.preventDefault();this.style.borderColor='rgba(232,192,74,0.6)';this.style.background='rgba(232,192,74,0.06)'" ondragleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)'" ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)';trxRptFileDrop(event)" style="border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.22s;background:rgba(255,255,255,0.02);">
+          <div style="font-size:30px;margin-bottom:8px;opacity:0.4;">📂</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.38);">انقر لاختيار ملف أو اسحبه هنا</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.18);margin-top:5px;font-weight:600;">PDF · Excel · Word · صورة — حتى 10 MB</div>
+        </div>
+        <div id="trxRptFilePreview" style="display:none;margin-top:10px;background:rgba(232,192,74,0.06);border:1px solid rgba(232,192,74,0.2);border-radius:12px;padding:11px 14px;align-items:center;gap:12px;">
+          <div id="trxRptFileIcon" style="font-size:24px;flex-shrink:0;">📄</div>
+          <div style="flex:1;min-width:0;">
+            <div id="trxRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="trxRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
+          </div>
+          <button onclick="trxRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✕ إزالة</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">القسم</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);">قسم الحوالات</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">المرسل</div>
+          <div style="font-size:13px;font-weight:800;color:#e8c04a;" id="trxRptSenderDisplay">موظف الحوالات</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button onclick="trxSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(232,192,74,0.9),rgba(251,191,36,0.8));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(232,192,74,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="trxCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function toggleUserDropdown(e){e.stopPropagation();document.getElementById("userDropdown").classList.toggle("open");}
+document.addEventListener("click",function(){var d=document.getElementById("userDropdown");if(d)d.classList.remove("open");});
+document.addEventListener("DOMContentLoaded",function(){var obs=new MutationObserver(function(){var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");var mn=document.getElementById("ud-menu-name"),mr=document.getElementById("ud-menu-role");if(n&&mn)mn.textContent=n.textContent;if(r&&mr)mr.textContent=r.textContent;});var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");if(n)obs.observe(n,{childList:true,characterData:true,subtree:true});if(r)obs.observe(r,{childList:true,characterData:true,subtree:true});});
+</script>
+
+<!-- ══ نافذة طلب التعديل البرمجي ══ -->
+<style>
+.dr-modal-box{background:var(--card-bg,#1e2b33);border-radius:18px;padding:28px 28px 22px;max-width:500px;width:95%;text-align:right;border:1px solid rgba(50,184,198,0.15);box-shadow:0 24px 64px rgba(0,0,0,0.6);}
+.dr-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.dr-hdr-icon{width:46px;height:46px;background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.dr-hdr-title{font-size:17px;font-weight:900;color:var(--text-main,#e9edef);}
+.dr-hdr-sub{font-size:11px;color:var(--text-sub,#8696a0);margin-top:2px;}
+.dr-field{margin-bottom:14px;}
+.dr-label{font-size:11px;font-weight:700;color:var(--text-sub,#8696a0);margin-bottom:6px;display:block;letter-spacing:.3px;}
+.dr-input,.dr-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;color:var(--text-main,#e9edef);outline:none;transition:border .2s;direction:rtl;}
+.dr-input:focus,.dr-textarea:focus{border-color:rgba(50,184,198,0.5);}
+.dr-textarea{resize:vertical;min-height:90px;}
+.dr-type-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dr-type-btn{flex:1;min-width:120px;padding:9px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-sub,#8696a0);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.dr-type-btn.active-improve{border-color:rgba(34,197,94,0.5);background:rgba(34,197,94,0.1);color:#22c55e;}
+.dr-type-btn.active-feature{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.1);color:#818cf8;}
+.dr-type-btn.active-bug{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.1);color:#f87171;}
+.dr-attach-lbl{display:flex;align-items:center;gap:8px;padding:10px 13px;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text-sub,#8696a0);transition:border .2s;}
+.dr-attach-lbl:hover{border-color:rgba(50,184,198,0.4);}
+.dr-attach-files{font-size:11px;color:#32b8c6;margin-top:5px;min-height:14px;}
+.dr-footer{display:flex;gap:10px;margin-top:6px;}
+.dr-btn-send{flex:1;padding:11px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;transition:opacity .2s;}
+.dr-btn-send:hover{opacity:.85;}
+.dr-btn-cancel{padding:11px 18px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:var(--text-sub,#8696a0);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.dr-btn-cancel:hover{background:rgba(255,255,255,0.1);}
+html:not([data-theme="dark"]) body .dr-modal-box{background:#ffffff;border-color:rgba(50,184,198,0.2);box-shadow:0 24px 64px rgba(0,0,0,0.12);}
+html:not([data-theme="dark"]) body .dr-input,html:not([data-theme="dark"]) body .dr-textarea{background:#f8fbfd;border-color:rgba(0,0,0,0.12);color:#0f172a;}
+html:not([data-theme="dark"]) body .dr-type-btn{background:#f1f5f9;border-color:#e2e8f0;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-attach-lbl{background:#f8fbfd;border-color:#cbd5e1;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-color:#e2e8f0;color:#475569;}
+</style>
+<div class="modal-overlay" id="devRequestModal" style="display:none;z-index:9500" onclick="if(event.target===this)closeDevRequestModal()">
+  <div class="dr-modal-box">
+    <div class="dr-hdr">
+      <div class="dr-hdr-icon">🛠️</div>
+      <div>
+        <div class="dr-hdr-title">طلب تعديل برمجي</div>
+        <div class="dr-hdr-sub">سيتم إرسال الطلب مباشرة إلى الإدارة</div>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">عنوان الطلب</label>
+      <input class="dr-input" id="drTitle" type="text" placeholder="اكتب عنواناً موجزاً للطلب...">
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">نوع الطلب</label>
+      <div class="dr-type-btns">
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">وصف الطلب بالتفصيل</label>
+      <textarea class="dr-textarea" id="drDesc" rows="4" placeholder="اشرح المشكلة أو التحسين المطلوب بوضوح..."></textarea>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">مرفقات (اختياري)</label>
+      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
+      <div class="dr-attach-files" id="drAttachFiles"></div>
+    </div>
+    <div class="dr-footer">
+      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _drType=null;
+function openDevRequestModal(){
+  _drType=null;
+  document.getElementById('drTitle').value='';
+  document.getElementById('drDesc').value='';
+  document.getElementById('drAttach').value='';
+  document.getElementById('drAttachFiles').textContent='';
+  ['improve','feature','bug'].forEach(function(t){document.getElementById('drType-'+t).className='dr-type-btn';});
+  document.getElementById('devRequestModal').style.display='flex';
+}
+function closeDevRequestModal(){document.getElementById('devRequestModal').style.display='none';}
+function selectDrType(t){
+  _drType=t;
+  ['improve','feature','bug'].forEach(function(x){document.getElementById('drType-'+x).className='dr-type-btn';});
+  document.getElementById('drType-'+t).className='dr-type-btn active-'+t;
+}
+function updateDrAttachLabel(){
+  var files=document.getElementById('drAttach').files;
+  var names=[];for(var i=0;i<files.length;i++)names.push(files[i].name);
+  document.getElementById('drAttachFiles').textContent=names.length?names.join(' • '):'';
+}
+// ══════════════════════════════════════════════════════════════
+// PORTAL REQUESTS — طلبات البوابة
+// ══════════════════════════════════════════════════════════════
+var _portalReqs = [], _prFilter = '', _prCurrentId = null, _prCurrentStatus = '';
+
+async function loadPortalRequests() {
+  try {
+    var url = '/api/ts/portal-requests/' + (_prFilter ? '?status=' + _prFilter : '');
+    var res = await fetch(url);
+    var data = await res.json();
+    if (!data.success) return;
+    _portalReqs = data.requests;
+    var c = data.counts;
+    var total = (c.new||0) + (c.reviewing||0) + (c.done||0) + (c.rejected||0);
+    document.getElementById('pr-cnt-all').textContent  = total;
+    document.getElementById('pr-cnt-new').textContent  = c.new     || 0;
+    document.getElementById('pr-cnt-rev').textContent  = c.reviewing || 0;
+    document.getElementById('pr-cnt-done').textContent = c.done    || 0;
+    document.getElementById('pr-cnt-rej').textContent  = c.rejected || 0;
+    document.getElementById('portalReqCount').textContent = _portalReqs.length;
+    renderPortalReqs();
+  } catch(e) { console.error('portal-requests fetch error', e); }
+}
+
+function filterPortalReqs(status, btn) {
+  _prFilter = status;
+  document.querySelectorAll('.pr-tab').forEach(function(b){b.classList.remove('active');});
+  if (btn) btn.classList.add('active');
+  loadPortalRequests();
+}
+
+var _statusColors = {new:'#60a5fa', reviewing:'#fabd15', done:'#22c55e', rejected:'#ef4444'};
+var _statusLabels = {new:'جديد', reviewing:'قيد المراجعة', done:'منفّذ', rejected:'مرفوض'};
+
+function renderPortalReqs() {
+  var tbody = document.getElementById('portalReqBody');
+  if (!_portalReqs.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:30px;text-align:center;color:#2d4060">لا توجد طلبات</td></tr>';
+    return;
+  }
+  tbody.innerHTML = _portalReqs.map(function(r) {
+    var col = _statusColors[r.status] || '#8696a0';
+    var lbl = _statusLabels[r.status] || r.status;
+    var dt  = r.createdAt ? r.createdAt.replace('T',' ').slice(0,16) : '—';
+    return '<tr style="border-bottom:1px solid rgba(30,144,255,0.07);transition:background .15s" onmouseover="this.style.background=\'rgba(30,144,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<td style="padding:10px 14px;color:#a5c8ff;font-family:monospace;font-weight:700;white-space:nowrap">'+r.trackingCode+'</td>'+
+      '<td style="padding:10px 14px;color:#c9dfff;word-break:break-all;max-width:160px">'+r.clientEmail+'</td>'+
+      '<td style="padding:10px 14px;color:#c9dfff">'+r.countryName+'</td>'+
+      '<td style="padding:10px 14px;color:#c9dfff">'+r.methodName+'</td>'+
+      '<td style="padding:10px 14px"><span style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap">'+lbl+'</span></td>'+
+      '<td style="padding:10px 14px;color:#8696a0;white-space:nowrap;font-size:11px">'+dt+'</td>'+
+      '<td style="padding:10px 14px;text-align:center"><button onclick="openPortalReqModal('+r.id+')" style="background:rgba(30,144,255,0.1);border:1px solid rgba(30,144,255,0.25);color:#60a5fa;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;">عرض</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+async function openPortalReqModal(id) {
+  _prCurrentId = id;
+  _prCurrentStatus = '';
+  document.querySelectorAll('.prs-btn').forEach(function(b){b.classList.remove('active-status');});
+  document.getElementById('prm-notes').value = '';
+  document.getElementById('portalReqModal').style.display = 'flex';
+  try {
+    var res  = await fetch('/api/ts/portal-requests/'+id+'/');
+    var data = await res.json();
+    if (!data.success) return;
+    var r = data.request;
+    document.getElementById('prm-code').textContent     = r.trackingCode;
+    document.getElementById('prm-name').textContent     = r.clientName || '—';
+    document.getElementById('prm-email').textContent    = r.clientEmail;
+    document.getElementById('prm-country').textContent  = r.countryName || '—';
+    document.getElementById('prm-method').textContent   = r.methodName  || '—';
+    document.getElementById('prm-currency').textContent = r.currency    || '—';
+    var dt = r.createdAt ? r.createdAt.replace('T',' ').slice(0,16) : '—';
+    document.getElementById('prm-created').textContent  = dt;
+    document.getElementById('prm-notes').value          = r.notes || '';
+    // Receipt image
+    var wrap = document.getElementById('prm-receipt-wrap');
+    if (r.receipt) {
+      document.getElementById('prm-receipt-img').src  = r.receipt;
+      document.getElementById('prm-receipt-link').href = r.receipt;
+      wrap.style.display = 'block';
+    } else {
+      wrap.style.display = 'none';
+    }
+    // Highlight current status button
+    _prCurrentStatus = r.status;
+    var activeBtn = document.querySelector('.prs-btn[data-status="'+r.status+'"]');
+    if (activeBtn) activeBtn.classList.add('active-status');
+  } catch(e) { console.error(e); }
+}
+
+function closePortalReqModal() {
+  document.getElementById('portalReqModal').style.display = 'none';
+  _prCurrentId = null;
+}
+
+function setPRStatus(status) {
+  _prCurrentStatus = status;
+  document.querySelectorAll('.prs-btn').forEach(function(b){b.classList.remove('active-status');});
+  var btn = document.querySelector('.prs-btn[data-status="'+status+'"]');
+  if (btn) btn.classList.add('active-status');
+}
+
+async function savePortalReqStatus() {
+  if (!_prCurrentId) return;
+  var notes = document.getElementById('prm-notes').value.trim();
+  var body  = {};
+  if (_prCurrentStatus) body.status = _prCurrentStatus;
+  if (notes !== undefined) body.notes = notes;
+
+  try {
+    var res  = await fetch('/api/ts/portal-requests/'+_prCurrentId+'/', {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body),
+    });
+    var data = await res.json();
+    if (data.success) {
+      closePortalReqModal();
+      loadPortalRequests();
+      if (typeof showToast === 'function') showToast('تم تحديث الطلب بنجاح ✅','success');
+    } else {
+      alert(data.error || 'حدث خطأ');
+    }
+  } catch(e) { alert('خطأ في الاتصال'); }
+}
+
+// Load on page start
+document.addEventListener('DOMContentLoaded', function() {
+  loadPortalRequests();
+});
+
+// ══════════════════════════════════════════════════════════════
+// WebSocket — إشعارات فورية: طلبات البوابة الإلكترونية
+// ══════════════════════════════════════════════════════════════
+(function initTransactionsWS() {
+    var _ws = null;
+    var _pingInterval = null;
+    var _reconnectTimer = null;
+    var _reconnectDelay = 3000;
+
+    function _wsUrl() {
+        var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+        return proto + '://' + location.host + '/ws/intl/';
+    }
+
+    function connect() {
+        try { _ws = new WebSocket(_wsUrl()); } catch(e) { scheduleReconnect(); return; }
+
+        _ws.onopen = function() {
+            _reconnectDelay = 3000;
+            _pingInterval = setInterval(function() {
+                if (_ws && _ws.readyState === WebSocket.OPEN)
+                    _ws.send(JSON.stringify({type:'ping'}));
+            }, 25000);
+        };
+
+        _ws.onmessage = function(e) {
+            var msg;
+            try { msg = JSON.parse(e.data); } catch(x) { return; }
+
+            if (msg.type === 'portal_request_new') {
+                var r = msg.request || {};
+                // تحديث القائمة فورًا
+                if (typeof loadPortalRequests === 'function') loadPortalRequests();
+                // إشعار مرئي
+                if (typeof showToast === 'function')
+                    showToast('طلب بوابة جديد ⚡ — ' + (r.clientEmail || '') + ' — ' + (r.countryName || ''), 'success', '🌐');
+                // شارة حمراء على لوحة البوابة
+                var badge = document.getElementById('portalReqCount');
+                if (badge) {
+                    var cur = parseInt(badge.textContent) || 0;
+                    badge.textContent = cur + 1;
+                    badge.style.background = 'rgba(239,68,68,0.2)';
+                    badge.style.borderColor = 'rgba(239,68,68,0.5)';
+                    badge.style.color = '#f87171';
+                    setTimeout(function() {
+                        badge.style.background = '';
+                        badge.style.borderColor = '';
+                        badge.style.color = '';
+                    }, 4000);
+                }
+                // تمرير لقسم البوابة
+                var panel = document.getElementById('portalReqPanel');
+                if (panel) panel.scrollIntoView({behavior:'smooth', block:'start'});
+            }
+        };
+
+        _ws.onclose = function() {
+            clearInterval(_pingInterval);
+            scheduleReconnect();
+        };
+        _ws.onerror = function() { _ws.close(); };
+    }
+
+    function scheduleReconnect() {
+        clearTimeout(_reconnectTimer);
+        _reconnectTimer = setTimeout(function() {
+            _reconnectDelay = Math.min(_reconnectDelay * 1.5, 30000);
+            connect();
+        }, _reconnectDelay);
+    }
+
+    document.addEventListener('DOMContentLoaded', connect);
+})();
+
+async function submitDevRequest(){
+  var title=document.getElementById('drTitle').value.trim();
+  var desc=document.getElementById('drDesc').value.trim();
+  if(!title){alert('يرجى كتابة عنوان الطلب');return;}
+  if(!_drType){alert('يرجى اختيار نوع الطلب');return;}
+  if(!desc){alert('يرجى كتابة وصف الطلب');return;}
+  var csrf=(document.cookie.split(';').find(function(c){return c.trim().startsWith('csrftoken=');})||'').split('=')[1]||'';
+  try{
+    var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'transactions'})});
+    var data=await res.json();
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    else{alert(data.error||'حدث خطأ أثناء الإرسال');}
+  }catch(e){alert('تعذّر الاتصال بالخادم');}
+}
+
+// ═══ Portal Notifications for T03 ═══
+(function(){
+  var PR_STATUS_LABEL = { new:'🔵 جديد', reviewing:'⚡ قيد المراجعة', done:'✅ منفّذ', rejected:'🚫 مرفوض' };
+
+  window.openPortalNotifPanel = function() {
+    var overlay = document.getElementById('portal-notif-overlay');
+    if (overlay) { overlay.style.display = 'flex'; loadTrxPortalReceipts(); }
+  };
+
+  window.closePortalNotifPanel = function() {
+    var overlay = document.getElementById('portal-notif-overlay');
+    if (overlay) overlay.style.display = 'none';
+  };
+
+  window.loadTrxPortalReceipts = function() {
+    var listEl  = document.getElementById('trx-portal-list');
+    var countEl = document.getElementById('trx-portal-count');
+    var statsEl = document.getElementById('trx-portal-stats');
+    var showDone = document.getElementById('trx-portal-show-done');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:#8696a0;">جاري التحميل...</div>';
+
+    var url = '/api/my-portal-receipts/' + (showDone && showDone.checked ? '?done=1' : '');
+    fetch(url, { credentials: 'include' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var receipts = data.receipts || [];
+
+        // badge
+        var unread = receipts.filter(function(r) { return r.status !== 'done' && r.status !== 'rejected'; }).length;
+        var badge = document.getElementById('trx-portal-badge');
+        if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? 'flex' : 'none'; }
+        if (countEl) countEl.textContent = receipts.length + ' إشعار';
+        if (statsEl) statsEl.textContent = 'واردة: ' + receipts.length + ' — غير منجزة: ' + unread;
+
+        if (!receipts.length) {
+          listEl.innerHTML = '<div style="text-align:center;padding:60px;color:#8696a0;font-size:13px;">لا توجد إشعارات واردة</div>';
+          return;
+        }
+
+        listEl.innerHTML = receipts.map(function(r) {
+          var imgHtml = r.receipt
+            ? '<a href="' + r.receipt + '" target="_blank" rel="noopener" style="display:block;width:68px;height:68px;border-radius:8px;overflow:hidden;border:1px solid #2a3942;flex-shrink:0">'
+              + '<img src="' + r.receipt + '" style="width:100%;height:100%;object-fit:cover;" alt="إيصال"></a>'
+            : '<div style="width:68px;height:68px;border-radius:8px;background:#0d1825;border:1px solid #2a3942;display:flex;align-items:center;justify-content:center;color:#8696a0;font-size:20px;flex-shrink:0">🖼️</div>';
+
+          var statusTag = '<span style="font-size:10px;padding:2px 7px;border-radius:5px;background:rgba(255,255,255,0.05);color:#8696a0;border:1px solid #2a3942;">' + (PR_STATUS_LABEL[r.status] || r.status) + '</span>';
+          var noteRow = r.forwardedNote ? '<div style="font-size:11px;color:#8696a0;margin-top:3px;">📝 ' + r.forwardedNote + '</div>' : '';
+          var dateStr = r.forwardedAt ? new Date(r.forwardedAt).toLocaleDateString('ar-SA') : '';
+
+          return '<div style="display:flex;gap:12px;align-items:flex-start;background:#111b22;border:1px solid #1e2d3d;border-radius:10px;padding:12px 14px;margin-bottom:10px;">'
+            + imgHtml
+            + '<div style="flex:1;min-width:0;">'
+            +   '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">'
+            +     '<span style="font-weight:800;color:#e9edef;font-size:13px;">' + (r.clientName || '—') + '</span>'
+            +     statusTag
+            +   '</div>'
+            +   '<div style="font-size:11px;color:#8696a0;margin-bottom:3px;">'
+            +     '🌍 ' + (r.countryName || '—') + ' | 💰 ' + (r.currency || '—') + ' | 🔑 ' + (r.trackingCode || '—')
+            +   '</div>'
+            +   noteRow
+            +   '<div style="font-size:10px;color:#8696a0;margin-top:4px;">' + dateStr + '</div>'
+            + '</div>'
+            + '</div>';
+        }).join('');
+      })
+      .catch(function() {
+        if (listEl) listEl.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">فشل في تحميل الإشعارات</div>';
+      });
+  };
+
+  // Background badge refresh on page load
+  fetch('/api/my-portal-receipts/', { credentials: 'include' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var receipts = data.receipts || [];
+      var unread = receipts.filter(function(r) { return r.status !== 'done' && r.status !== 'rejected'; }).length;
+      var badge = document.getElementById('trx-portal-badge');
+      if (badge && unread > 0) { badge.textContent = unread; badge.style.display = 'flex'; }
+    })
+    .catch(function() {});
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL: رسائل الانتظار — تحتاج مراجعة
+══════════════════════════════════════════════════════════════ -->
+<div id="wa-pending-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="width:min(520px,95vw);max-height:88vh;display:flex;flex-direction:column;background:#0d1626;border:1px solid rgba(201,168,76,.25);border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.7)">
+
+    <!-- Header -->
+    <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;background:#0d1626;position:sticky;top:0;z-index:1">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#e8eaf0">⏳ رسائل تحتاج مراجعة</div>
+        <div style="font-size:11px;color:#9aa3b8;margin-top:2px">النظام غير متأكد من كونها حوالات — قرر أنت</div>
+      </div>
+      <button onclick="waBridgeClosePending()"
+        style="width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+
+    <!-- Info bar -->
+    <div style="padding:10px 22px;background:rgba(201,168,76,.06);border-bottom:1px solid rgba(201,168,76,.1);font-size:11px;color:#9aa3b8;line-height:1.6">
+      💡 <strong style="color:#c9a84c">نظام النقاط:</strong>
+      عملة +3 · كلمة حوالة +2 · هاتف +2 · مبلغ +2 · اسم +1 · رد/تأكيد −3
+      | <strong style="color:#00c97a">≥4 تُقبل تلقائياً</strong> · <strong style="color:#f59e0b">2-3 تنتظر هنا</strong> · <strong style="color:#ff4d6a">&lt;2 تُتجاهل</strong>
+    </div>
+
+    <!-- List -->
+    <div id="wa-pending-list" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px">
+      <div style="text-align:center;color:#9aa3b8;padding:32px;font-size:13px">لا توجد رسائل في الانتظار</div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:14px 22px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="waBridgeRejectAllPending()"
+        style="padding:8px 16px;border-radius:10px;border:1px solid rgba(255,77,106,.3);background:transparent;color:#ff4d6a;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
+        ✗ تجاهل الكل
+      </button>
+      <button onclick="waBridgeClosePending()"
+        style="padding:8px 18px;border-radius:10px;border:none;background:rgba(255,255,255,.08);color:#e8eaf0;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
+        إغلاق
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// إغلاق modal الانتظار بالنقر خارجه
+document.getElementById('wa-pending-modal').addEventListener('click', function(e) {
+  if (e.target === this) waBridgeClosePending();
+});
+
+// تجاهل الكل
+window.waBridgeRejectAllPending = function() {
+  if (!confirm('تجاهل جميع رسائل الانتظار؟')) return;
+  // استنزف القائمة من الآخر للأول
+  const modal = document.getElementById('wa-pending-modal');
+  // استدع reject بالترتيب العكسي
+  let count = 0;
+  while (window._waBridgePendingCount && window._waBridgePendingCount() > 0) {
+    waBridgeRejectPending(0);
+    if (++count > 200) break; // حماية من loop لا نهائي
+  }
+  // fallback: أغلق فقط
+  waBridgeClosePending();
+};
+
+// مزامنة العداد مع الـ badge
+window._waBridgePendingCount = function() {
+  const badge = document.getElementById('wa-pending-badge');
+  return badge ? parseInt(badge.textContent || '0') : 0;
+};
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+
+<!-- تفعيل لوحة الواتساب في إدارة الحسابات — خاص بصفحة الحوالات فقط -->
+<script>window._waApEnabled = true;</script>
+<script src="{% static 'js/accounts_panel.js' %}?v=7"></script>
+<script>
+  // انتظر تحميل wa-bridge ثم هيّئ اللوحة
+  (function() {
+    function _tryInit() {
+      if (window._waBridgeParseMsg && window._waBridgeClassify && window._cachedMessages) {
+        apWaInit();
+      } else {
+        setTimeout(_tryInit, 200);
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { setTimeout(_tryInit, 400); });
+    } else {
+      setTimeout(_tryInit, 400);
+    }
+  })();
+</script>
+
+{% include 'layout/accounts_panel.html' %}
+{% endblock content %}

@@ -1,0 +1,25 @@
+# ══════════════════════════════════════════════════════════════
+#  docker-compose.yml — بيئة التطوير / الشبكة الداخلية
+#  تشغيل: docker compose up
+#  يستخدم: SQLite + Django runserver
+# ══════════════════════════════════════════════════════════════
+
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.dev
+    restart: unless-stopped
+
+volumes:
+  media_data:

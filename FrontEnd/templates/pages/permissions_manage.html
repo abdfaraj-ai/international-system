@@ -1,0 +1,147 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}صلاحيات الوصول - نظام انترناشونال{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260509b">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<style>
+  .pm-page { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+  .pm-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
+  }
+  .pm-title-wrap { display: flex; align-items: center; gap: 14px; }
+  .pm-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(232,192,74,0.2), rgba(232,192,74,0.05));
+    border: 1px solid rgba(232,192,74,0.3);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .pm-title { font-size: 20px; font-weight: 800; color: #e9edef; }
+  .pm-sub   { font-size: 12px; color: #4a6280; margin-top: 2px; }
+  .pm-actions { display: flex; gap: 10px; align-items: center; }
+  .pm-back {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 9px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    color: #8696a0; font-size: 12px; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all .2s;
+  }
+  .pm-back:hover { background: rgba(255,255,255,0.08); color: #e9edef; }
+  .pm-section-title {
+    font-size: 13px; font-weight: 700; color: #e9edef;
+    margin: 28px 0 14px; display: flex; align-items: center; gap: 8px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="notification" id="notification"></div>
+
+<!-- FX Ticker -->
+<div id="fx-ticker-bar">
+  <div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div>
+  <div id="fx-ticker-track"><div id="fx-ticker-inner"><span id="fx-ticker-loading">جاري تحميل أسعار العملات...</span></div></div>
+  <button id="fx-ticker-refresh" title="تحديث">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Header -->
+<div id="header">
+  <div class="logo-wrap">
+    <img class="logo-icon" src="{% static 'images/الشعار-01.png' %}" alt="شعار">
+    <div>
+      <div class="logo-title">نظام انترناشونال الموحد</div>
+      <div class="logo-sub">إدارة الصلاحيات والوصول</div>
+    </div>
+  </div>
+  <div id="header-section-name">
+    <span class="sec-icon">🔐</span>
+    <span id="header-sec-text">صلاحيات الوصول</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="clock-toggle-wrap">
+      <div class="clock-box">
+        <div class="clock-time" id="clock">--:--:--</div>
+        <div class="clock-date" id="dateDisplay">جاري التحميل...</div>
+      </div>
+    </div>
+    <div class="user-dropdown" id="userDropdown" onclick="toggleUserDropdown(event)">
+      <div class="ud-avatar">👤</div>
+      <div class="ud-info">
+        <div class="ud-name" id="userDisplayName">—</div>
+        <div class="ud-role" id="userDisplayRole">—</div>
+      </div>
+      <svg class="ud-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="ud-menu">
+        <div class="ud-menu-header">
+          <div class="ud-menu-avatar">👤</div>
+          <div><div class="ud-menu-name" id="ud-menu-name">—</div><div class="ud-menu-role" id="ud-menu-role">—</div></div>
+        </div>
+        <div class="ud-menu-item danger" onclick="logout();event.stopPropagation()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-layout">
+{% include 'layout/sidebar.html' %}
+<main class="main-content">
+<div class="pm-page">
+
+  <!-- ── Page Header ── -->
+  <div class="pm-header">
+    <div class="pm-title-wrap">
+      <div class="pm-icon">🔐</div>
+      <div>
+        <div class="pm-title">صلاحيات الوصول</div>
+        <div class="pm-sub">تحكم في صلاحيات كل دور وضبط الجلسات النشطة</div>
+      </div>
+    </div>
+    <div class="pm-actions">
+      <button class="btn btn-gold btn-sm" onclick="savePermissions()">💾 حفظ التغييرات</button>
+      <button class="btn btn-gray btn-sm" onclick="resetPermissions()">↩️ إعادة الضبط</button>
+      <a href="/dashboard/" class="pm-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+        لوحة التحكم
+      </a>
+    </div>
+  </div>
+
+  <!-- ── مصفوفة الصلاحيات ── -->
+  <div class="pm-section-title">🗂️ مصفوفة الصلاحيات</div>
+  <p class="text-muted fs-12" style="margin-bottom:20px;">تحكم في الصفحات المسموح لكل دور الوصول إليها. التغييرات تُطبّق فور حفظها.</p>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:32px;">
+    <div id="perm-matrix" style="padding:4px;"></div>
+  </div>
+
+  <!-- ── الجلسات النشطة ── -->
+  <div class="pm-section-title">🟢 الجلسات النشطة</div>
+  <div class="card">
+    <div id="active-sessions"></div>
+  </div>
+
+</div>
+</main>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/fx-ticker.js' %}?v=3"></script>
+<script src="{% static 'js/dashboard.js' %}?v=20260513a"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    loadPermissionsFromServer().then(() => renderActiveSessions());
+  });
+</script>
+{% endblock %}

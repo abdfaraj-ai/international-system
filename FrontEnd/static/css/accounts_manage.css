@@ -1,0 +1,238 @@
+/* ══════════════════════════════════════════════
+   accounts_manage.css  —  إدارة الحسابات
+   ══════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.am-page { padding: 24px 28px; }
+
+/* ── Header ── */
+.am-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.am-header-left { display: flex; align-items: center; gap: 14px; }
+.am-icon-wrap {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: linear-gradient(135deg,#6366f1,#4f46e5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; box-shadow: 0 5px 20px rgba(99,102,241,0.4);
+  flex-shrink: 0;
+}
+.am-title { font-size: 20px; font-weight: 800; color: #e9edef; }
+.am-sub   { font-size: 11px; color: #818cf8; margin-top: 3px; }
+.am-back-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  color: #8696a0; font-size: 12px; font-weight: 700;
+  text-decoration: none; transition: all .2s; font-family: inherit;
+}
+.am-back-btn:hover { background: rgba(255,255,255,0.08); color: #e9edef; }
+
+/* ══ شريط الأيقونات الأفقي ══ */
+.am-toolbar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  overflow-x: auto;
+  margin-bottom: 0;
+  scrollbar-width: none;
+}
+.am-toolbar::-webkit-scrollbar { display: none; }
+
+.am-tb-sep {
+  width: 1px; height: 44px; background: rgba(255,255,255,0.07);
+  flex-shrink: 0; border-radius: 1px; margin: 0 4px;
+}
+
+.am-btn {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 5px; padding: 8px 14px; border-radius: 12px;
+  cursor: pointer; border: 1px solid transparent;
+  background: transparent;
+  transition: background .18s, border-color .18s, transform .15s;
+  flex-shrink: 0; min-width: 72px; font-family: inherit;
+  position: relative;
+}
+.am-btn:hover {
+  background: var(--btn-bg-h);
+  border-color: var(--btn-bd-h);
+  transform: translateY(-2px);
+}
+.am-btn.active {
+  background: var(--btn-bg-a);
+  border-color: var(--btn-bd-a);
+}
+.am-btn-ico {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+}
+.am-btn-lbl {
+  font-size: 10px; font-weight: 700;
+  color: var(--btn-clr); white-space: nowrap;
+}
+.am-btn.active::after {
+  content: '';
+  position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--btn-dot, #818cf8);
+}
+
+/* ══ منطقة المحتوى ══ */
+.am-content-area {
+  margin-top: 20px;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  min-height: 420px;
+  overflow: hidden;
+}
+
+/* ── Placeholder ── */
+.am-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 14px;
+  padding: 80px 40px; text-align: center;
+}
+.am-placeholder-icon { font-size: 52px; opacity: .3; }
+.am-placeholder-text { font-size: 15px; color: #2d4060; font-weight: 700; }
+.am-placeholder-sub  { font-size: 12px; color: #1e2d40; margin-top: 4px; }
+
+/* ── حقل مشترك ── */
+.am-field { display: flex; flex-direction: column; gap: 5px; }
+.am-field label {
+  font-size: 10px; font-weight: 700; color: #5a7090;
+  letter-spacing: .4px; text-transform: uppercase;
+}
+.am-field input, .am-field select, .am-field textarea {
+  padding: 9px 12px; border-radius: 9px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e9edef; font-size: 12px; outline: none;
+  font-family: inherit; width: 100%; box-sizing: border-box;
+  transition: border-color .2s;
+}
+.am-field input:focus, .am-field select:focus, .am-field textarea:focus {
+  border-color: rgba(99,102,241,0.45);
+}
+.am-field textarea { resize: vertical; min-height: 70px; }
+
+/* ── لوحة ثنائية ── */
+.am-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.am-dual-panel { padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+.am-dual-panel.green {
+  background: rgba(34,197,94,0.04);
+  border-left: 1px solid rgba(34,197,94,0.12);
+}
+.am-dual-panel.red { background: rgba(239,68,68,0.04); }
+.am-dual-head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 800;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 4px;
+}
+
+/* ── شريط الربح ── */
+.am-profit-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.am-profit-kpi { text-align: center; }
+.am-profit-kpi-val { font-size: 18px; font-weight: 800; }
+.am-profit-kpi-lbl { font-size: 10px; color: #4a6280; margin-top: 2px; }
+
+/* ── أزرار الإجراء ── */
+.am-actions {
+  display: flex; gap: 10px; padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.15);
+}
+.am-btn-cancel {
+  flex: 1; padding: 11px; border-radius: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: #8696a0; font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer;
+}
+.am-btn-submit {
+  flex: 3; padding: 11px; border-radius: 10px;
+  border: none; color: #fff;
+  font-family: inherit; font-size: 13px; font-weight: 800;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+
+/* ── جدول الحوالات ── */
+.am-table-wrap { overflow-x: auto; }
+.am-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.am-table th {
+  padding: 11px 14px; color: #4a6280; font-weight: 700;
+  text-align: right; background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.am-table td {
+  padding: 10px 14px; color: #8696a0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.am-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── كشف الحساب: بحث العميل ── */
+.am-client-dd {
+  position: absolute; top: calc(100% + 4px); right: 0; left: 0;
+  background: #0f1c35; border: 1px solid rgba(29,78,216,0.3);
+  border-radius: 10px; max-height: 200px; overflow-y: auto;
+  z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.am-client-dd-item {
+  padding: 10px 14px; cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background .15s;
+}
+.am-client-dd-item:hover { background: rgba(29,78,216,0.12); }
+
+/* ── بطاقات إحصاء ── */
+.am-stat-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap: 10px; padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.am-stat-card {
+  padding: 12px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+}
+.am-stat-val { font-size: 20px; font-weight: 800; color: #e9edef; margin-bottom: 3px; }
+.am-stat-lbl { font-size: 10px; color: #4a6280; }
+
+/* ── حقول الحوالة / التبديل / القص ── */
+.nm-lbl {
+  font-size: 11px; font-weight: 700; color: #5a7090;
+  white-space: nowrap; text-align: right;
+}
+.nm-input {
+  padding: 8px 12px; border-radius: 9px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e9edef; font-size: 12px; outline: none;
+  font-family: inherit; width: 100%; box-sizing: border-box;
+  transition: border-color .2s;
+}
+.nm-input:focus { border-color: rgba(245,158,11,0.4); }
+.nm-input option { background: #0f1c35; }
+
+/* ── قوالب ── */
+.am-tpl-btn {
+  padding: 6px 12px; border-radius: 8px;
+  border: 1px solid rgba(239,68,68,0.25);
+  background: rgba(239,68,68,0.07);
+  color: #f87171; font-size: 11px; font-weight: 700;
+  cursor: pointer; white-space: nowrap; font-family: inherit;
+  transition: background .15s;
+}
+.am-tpl-btn:hover { background: rgba(239,68,68,0.15); }

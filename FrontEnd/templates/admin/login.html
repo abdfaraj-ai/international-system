@@ -1,0 +1,316 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول — نظام انترناشونال</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0b1622;
+  --surface: #111f2e;
+  --card:    #162030;
+  --border:  rgba(50,184,198,0.18);
+  --primary: #32b8c6;
+  --primary2:#1a8f9a;
+  --gold:    #D4AF37;
+  --text:    #e2e8f0;
+  --muted:   #64748b;
+  --green:   #22c55e;
+  --red:     #ef4444;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Tajawal', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Animated background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(50,184,198,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(50,184,198,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 0;
+}
+
+/* Glowing orbs */
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(50,184,198,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  animation: orb 8s ease-in-out infinite alternate;
+}
+
+@keyframes orb {
+  from { transform: translate(0,0); }
+  to   { transform: translate(-60px, 80px); }
+}
+
+.orb2 {
+  position: fixed;
+  bottom: -150px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  animation: orb2 10s ease-in-out infinite alternate;
+}
+
+@keyframes orb2 {
+  from { transform: translate(0,0); }
+  to   { transform: translate(80px,-60px); }
+}
+
+/* Login Card */
+.login-wrap {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(50,184,198,0.06);
+  backdrop-filter: blur(8px);
+}
+
+/* Brand */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.brand-logo {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, rgba(50,184,198,0.2), rgba(50,184,198,0.05));
+  border: 1px solid rgba(50,184,198,0.35);
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 0 30px rgba(50,184,198,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.brand-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.brand-sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.brand-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  border-radius: 2px;
+  margin: 0 auto;
+}
+
+/* Form */
+.form-group { margin-bottom: 20px; }
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.form-group .field-icon-wrap {
+  position: relative;
+}
+
+.form-group .field-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.form-group input[type=text],
+.form-group input[type=password] {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(50,184,198,0.18);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px 44px 12px 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: border .2s, background .2s, box-shadow .2s;
+}
+
+.form-group input[type=text]:focus,
+.form-group input[type=password]:focus {
+  border-color: rgba(50,184,198,0.5);
+  background: rgba(50,184,198,0.06);
+  box-shadow: 0 0 0 3px rgba(50,184,198,0.08);
+}
+
+/* Errors */
+.errornote, .errorlist {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 10px;
+  color: #f87171;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  list-style: none;
+}
+.errorlist li { padding: 0; }
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 24px rgba(50,184,198,0.3);
+  transition: all .2s;
+  margin-top: 8px;
+}
+.submit-btn:hover {
+  background: linear-gradient(135deg, #3dd5e4, var(--primary));
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(50,184,198,0.4);
+}
+.submit-btn:active { transform: translateY(0); }
+
+/* Footer note */
+.login-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.login-footer strong { color: var(--gold); }
+
+/* Next URL hidden */
+input[name=next] { display: none; }
+</style>
+</head>
+<body>
+<div class="orb2"></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-logo">🏦</div>
+      <div>
+        <div class="brand-title">نظام انترناشونال</div>
+        <div class="brand-sub">International Financial Services — Admin Panel</div>
+      </div>
+      <div class="brand-divider"></div>
+    </div>
+
+    <!-- Error messages -->
+    {% if form.errors %}
+    <ul class="errorlist">
+      <li>{% trans "Please enter the correct username and password for a staff account." %}</li>
+    </ul>
+    {% endif %}
+
+    {% if error_message %}
+    <p class="errornote">{{ error_message }}</p>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form method="post" action="{{ app_path }}" id="login-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+
+      <div class="form-group">
+        <label for="id_username">{% trans "Username" %}</label>
+        <div class="field-icon-wrap">
+          <span class="field-icon">👤</span>
+          <input
+            type="text"
+            id="id_username"
+            name="username"
+            value="{{ form.username.value|default:'' }}"
+            autocomplete="username"
+            autofocus
+            placeholder="أدخل اسم المستخدم"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_password">{% trans "Password" %}</label>
+        <div class="field-icon-wrap">
+          <span class="field-icon">🔑</span>
+          <input
+            type="password"
+            id="id_password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="أدخل كلمة المرور"
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        تسجيل الدخول
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <strong>نظام انترناشونال الموحد</strong> — لوحة التحكم الإدارية
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% load static %}
+{# ═══ شريط التنقل المشترك: التوقيت + تبديل الوضع + قائمة المستخدم ═══ #}
+<div style="display:flex;align-items:center;gap:16px;">
+    <div class="clock-toggle-wrap">
+        <div class="clock-box">
+            <div class="clock-time" id="clock">--:--:--</div>
+            <div class="clock-date" id="dateDisplay">جاري التحميل...</div>
+        </div>
+    </div>
+    <div class="user-dropdown" id="userDropdown" onclick="toggleUserDropdown(event)">
+        <div class="ud-avatar">👤</div>
+        <div class="ud-info">
+            <div class="ud-name" id="userDisplayName">---</div>
+            <div class="ud-role" id="userDisplayRole">---</div>
+        </div>
+        <svg class="ud-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="ud-menu">
+            <div class="ud-menu-header">
+                <div class="ud-menu-avatar">👤</div>
+                <div>
+                    <div class="ud-menu-name" id="ud-menu-name">---</div>
+                    <div class="ud-menu-role" id="ud-menu-role">---</div>
+                </div>
+            </div>
+            {% if report_fn %}
+            <div class="ud-menu-item" onclick="{{ report_fn }}(); event.stopPropagation()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> رفع تقرير</div>
+            {% endif %}
+            {% if page_name and page_title %}
+            <div class="ud-menu-item" onclick="openVisualEditor('{{ page_name }}','{{ page_title }}'); event.stopPropagation()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> طلب تعديل برمجي</div>
+            {% endif %}
+            <div class="ud-menu-item" onclick="open2FASettings(); event.stopPropagation()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> <span id="nav2faLabel">المصادقة الثنائية</span></div>
+            <div class="ud-menu-item" id="navTasksItem" onclick="goToTasks(); event.stopPropagation()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> المهام</div>
+            {% if request.user.role != 'T01' %}
+            <a class="ud-menu-item" href="/accounts/manage/" onclick="event.stopPropagation()" style="text-decoration:none;color:inherit;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> إدارة الحسابات</a>
+            {% endif %}
+            <div class="ud-menu-item danger" onclick="logout(); event.stopPropagation()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> تسجيل الخروج</div>
+        </div>
+    </div>
+</div>

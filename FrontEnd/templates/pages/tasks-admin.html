@@ -1,0 +1,770 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}نظام انترناشونال — إدارة المهام{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+<canvas class="particles-canvas" id="particles"></canvas>
+
+<!-- ══ الهيدر ══ -->
+<header class="header">
+    <div class="header-right">
+        <img src="{% static 'images/الشعار-01.png' %}" alt="شعار" class="header-logo">
+        <div>
+            <div class="h-title">نظام انترناشونال الموحد</div>
+            <div class="h-sub"><span class="status-dot"></span> لوحة إدارة المهام والمبرمجين</div>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+        <span class="h-badge">⚙️ الإدارة العامة</span>
+        <span class="h-badge" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--success)" id="headerBadge">📋 0 مهمة نشطة</span>
+    </div>
+    {% include 'layout/navbar.html' with page_name="tasks-admin" page_title="إدارة المهام" %}
+</header>
+
+<div class="app-layout">
+<!-- ══ الشريط الجانبي ══ -->
+<aside class="sidebar">
+    <div class="sidebar-section">إدارة المهام</div>
+    <div class="nav-item active" data-page="tasks" onclick="switchPage('tasks')">
+        <div class="nav-icon">📋</div> جميع المهام
+        <span class="nav-badge blue" id="badgeAll">0</span>
+    </div>
+    <div class="nav-item" data-page="create" onclick="switchPage('create')">
+        <div class="nav-icon">➕</div> إنشاء مهمة جديدة
+    </div>
+    <div class="nav-item" data-page="submitted" onclick="switchPage('submitted');filterByStatus('submitted')">
+        <div class="nav-icon">📥</div> بانتظار المراجعة
+        <span class="nav-badge red" id="badgeSubmitted">0</span>
+    </div>
+    <div class="sidebar-section">المبرمجون</div>
+    <div class="nav-item" data-page="developers" onclick="switchPage('developers')">
+        <div class="nav-icon">👨‍💻</div> إدارة المبرمجين
+    </div>
+    <div class="nav-item" data-page="add-developer" onclick="switchPage('add-developer')">
+        <div class="nav-icon">➕</div> إضافة مبرمج
+    </div>
+    <div class="sidebar-section" style="margin-top:auto">عام</div>
+    <div class="nav-item" onclick="loadStats()">
+        <div class="nav-icon">🔄</div> تحديث البيانات
+    </div>
+</aside>
+
+<!-- ══ المحتوى ══ -->
+<main class="main-content">
+
+<!-- ── الإحصائيات ── -->
+<div class="top-stats">
+    <div class="t-stat"><div class="t-stat-icon">📋</div><div class="t-stat-value" id="statTotal">0</div><div class="t-stat-label">إجمالي المهام</div></div>
+    <div class="t-stat"><div class="t-stat-icon">⏳</div><div class="t-stat-value" id="statPending">0</div><div class="t-stat-label">بانتظار / قيد التنفيذ</div></div>
+    <div class="t-stat"><div class="t-stat-icon">📥</div><div class="t-stat-value" id="statSubmitted">0</div><div class="t-stat-label">بانتظار المراجعة</div></div>
+    <div class="t-stat"><div class="t-stat-icon">✅</div><div class="t-stat-value" id="statAccepted">0</div><div class="t-stat-label">مقبولة</div></div>
+    <div class="t-stat"><div class="t-stat-icon">❌</div><div class="t-stat-value" id="statRejected">0</div><div class="t-stat-label">مرفوضة</div></div>
+</div>
+
+<!-- ══ قسم: كل المهام ══ -->
+<div class="page-section active" id="sec-tasks">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">📋</div> قائمة المهام</div>
+            <button class="btn btn-primary btn-sm" onclick="switchPage('create');setNav('create')">
+                <span>➕</span> مهمة جديدة
+            </button>
+        </div>
+
+        <!-- فلاتر -->
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterByStatus('');setFilter(this)">الكل</button>
+            <button class="filter-btn" onclick="filterByStatus('new');setFilter(this)">🆕 جديدة</button>
+            <button class="filter-btn" onclick="filterByStatus('in_progress');setFilter(this)">⚙️ قيد التنفيذ</button>
+            <button class="filter-btn" onclick="filterByStatus('submitted');setFilter(this)">📥 مُسلَّمة</button>
+            <button class="filter-btn" onclick="filterByStatus('accepted');setFilter(this)">✅ مقبولة</button>
+            <button class="filter-btn" onclick="filterByStatus('rejected');setFilter(this)">❌ مرفوضة</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث في المهام..." oninput="filterSearch(this.value)">
+            </div>
+        </div>
+
+        <!-- القائمة -->
+        <div id="tasksList" class="tasks-list">
+            <div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">جاري التحميل...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ قسم: إنشاء مهمة ══ -->
+<div class="page-section" id="sec-create">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">➕</div> إنشاء مهمة جديدة</div>
+        </div>
+        <form id="createTaskForm" onsubmit="submitCreateTask(event)">
+            <div class="create-form">
+                <div class="form-group full">
+                    <label class="form-label">عنوان المهمة *</label>
+                    <input type="text" class="form-control" id="fTitle" placeholder="عنوان واضح ومختصر للمهمة" required>
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">الوصف التفصيلي *</label>
+                    <textarea class="form-control" id="fDesc" rows="5" placeholder="اكتب وصفاً دقيقاً للمطلوب تنفيذه..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">تكليف إلى *</label>
+                    <select class="form-control" id="fAssignee" required>
+                        <option value="">-- اختر المبرمج --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الأولوية</label>
+                    <select class="form-control" id="fPriority">
+                        <option value="low">⚪ عادية</option>
+                        <option value="medium" selected>🔵 مهمة</option>
+                        <option value="high">🟡 عالية</option>
+                        <option value="urgent">🔴 عاجلة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الموعد النهائي (اختياري)</label>
+                    <input type="datetime-local" class="form-control" id="fDeadline">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ملف مرفق (اختياري)</label>
+                    <input type="file" class="form-control" id="fAttachment">
+                </div>
+            </div>
+            <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:10px">
+                <button type="button" class="btn btn-secondary" onclick="switchPage('tasks');setNav('tasks')">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="createBtn">
+                    <span>📤</span> إرسال المهمة
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ══ قسم: بانتظار المراجعة ══ -->
+<div class="page-section" id="sec-submitted">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">📥</div> المهام المُسلَّمة — بانتظار مراجعتك</div>
+        </div>
+        <div id="submittedList" class="tasks-list">
+            <div class="empty-state"><div class="empty-state-icon">📥</div><div class="empty-state-title">لا توجد مهام مُسلَّمة حالياً</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ قسم: المبرمجون ══ -->
+<div class="page-section" id="sec-developers">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">👨‍💻</div> المبرمجون المُسجَّلون</div>
+            <div style="display:flex;gap:10px;align-items:center">
+                <span id="devCount" style="font-size:12px;color:var(--text-muted)">0 مبرمج</span>
+                <button class="btn btn-primary btn-sm" onclick="switchPage('add-developer');setNav('add-developer')">
+                    ➕ إضافة مبرمج
+                </button>
+            </div>
+        </div>
+        <div id="devGrid" class="dev-grid">
+            <div class="empty-state"><div class="empty-state-icon">👨‍💻</div><div class="empty-state-title">جاري التحميل...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ قسم: إضافة مبرمج ══ -->
+<div class="page-section" id="sec-add-developer">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">➕</div> إضافة مبرمج جديد</div>
+        </div>
+        <form id="addDevForm" onsubmit="submitAddDeveloper(event)">
+            <div class="create-form">
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم *</label>
+                    <input type="text" class="form-control" id="devUsername"
+                        placeholder="مثال: dev_ahmad" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الاسم الكامل</label>
+                    <input type="text" class="form-control" id="devFullname"
+                        placeholder="الاسم المعروض في النظام">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <input type="email" class="form-control" id="devEmail" placeholder="example@mail.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور * (8 أحرف على الأقل)</label>
+                    <input type="password" class="form-control" id="devPassword"
+                        placeholder="كلمة مرور قوية" autocomplete="new-password" required minlength="8">
+                </div>
+            </div>
+
+            <!-- معلومات الدور -->
+            <div style="margin:16px 0;background:rgba(50,184,198,0.06);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+                <span style="font-size:24px">👨‍💻</span>
+                <div>
+                    <div style="font-size:13px;font-weight:700;color:var(--primary-light)">دور المبرمج — P01</div>
+                    <div style="font-size:12px;color:var(--text-muted);margin-top:2px">سيتمكن من رؤية مهامه الموكلة، تسليم التنفيذ، والتواصل معك عبر التعليقات</div>
+                </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px">
+                <button type="button" class="btn btn-secondary"
+                    onclick="switchPage('developers');setNav('developers')">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="addDevBtn">
+                    <span>👨‍💻</span> إضافة المبرمج
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</main>
+</div>
+
+<!-- ══ مودال: تفاصيل المهمة ══ -->
+<div class="modal-overlay hidden" id="taskModal">
+    <div class="task-modal">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTaskTitle">📋 تفاصيل المهمة</div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- البيانات الأساسية -->
+            <div class="task-detail-grid" id="modalDetails"></div>
+            <!-- الوصف -->
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📝 الوصف</div>
+            <div class="task-desc-box" id="modalDesc"></div>
+            <!-- التسليم -->
+            <div id="modalSubmission"></div>
+            <!-- التعليقات -->
+            <div class="comments-section">
+                <div class="comments-title">💬 التعليقات والمراسلات</div>
+                <div class="comment-list" id="commentList"></div>
+                <div class="comment-input-row">
+                    <textarea id="commentInput" placeholder="اكتب تعليقاً أو توضيحاً..."></textarea>
+                    <button class="btn btn-primary btn-sm" onclick="sendComment()" style="height:52px;white-space:nowrap">إرسال</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
+
+<!-- ══ Toast ══ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script>
+let allTasks = [];
+let currentTaskId = null;
+let currentFilter = '';
+const CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+
+/* ══════════ تهيئة ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+    loadStats();
+    loadAssignees();
+    loadDevelopers();
+    // WebSocket: مهام جديدة
+    document.addEventListener('ws:task_event', e => {
+        const {event} = e.detail;
+        if(['task_submitted','task_updated','task_assigned'].includes(event)){
+            loadTasks(); loadStats();
+            showToast('تحديث مهمة', `حدث جديد: ${event}`, 'info');
+        }
+    });
+});
+
+/* ══════════ التنقل ══════════ */
+function switchPage(page) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + page)?.classList.add('active');
+    setNav(page);
+}
+function setNav(page) {
+    document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', n.dataset.page === page);
+    });
+}
+function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+/* ══════════ تحميل البيانات ══════════ */
+async function loadTasks(status = '') {
+    const url = `/api/tasks/?${status ? 'status='+status : ''}`;
+    try {
+        const r = await fetch(url); const d = await r.json();
+        allTasks = d.tasks || [];
+        renderTasks(allTasks, 'tasksList');
+        renderTasks(allTasks.filter(t => t.status === 'submitted'), 'submittedList');
+    } catch { showToast('خطأ', 'تعذّر تحميل المهام', 'error'); }
+}
+
+async function loadStats() {
+    try {
+        const r = await fetch('/api/tasks/stats/'); const d = await r.json();
+        if (!d.success) return;
+        const s = d.stats;
+        document.getElementById('statTotal').textContent    = s.total;
+        document.getElementById('statPending').textContent  = s.new + s.inProgress;
+        document.getElementById('statSubmitted').textContent= s.submitted;
+        document.getElementById('statAccepted').textContent = s.accepted;
+        document.getElementById('statRejected').textContent = s.rejected;
+        document.getElementById('badgeAll').textContent      = s.total;
+        document.getElementById('badgeSubmitted').textContent= s.submitted;
+        document.getElementById('headerBadge').textContent   = `📋 ${s.new + s.inProgress} مهمة نشطة`;
+        if (s.submitted > 0) {
+            document.getElementById('badgeSubmitted').style.display = 'block';
+        }
+    } catch {}
+}
+
+async function loadAssignees() {
+    try {
+        const r = await fetch('/api/tasks/assignees/'); const d = await r.json();
+        const sel = document.getElementById('fAssignee');
+        (d.users || []).forEach(u => {
+            const o = document.createElement('option');
+            o.value = u.username;
+            o.textContent = `${u.name} (${u.username})`;
+            sel.appendChild(o);
+        });
+    } catch {}
+}
+
+async function loadDevelopers() {
+    try {
+        const [devR, tasksR] = await Promise.all([
+            fetch('/api/tasks/developers/'),
+            fetch('/api/tasks/')
+        ]);
+        const devD   = await devR.json();
+        const tasksD = await tasksR.json();
+
+        const devs  = devD.developers || [];
+        const allT  = tasksD.tasks    || [];
+        const grid  = document.getElementById('devGrid');
+
+        document.getElementById('devCount').textContent = devs.length + ' مبرمج';
+
+        if (!devs.length) {
+            grid.innerHTML = `<div class="empty-state">
+                <div class="empty-state-icon">👨‍💻</div>
+                <div class="empty-state-title">لا يوجد مبرمجون بعد</div>
+                <div class="empty-state-sub">اضغط "إضافة مبرمج" لإضافة أول مبرمج</div></div>`;
+            return;
+        }
+
+        grid.innerHTML = '';
+        devs.forEach(u => {
+            const myTasks = allT.filter(t => t.assignedTo === u.username);
+            const active  = myTasks.filter(t => ['new','in_progress'].includes(t.status)).length;
+            const done    = myTasks.filter(t => t.status === 'accepted').length;
+            const pending = myTasks.filter(t => t.status === 'submitted').length;
+            const pct     = myTasks.length ? Math.round(done / myTasks.length * 100) : 0;
+            const initial = (u.name || u.username).charAt(0).toUpperCase();
+            const statusColor = u.isActive ? 'var(--success)' : 'var(--danger)';
+            const statusLabel = u.isActive ? '● نشط' : '● موقوف';
+            grid.innerHTML += `
+            <div class="dev-card">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div class="dev-avatar">${initial}</div>
+                        <div>
+                            <div class="dev-name">${u.name || u.username}</div>
+                            <div class="dev-username">@${u.username}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                        <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span>
+                        <div style="display:flex;gap:6px">
+                            <button class="btn btn-secondary btn-sm" style="padding:4px 10px;font-size:11px"
+                                onclick="editDeveloper('${u.username}','${u.name||u.username}','${u.email||''}')">✏️</button>
+                            <button class="btn btn-danger btn-sm" style="padding:4px 10px;font-size:11px"
+                                onclick="deleteDeveloper('${u.username}','${u.name||u.username}')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="dev-stats">
+                    <div class="dev-stat"><div class="dev-stat-val" style="color:#818cf8">${active}</div><div class="dev-stat-lbl">نشطة</div></div>
+                    <div class="dev-stat"><div class="dev-stat-val" style="color:var(--warning)">${pending}</div><div class="dev-stat-lbl">مُسلَّمة</div></div>
+                    <div class="dev-stat"><div class="dev-stat-val" style="color:var(--success)">${done}</div><div class="dev-stat-lbl">مقبولة</div></div>
+                </div>
+                <div class="progress-bar" style="margin-top:12px">
+                    <div class="progress-fill" style="width:${pct}%"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:5px">
+                    <span style="font-size:10px;color:var(--text-muted)">${pct}% إنجاز</span>
+                    <span style="font-size:10px;color:var(--text-muted)">${myTasks.length} مهمة</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn btn-secondary btn-sm" style="flex:1"
+                        onclick="filterByAssignee('${u.username}');setNav('tasks');switchPage('tasks')">عرض مهامه</button>
+                    <button class="btn btn-primary btn-sm" style="flex:1"
+                        onclick="resetDevPassword('${u.username}','${u.name||u.username}')">🔑 كلمة المرور</button>
+                </div>
+            </div>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+/* ══════════ إضافة مبرمج ══════════ */
+async function submitAddDeveloper(e) {
+    e.preventDefault();
+    const btn = document.getElementById('addDevBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> جاري الإضافة...';
+
+    const fullname = document.getElementById('devFullname').value.trim().split(' ');
+    const payload = {
+        username:  document.getElementById('devUsername').value.trim(),
+        password:  document.getElementById('devPassword').value.trim(),
+        firstName: fullname[0] || '',
+        lastName:  fullname.slice(1).join(' ') || '',
+        email:     document.getElementById('devEmail').value.trim(),
+    };
+
+    try {
+        const r = await fetch('/api/tasks/developers/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+            body: JSON.stringify(payload)
+        });
+        const d = await r.json();
+        if (d.success) {
+            showToast('تم الإضافة', `تم إضافة المبرمج @${payload.username} بنجاح ✓`, 'success');
+            document.getElementById('addDevForm').reset();
+            switchPage('developers'); setNav('developers');
+            loadDevelopers();
+            // تحديث قائمة المكلَّفين
+            document.getElementById('fAssignee').innerHTML = '<option value="">-- اختر المبرمج --</option>';
+            loadAssignees();
+        } else {
+            showToast('خطأ', d.message || 'تعذّر إضافة المبرمج', 'error');
+        }
+    } catch {
+        showToast('خطأ', 'خطأ في الاتصال بالخادم', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<span>👨‍💻</span> إضافة المبرمج';
+}
+
+/* ══════════ تعديل مبرمج ══════════ */
+async function editDeveloper(username, name, email) {
+    const newName  = prompt('الاسم الكامل:', name);
+    if (newName === null) return;
+    const newEmail = prompt('البريد الإلكتروني:', email);
+    if (newEmail === null) return;
+
+    const parts = newName.trim().split(' ');
+    try {
+        const r = await fetch(`/api/tasks/developers/${username}/`, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+            body: JSON.stringify({firstName: parts[0]||'', lastName: parts.slice(1).join(' ')||'', email: newEmail})
+        });
+        const d = await r.json();
+        if (d.success) { showToast('تم', 'تم تعديل بيانات المبرمج', 'success'); loadDevelopers(); }
+        else showToast('خطأ', d.message, 'error');
+    } catch {}
+}
+
+/* ══════════ حذف مبرمج ══════════ */
+async function deleteDeveloper(username, name) {
+    if (!confirm(`هل أنت متأكد من حذف المبرمج "${name}" (@${username})؟\nسيتم حذف حسابه نهائياً.`)) return;
+    try {
+        const r = await fetch(`/api/tasks/developers/${username}/`, {
+            method: 'DELETE', headers: {'X-CSRFToken': CSRF}
+        });
+        const d = await r.json();
+        if (d.success) { showToast('تم', 'تم حذف المبرمج', 'success'); loadDevelopers(); }
+        else showToast('خطأ', d.message, 'error');
+    } catch {}
+}
+
+/* ══════════ إعادة ضبط كلمة المرور ══════════ */
+async function resetDevPassword(username, name) {
+    const newPw = prompt(`كلمة مرور جديدة لـ "${name}" (8 أحرف على الأقل):`);
+    if (!newPw || newPw.length < 8) {
+        if (newPw !== null) showToast('خطأ', 'كلمة المرور قصيرة جداً', 'error');
+        return;
+    }
+    try {
+        const r = await fetch(`/api/tasks/developers/${username}/password/`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+            body: JSON.stringify({password: newPw})
+        });
+        const d = await r.json();
+        if (d.success) showToast('تم', 'تم تغيير كلمة المرور', 'success');
+        else showToast('خطأ', d.message, 'error');
+    } catch {}
+}
+
+/* ══════════ عرض المهام ══════════ */
+const priorityLabel = {urgent:'🔴 عاجلة',high:'🟡 عالية',medium:'🔵 مهمة',low:'⚪ عادية'};
+const statusLabel   = {new:'جديدة',in_progress:'قيد التنفيذ',submitted:'مُسلَّمة',accepted:'مقبولة',rejected:'مرفوضة'};
+
+function renderTasks(tasks, containerId) {
+    const el = document.getElementById(containerId);
+    if (!tasks.length) {
+        el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div>
+            <div class="empty-state-title">لا توجد مهام</div>
+            <div class="empty-state-sub">لم يتم العثور على مهام بهذه الفلاتر</div></div>`;
+        return;
+    }
+    el.innerHTML = tasks.map(t => {
+        const dl = t.deadline ? new Date(t.deadline) : null;
+        const now = new Date();
+        const dlStr = dl ? (dl < now && t.status !== 'accepted'
+            ? `<span class="deadline-warn">⚠️ ${dl.toLocaleDateString('ar')}</span>`
+            : `<span class="deadline-ok">📅 ${dl.toLocaleDateString('ar')}</span>`) : '';
+        return `
+        <div class="task-row ${t.priority}" onclick="openTask(${t.id})">
+            <div class="task-priority-dot ${t.priority}"></div>
+            <div class="task-main">
+                <div class="task-title-row">${t.title}</div>
+                <div class="task-meta">
+                    <span>👨‍💻 ${t.assignedToName}</span>
+                    <span>${priorityLabel[t.priority]||t.priority}</span>
+                    ${dlStr}
+                </div>
+            </div>
+            <div class="task-right">
+                <span class="task-badge ${t.status}">${statusLabel[t.status]||t.status}</span>
+                <span class="task-date">${new Date(t.createdAt).toLocaleDateString('ar')}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ══════════ فلترة ══════════ */
+function filterByStatus(status) {
+    currentFilter = status;
+    const filtered = status ? allTasks.filter(t => t.status === status) : allTasks;
+    renderTasks(filtered, 'tasksList');
+}
+function filterByAssignee(username) {
+    switchPage('tasks'); setNav('tasks');
+    const filtered = allTasks.filter(t => t.assignedTo === username);
+    renderTasks(filtered, 'tasksList');
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+}
+function filterSearch(q) {
+    const s = q.trim().toLowerCase();
+    const base = currentFilter ? allTasks.filter(t => t.status === currentFilter) : allTasks;
+    const filtered = s ? base.filter(t =>
+        t.title.toLowerCase().includes(s) ||
+        t.assignedToName.toLowerCase().includes(s) ||
+        (t.description||'').toLowerCase().includes(s)
+    ) : base;
+    renderTasks(filtered, 'tasksList');
+}
+
+/* ══════════ إنشاء مهمة ══════════ */
+async function submitCreateTask(e) {
+    e.preventDefault();
+    const btn = document.getElementById('createBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
+
+    const fd = new FormData();
+    fd.append('title',      document.getElementById('fTitle').value);
+    fd.append('description',document.getElementById('fDesc').value);
+    fd.append('assignedTo', document.getElementById('fAssignee').value);
+    fd.append('priority',   document.getElementById('fPriority').value);
+    fd.append('deadline',   document.getElementById('fDeadline').value);
+    const file = document.getElementById('fAttachment').files[0];
+    if (file) fd.append('attachment', file);
+
+    try {
+        const r = await fetch('/api/tasks/create/', {
+            method:'POST', headers:{'X-CSRFToken':CSRF}, body:fd
+        });
+        const d = await r.json();
+        if (d.success) {
+            showToast('تم الإرسال', 'تم إرسال المهمة بنجاح ✓', 'success');
+            document.getElementById('createTaskForm').reset();
+            switchPage('tasks'); setNav('tasks');
+            loadTasks(); loadStats();
+        } else {
+            showToast('خطأ', d.message || 'تعذّر إنشاء المهمة', 'error');
+        }
+    } catch {
+        showToast('خطأ', 'خطأ في الاتصال بالخادم', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<span>📤</span> إرسال المهمة';
+}
+
+/* ══════════ فتح المهمة ══════════ */
+async function openTask(id) {
+    currentTaskId = id;
+    try {
+        const r = await fetch(`/api/tasks/${id}/`); const d = await r.json();
+        if (!d.success) return;
+        const t = d.task;
+
+        document.getElementById('modalTaskTitle').innerHTML =
+            `📋 ${t.title} <span class="task-badge ${t.status}" style="font-size:12px">${statusLabel[t.status]||t.status}</span>`;
+
+        // تفاصيل
+        const dl = t.deadline ? new Date(t.deadline).toLocaleString('ar') : '—';
+        document.getElementById('modalDetails').innerHTML = `
+            <div class="detail-item"><div class="detail-label">المُكلَّف به</div>
+                <div class="detail-value">👨‍💻 ${t.assignedToName} (@${t.assignedTo})</div></div>
+            <div class="detail-item"><div class="detail-label">الأولوية</div>
+                <div class="detail-value"><span class="priority-badge ${t.priority}">${priorityLabel[t.priority]}</span></div></div>
+            <div class="detail-item"><div class="detail-label">الموعد النهائي</div>
+                <div class="detail-value">${dl}</div></div>
+            <div class="detail-item"><div class="detail-label">تاريخ الإنشاء</div>
+                <div class="detail-value">${new Date(t.createdAt).toLocaleString('ar')}</div></div>`;
+
+        document.getElementById('modalDesc').textContent = t.description;
+
+        // التسليم
+        const subBox = document.getElementById('modalSubmission');
+        if (t.submission) {
+            const sub = t.submission;
+            subBox.innerHTML = `
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📦 التسليم</div>
+            <div class="submission-done">
+                <div class="submission-done-icon">📦</div>
+                <div>
+                    <div class="submission-done-text">تم التسليم بواسطة ${sub.submittedByName}</div>
+                    <div class="submission-done-note">${new Date(sub.submittedAt).toLocaleString('ar')}
+                        ${sub.note ? ' — ' + sub.note : ''}
+                        ${sub.file ? ` — <a href="${sub.file}" target="_blank" style="color:var(--primary-light)">📎 تحميل الملف</a>` : ''}</div>
+                </div>
+            </div>`;
+        } else subBox.innerHTML = '';
+
+        // التعليقات
+        renderComments(t.comments || []);
+
+        // أزرار المودال
+        const footer = document.getElementById('modalFooter');
+        if (t.status === 'submitted') {
+            footer.innerHTML = `
+                <button class="btn btn-danger" onclick="reviewTask('rejected')">❌ رفض التسليم</button>
+                <button class="btn btn-success" onclick="reviewTask('accepted')">✅ قبول التسليم</button>`;
+        } else if (t.status !== 'accepted') {
+            footer.innerHTML = `
+                <button class="btn btn-secondary btn-sm" onclick="closeModal()">إغلاق</button>`;
+        } else {
+            footer.innerHTML = `<button class="btn btn-secondary btn-sm" onclick="closeModal()">إغلاق</button>`;
+        }
+
+        document.getElementById('taskModal').classList.remove('hidden');
+    } catch { showToast('خطأ', 'تعذّر تحميل المهمة', 'error'); }
+}
+
+function renderComments(comments) {
+    const list = document.getElementById('commentList');
+    if (!comments.length) {
+        list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px">لا توجد تعليقات بعد</div>`;
+        return;
+    }
+    list.innerHTML = comments.map(c => `
+        <div class="comment-item">
+            <div class="comment-avatar admin">${c.authorName.charAt(0)}</div>
+            <div class="comment-bubble">
+                <div class="comment-author">
+                    <span>${c.authorName}</span>
+                    <span class="comment-time">${new Date(c.createdAt).toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}</span>
+                </div>
+                <div class="comment-text">${c.body}</div>
+            </div>
+        </div>`).join('');
+    list.scrollTop = list.scrollHeight;
+}
+
+async function sendComment() {
+    const input = document.getElementById('commentInput');
+    const body = input.value.trim();
+    if (!body || !currentTaskId) return;
+    try {
+        const r = await fetch(`/api/tasks/${currentTaskId}/comment/`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+            body: JSON.stringify({body})
+        });
+        const d = await r.json();
+        if (d.success) {
+            input.value = '';
+            const list = document.getElementById('commentList');
+            const c = d.comment;
+            list.insertAdjacentHTML('beforeend', `
+                <div class="comment-item">
+                    <div class="comment-avatar admin">${c.authorName.charAt(0)}</div>
+                    <div class="comment-bubble">
+                        <div class="comment-author"><span>${c.authorName}</span>
+                            <span class="comment-time">الآن</span></div>
+                        <div class="comment-text">${c.body}</div>
+                    </div>
+                </div>`);
+            list.scrollTop = list.scrollHeight;
+        }
+    } catch {}
+}
+
+/* ══════════ مراجعة التسليم ══════════ */
+async function reviewTask(status) {
+    let adminNotes = '';
+    if (status === 'rejected') {
+        adminNotes = prompt('سبب الرفض (سيُرسل للمبرمج):');
+        if (adminNotes === null) return;
+    }
+    try {
+        const r = await fetch(`/api/tasks/${currentTaskId}/`, {
+            method:'PATCH',
+            headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+            body: JSON.stringify({status, adminNotes})
+        });
+        const d = await r.json();
+        if (d.success) {
+            showToast(status === 'accepted' ? 'تم القبول' : 'تم الرفض',
+                status === 'accepted' ? 'تم قبول التسليم ✓' : 'تم رفض التسليم',
+                status === 'accepted' ? 'success' : 'warning');
+            closeModal();
+            loadTasks(); loadStats();
+        }
+    } catch {}
+}
+
+function closeModal() {
+    document.getElementById('taskModal').classList.add('hidden');
+    currentTaskId = null;
+}
+document.getElementById('taskModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+});
+
+/* ══════════ Toast ══════════ */
+function showToast(title, msg, type='info') {
+    const tc = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span>${title}:</span> ${msg}`;
+    tc.appendChild(el);
+    setTimeout(() => { el.classList.add('hide'); setTimeout(()=>el.remove(),400); }, 3500);
+}
+
+/* ══════════ تسجيل الخروج ══════════ */
+function logout() { window.location.href = '/logout/'; }
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+{% endblock %}

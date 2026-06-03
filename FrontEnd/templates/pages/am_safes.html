@@ -1,0 +1,698 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}جميع الصناديق — نظام انترناشونال{% endblock %}
+
+{% block theme_init %}
+<script>document.documentElement.setAttribute('data-theme','corporate');</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<style>
+:root {
+  --bg:     #F0F2F5;
+  --white:  #FFFFFF;
+  --bdr:    #D9DEE7;
+  --t1:     #1E293B;
+  --t2:     #64748B;
+  --blue:   #2563EB;
+  --blue-l: #EEF4FF;
+  --red:    #DC2626;
+  --green:  #16A34A;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg)!important;direction:rtl;font-family:'Cairo',sans-serif;}
+
+/* fx-ticker */
+#fx-ticker-bar{position:sticky!important;top:0!important;z-index:210!important;}
+
+/* ── الهيدر ── */
+#am-header{
+  background:var(--white);border-bottom:1px solid var(--bdr);
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+  padding:0 18px;height:52px;
+  display:flex;align-items:center;gap:10px;
+  position:sticky;top:36px;z-index:200;
+}
+.am-logo{height:34px;flex-shrink:0;}
+.am-sep{width:1px;height:28px;background:var(--bdr);flex-shrink:0;}
+.am-title{font-size:14px;font-weight:900;color:var(--t1);white-space:nowrap;}
+.am-subtitle{font-size:11px;color:var(--t2);font-weight:600;}
+
+/* زر الرجوع */
+.am-back{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 13px;border-radius:7px;
+  background:var(--bg);border:1px solid var(--bdr);
+  color:var(--t1);font-size:11.5px;font-weight:700;
+  cursor:pointer;font-family:inherit;text-decoration:none;
+  transition:background .15s;white-space:nowrap;flex-shrink:0;
+  margin-right:auto;
+}
+.am-back:hover{background:var(--bdr);}
+
+/* clock / user */
+.am-clock-box{
+  display:flex;flex-direction:column;align-items:flex-end;
+  padding:3px 10px;border:1px solid var(--bdr);border-radius:8px;
+  background:var(--bg);flex-shrink:0;
+}
+.am-clock-time{font-size:14px;font-weight:900;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1.2;}
+.am-clock-date{font-size:9px;color:var(--t2);font-weight:600;white-space:nowrap;}
+
+.am-user-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:4px 11px 4px 9px;border:1px solid var(--bdr);border-radius:8px;
+  background:var(--bg);cursor:pointer;flex-shrink:0;position:relative;
+  transition:background .15s;
+}
+.am-user-btn:hover{background:var(--blue-l);border-color:#BFDBFE;}
+.am-user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1A6BAA,#2563EB);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.am-user-name{font-size:12px;font-weight:800;color:var(--t1);}
+.am-user-role{font-size:9.5px;color:var(--t2);font-weight:600;}
+.am-udrop{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:180px;padding:6px 0;z-index:9999;direction:rtl;}
+.am-user-btn:hover .am-udrop{display:block;}
+.am-udrop a,.am-udrop button{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--t1);text-decoration:none;border:none;background:transparent;width:100%;text-align:right;font-family:inherit;cursor:pointer;transition:background .1s;}
+.am-udrop a:hover,.am-udrop button:hover{background:#F0F6FF;color:var(--blue);}
+.am-udrop .danger{color:var(--red);}
+.am-udrop .danger:hover{background:#FEF2F2;}
+
+/* ── أزرار الإجراءات ── */
+.am-body{padding:14px 18px;}
+.am-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px;}
+.am-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:8px;border:none;
+  font-family:'Cairo',sans-serif;font-size:12px;font-weight:800;
+  cursor:pointer;transition:opacity .15s,box-shadow .15s;white-space:nowrap;
+}
+.am-btn:hover{opacity:.88;box-shadow:0 3px 10px rgba(0,0,0,.13);}
+.am-btn-green {background:#16A34A;color:#fff;}
+.am-btn-blue  {background:#2563EB;color:#fff;}
+.am-btn-teal  {background:#0D9488;color:#fff;}
+.am-btn-red   {background:#DC2626;color:#fff;}
+
+/* ── بطاقة الجدول ── */
+.am-card{
+  background:var(--white);border:1px solid var(--bdr);
+  border-radius:12px;overflow:hidden;
+}
+
+/* ── شريط الأدوات والبحث ── */
+.am-toolbar{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-bottom:1px solid var(--bdr);
+  background:#F8FAFC;flex-wrap:wrap;direction:rtl;
+}
+.am-search-bar{
+  display:flex;align-items:center;
+  padding:6px 14px 8px;background:#F8FAFC;
+  border-bottom:1px solid var(--bdr);direction:rtl;
+}
+.am-search-row-box{
+  display:flex;align-items:center;gap:6px;
+  border:1px solid var(--bdr);border-radius:6px;
+  padding:4px 10px;background:#fff;
+}
+.am-search-lbl{font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;}
+.am-search-row-inp{border:none;background:transparent;outline:none;font-family:inherit;font-size:12px;color:var(--t1);width:160px;}
+.am-tbar-spacer{flex:1;}
+.am-tbar-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 11px;border-radius:6px;border:1px solid var(--bdr);
+  background:var(--white);font-family:inherit;font-size:11px;font-weight:700;
+  color:var(--t2);cursor:pointer;transition:background .12s;white-space:nowrap;
+}
+.am-tbar-btn:hover{background:var(--blue-l);color:var(--blue);border-color:#BFDBFE;}
+
+/* ── الجدول ── */
+.am-table-wrap{overflow-x:auto;}
+table.am-table{width:100%;border-collapse:collapse;font-size:12px;}
+table.am-table thead tr{background:#1A3D5C;color:#fff;}
+table.am-table thead th{
+  padding:10px 14px;font-size:11.5px;font-weight:800;
+  white-space:nowrap;cursor:pointer;user-select:none;
+  border-left:1px solid rgba(255,255,255,.08);
+}
+table.am-table thead th:last-child{border-left:none;}
+table.am-table thead th:hover{background:#1e4a6e;}
+table.am-table thead th .sort-arrow{font-size:9px;opacity:.5;margin-right:4px;}
+table.am-table tbody tr{border-bottom:1px solid #F1F5F9;transition:background .1s;}
+table.am-table tbody tr:hover{background:#F8FAFC;}
+table.am-table tbody td{padding:9px 14px;color:var(--t1);white-space:nowrap;}
+table.am-table tbody td.num{font-variant-numeric:tabular-nums;font-weight:700;}
+
+/* شارة الحالة */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:800;}
+.badge-green{background:#DCFCE7;color:#15803D;}
+.badge-red  {background:#FEE2E2;color:#B91C1C;}
+.badge-gray {background:#F1F5F9;color:#64748B;}
+.badge-dot{width:6px;height:6px;border-radius:50%;}
+
+/* ── تذييل الجدول ── */
+.am-table-foot{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;border-top:1px solid var(--bdr);
+  background:#F8FAFC;font-size:11px;color:var(--t2);
+  flex-wrap:wrap;
+}
+.am-page-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:6px;
+  border:1px solid var(--bdr);background:var(--white);
+  font-size:13px;cursor:pointer;color:var(--t2);
+  transition:background .12s;
+}
+.am-page-btn:hover,.am-page-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.am-per-page{
+  padding:3px 8px;border:1px solid var(--bdr);border-radius:6px;
+  background:var(--white);font-family:inherit;font-size:11px;color:var(--t1);outline:none;cursor:pointer;
+}
+
+/* ── Modal ── */
+.am-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:8000;align-items:center;justify-content:center;
+}
+.am-modal-bg.open{display:flex;}
+.am-modal{
+  background:#fff;border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  direction:rtl;animation:modalIn .2s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.am-modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--bdr);
+}
+.am-modal-head-title{font-size:14px;font-weight:900;color:var(--t1);}
+.am-modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--t2);line-height:1;}
+.am-modal-body{padding:18px 20px;}
+.am-form-row{margin-bottom:14px;}
+.am-form-row label{display:block;font-size:11.5px;font-weight:800;color:var(--t2);margin-bottom:5px;}
+.am-form-row input,.am-form-row select,.am-form-row textarea{
+  width:100%;padding:8px 12px;border:1px solid var(--bdr);border-radius:8px;
+  font-family:inherit;font-size:12.5px;color:var(--t1);background:var(--bg);outline:none;
+  transition:border-color .15s;
+}
+.am-form-row input:focus,.am-form-row select:focus,.am-form-row textarea:focus{border-color:var(--blue);background:#fff;}
+.am-form-row textarea{resize:vertical;min-height:70px;}
+.am-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.am-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--bdr);}
+.am-modal-cancel{padding:7px 18px;border-radius:7px;border:1px solid var(--bdr);background:var(--bg);font-family:inherit;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;}
+.am-modal-cancel:hover{background:var(--bdr);}
+.am-modal-save{padding:7px 20px;border-radius:7px;border:none;background:var(--blue);color:#fff;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;}
+.am-modal-save:hover{opacity:.88;}
+
+/* ── Toast ── */
+#am-toast{
+  position:fixed;bottom:20px;left:20px;
+  min-width:280px;max-width:400px;
+  background:#fff;border-radius:10px;
+  box-shadow:0 6px 24px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.06);
+  font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;
+  color:var(--t1);direction:rtl;display:flex;align-items:center;gap:0;
+  opacity:0;pointer-events:none;transform:translateY(8px);
+  transition:opacity .2s,transform .2s;z-index:9999;overflow:hidden;
+}
+#am-toast.show{opacity:1;transform:translateY(0);pointer-events:all;}
+#am-toast-stripe{width:4px;align-self:stretch;background:#0D9488;flex-shrink:0;}
+#am-toast-body{display:flex;align-items:center;gap:8px;padding:10px 14px;flex:1;}
+
+/* حالة فارغة */
+.am-empty{text-align:center;padding:40px 20px;color:var(--t2);}
+.am-empty-icon{font-size:36px;margin-bottom:8px;}
+.am-spinner{display:inline-block;width:22px;height:22px;border:3px solid #E2E8F0;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media print {
+  /* إخفاء كل شيء */
+  body * { visibility: hidden; }
+  /* إظهار الجدول فقط */
+  .am-card, .am-card * { visibility: visible; }
+  .am-card {
+    position: fixed; inset: 0;
+    border: none; box-shadow: none;
+    overflow: visible;
+  }
+  /* إخفاء عناصر لا تُطبع */
+  .am-toolbar, .am-search-bar,
+  #fx-ticker-bar, #am-header,
+  .am-actions, .am-table-foot { display: none !important; }
+  /* الجدول */
+  table.am-table { width: 100%; font-size: 11px; }
+  table.am-table thead tr { background: #1A3D5C !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  table.am-table thead th { color: #fff !important; padding: 7px 10px; }
+  table.am-table tbody td { padding: 6px 10px; color: #000 !important; }
+  table.am-table tbody tr:nth-child(even) { background: #f5f5f5 !important; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div id="am-toast">
+  <div id="am-toast-stripe"></div>
+  <div id="am-toast-body"><span id="am-toast-icon">ℹ️</span><span id="am-toast-text"></span></div>
+</div>
+
+<!-- fx-ticker -->
+<div id="fx-ticker-bar">
+  <div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div>
+  <div id="fx-ticker-track"><div id="fx-ticker-inner"><span style="color:rgba(255,255,255,.5);font-size:11px;padding:0 16px">جاري تحميل أسعار العملات...</span></div></div>
+  <button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg></button>
+</div>
+
+<!-- الهيدر -->
+<div id="am-header">
+  <img src="{% static 'images/الشعار-01.png' %}" alt="شعار" class="am-logo">
+  <div class="am-sep"></div>
+  <div>
+    <div class="am-title">جميع الصناديق</div>
+    <div class="am-subtitle">إدارة المراكز والصناديق</div>
+  </div>
+
+  <a href="/accounting/launcher/" class="am-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    رجوع
+  </a>
+
+  <div class="am-clock-box">
+    <div class="am-clock-time" id="am-clock">--:--:--</div>
+    <div class="am-clock-date" id="am-date">—</div>
+  </div>
+
+  <div class="am-user-btn">
+    <div class="am-user-avatar">👤</div>
+    <div>
+      <div class="am-user-name" id="am-uname">—</div>
+      <div class="am-user-role" id="am-urole">—</div>
+    </div>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="am-udrop">
+      <a href="/accounting/launcher/">🏠 المشغّل المحاسبي</a>
+      <a href="/dashboard/">📊 لوحة الإدارة</a>
+      <button class="danger" onclick="window.location.href='/logout/'">🚪 تسجيل الخروج</button>
+    </div>
+  </div>
+</div>
+
+<!-- المحتوى -->
+<div class="am-body">
+
+  <!-- أزرار الإجراءات -->
+  <div class="am-actions">
+    <button class="am-btn am-btn-green" onclick="openAddModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      إضافة مركز جديد
+    </button>
+    <button class="am-btn am-btn-teal" onclick="openBalancesModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      اظهار الأرصدة
+    </button>
+    <button class="am-btn am-btn-blue" onclick="loadBranches()" title="تحديث">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      تحديث
+    </button>
+    <button class="am-btn am-btn-red" onclick="openTrashModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      المراكز المحذوفة
+    </button>
+    <button class="am-btn" style="background:#0D9488;color:#fff" onclick="openTransitsModal()">
+      🚉 العوابر
+    </button>
+  </div>
+
+  <!-- بطاقة الجدول -->
+  <div class="am-card">
+
+    <!-- شريط الأدوات -->
+    <div class="am-toolbar">
+      <div class="am-tbar-spacer"></div>
+      <button class="am-tbar-btn" onclick="amCopyTable()">نسخ إلى الحافظة</button>
+      <button class="am-tbar-btn" onclick="exportCSV()">CSV</button>
+      <button class="am-tbar-btn" onclick="window.print()">طباعة</button>
+      <select class="am-per-page" id="am-per-page" onchange="renderPage(1)">
+        <option value="10">إظهار 10 أسطر</option>
+        <option value="25">إظهار 25 سطر</option>
+        <option value="50">إظهار 50 سطر</option>
+        <option value="100">إظهار 100 سطر</option>
+      </select>
+    </div>
+    <!-- سطر البحث -->
+    <div class="am-search-bar">
+      <div class="am-tbar-spacer"></div>
+      <div class="am-search-row-box">
+        <span class="am-search-lbl">ابحث:</span>
+        <input type="text" id="am-search" oninput="filterTable(this.value)" class="am-search-row-inp">
+      </div>
+    </div>
+
+    <!-- الجدول -->
+    <div class="am-table-wrap">
+      <table class="am-table" id="am-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable('id')"><span class="sort-arrow" id="sa-id">↕</span>#</th>
+            <th onclick="sortTable('name')"><span class="sort-arrow" id="sa-name">↕</span>الاسم</th>
+            <th onclick="sortTable('status')"><span class="sort-arrow" id="sa-status">↕</span>النوع</th>
+            <th onclick="sortTable('location')"><span class="sort-arrow" id="sa-location">↕</span>الدولة</th>
+            <th onclick="sortTable('location')"><span class="sort-arrow">↕</span>المدينة</th>
+            <th onclick="sortTable('manager')"><span class="sort-arrow" id="sa-manager">↕</span>عنوان</th>
+            <th onclick="sortTable('phone')"><span class="sort-arrow" id="sa-phone">↕</span>قفل</th>
+            <th>رابط التوثيق</th>
+          </tr>
+        </thead>
+        <tbody id="am-tbody">
+          <tr><td colspan="8" class="am-empty"><div class="am-spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- تذييل الجدول -->
+    <div class="am-table-foot" id="am-foot">
+      <span id="am-showing">—</span>
+      <div style="margin-right:auto;display:flex;gap:4px;" id="am-pages"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ Modal: إضافة / تعديل مركز ══ -->
+<div class="am-modal-bg" id="modal-branch">
+  <div class="am-modal">
+    <div class="am-modal-head">
+      <span class="am-modal-head-title" id="modal-branch-title">إضافة مركز جديد</span>
+      <button class="am-modal-close" onclick="closeModal('modal-branch')">✕</button>
+    </div>
+    <div class="am-modal-body">
+      <input type="hidden" id="b-id">
+      <div class="am-form-row">
+        <label>اسم المركز / الصندوق *</label>
+        <input type="text" id="b-name" placeholder="مثال: مركز دمشق">
+      </div>
+      <div class="am-form-grid">
+        <div class="am-form-row">
+          <label>الدولة</label>
+          <input type="text" id="b-country" placeholder="سوريا">
+        </div>
+        <div class="am-form-row">
+          <label>المدينة / الموقع</label>
+          <input type="text" id="b-location" placeholder="دمشق — المزة">
+        </div>
+      </div>
+      <div class="am-form-grid">
+        <div class="am-form-row">
+          <label>المدير المسؤول</label>
+          <input type="text" id="b-manager" placeholder="اسم المدير">
+        </div>
+        <div class="am-form-row">
+          <label>رقم الهاتف</label>
+          <input type="text" id="b-phone" placeholder="+963...">
+        </div>
+      </div>
+      <div class="am-form-grid">
+        <div class="am-form-row">
+          <label>الحالة</label>
+          <select id="b-status">
+            <option value="active">نشط</option>
+            <option value="inactive">غير نشط</option>
+            <option value="pending">قيد الإنشاء</option>
+          </select>
+        </div>
+        <div class="am-form-row">
+          <label>العملة الأساسية</label>
+          <select id="b-currency">
+            <option value="USD">دولار USD</option>
+            <option value="ILS">شيكل ILS</option>
+            <option value="JOD">دينار JOD</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <label>ملاحظات</label>
+        <textarea id="b-notes" placeholder="أي ملاحظات إضافية..."></textarea>
+      </div>
+    </div>
+    <div class="am-modal-foot">
+      <button class="am-modal-cancel" onclick="closeModal('modal-branch')">إلغاء</button>
+      <button class="am-modal-save" onclick="saveBranch()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+<script>
+// ── بيانات ──
+let _all = [], _filtered = [], _sortCol = 'id', _sortAsc = true, _page = 1;
+
+// ── ساعة ──
+function amClock() {
+  const n = new Date();
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const t = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+  const d = `${days[n.getDay()]} ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;
+  const c = document.getElementById('am-clock'); if(c) c.textContent = t;
+  const dd = document.getElementById('am-date'); if(dd) dd.textContent = d;
+}
+amClock(); setInterval(amClock, 1000);
+
+// ── مستخدم ──
+(async () => {
+  try {
+    const r = await fetch('/api/me/'); const d = await r.json();
+    if (d.success) {
+      document.getElementById('am-uname').textContent = d.name || d.username;
+      document.getElementById('am-urole').textContent = d.roleName || d.role;
+    }
+  } catch {}
+})();
+
+// ── Toast ──
+let _tt;
+function toast(msg, type='info', icon='ℹ️') {
+  const colors = {info:'#0D9488',success:'#16A34A',error:'#DC2626',warning:'#D97706'};
+  document.getElementById('am-toast-stripe').style.background = colors[type]||colors.info;
+  document.getElementById('am-toast-icon').textContent = icon;
+  document.getElementById('am-toast-text').textContent = msg;
+  document.getElementById('am-toast').classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => document.getElementById('am-toast').classList.remove('show'), 3200);
+}
+
+// ── تحميل البيانات ──
+async function loadBranches() {
+  document.getElementById('am-tbody').innerHTML =
+    '<tr><td colspan="8" class="am-empty"><div class="am-spinner"></div></td></tr>';
+  try {
+    const r = await fetch('/api/branches', {credentials:'include'});
+    const d = await r.json();
+    if (!d.success) { toast('فشل تحميل البيانات', 'error', '❌'); return; }
+    _all = d.branches || [];
+    _filtered = [..._all];
+    document.getElementById('am-count-badge').textContent = `${_all.length} مركز`;
+    renderPage(1);
+  } catch(e) {
+    toast('خطأ في الاتصال بالخادم', 'error', '❌');
+    document.getElementById('am-tbody').innerHTML =
+      '<tr><td colspan="8" class="am-empty"><div class="am-empty-icon">⚠️</div><div>تعذّر تحميل البيانات</div></td></tr>';
+  }
+}
+
+// ── تصيير الصفحة ──
+function renderPage(p) {
+  _page = p;
+  const perPage = parseInt(document.getElementById('am-per-page').value) || 10;
+  const start = (p - 1) * perPage;
+  const slice = _filtered.slice(start, start + perPage);
+  const tbody = document.getElementById('am-tbody');
+
+  if (!_filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="am-empty"><div class="am-empty-icon">📭</div><div>لا توجد نتائج</div></td></tr>';
+    document.getElementById('am-showing').textContent = '0 نتائج';
+    document.getElementById('am-pages').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = slice.map(b => {
+    const status = b.status === 'active'   ? '<span class="badge badge-green"><span class="badge-dot" style="background:#16A34A"></span>نشط</span>'
+                 : b.status === 'inactive' ? '<span class="badge badge-red"><span class="badge-dot" style="background:#DC2626"></span>غير نشط</span>'
+                 : '<span class="badge badge-gray"><span class="badge-dot" style="background:#94A3B8"></span>قيد الإنشاء</span>';
+    const loc = (b.location || '—').split('—');
+    const city = loc[0]?.trim() || '—';
+    const addr = loc[1]?.trim() || '—';
+    return `<tr>
+      <td class="num">${b.id}</td>
+      <td><strong>${b.name}</strong></td>
+      <td>${status}</td>
+      <td>${city}</td>
+      <td>${addr}</td>
+      <td>${b.manager || '—'}</td>
+      <td>${b.phone || '—'}</td>
+      <td>
+        <button class="am-tbar-btn" onclick="openEditModal(${b.id})" title="تعديل">✏️ تعديل</button>
+        <button class="am-tbar-btn" style="color:#DC2626" onclick="deleteBranch(${b.id},'${b.name}')" title="حذف">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // الترقيم
+  const total = _filtered.length;
+  const pages = Math.ceil(total / perPage);
+  document.getElementById('am-showing').textContent =
+    `عرض ${start + 1}–${Math.min(start + perPage, total)} من ${total}`;
+
+  const pg = document.getElementById('am-pages');
+  pg.innerHTML = '';
+  for (let i = 1; i <= pages; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'am-page-btn' + (i === _page ? ' active' : '');
+    btn.textContent = i;
+    btn.onclick = () => renderPage(i);
+    pg.appendChild(btn);
+  }
+}
+
+// ── ترتيب ──
+function sortTable(col) {
+  if (_sortCol === col) _sortAsc = !_sortAsc;
+  else { _sortCol = col; _sortAsc = true; }
+  document.querySelectorAll('.sort-arrow').forEach(a => a.textContent = '↕');
+  const el = document.getElementById('sa-' + col);
+  if (el) el.textContent = _sortAsc ? '↑' : '↓';
+  _filtered.sort((a, b) => {
+    const va = (a[col] || ''), vb = (b[col] || '');
+    return _sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+  renderPage(1);
+}
+
+// ── بحث ──
+function filterTable(q) {
+  const t = q.trim().toLowerCase();
+  _filtered = !t ? [..._all] : _all.filter(b =>
+    (b.name||'').toLowerCase().includes(t) ||
+    (b.location||'').toLowerCase().includes(t) ||
+    (b.manager||'').toLowerCase().includes(t) ||
+    (b.phone||'').toLowerCase().includes(t)
+  );
+  document.getElementById('am-count-badge').textContent = `${_filtered.length} مركز`;
+  renderPage(1);
+}
+
+// ── Modal إضافة ──
+function openAddModal() {
+  document.getElementById('modal-branch-title').textContent = 'إضافة مركز جديد';
+  ['b-id','b-name','b-country','b-location','b-manager','b-phone','b-notes'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('b-status').value = 'active';
+  document.getElementById('b-currency').value = 'USD';
+  document.getElementById('modal-branch').classList.add('open');
+}
+
+// ── Modal تعديل ──
+function openEditModal(id) {
+  const b = _all.find(x => x.id === id); if (!b) return;
+  document.getElementById('modal-branch-title').textContent = 'تعديل المركز';
+  document.getElementById('b-id').value = b.id;
+  document.getElementById('b-name').value = b.name || '';
+  document.getElementById('b-location').value = b.location || '';
+  document.getElementById('b-manager').value = b.manager || '';
+  document.getElementById('b-phone').value = b.phone || '';
+  document.getElementById('b-notes').value = b.notes || '';
+  document.getElementById('b-status').value = b.status || 'active';
+  document.getElementById('b-currency').value = b.currency || 'USD';
+  document.getElementById('modal-branch').classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── حفظ مركز ──
+async function saveBranch() {
+  const id = document.getElementById('b-id').value;
+  const name = document.getElementById('b-name').value.trim();
+  if (!name) { toast('اسم المركز مطلوب', 'error', '❌'); return; }
+  const body = {
+    name,
+    location: document.getElementById('b-location').value.trim(),
+    manager:  document.getElementById('b-manager').value.trim(),
+    phone:    document.getElementById('b-phone').value.trim(),
+    notes:    document.getElementById('b-notes').value.trim(),
+    status:   document.getElementById('b-status').value,
+    currency: document.getElementById('b-currency').value,
+  };
+  const url    = id ? `/api/branches/${id}` : '/api/branches';
+  const method = id ? 'PATCH' : 'POST';
+  try {
+    const r = await fetch(url, {
+      method, credentials: 'include',
+      headers: {'Content-Type':'application/json','X-CSRFToken': getCookie('csrftoken')},
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (d.success) {
+      toast(id ? 'تم تحديث المركز بنجاح' : 'تمت إضافة المركز بنجاح', 'success', '✅');
+      closeModal('modal-branch');
+      loadBranches();
+    } else {
+      toast(d.error || 'حدث خطأ', 'error', '❌');
+    }
+  } catch { toast('خطأ في الاتصال', 'error', '❌'); }
+}
+
+// ── حذف مركز ──
+async function deleteBranch(id, name) {
+  if (!confirm(`هل تريد حذف "${name}"؟`)) return;
+  try {
+    const r = await fetch(`/api/branches/${id}`, {
+      method: 'DELETE', credentials: 'include',
+      headers: {'X-CSRFToken': getCookie('csrftoken')},
+    });
+    const d = await r.json();
+    if (d.success) { toast('تم الحذف بنجاح', 'success', '✅'); loadBranches(); }
+    else toast(d.error || 'فشل الحذف', 'error', '❌');
+  } catch { toast('خطأ في الاتصال', 'error', '❌'); }
+}
+
+// ── تصدير CSV ──
+function exportCSV() {
+  const hdr = ['#','الاسم','الحالة','الموقع','المدير','الهاتف'].join(',');
+  const rows = _filtered.map(b => [b.id, b.name, b.status, b.location||'', b.manager||'', b.phone||''].join(','));
+  const csv = '﻿' + hdr + '\n' + rows.join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+  a.download = 'الصناديق.csv'; a.click();
+}
+
+function amCopyTable() {
+  const rows = _filtered.map(b => [b.id, b.name, b.status, b.location||'', b.manager||'', b.phone||''].join('\t'));
+  navigator.clipboard.writeText(rows.join('\n')).then(() => toast('تم النسخ إلى الحافظة', 'success', '📋'));
+}
+
+// Placeholder modals
+function openBalancesModal() { toast('قيد الإنشاء — عرض الأرصدة', 'warning', '🚧'); }
+function openTrashModal()    { toast('قيد الإنشاء — المحذوفات', 'warning', '🚧'); }
+function openTransitsModal() { toast('قيد الإنشاء — العوابر', 'warning', '🚧'); }
+
+// ── CSRF ──
+function getCookie(name) {
+  const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return v ? v.pop() : '';
+}
+
+// إغلاق Modal بالضغط خارجه
+document.querySelectorAll('.am-modal-bg').forEach(bg =>
+  bg.addEventListener('click', e => { if(e.target === bg) bg.classList.remove('open'); })
+);
+
+// تحميل عند البدء
+loadBranches();
+</script>
+{% endblock %}

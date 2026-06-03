@@ -1,0 +1,508 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}نظام انترناشونال — مهامي{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+<canvas class="particles-canvas" id="particles"></canvas>
+
+<!-- ══ الهيدر ══ -->
+<header class="header">
+    <div class="header-right">
+        <img src="{% static 'images/الشعار-01.png' %}" alt="شعار" class="header-logo">
+        <div>
+            <div class="h-title">نظام انترناشونال الموحد</div>
+            <div class="h-sub"><span class="status-dot"></span> مهامي الموكلة</div>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+        <span class="h-badge" id="userBadge">👤 المستخدم</span>
+        <span class="h-badge" id="urgentBadge" style="display:none;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.2);color:var(--danger)"></span>
+    </div>
+    {% include 'layout/navbar.html' with page_name="tasks-developer" page_title="مهامي" %}
+</header>
+
+<div class="app-layout">
+
+<!-- ══ الشريط الجانبي ══ -->
+<aside class="sidebar">
+    <div class="sidebar-section">مهامي</div>
+    <div class="nav-item active" data-page="tasks" onclick="switchPage('tasks')">
+        <div class="nav-icon">📋</div> كل المهام
+        <span class="nav-badge blue" id="badgeAll">0</span>
+    </div>
+    <div class="nav-item" data-page="new" onclick="switchPage('new');filterStatus('new')">
+        <div class="nav-icon">🆕</div> جديدة
+        <span class="nav-badge red" id="badgeNew">0</span>
+    </div>
+    <div class="nav-item" data-page="progress" onclick="switchPage('progress');filterStatus('in_progress')">
+        <div class="nav-icon">⚙️</div> قيد التنفيذ
+    </div>
+    <div class="nav-item" data-page="done" onclick="switchPage('done');filterStatus('accepted')">
+        <div class="nav-icon">✅</div> مقبولة
+    </div>
+    <div class="sidebar-section" style="margin-top:auto">عام</div>
+    <div class="nav-item" onclick="loadTasks()">
+        <div class="nav-icon">🔄</div> تحديث
+    </div>
+</aside>
+
+<!-- ══ المحتوى ══ -->
+<main class="main-content">
+
+<!-- ── الإحصائيات ── -->
+<div class="top-stats">
+    <div class="t-stat"><div class="t-stat-icon">📋</div><div class="t-stat-value" id="statTotal">0</div><div class="t-stat-label">إجمالي مهامي</div></div>
+    <div class="t-stat"><div class="t-stat-icon">🆕</div><div class="t-stat-value" id="statNew">0</div><div class="t-stat-label">جديدة</div></div>
+    <div class="t-stat"><div class="t-stat-icon">⚙️</div><div class="t-stat-value" id="statProgress">0</div><div class="t-stat-label">قيد التنفيذ</div></div>
+    <div class="t-stat"><div class="t-stat-icon">✅</div><div class="t-stat-value" id="statAccepted">0</div><div class="t-stat-label">مقبولة</div></div>
+    <div class="t-stat"><div class="t-stat-icon">📊</div><div class="t-stat-value" id="statPercent">0%</div><div class="t-stat-label">نسبة الإنجاز</div></div>
+</div>
+
+<!-- ══ قسم: كل المهام ══ -->
+<div class="page-section active" id="sec-tasks">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">📋</div> مهامي الموكلة</div>
+        </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterStatus('');setFilter(this)">الكل</button>
+            <button class="filter-btn" onclick="filterStatus('new');setFilter(this)">🆕 جديدة</button>
+            <button class="filter-btn" onclick="filterStatus('in_progress');setFilter(this)">⚙️ قيد التنفيذ</button>
+            <button class="filter-btn" onclick="filterStatus('submitted');setFilter(this)">📤 مُسلَّمة</button>
+            <button class="filter-btn" onclick="filterStatus('rejected');setFilter(this)">❌ مرفوضة</button>
+            <button class="filter-btn" onclick="filterStatus('accepted');setFilter(this)">✅ مقبولة</button>
+            <div class="search-box">
+                <input type="text" placeholder="ابحث في مهامك..." oninput="searchTasks(this.value)">
+            </div>
+        </div>
+        <div id="tasksList" class="tasks-list">
+            <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-title">جاري التحميل...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ قسم: جديدة ══ -->
+<div class="page-section" id="sec-new">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">🆕</div> المهام الجديدة</div>
+        </div>
+        <div id="newList" class="tasks-list"></div>
+    </div>
+</div>
+
+<!-- ══ قسم: قيد التنفيذ ══ -->
+<div class="page-section" id="sec-progress">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">⚙️</div> المهام قيد التنفيذ</div>
+        </div>
+        <div id="progressList" class="tasks-list"></div>
+    </div>
+</div>
+
+<!-- ══ قسم: مقبولة ══ -->
+<div class="page-section" id="sec-done">
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">✅</div> المهام المقبولة</div>
+        </div>
+        <div id="doneList" class="tasks-list"></div>
+    </div>
+</div>
+
+</main>
+</div>
+
+<!-- ══ مودال: تفاصيل + تسليم ══ -->
+<div class="modal-overlay hidden" id="taskModal">
+    <div class="task-modal">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle">📋 تفاصيل المهمة</div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- التفاصيل الأساسية -->
+            <div class="task-detail-grid" id="modalDetails"></div>
+            <!-- الوصف -->
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📝 الوصف والمطلوب</div>
+            <div class="task-desc-box" id="modalDesc"></div>
+            <!-- رابط الملف -->
+            <div id="modalAttachment"></div>
+            <!-- تسليم المهمة -->
+            <div id="submitSection"></div>
+            <!-- التعليقات -->
+            <div class="comments-section">
+                <div class="comments-title">💬 التواصل مع المدير</div>
+                <div class="comment-list" id="commentList"></div>
+                <div class="comment-input-row">
+                    <textarea id="commentInput" placeholder="تعليق أو سؤال للمدير..."></textarea>
+                    <button class="btn btn-primary btn-sm" onclick="sendComment()" style="height:52px;white-space:nowrap">إرسال</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
+
+<!-- ══ مودال: رفع التنفيذ ══ -->
+<div class="modal-overlay hidden" id="submitModal">
+    <div class="review-modal">
+        <div class="modal-header">
+            <div class="modal-title">📤 تسليم التنفيذ</div>
+            <button class="modal-close" onclick="closeSubmitModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">ملاحظات التسليم</label>
+                <textarea class="form-control" id="submitNote" rows="4"
+                    placeholder="اشرح ما قمت بتنفيذه، أي تعليمات مهمة للمدير..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">ملف التنفيذ (اختياري)</label>
+                <input type="file" class="form-control" id="submitFile">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeSubmitModal()">إلغاء</button>
+            <button class="btn btn-primary" id="confirmSubmitBtn" onclick="confirmSubmit()">
+                <span>📤</span> تأكيد التسليم
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Toast ══ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script>
+let allTasks = [];
+let currentTaskId = null;
+let currentFilter = '';
+const CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+
+/* ══════════ تهيئة ══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    // اسم المستخدم
+    fetch('/api/me/').then(r=>r.json()).then(d => {
+        if (d.success) {
+            document.getElementById('userBadge').textContent = `👤 ${d.name}`;
+        }
+    });
+    loadTasks();
+    loadStats();
+
+    // WebSocket: مهمة جديدة لي
+    document.addEventListener('ws:notification', e => {
+        const {title, message} = e.detail;
+        showToast(title, message, 'info');
+        loadTasks(); loadStats();
+    });
+    document.addEventListener('ws:task_event', e => {
+        const {event} = e.detail;
+        if (['task_updated','task_assigned'].includes(event)) {
+            loadTasks(); loadStats();
+        }
+    });
+});
+
+/* ══════════ التنقل ══════════ */
+function switchPage(page) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + page)?.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+}
+function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+/* ══════════ تحميل ══════════ */
+async function loadTasks() {
+    try {
+        const r = await fetch('/api/tasks/'); const d = await r.json();
+        allTasks = d.tasks || [];
+        renderTasks(allTasks, 'tasksList');
+        renderTasks(allTasks.filter(t=>t.status==='new'), 'newList');
+        renderTasks(allTasks.filter(t=>t.status==='in_progress'), 'progressList');
+        renderTasks(allTasks.filter(t=>t.status==='accepted'), 'doneList');
+    } catch { showToast('خطأ','تعذّر التحميل','error'); }
+}
+
+async function loadStats() {
+    try {
+        const r = await fetch('/api/tasks/stats/'); const d = await r.json();
+        if (!d.success) return;
+        const s = d.stats;
+        document.getElementById('statTotal').textContent    = s.total;
+        document.getElementById('statNew').textContent      = s.new;
+        document.getElementById('statProgress').textContent = s.inProgress;
+        document.getElementById('statAccepted').textContent = s.accepted;
+        document.getElementById('statPercent').textContent  = s.total ? Math.round(s.accepted/s.total*100)+'%' : '0%';
+        document.getElementById('badgeAll').textContent = s.total;
+        document.getElementById('badgeNew').textContent = s.new;
+        if (s.new > 0) {
+            const ub = document.getElementById('urgentBadge');
+            ub.textContent = `🔴 ${s.new} مهمة جديدة`;
+            ub.style.display = 'block';
+        }
+    } catch {}
+}
+
+/* ══════════ عرض ══════════ */
+const priorityLabel = {urgent:'🔴 عاجلة', high:'🟡 عالية', medium:'🔵 مهمة', low:'⚪ عادية'};
+const statusLabel   = {new:'جديدة', in_progress:'قيد التنفيذ', submitted:'مُسلَّمة', accepted:'مقبولة', rejected:'مرفوضة'};
+
+function renderTasks(tasks, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    if (!tasks.length) {
+        el.innerHTML = `<div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div class="empty-state-title">لا توجد مهام هنا</div></div>`;
+        return;
+    }
+    el.innerHTML = tasks.map(t => {
+        const dl  = t.deadline ? new Date(t.deadline) : null;
+        const now = new Date();
+        const dlStr = dl ? (dl < now && !['accepted'].includes(t.status)
+            ? `<span class="deadline-warn">⚠️ ${dl.toLocaleDateString('ar')}</span>`
+            : `<span class="deadline-ok">📅 ${dl.toLocaleDateString('ar')}</span>`) : '';
+        const rejected = t.status === 'rejected'
+            ? `<div style="font-size:11px;color:var(--danger);margin-top:4px">❌ مرفوضة — ${t.adminNotes||'تحقق من التعليقات'}</div>` : '';
+        return `
+        <div class="task-row ${t.priority}" onclick="openTask(${t.id})">
+            <div class="task-priority-dot ${t.priority}"></div>
+            <div class="task-main">
+                <div class="task-title-row">${t.title}</div>
+                <div class="task-meta">
+                    <span>📌 ${priorityLabel[t.priority]||t.priority}</span>
+                    ${dlStr}
+                    ${t.status==='new' ? '<span style="color:#818cf8;font-weight:700">← يحتاج تأكيد البدء</span>' : ''}
+                    ${t.status==='rejected' ? '<span style="color:var(--danger);font-weight:700">← يحتاج إعادة تسليم</span>' : ''}
+                </div>
+                ${rejected}
+            </div>
+            <div class="task-right">
+                <span class="task-badge ${t.status}">${statusLabel[t.status]||t.status}</span>
+                <span class="task-date">${new Date(t.createdAt).toLocaleDateString('ar')}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function filterStatus(s) {
+    currentFilter = s;
+    const filtered = s ? allTasks.filter(t => t.status === s) : allTasks;
+    renderTasks(filtered, 'tasksList');
+}
+function searchTasks(q) {
+    const s = q.trim().toLowerCase();
+    const base = currentFilter ? allTasks.filter(t=>t.status===currentFilter) : allTasks;
+    renderTasks(s ? base.filter(t=>t.title.toLowerCase().includes(s)||t.description?.toLowerCase().includes(s)) : base, 'tasksList');
+}
+
+/* ══════════ فتح مهمة ══════════ */
+async function openTask(id) {
+    currentTaskId = id;
+    try {
+        const r = await fetch(`/api/tasks/${id}/`); const d = await r.json();
+        if (!d.success) return;
+        const t = d.task;
+
+        document.getElementById('modalTitle').innerHTML =
+            `📋 ${t.title} <span class="task-badge ${t.status}" style="font-size:12px">${statusLabel[t.status]}</span>`;
+
+        const dl = t.deadline ? new Date(t.deadline).toLocaleString('ar') : '—';
+        document.getElementById('modalDetails').innerHTML = `
+            <div class="detail-item"><div class="detail-label">أنشأها</div>
+                <div class="detail-value">👤 ${t.createdByName}</div></div>
+            <div class="detail-item"><div class="detail-label">الأولوية</div>
+                <div class="detail-value"><span class="priority-badge ${t.priority}">${priorityLabel[t.priority]}</span></div></div>
+            <div class="detail-item"><div class="detail-label">الموعد النهائي</div>
+                <div class="detail-value">${dl}</div></div>
+            <div class="detail-item"><div class="detail-label">تاريخ الإسناد</div>
+                <div class="detail-value">${new Date(t.createdAt).toLocaleString('ar')}</div></div>`;
+
+        document.getElementById('modalDesc').textContent = t.description;
+
+        // مرفق من المدير
+        document.getElementById('modalAttachment').innerHTML = t.attachment
+            ? `<div style="margin-bottom:16px"><a href="${t.attachment}" target="_blank" class="btn btn-secondary btn-sm">📎 تحميل الملف المرفق من المدير</a></div>` : '';
+
+        // قسم التسليم
+        const ss = document.getElementById('submitSection');
+        if (t.submission) {
+            ss.innerHTML = `
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📦 آخر تسليم</div>
+            <div class="submission-done">
+                <div class="submission-done-icon">${t.status==='accepted'?'✅':'📦'}</div>
+                <div>
+                    <div class="submission-done-text">${t.status==='accepted'?'تم قبول التسليم':'تم التسليم — بانتظار مراجعة المدير'}</div>
+                    <div class="submission-done-note">${new Date(t.submission.submittedAt).toLocaleString('ar')}
+                        ${t.submission.note?' — '+t.submission.note:''}
+                        ${t.submission.file?` — <a href="${t.submission.file}" target="_blank" style="color:var(--primary-light)">📎 الملف</a>`:''}</div>
+                </div>
+            </div>`;
+        } else ss.innerHTML = '';
+
+        // التعليقات
+        renderComments(t.comments || []);
+
+        // أزرار
+        const footer = document.getElementById('modalFooter');
+        if (t.status === 'new') {
+            footer.innerHTML = `
+                <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
+                <button class="btn btn-primary" onclick="startTask(${t.id})">⚙️ بدء التنفيذ</button>`;
+        } else if (t.status === 'in_progress' || t.status === 'rejected') {
+            footer.innerHTML = `
+                <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
+                <button class="btn btn-success" onclick="openSubmitModal()">📤 تسليم التنفيذ</button>`;
+        } else {
+            footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>`;
+        }
+
+        document.getElementById('taskModal').classList.remove('hidden');
+    } catch { showToast('خطأ','تعذّر فتح المهمة','error'); }
+}
+
+function renderComments(comments) {
+    const list = document.getElementById('commentList');
+    if (!comments.length) {
+        list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px">لا توجد رسائل بعد</div>`;
+        return;
+    }
+    list.innerHTML = comments.map(c => `
+        <div class="comment-item">
+            <div class="comment-avatar dev">${c.authorName.charAt(0)}</div>
+            <div class="comment-bubble">
+                <div class="comment-author">
+                    <span>${c.authorName}</span>
+                    <span class="comment-time">${new Date(c.createdAt).toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}</span>
+                </div>
+                <div class="comment-text">${c.body}</div>
+            </div>
+        </div>`).join('');
+    list.scrollTop = list.scrollHeight;
+}
+
+/* ══════════ بدء التنفيذ ══════════ */
+async function startTask(id) {
+    try {
+        const r = await fetch(`/api/tasks/${id}/`, {
+            method:'PATCH',
+            headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+            body: JSON.stringify({status:'in_progress'})
+        });
+        const d = await r.json();
+        if (d.success) {
+            showToast('تم','تم تغيير حالة المهمة إلى قيد التنفيذ','success');
+            closeModal();
+            loadTasks(); loadStats();
+        }
+    } catch {}
+}
+
+/* ══════════ تسليم ══════════ */
+function openSubmitModal() {
+    document.getElementById('submitModal').classList.remove('hidden');
+}
+function closeSubmitModal() {
+    document.getElementById('submitModal').classList.add('hidden');
+}
+async function confirmSubmit() {
+    const btn = document.getElementById('confirmSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
+
+    const fd = new FormData();
+    fd.append('note', document.getElementById('submitNote').value);
+    const file = document.getElementById('submitFile').files[0];
+    if (file) fd.append('file', file);
+
+    try {
+        const r = await fetch(`/api/tasks/${currentTaskId}/submit/`, {
+            method:'POST', headers:{'X-CSRFToken':CSRF}, body:fd
+        });
+        const d = await r.json();
+        if (d.success) {
+            showToast('تم التسليم','تم إرسال تنفيذك للمدير بنجاح ✓','success');
+            closeSubmitModal();
+            closeModal();
+            loadTasks(); loadStats();
+        } else {
+            showToast('خطأ', d.message || 'تعذّر التسليم','error');
+        }
+    } catch { showToast('خطأ','خطأ في الاتصال','error'); }
+
+    btn.disabled = false;
+    btn.innerHTML = '<span>📤</span> تأكيد التسليم';
+}
+
+/* ══════════ تعليق ══════════ */
+async function sendComment() {
+    const input = document.getElementById('commentInput');
+    const body = input.value.trim();
+    if (!body || !currentTaskId) return;
+    try {
+        const r = await fetch(`/api/tasks/${currentTaskId}/comment/`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+            body: JSON.stringify({body})
+        });
+        const d = await r.json();
+        if (d.success) {
+            input.value = '';
+            const c = d.comment;
+            const list = document.getElementById('commentList');
+            list.insertAdjacentHTML('beforeend', `
+                <div class="comment-item">
+                    <div class="comment-avatar dev">${c.authorName.charAt(0)}</div>
+                    <div class="comment-bubble">
+                        <div class="comment-author"><span>${c.authorName}</span>
+                            <span class="comment-time">الآن</span></div>
+                        <div class="comment-text">${c.body}</div>
+                    </div>
+                </div>`);
+            list.scrollTop = list.scrollHeight;
+        }
+    } catch {}
+}
+
+/* ══════════ إغلاق المودال ══════════ */
+function closeModal() {
+    document.getElementById('taskModal').classList.add('hidden');
+    currentTaskId = null;
+}
+document.getElementById('taskModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+});
+document.getElementById('submitModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeSubmitModal();
+});
+
+/* ══════════ Toast ══════════ */
+function showToast(title, msg, type='info') {
+    const tc = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span>${title}:</span> ${msg}`;
+    tc.appendChild(el);
+    setTimeout(() => { el.classList.add('hide'); setTimeout(()=>el.remove(),400); }, 3500);
+}
+
+/* ══════════ تسجيل الخروج ══════════ */
+function logout() { window.location.href = '/logout/'; }
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+{% endblock %}

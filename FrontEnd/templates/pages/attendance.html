@@ -1,0 +1,2950 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}الحضور والانصراف — نظام انترناشونال الموحد{% endblock %}
+
+{% block theme_init %}
+<script>
+  /* تثبيت الـ theme قبل أي render — يمنع الرجفة */
+  document.documentElement.setAttribute('data-theme', 'corporate');
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<style>
+:root {
+    --att-bg:      #EFF6FF;
+    --att-card:    #FFFFFF;
+    --att-border:  rgba(37,99,235,0.12);
+    --att-border2: rgba(37,99,235,0.22);
+    --att-blue:    #2563EB;
+    --att-blue-dk: #1E3A5F;
+    --att-blue-lt: #DBEAFE;
+    --att-text1:   #1E3A5F;
+    --att-text2:   #64748B;
+    --att-green:   #16A34A;
+    --att-red:     #DC2626;
+    --att-orange:  #D97706;
+    --att-purple:  #7C3AED;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--att-bg) !important; color: var(--att-text1); direction: rtl; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── Header — قيم ثابتة لا تتأثر بتغيير الـ theme ── */
+#header {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid rgba(37,99,235,0.15) !important;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.10) !important;
+    padding: 0 32px !important;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    position: sticky; top: 0; z-index: 100;
+}
+#header .logo-title { font-size: 18px; font-weight: 900; color: #1E3A5F !important; }
+#header .logo-sub   { font-size: 11px; color: rgba(30,58,95,0.60) !important; margin-top: 1px; }
+#header #header-section-name {
+    font-size: 15px; font-weight: 700; color: #1E3A5F !important;
+    background: rgba(37,99,235,0.07) !important; border: 1px solid rgba(37,99,235,0.20) !important;
+    padding: 6px 18px; border-radius: 10px;
+    display: flex; align-items: center; gap: 8px;
+}
+#header #header-section-name .sec-icon { font-size: 18px; }
+#header .clock-time { font-size: 18px; font-weight: 900; color: #1E3A5F !important; line-height:1; }
+#header .clock-date { font-size: 10px; color: rgba(30,58,95,0.60) !important; }
+
+/* ── Device Status ── */
+.device-badge {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    border: 1px solid;
+}
+.device-badge.online   { background: rgba(22,163,74,.10);  border-color: rgba(22,163,74,.30);  color: var(--att-green); }
+.device-badge.offline  { background: rgba(220,38,38,.10);  border-color: rgba(220,38,38,.30);  color: var(--att-red); }
+.device-badge.checking { background: rgba(37,99,235,.08);  border-color: var(--att-border2);   color: var(--att-blue); }
+.device-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+/* ── Buttons ── */
+.btn {
+    padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    transition: all .15s;
+}
+.btn-gold {
+    background: linear-gradient(135deg, var(--accent-dark, #1d4ed8), var(--accent, #2563EB));
+    color: #FFFFFF;
+    box-shadow: 0 3px 12px rgba(37,99,235,0.25);
+}
+.btn-gold:hover { opacity: .88; box-shadow: 0 6px 18px rgba(37,99,235,0.35); transform: translateY(-1px); }
+.btn-outline {
+    background: var(--accent-bg, rgba(37,99,235,0.06));
+    color: var(--accent, #2563EB);
+    border: 1px solid var(--accent-border, rgba(37,99,235,0.22));
+}
+.btn-outline:hover { background: var(--accent-bg-hover, rgba(37,99,235,0.12)); border-color: var(--accent, #2563EB); transform: translateY(-1px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+
+/* ── Main Layout ── */
+.att-outer { display: flex; min-height: calc(100vh - 72px); }
+
+/* ── Employee Sidebar ── */
+.emp-sidebar {
+    width: 280px; flex-shrink: 0;
+    background: #FFFFFF; border-left: 1px solid var(--att-border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 72px; height: calc(100vh - 72px); overflow: hidden;
+}
+.emp-sidebar-head {
+    padding: 16px; border-bottom: 1px solid var(--att-border);
+    background: #F8FBFF;
+}
+.emp-sidebar-title {
+    font-size: 13px; font-weight: 800; color: var(--att-text1);
+    margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+}
+.emp-sidebar-count {
+    font-size: 11px; font-weight: 600; color: #FFFFFF;
+    background: var(--att-blue); border-radius: 20px; padding: 2px 8px;
+}
+.emp-search {
+    width: 100%; padding: 8px 12px; border-radius: 8px;
+    border: 1px solid var(--att-border); background: #FFFFFF;
+    color: var(--att-text1); font-size: 12px; font-family: inherit;
+    outline: none; transition: border-color .15s;
+}
+.emp-search:focus { border-color: var(--att-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.10); }
+.emp-list { flex: 1; overflow-y: auto; padding: 8px; }
+.emp-list::-webkit-scrollbar { width: 4px; }
+.emp-list::-webkit-scrollbar-track { background: transparent; }
+.emp-list::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.20); border-radius: 2px; }
+.emp-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    transition: all .15s; margin-bottom: 2px;
+    border: 1px solid transparent;
+}
+.emp-item:hover { background: var(--att-blue-lt); border-color: rgba(37,99,235,0.15); }
+.emp-item.active {
+    background: linear-gradient(135deg, #1d4ed8, #2563EB);
+    border-color: transparent;
+}
+.emp-item.active .emp-item-name { color: #FFFFFF; font-weight: 700; }
+.emp-item.active .emp-item-id   { color: rgba(255,255,255,0.70); }
+.emp-avatar-sm {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    border: 1.5px solid rgba(37,99,235,0.20);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--att-blue);
+}
+.emp-item.active .emp-avatar-sm {
+    background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.40); color: #FFFFFF;
+}
+.emp-item-info { flex: 1; min-width: 0; }
+.emp-item-name { font-size: 12px; font-weight: 600; color: var(--att-text1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.emp-item-id   { font-size: 10px; color: var(--att-text2); margin-top: 2px; }
+
+/* ── Main Content ── */
+.att-body { flex: 1; padding: 24px; min-width: 0; overflow: auto; }
+
+/* ── Tabs ── */
+.att-tabs {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    background: #FFFFFF; border-radius: 10px; padding: 4px;
+    border: 1px solid var(--att-border); margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+.att-tab {
+    padding: 7px 16px; border-radius: 7px; cursor: pointer;
+    font-size: 12px; font-weight: 600; color: var(--att-text2);
+    transition: all .15s; border: none; background: transparent; font-family: inherit;
+}
+.att-tab.active {
+    background: linear-gradient(135deg, #1d4ed8, #2563EB);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.30);
+}
+.att-tab:hover:not(.active) { color: var(--att-blue); background: var(--att-blue-lt); }
+
+/* ── Stat Cards — compact strip ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 20px;
+}
+.stat-card {
+    background: var(--att-card); border: 1px solid var(--att-border); border-radius: 10px;
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 1px 6px rgba(37,99,235,0.06);
+    border-right: 3px solid var(--att-blue);
+}
+.stat-icon {
+    width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+    background: rgba(37,99,235,0.08); display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+}
+.stat-info { flex: 1; min-width: 0; }
+.stat-label { font-size: 10px; color: var(--att-text2); font-weight: 600; letter-spacing: .4px; margin-bottom: 2px; }
+.stat-value { font-size: 22px; font-weight: 900; color: var(--att-blue); line-height: 1; }
+.stat-sub   { font-size: 10px; color: var(--att-text2); margin-top: 2px; }
+
+/* ── Employee Detail Panel ── */
+.emp-detail-panel {
+    display: none;
+    background: #FFFFFF; border: 1px solid var(--att-border); border-radius: 16px;
+    margin-bottom: 20px; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(37,99,235,0.10);
+}
+.emp-detail-panel.open { display: block; }
+.emp-detail-head {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 100%);
+    padding: 20px 24px; color: #FFFFFF;
+    display: flex; align-items: center; gap: 16px;
+}
+.emp-detail-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.18); border: 2px solid rgba(255,255,255,0.35);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900; flex-shrink: 0;
+}
+.emp-detail-info { flex: 1; min-width: 0; }
+.emp-detail-name { font-size: 18px; font-weight: 800; }
+.emp-detail-meta { font-size: 12px; color: rgba(255,255,255,0.70); margin-top: 3px; }
+.emp-detail-actions { display: flex; gap: 8px; align-items: center; }
+.btn-sm-white {
+    padding: 7px 14px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.12); color: #FFFFFF; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all .15s; backdrop-filter: blur(4px);
+}
+.btn-sm-white:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.60); }
+.emp-detail-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--att-border);
+}
+.emp-det-stat {
+    padding: 14px 16px; text-align: center;
+    border-left: 1px solid var(--att-border);
+}
+.emp-det-stat:last-child { border-left: none; }
+.emp-det-val  { font-size: 20px; font-weight: 900; color: var(--att-text1); line-height: 1; }
+.emp-det-lbl  { font-size: 10px; color: var(--att-text2); font-weight: 600; margin-top: 4px; }
+.emp-detail-body { padding: 0; }
+
+/* ── Rename Modal ── */
+.rename-inline {
+    display: none; padding: 12px 16px; background: #F8FBFF;
+    border-bottom: 1px solid var(--att-border);
+    align-items: center; gap: 10px;
+}
+.rename-inline.open { display: flex; }
+.rename-inline input {
+    flex: 1; padding: 8px 12px; border-radius: 8px;
+    border: 1px solid var(--att-blue); background: #FFFFFF;
+    color: var(--att-text1); font-size: 13px; font-family: inherit; outline: none;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+}
+.rename-inline .btn-rename-save {
+    padding: 8px 16px; border-radius: 8px; border: none;
+    background: var(--att-blue); color: #FFFFFF;
+    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.rename-inline .btn-rename-cancel {
+    padding: 8px 14px; border-radius: 8px;
+    border: 1px solid var(--att-border); background: #FFFFFF;
+    color: var(--att-text2); font-size: 12px; cursor: pointer; font-family: inherit;
+}
+
+/* ── Section Card ── */
+.sec-card {
+    background: var(--att-card); border: 1px solid var(--att-border); border-radius: 14px;
+    overflow: hidden; margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.07);
+}
+.sec-card-header {
+    padding: 14px 20px; border-bottom: 1px solid var(--att-border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: #F8FBFF;
+}
+.sec-card-title { font-size: 14px; font-weight: 700; color: var(--att-text1); display: flex; align-items: center; gap: 8px; }
+.sec-card-body  { padding: 0; }
+
+/* ── Filters ── */
+.filters-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 14px 20px; border-bottom: 1px solid var(--att-border);
+    background: #F8FBFF;
+}
+.filter-btn {
+    padding: 6px 14px; border-radius: 6px; border: 1px solid var(--att-border);
+    background: #FFFFFF; color: var(--att-text2); font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all .15s; font-family: inherit;
+}
+.filter-btn.active { background: var(--att-blue-lt); border-color: var(--att-blue); color: var(--att-blue); font-weight: 700; }
+.filter-btn:hover:not(.active) { border-color: var(--att-border2); color: var(--att-blue); }
+
+.date-input {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--att-border);
+    background: #FFFFFF; color: var(--att-text1); font-size: 12px; font-family: inherit;
+}
+.date-input:focus { outline: none; border-color: var(--att-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.10); }
+select.date-input option { background: #FFFFFF; }
+
+/* ── Table ── */
+.att-table { width: 100%; border-collapse: collapse; }
+.att-table thead th {
+    padding: 11px 16px !important; text-align: right;
+    font-size: 11px !important; font-weight: 800 !important;
+    color: #2563EB !important; letter-spacing: .6px; text-transform: uppercase;
+    background: #EFF6FF !important;
+    border-bottom: 2px solid rgba(37,99,235,0.18) !important;
+}
+.att-table td {
+    padding: 12px 16px !important; font-size: 13px !important;
+    color: #1E3A5F !important; font-weight: 500 !important;
+    border-bottom: 1px solid rgba(37,99,235,0.08) !important;
+    background: #FFFFFF !important;
+    transition: background .12s, color .12s;
+}
+.att-table tr:last-child td { border-bottom: none !important; }
+.att-table tbody tr:hover td {
+    background: rgba(37,99,235,0.07) !important;
+    color: #1D4ED8 !important;
+}
+
+/* ── Punch Badge ── */
+.punch-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.punch-in    { background: rgba(22,163,74,.10);  color: var(--att-green);  border: 1px solid rgba(22,163,74,.25); }
+.punch-out   { background: rgba(220,38,38,.10);  color: var(--att-red);    border: 1px solid rgba(220,38,38,.25); }
+.punch-other { background: rgba(37,99,235,.10);  color: var(--att-blue);   border: 1px solid rgba(37,99,235,.25); }
+
+/* ── Progress Bar ── */
+.prog-wrap { display:flex; align-items:center; gap:8px; }
+.prog-bar  { flex:1; height:6px; background: rgba(37,99,235,0.10); border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:3px; transition:width .4s; }
+.prog-green  { background: var(--att-green); }
+.prog-red    { background: var(--att-red); }
+.prog-gold   { background: var(--att-orange); }
+.prog-pct    { font-size:11px; font-weight:700; min-width:32px; text-align:left; color: var(--att-text2); }
+
+/* ── Summary Cards ── */
+.summary-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px; margin-bottom:20px;
+}
+.sum-card {
+    background: var(--att-card); border: 1px solid var(--att-border); border-radius:12px;
+    padding:16px; text-align:center;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.07);
+}
+.sum-card .val { font-size:32px; font-weight:800; line-height:1; margin-bottom:4px; }
+.sum-card .lbl { font-size:11px; font-weight:600; color:var(--att-text2); letter-spacing:.4px; }
+.sum-card.green { border-top: 3px solid var(--att-green);  border-color: rgba(22,163,74,.20); }
+.sum-card.red   { border-top: 3px solid var(--att-red);    border-color: rgba(220,38,38,.20); }
+.sum-card.gold  { border-top: 3px solid var(--att-orange); border-color: rgba(217,119,6,.20); }
+.sum-card.blue  { border-top: 3px solid var(--att-blue);   border-color: rgba(37,99,235,.20); }
+
+/* ── Status Badge ── */
+.status-good { color:var(--att-green);  font-weight:700; font-size:12px; }
+.status-warn { color:var(--att-orange); font-weight:700; font-size:12px; }
+.status-bad  { color:var(--att-red);    font-weight:700; font-size:12px; }
+
+/* ── Daily Status Badges ── */
+.ds-present { background:rgba(22,163,74,.10);  color:var(--att-green);  border:1px solid rgba(22,163,74,.25);  border-radius:8px; padding:3px 10px; font-size:11px; font-weight:700; }
+.ds-late    { background:rgba(217,119,6,.10);  color:var(--att-orange); border:1px solid rgba(217,119,6,.25);  border-radius:8px; padding:3px 10px; font-size:11px; font-weight:700; }
+.ds-absent  { background:rgba(220,38,38,.10);  color:var(--att-red);    border:1px solid rgba(220,38,38,.25);  border-radius:8px; padding:3px 10px; font-size:11px; font-weight:700; }
+.ds-excused { background:rgba(124,58,237,.10); color:var(--att-purple); border:1px solid rgba(124,58,237,.25); border-radius:8px; padding:3px 10px; font-size:11px; font-weight:700; }
+
+/* ── Alert Badge ── */
+.alert-badge  { background:rgba(220,38,38,.10); border:1px solid rgba(220,38,38,.30); color:var(--att-red);   border-radius:20px; padding:4px 12px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px; }
+.normal-badge { background:rgba(22,163,74,.10); border:1px solid rgba(22,163,74,.25); color:var(--att-green); border-radius:20px; padding:4px 12px; font-size:11px; font-weight:700; }
+
+/* ── Note Type Badges ── */
+.nt-note    { background:rgba(37,99,235,.10);  color:var(--att-blue);   border:1px solid rgba(37,99,235,.25);  border-radius:6px; padding:2px 8px; font-size:11px; font-weight:700; }
+.nt-warning { background:rgba(220,38,38,.10);  color:var(--att-red);    border:1px solid rgba(220,38,38,.25);  border-radius:6px; padding:2px 8px; font-size:11px; font-weight:700; }
+.nt-praise  { background:rgba(22,163,74,.10);  color:var(--att-green);  border:1px solid rgba(22,163,74,.25);  border-radius:6px; padding:2px 8px; font-size:11px; font-weight:700; }
+
+/* ── Modal ── */
+.modal-overlay {
+    display:none; position:fixed; inset:0; background:rgba(30,58,95,0.50);
+    backdrop-filter: blur(6px); z-index:9999; align-items:center; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+    background:#FFFFFF; border:1px solid var(--att-border); border-radius:18px;
+    width:min(560px,96vw); max-height:90vh; overflow-y:auto;
+    padding:0; box-shadow:0 24px 60px rgba(30,58,95,0.18);
+}
+.modal-head {
+    padding:20px 24px 16px; border-bottom:1px solid var(--att-border);
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; background:#F8FBFF; z-index:1;
+}
+.modal-body { padding:24px; display:flex; flex-direction:column; gap:16px; }
+.modal-close {
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--att-border);
+    background:#F1F5F9; color:var(--att-text2); font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+}
+.modal-close:hover { background: var(--att-blue-lt); color: var(--att-blue); }
+
+/* ── Form Elements ── */
+.form-label { font-size:12px; color:var(--att-text2); font-weight:600; margin-bottom:6px; }
+.form-input {
+    width:100%; padding:9px 12px; border-radius:8px;
+    border:1px solid var(--att-border); background:#F8FAFF;
+    color:var(--att-text1); font-size:13px; font-family:inherit; outline:none;
+}
+.form-input:focus { border-color:var(--att-blue); box-shadow:0 0 0 3px rgba(37,99,235,0.10); }
+.form-textarea { min-height:80px; resize:vertical; }
+.form-select { cursor:pointer; }
+
+/* ── Absence Type Chip ── */
+.absence-chip { background:rgba(37,99,235,.10); color:var(--att-blue); border:1px solid rgba(37,99,235,.25); border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700; }
+
+/* ── Empty State ── */
+.empty-state { padding:48px 20px; text-align:center; color:var(--att-text2); font-size:14px; }
+.empty-state .empty-icon { font-size:40px; margin-bottom:12px; }
+
+/* ── Loading ── */
+.loading-row td { text-align:center; padding:32px; color:#64748B !important; background:#FFFFFF !important; }
+
+/* ── Sync Bar ── */
+.sync-bar {
+    background: #EFF6FF; border: 1px solid var(--att-border);
+    border-radius: 10px; padding: 12px 18px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap;
+}
+.sync-info { font-size:13px; color:var(--att-text2); }
+.sync-info strong { color:var(--att-blue); font-weight:700; }
+
+/* ── Report Table ── */
+.report-days {
+    display:inline-block; background:rgba(37,99,235,.10);
+    color:var(--att-blue); border-radius:12px; padding:2px 10px;
+    font-size:12px; font-weight:700;
+}
+
+/* ── Toast Notification ── */
+#att-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    right: auto;
+    transform: translateY(12px);
+    min-width: 260px;
+    max-width: 360px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid rgba(37,99,235,0.15);
+    box-shadow: 0 8px 32px rgba(30,58,95,0.14), 0 2px 8px rgba(30,58,95,0.08);
+
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--att-text1);
+    z-index: 99999;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+}
+#att-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* اللون الجانبي + الأيقونة حسب النوع */
+#att-toast::before {
+    content: '';
+    width: 4px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: 4px;
+    background: #2563EB;
+}
+#att-toast.ok::before  { background: #16A34A; }
+#att-toast.err::before { background: #DC2626; }
+#att-toast.warn::before{ background: #D97706; }
+
+#att-toast .toast-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+#att-toast .toast-text {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .emp-sidebar { width: 240px; }
+    .stats-grid  { grid-template-columns: repeat(2, 1fr); }
+    .emp-detail-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .att-outer   { flex-direction: column; }
+    .emp-sidebar { width: 100%; height: auto; position: static; border-left: none; border-bottom: 1px solid var(--att-border); }
+    .emp-list    { max-height: 200px; }
+    .stats-grid  { grid-template-columns: repeat(2, 1fr); }
+    .emp-detail-stats { grid-template-columns: repeat(2, 1fr); }
+    .emp-detail-head  { flex-wrap: wrap; }
+    .emp-detail-actions { width: 100%; margin-top: 8px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div id="att-toast">
+    <span class="toast-icon" id="att-toast-icon">ℹ️</span>
+    <span class="toast-text"  id="att-toast-text"></span>
+</div>
+
+<!-- Header -->
+<div id="header">
+
+    <div class="logo-wrap">
+        <img class="logo-icon" src="{% static 'images/الشعار-01.png' %}" alt="شعار">
+        <div>
+            <div class="logo-title">نظام انترناشونال الموحد</div>
+            <div class="logo-sub">الحضور والانصراف — جهاز البصمة</div>
+        </div>
+    </div>
+
+    <div id="header-section-name">
+        <span class="sec-icon">🖐</span>
+        <span>الحضور والانصراف</span>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+
+        <div class="device-badge checking" id="device-badge">
+            <div class="device-dot"></div>
+            <span id="device-badge-text">جاري الفحص...</span>
+        </div>
+
+        <button class="btn btn-outline" onclick="checkDevice()">🔄 فحص</button>
+        <button class="btn btn-gold" onclick="syncData()" id="sync-btn">⬇️ مزامنة</button>
+        <button class="btn" onclick="openManualPunchModal()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;">✋ بصمة يدوية</button>
+
+        <div class="clock-toggle-wrap">
+            <div class="clock-box">
+                <div class="clock-time" id="clock">--:--:--</div>
+                <div class="clock-date" id="dateDisplay">—</div>
+            </div>
+        </div>
+
+        <div class="user-dropdown" id="userDropdown" onclick="toggleUserDropdown(event)">
+            <div class="ud-avatar">👤</div>
+            <div class="ud-info">
+                <div class="ud-name" id="userDisplayName">—</div>
+                <div class="ud-role">مدير النظام</div>
+            </div>
+            <svg class="ud-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <div class="ud-menu">
+                <div class="ud-menu-header">
+                    <div class="ud-menu-avatar">👤</div>
+                    <div>
+                        <div class="ud-menu-name" id="ud-menu-name">—</div>
+                        <div class="ud-menu-role">مدير النظام</div>
+                    </div>
+                </div>
+                <div class="ud-menu-item danger" onclick="logout(); event.stopPropagation()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    تسجيل الخروج
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Outer wrapper: sidebar + content -->
+<div class="att-outer">
+
+<!-- ── Employee Sidebar ── -->
+<aside class="emp-sidebar">
+    <div class="emp-sidebar-head">
+        <div class="emp-sidebar-title">
+            <span>👥 الموظفون</span>
+            <span class="emp-sidebar-count" id="sidebar-emp-count">0</span>
+        </div>
+        <input class="emp-search" id="emp-sidebar-search" type="text"
+               placeholder="🔍 ابحث بالاسم..." oninput="filterSidebarEmps()">
+    </div>
+    <div class="emp-list" id="emp-sidebar-list">
+        <div style="text-align:center;padding:24px;color:var(--att-text2);font-size:12px">
+            جاري التحميل...
+        </div>
+    </div>
+</aside>
+
+<!-- Body -->
+<div class="att-body">
+
+    <!-- Sync Info Bar -->
+    <div class="sync-bar" id="sync-bar" style="display:none">
+        <div class="sync-info">
+            آخر مزامنة: <strong id="last-sync-time">—</strong> |
+            إجمالي السجلات: <strong id="total-records">—</strong>
+        </div>
+        <div style="font-size:12px;color:var(--text2)" id="sync-status-text"></div>
+    </div>
+
+    <!-- Stats — compact strip -->
+    <div class="stats-grid" id="stats-grid">
+        <div class="stat-card" style="border-right-color:#2563EB">
+            <div class="stat-icon" style="background:rgba(37,99,235,0.08)">👥</div>
+            <div class="stat-info">
+                <div class="stat-label">إجمالي الموظفين</div>
+                <div class="stat-value" id="stat-employees" style="color:#2563EB">—</div>
+                <div class="stat-sub">مسجّلون في الجهاز</div>
+            </div>
+        </div>
+        <div class="stat-card" style="border-right-color:#16A34A">
+            <div class="stat-icon" style="background:rgba(22,163,74,0.08)">📅</div>
+            <div class="stat-info">
+                <div class="stat-label">سجلات اليوم</div>
+                <div class="stat-value" id="stat-today" style="color:#16A34A">—</div>
+                <div class="stat-sub">بصمة اليوم</div>
+            </div>
+        </div>
+        <div class="stat-card" style="border-right-color:#D97706">
+            <div class="stat-icon" style="background:rgba(217,119,6,0.08)">📆</div>
+            <div class="stat-info">
+                <div class="stat-label">سجلات الأسبوع</div>
+                <div class="stat-value" id="stat-week" style="color:#D97706">—</div>
+                <div class="stat-sub">آخر 7 أيام</div>
+            </div>
+        </div>
+        <div class="stat-card" style="border-right-color:#7C3AED">
+            <div class="stat-icon" style="background:rgba(124,58,237,0.08)">📊</div>
+            <div class="stat-info">
+                <div class="stat-label">إجمالي السجلات</div>
+                <div class="stat-value" id="stat-total" style="color:#7C3AED">—</div>
+                <div class="stat-sub">كامل البيانات</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Detail Panel -->
+    <div class="emp-detail-panel" id="emp-detail-panel">
+        <div class="emp-detail-head">
+            <div class="emp-detail-avatar" id="edp-avatar">—</div>
+            <div class="emp-detail-info">
+                <div class="emp-detail-name" id="edp-name">—</div>
+                <div class="emp-detail-meta" id="edp-meta">—</div>
+            </div>
+            <div class="emp-detail-actions">
+                <button class="btn-sm-white" onclick="toggleRenameInline()">✏️ تعديل الاسم</button>
+                <button class="btn-sm-white" onclick="openNotesModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">📝 ملاحظات</button>
+                <button class="btn-sm-white" onclick="openExcusedModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">📋 إذن</button>
+                <button class="btn-sm-white" onclick="openEmpReportModal(_selectedEmpId, document.getElementById('edp-name').textContent)">📄 تقرير</button>
+                <button class="btn-sm-white" onclick="closeEmpDetail()">✕</button>
+            </div>
+        </div>
+        <!-- Rename row -->
+        <div class="rename-inline" id="rename-inline">
+            <input type="text" id="rename-input" placeholder="أدخل الاسم الجديد...">
+            <button class="btn-rename-save" onclick="saveRename()">💾 حفظ</button>
+            <button class="btn-rename-cancel" onclick="toggleRenameInline()">إلغاء</button>
+        </div>
+        <!-- Stats row -->
+        <div class="emp-detail-stats" id="edp-stats">
+            <div class="emp-det-stat">
+                <div class="emp-det-val" id="edp-stat-present" style="color:#16A34A">—</div>
+                <div class="emp-det-lbl">أيام الحضور</div>
+            </div>
+            <div class="emp-det-stat">
+                <div class="emp-det-val" id="edp-stat-absent" style="color:#DC2626">—</div>
+                <div class="emp-det-lbl">أيام الغياب</div>
+            </div>
+            <div class="emp-det-stat">
+                <div class="emp-det-val" id="edp-stat-late" style="color:#D97706">—</div>
+                <div class="emp-det-lbl">أيام التأخير</div>
+            </div>
+            <div class="emp-det-stat">
+                <div class="emp-det-val" id="edp-stat-total" style="color:#2563EB">—</div>
+                <div class="emp-det-lbl">إجمالي البصمات</div>
+            </div>
+        </div>
+        <!-- Detail records table -->
+        <div style="padding:0">
+            <div style="padding:12px 20px;background:#F8FBFF;border-bottom:1px solid var(--att-border);display:flex;align-items:center;justify-content:space-between">
+                <div style="font-size:13px;font-weight:700;color:var(--att-text1)">📋 سجلات البصمات</div>
+                <div style="display:flex;gap:6px">
+                    <button class="filter-btn active" id="edp-filter-today" onclick="setEdpPeriod('today',this)">اليوم</button>
+                    <button class="filter-btn" id="edp-filter-week" onclick="setEdpPeriod('week',this)">الأسبوع</button>
+                    <button class="filter-btn" id="edp-filter-month" onclick="setEdpPeriod('month',this)">الشهر</button>
+                </div>
+            </div>
+            <table class="att-table" id="edp-records-table">
+                <thead><tr>
+                    <th>التاريخ</th>
+                    <th>الوقت</th>
+                    <th>نوع البصمة</th>
+                    <th style="width:80px">إجراءات</th>
+                </tr></thead>
+                <tbody id="edp-records-tbody">
+                    <tr class="loading-row"><td colspan="4">جاري التحميل...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="att-tabs" id="main-tabs">
+        <button class="att-tab active" onclick="switchTab('records', this)">📋 سجلات الحضور</button>
+        <button class="att-tab" onclick="switchTab('employees', this)">👥 الموظفون</button>
+        <button class="att-tab" onclick="switchTab('daily', this)">📅 الدوام اليومي</button>
+        <button class="att-tab" onclick="switchTab('alerts', this)">🔔 التنبيهات</button>
+        <button class="att-tab" onclick="switchTab('report', this)">📊 التقرير</button>
+        <button class="att-tab" onclick="switchTab('stats', this)">📈 الإحصائيات</button>
+        <button class="att-tab" onclick="switchTab('export', this)">📥 استخراج فردي</button>
+    </div>
+
+    <!-- Tab: Records -->
+    <div class="tab-panel active" id="tab-records">
+        <div class="sec-card">
+            <div class="sec-card-header">
+                <div class="sec-card-title">📋 سجلات الحضور والانصراف</div>
+                <div style="font-size:12px;color:var(--text2)" id="records-count"></div>
+            </div>
+            <div class="filters-row">
+                <button class="filter-btn active" onclick="setRecordPeriod('today', this)">اليوم</button>
+                <button class="filter-btn" onclick="setRecordPeriod('week', this)">هذا الأسبوع</button>
+                <button class="filter-btn" onclick="setRecordPeriod('month', this)">هذا الشهر</button>
+                <button class="filter-btn" onclick="setRecordPeriod('custom', this)">مخصص</button>
+                <div id="custom-dates" style="display:none;gap:8px;display:none;align-items:center">
+                    <input type="date" class="date-input" id="rec-from" onchange="loadRecords()">
+                    <span style="color:var(--text2);font-size:12px">إلى</span>
+                    <input type="date" class="date-input" id="rec-to" onchange="loadRecords()">
+                </div>
+                <select class="date-input" id="rec-emp-filter" onchange="loadRecords()" style="min-width:140px">
+                    <option value="">كل الموظفين</option>
+                </select>
+            </div>
+            <div class="sec-card-body">
+                <table class="att-table">
+                    <thead>
+                        <tr>
+                            <th>الموظف</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>نوع البصمة</th>
+                            <th style="width:100px">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-tbody">
+                        <tr class="loading-row"><td colspan="5">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Employees -->
+    <div class="tab-panel" id="tab-employees">
+        <div class="sec-card">
+            <div class="sec-card-header">
+                <div class="sec-card-title">👥 الموظفون المسجّلون في الجهاز</div>
+                <div style="font-size:12px;color:var(--text2)" id="employees-count"></div>
+            </div>
+            <div class="sec-card-body">
+                <table class="att-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الجهاز</th>
+                            <th>الاسم</th>
+                            <th>المعرف</th>
+                            <th>آخر بصمة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employees-tbody">
+                        <tr class="loading-row"><td colspan="5">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: استخراج فردي -->
+    <div class="tab-panel" id="tab-export">
+        <div class="sec-card">
+            <div class="sec-card-header">
+                <div class="sec-card-title">📥 استخراج تقرير موظف</div>
+                <div style="font-size:12px;color:var(--text2)" id="export-emp-count"></div>
+            </div>
+            <div style="padding:16px 20px 0">
+                <!-- بحث -->
+                <input type="text" id="export-search"
+                    placeholder="🔍 ابحث عن موظف بالاسم أو الرقم..."
+                    oninput="filterExportEmps()"
+                    style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(201,168,76,.25);background:#0d1626;color:#e8eaf0;font-size:13px;font-family:inherit;outline:none;margin-bottom:14px">
+            </div>
+            <!-- شبكة الموظفين -->
+            <div style="padding:0 20px 20px">
+                <div id="export-emp-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+                    <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text2)">جاري التحميل...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: تقرير موظف فردي -->
+    <div id="emp-report-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center">
+        <div style="background:#111827;border:1px solid rgba(201,168,76,.25);border-radius:18px;width:min(500px,94vw);padding:0;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6)">
+            <!-- Header -->
+            <div style="padding:22px 24px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+                <div>
+                    <div style="font-size:16px;font-weight:800;color:#e8eaf0">📄 استخراج تقرير موظف</div>
+                    <div style="font-size:12px;color:var(--text2);margin-top:3px" id="emp-report-name">—</div>
+                </div>
+                <button type="button" onclick="closeEmpReportModal()" style="width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+            </div>
+            <!-- Body -->
+            <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+                <!-- نوع الفترة -->
+                <div>
+                    <div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600">نوع التقرير</div>
+                    <div style="display:flex;gap:8px">
+                        <button type="button" class="filter-btn active" id="erp-week-btn"  onclick="setEmpReportPeriod('week',this)">📅 أسبوعي</button>
+                        <button type="button" class="filter-btn"        id="erp-month-btn" onclick="setEmpReportPeriod('month',this)">📆 شهري</button>
+                        <button type="button" class="filter-btn"        id="erp-custom-btn" onclick="setEmpReportPeriod('custom',this)">🗓 مخصص</button>
+                    </div>
+                </div>
+                <!-- تواريخ مخصصة -->
+                <div id="erp-custom-dates" style="display:none;gap:10px;align-items:center">
+                    <div style="flex:1">
+                        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">من</div>
+                        <input type="date" class="date-input" id="erp-from" style="width:100%">
+                    </div>
+                    <div style="flex:1">
+                        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">إلى</div>
+                        <input type="date" class="date-input" id="erp-to" style="width:100%">
+                    </div>
+                </div>
+                <!-- وقت التأخير -->
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="font-size:12px;color:var(--text2);font-weight:600;white-space:nowrap">حد التأخير:</div>
+                    <input type="time" class="date-input" id="erp-late" value="09:00" style="width:110px">
+                </div>
+                <!-- معلومة -->
+                <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:12px 14px;font-size:12px;color:#9aa3b8;line-height:1.7">
+                    📊 سيحتوي الملف على <strong style="color:#C9A84C">3 أوراق</strong>: ملخص الإحصائيات، التفاصيل اليومية، وجميع البصمات.
+                </div>
+                <!-- أزرار التنزيل -->
+                <div style="display:flex;gap:10px">
+                    <button type="button" class="btn btn-gold" style="flex:1;padding:12px;font-size:13px" onclick="downloadEmpReport()">
+                        ⬇ Excel (3 أوراق)
+                    </button>
+                    <button type="button" onclick="printEmpPDF()" style="flex:1;padding:12px;font-size:13px;font-family:'Cairo',sans-serif;font-weight:700;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#1E40AF,#2563EB);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        🖨 كشف PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Report -->
+    <div class="tab-panel" id="tab-report">
+        <div class="sec-card">
+            <div class="sec-card-header">
+                <div class="sec-card-title">📊 تقرير الحضور</div>
+                <div style="display:flex;gap:8px">
+                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('records')">⬇ Excel</button>
+                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('report')">🖨 PDF</button>
+                </div>
+            </div>
+            <div class="filters-row">
+                <button class="filter-btn" onclick="setReportPeriod('today', this)">اليوم</button>
+                <button class="filter-btn active" onclick="setReportPeriod('week', this)">هذا الأسبوع</button>
+                <button class="filter-btn" onclick="setReportPeriod('month', this)">هذا الشهر</button>
+                <button class="filter-btn" onclick="setReportPeriod('custom', this)">مخصص</button>
+                <div id="report-custom-dates" style="display:none;gap:8px;align-items:center">
+                    <input type="date" class="date-input" id="rep-from" onchange="loadReport()">
+                    <span style="color:var(--text2);font-size:12px">إلى</span>
+                    <input type="date" class="date-input" id="rep-to" onchange="loadReport()">
+                </div>
+            </div>
+            <div class="sec-card-body">
+                <table class="att-table">
+                    <thead>
+                        <tr>
+                            <th>الموظف</th>
+                            <th>أيام الحضور</th>
+                            <th>أول دخول</th>
+                            <th>آخر خروج</th>
+                            <th>إجمالي البصمات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-tbody">
+                        <tr class="loading-row"><td colspan="5">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Stats -->
+    <div class="tab-panel" id="tab-stats">
+
+        <!-- فلاتر الفترة -->
+        <div class="sec-card" style="margin-bottom:20px">
+            <div class="sec-card-header">
+                <div class="sec-card-title">⚙️ إعدادات الإحصائيات</div>
+            </div>
+            <div class="filters-row" style="gap:14px">
+                <button class="filter-btn" onclick="setStatsPeriod('today',this)">اليوم</button>
+                <button class="filter-btn" onclick="setStatsPeriod('week',this)">هذا الأسبوع</button>
+                <button class="filter-btn active" onclick="setStatsPeriod('month',this)">هذا الشهر</button>
+                <button class="filter-btn" onclick="setStatsPeriod('custom',this)">مخصص</button>
+                <div id="stats-custom-dates" style="display:none;gap:8px;align-items:center">
+                    <input type="date" class="date-input" id="stats-from" onchange="loadStats2()">
+                    <span style="color:var(--text2);font-size:12px">إلى</span>
+                    <input type="date" class="date-input" id="stats-to" onchange="loadStats2()">
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-right:auto">
+                    <span style="font-size:12px;color:var(--text2)">وقت التأخير:</span>
+                    <input type="time" class="date-input" id="late-threshold" value="09:00" onchange="loadStats2()" style="width:90px">
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقات الملخص -->
+        <div class="summary-grid" id="stats-summary">
+            <div class="sum-card green"><div class="val" id="ss-present" style="color:var(--green)">—</div><div class="lbl">حاضرون اليوم</div></div>
+            <div class="sum-card red">  <div class="val" id="ss-absent"  style="color:var(--red)">—</div><div class="lbl">غائبون اليوم</div></div>
+            <div class="sum-card gold"> <div class="val" id="ss-late"     style="color:var(--gold)">—</div><div class="lbl">متأخرون (الفترة)</div></div>
+            <div class="sum-card blue"> <div class="val" id="ss-workdays" style="color:var(--blue)">—</div><div class="lbl">أيام العمل في الفترة</div></div>
+            <div class="sum-card" style="border-color:rgba(139,92,246,.3)"> <div class="val" id="ss-total-hours"  style="color:#a78bfa">—</div><div class="lbl">إجمالي ساعات العمل</div></div>
+            <div class="sum-card" style="border-color:rgba(20,184,166,.3)"> <div class="val" id="ss-avg-hours"    style="color:#2dd4bf">—</div><div class="lbl">متوسط ساعات/موظف</div></div>
+        </div>
+
+        <!-- جدول الإحصائيات التفصيلية -->
+        <div class="sec-card">
+            <div class="sec-card-header">
+                <div class="sec-card-title">📈 إحصائيات الحضور لكل موظف</div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="font-size:12px;color:var(--text2)" id="stats-period-label"></div>
+                    <div style="display:flex;gap:8px">
+                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('stats')">⬇ Excel</button>
+                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('stats')">🖨 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="sec-card-body">
+                <table class="att-table">
+                    <thead>
+                        <tr>
+                            <th>الموظف</th>
+                            <th>نسبة الحضور</th>
+                            <th>نسبة الغياب</th>
+                            <th>نسبة التأخير</th>
+                            <th>أيام حضور</th>
+                            <th>أيام غياب</th>
+                            <th>أيام تأخير</th>
+                            <th>متوسط الدخول</th>
+                            <th>متوسط الخروج</th>
+                            <th>ساعات الفترة</th>
+                            <th>متوسط يومي</th>
+                            <th>تقدير أسبوعي</th>
+                            <th>تقدير شهري</th>
+                            <th>التقييم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stats-tbody">
+                        <tr class="loading-row"><td colspan="14">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /tab-stats -->
+
+    <!-- ══ Tab: الدوام اليومي ══ -->
+    <div class="tab-panel" id="tab-daily">
+
+        <!-- فلتر اليوم -->
+        <div class="sec-card" style="margin-bottom:20px">
+            <div class="sec-card-header">
+                <div class="sec-card-title">📅 تقرير الدوام اليومي</div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <input type="date" class="date-input" id="daily-date" onchange="loadDaily()">
+                    <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadDaily()">🔄 تحديث</button>
+                </div>
+            </div>
+            <div class="filters-row">
+                <span style="font-size:12px;color:var(--text2)">وقت التأخير:</span>
+                <input type="time" class="date-input" id="daily-late" value="09:00" onchange="loadDaily()" style="width:90px">
+                <div style="margin-right:auto;display:flex;gap:8px" id="daily-counts">
+                    <span style="font-size:12px;color:var(--green)">حاضر: <strong id="dc-present">—</strong></span>
+                    <span style="font-size:12px;color:var(--gold)">متأخر: <strong id="dc-late">—</strong></span>
+                    <span style="font-size:12px;color:var(--red)">غائب: <strong id="dc-absent">—</strong></span>
+                    <span style="font-size:12px;color:var(--blue)">بإذن: <strong id="dc-excused">—</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sec-card">
+            <div class="sec-card-body">
+                <table class="att-table">
+                    <thead>
+                        <tr>
+                            <th>الموظف</th>
+                            <th>الحالة</th>
+                            <th>وقت الدخول</th>
+                            <th>وقت الخروج</th>
+                            <th>ملاحظات</th>
+                            <th>إذن غياب</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daily-tbody">
+                        <tr class="loading-row"><td colspan="6">اختر يوماً لعرض الدوام</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /tab-daily -->
+
+    <!-- ══ Tab: التنبيهات ══ -->
+    <div class="tab-panel" id="tab-alerts">
+        <div class="sec-card" style="margin-bottom:20px">
+            <div class="sec-card-header">
+                <div class="sec-card-title">🔔 تنبيهات الغياب المتكرر</div>
+            </div>
+            <div class="filters-row">
+                <span style="font-size:12px;color:var(--text2)">الشهر:</span>
+                <input type="month" class="date-input" id="alert-month" onchange="loadAlerts()" style="width:140px">
+                <span style="font-size:12px;color:var(--text2)">حد الغياب:</span>
+                <input type="number" class="date-input" id="alert-threshold" value="3" min="1" max="30" onchange="loadAlerts()" style="width:65px">
+                <span style="font-size:12px;color:var(--text2)">أيام</span>
+                <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadAlerts()">🔍 فحص</button>
+                <div id="alerts-summary" style="margin-right:auto;font-size:12px;color:var(--text2)"></div>
+            </div>
+        </div>
+
+        <!-- الموظفون الذين تجاوزوا الحد -->
+        <div id="alerts-section" style="display:none">
+            <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+                <span>⚠</span> <span id="alerts-title">تجاوزوا حد الغياب</span>
+            </div>
+            <div class="sec-card" style="margin-bottom:20px">
+                <div class="sec-card-body">
+                    <table class="att-table">
+                        <thead>
+                            <tr>
+                                <th>الموظف</th>
+                                <th>أيام الحضور</th>
+                                <th>أيام الغياب</th>
+                                <th>أيام بإذن</th>
+                                <th>أيام العمل</th>
+                                <th>الحالة</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- الموظفون الطبيعيون -->
+        <div id="normal-section">
+            <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px">✓ حضور طبيعي</div>
+            <div class="sec-card">
+                <div class="sec-card-body">
+                    <table class="att-table">
+                        <thead>
+                            <tr>
+                                <th>الموظف</th>
+                                <th>أيام الحضور</th>
+                                <th>أيام الغياب</th>
+                                <th>أيام بإذن</th>
+                                <th>أيام العمل</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="normal-tbody">
+                            <tr class="loading-row"><td colspan="6">اضغط "فحص" لعرض النتائج</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- /tab-alerts -->
+
+</div><!-- /att-body -->
+</div><!-- /att-outer -->
+
+<!-- ══ Modal: ملاحظات الموظف ══ -->
+<div class="modal-overlay" id="notes-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">📝 ملاحظات الموظف</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:2px" id="notes-emp-name">—</div>
+            </div>
+            <button class="modal-close" onclick="closeNotesModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- إضافة ملاحظة جديدة -->
+            <div style="background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:12px;font-weight:700;color:var(--gold)">+ إضافة ملاحظة جديدة</div>
+                <div>
+                    <div class="form-label">نوع الملاحظة</div>
+                    <select class="form-input form-select" id="note-type-sel">
+                        <option value="note">📋 ملاحظة</option>
+                        <option value="warning">⚠ تحذير</option>
+                        <option value="praise">⭐ شكر وتقدير</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="form-label">نص الملاحظة</div>
+                    <textarea class="form-input form-textarea" id="note-body" placeholder="اكتب الملاحظة هنا..."></textarea>
+                </div>
+                <button class="btn btn-gold" onclick="saveNote()">💾 حفظ الملاحظة</button>
+            </div>
+            <!-- قائمة الملاحظات -->
+            <div id="notes-list" style="display:flex;flex-direction:column;gap:10px">
+                <div style="text-align:center;color:var(--text2);padding:16px">جاري التحميل...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Modal: بصمة يدوية ══ -->
+<div class="modal-overlay" id="manual-punch-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">✋ إضافة بصمة يدوية</div>
+                <div style="font-size:12px;color:#9aa3b8;margin-top:3px">لموظف نسي البصم — وقت تقديري</div>
+            </div>
+            <button class="modal-close" onclick="closeManualPunchModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div class="form-label">الموظف *</div>
+                <select class="form-input form-select" id="mp-employee">
+                    <option value="">اختر الموظف...</option>
+                </select>
+            </div>
+            <div>
+                <div class="form-label">نوع البصمة *</div>
+                <div style="display:flex;gap:10px">
+                    <label style="flex:1;display:flex;align-items:center;gap:8px;background:rgba(0,201,122,.08);border:1px solid rgba(0,201,122,.2);border-radius:8px;padding:10px 14px;cursor:pointer">
+                        <input type="radio" name="mp-punch" value="0" checked style="accent-color:#00c97a">
+                        <span style="color:#00c97a;font-weight:700;font-size:13px">🟢 دخول</span>
+                    </label>
+                    <label style="flex:1;display:flex;align-items:center;gap:8px;background:rgba(255,77,106,.08);border:1px solid rgba(255,77,106,.2);border-radius:8px;padding:10px 14px;cursor:pointer">
+                        <input type="radio" name="mp-punch" value="1" style="accent-color:#ff4d6a">
+                        <span style="color:#ff4d6a;font-weight:700;font-size:13px">🔴 خروج</span>
+                    </label>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                    <div class="form-label">التاريخ *</div>
+                    <input type="date" class="form-input" id="mp-date">
+                </div>
+                <div>
+                    <div class="form-label">الوقت (تقديري) *</div>
+                    <input type="time" class="form-input" id="mp-time">
+                </div>
+            </div>
+            <div>
+                <div class="form-label">سبب البصمة اليدوية</div>
+                <textarea class="form-input form-textarea" id="mp-reason" placeholder="مثال: نسي الموظف البصم عند الدخول..."></textarea>
+            </div>
+            <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#a78bfa;line-height:1.7">
+                ⚠️ سيُسجَّل هذا الإدخال كبصمة <strong>يدوية / تقديرية</strong> باسمك كمدير. لا يمكن استخدامه كبديل عن البصمة الفعلية في السجلات الرسمية.
+            </div>
+            <button class="btn btn-gold" id="mp-save-btn" onclick="saveManualPunch()" style="width:100%;padding:11px">
+                حفظ البصمة اليدوية
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Modal: تعديل بصمة ══ -->
+<div class="modal-overlay" id="edit-punch-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <div>
+                <div style="font-size:15px;font-weight:800;color:#1E3A5F">✏️ تعديل بصمة</div>
+                <div style="font-size:12px;color:var(--att-text2);margin-top:3px" id="ep-emp-name">—</div>
+            </div>
+            <button class="modal-close" onclick="closeEditPunchModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="ep-record-id">
+            <div>
+                <div class="form-label">نوع البصمة *</div>
+                <select class="form-input form-select" id="ep-punch">
+                    <option value="0">🟢 دخول</option>
+                    <option value="1">🔴 خروج</option>
+                    <option value="4">⏸ خروج استراحة</option>
+                    <option value="5">▶️ دخول استراحة</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                    <div class="form-label">التاريخ *</div>
+                    <input type="date" class="form-input" id="ep-date">
+                </div>
+                <div>
+                    <div class="form-label">الوقت *</div>
+                    <input type="time" class="form-input" id="ep-time">
+                </div>
+            </div>
+            <div>
+                <div class="form-label">سبب التعديل</div>
+                <textarea class="form-input form-textarea" id="ep-reason" placeholder="مثال: تصحيح خطأ في وقت الدخول..."></textarea>
+            </div>
+            <div style="background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#D97706;line-height:1.7">
+                ⚠️ سيُسجَّل هذا التعديل في سجل المراجعة باسمك. سيُصنَّف السجل كبصمة <strong>يدوية</strong> بعد التعديل.
+            </div>
+            <button class="btn btn-gold" id="ep-save-btn" onclick="saveEditPunch()" style="width:100%;padding:11px">
+                💾 حفظ التعديل
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Modal: أذونات الغياب ══ -->
+<div class="modal-overlay" id="excused-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">📋 أذونات الغياب</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:2px" id="excused-emp-name">—</div>
+            </div>
+            <button class="modal-close" onclick="closeExcusedModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- إضافة إذن جديد -->
+            <div style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.15);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:12px;font-weight:700;color:var(--blue)">+ تسجيل إذن غياب جديد</div>
+                <div>
+                    <div class="form-label">نوع الغياب</div>
+                    <select class="form-input form-select" id="absence-type-sel">
+                        <option value="annual">🏖 إجازة سنوية</option>
+                        <option value="sick">🏥 إجازة مرضية</option>
+                        <option value="emergency">🚨 إجازة طارئة</option>
+                        <option value="unpaid">💸 غياب بدون راتب</option>
+                        <option value="other">📌 أخرى</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:10px">
+                    <div style="flex:1">
+                        <div class="form-label">من تاريخ</div>
+                        <input type="date" class="form-input" id="absence-from">
+                    </div>
+                    <div style="flex:1">
+                        <div class="form-label">إلى تاريخ</div>
+                        <input type="date" class="form-input" id="absence-to">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-label">السبب (اختياري)</div>
+                    <textarea class="form-input form-textarea" id="absence-reason" placeholder="سبب الغياب..." style="min-height:60px"></textarea>
+                </div>
+                <button class="btn btn-gold" onclick="saveExcused()">✅ تسجيل الإذن</button>
+            </div>
+            <!-- قائمة الأذونات -->
+            <div id="excused-list" style="display:flex;flex-direction:column;gap:10px">
+                <div style="text-align:center;color:var(--text2);padding:16px">جاري التحميل...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let _recPeriod      = 'today';
+let _repPeriod      = 'week';
+let _employees      = [];
+let _selectedEmpId  = null;
+let _edpPeriod      = 'today';
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    startClock();
+    loadUser();
+    checkDevice();
+    loadEmployees();
+    loadRecords();
+    loadStats();
+});
+
+// ── Clock ─────────────────────────────────────────────────────────────────────
+function startClock() {
+    function tick() {
+        const now  = new Date();
+        const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+        const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+        let h = now.getHours();
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        const hh = String(h).padStart(2,'0');
+        const mm = String(now.getMinutes()).padStart(2,'0');
+        const ss = String(now.getSeconds()).padStart(2,'0');
+        document.getElementById('clock').textContent = `${hh}:${mm}:${ss} ${ampm}`;
+        document.getElementById('dateDisplay').textContent =
+            `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+    tick();
+    setInterval(tick, 1000);
+}
+
+// ── User Info ─────────────────────────────────────────────────────────────────
+async function loadUser() {
+    try {
+        const r = await fetch('/api/session/');
+        const d = await r.json();
+        if (d.success) {
+            const name = d.full_name || d.username || '—';
+            document.getElementById('userDisplayName').textContent = name;
+            document.getElementById('ud-menu-name').textContent    = name;
+        }
+    } catch {}
+}
+
+function toggleUserDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.remove('open');
+});
+
+function open2FASettings() { window.location.href = '/dashboard/'; }
+
+async function logout() {
+    await fetch('/api/logout/', { method: 'POST', headers: { 'X-CSRFToken': getCsrf() } });
+    window.location.href = '/login/';
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+    const el   = document.getElementById('att-toast');
+    const icon = document.getElementById('att-toast-icon');
+    const text = document.getElementById('att-toast-text');
+
+    const icons = { ok: '✅', err: '❌', warn: '⚠️', info: 'ℹ️' };
+    icon.textContent = icons[type] || icons.info;
+    text.textContent = msg;
+
+    el.className = `show ${type}`;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── CSRF ──────────────────────────────────────────────────────────────────────
+function getCsrf() {
+    return document.cookie.split(';').map(c => c.trim())
+        .find(c => c.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+let _statsPeriod = 'month';
+
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.att-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (name === 'employees') loadEmployees();
+    if (name === 'report')    loadReport();
+    if (name === 'stats')     loadStats2();
+    if (name === 'export')    loadExportEmps();
+    if (name === 'daily')     { initDailyDate(); loadDaily(); }
+    if (name === 'alerts')    { initAlertMonth(); loadAlerts(); }
+}
+
+// ── Device Status ──────────────────────────────────────────────────────────────
+async function checkDevice() {
+    const badge = document.getElementById('device-badge');
+    const text  = document.getElementById('device-badge-text');
+    badge.className = 'device-badge checking';
+    text.textContent = 'جاري الفحص...';
+    try {
+        const r = await fetch('/api/attendance/device-status/');
+        const d = await r.json();
+        if (d.online) {
+            badge.className = 'device-badge online';
+            text.textContent = 'متصل ✓';
+        } else {
+            badge.className = 'device-badge offline';
+            text.textContent = 'غير متصل';
+        }
+    } catch {
+        badge.className = 'device-badge offline';
+        text.textContent = 'خطأ في الفحص';
+    }
+}
+
+// ── Sync ──────────────────────────────────────────────────────────────────────
+async function syncData() {
+    const btn = document.getElementById('sync-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري المزامنة...';
+    try {
+        const r = await fetch('/api/attendance/sync/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCsrf() },
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast(`✓ تمت المزامنة — ${d.new_records} سجل جديد`, 'ok');
+            document.getElementById('sync-bar').style.display = 'flex';
+            document.getElementById('last-sync-time').textContent = d.last_sync;
+            document.getElementById('total-records').textContent  = d.total_records;
+            document.getElementById('sync-status-txt') && (document.getElementById('sync-status-text').textContent = `موظفون جدد: ${d.new_employees}`);
+            loadEmployees();
+            loadRecords();
+            loadStats();
+        } else {
+            toast('✗ ' + (d.error || 'فشلت المزامنة'), 'err');
+        }
+    } catch (e) {
+        toast('✗ خطأ في الاتصال', 'err');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '⬇️ مزامنة البيانات';
+    }
+}
+
+// ── Stats ──────────────────────────────────────────────────────────────────────
+async function loadStats() {
+    try {
+        const [empR, todayR, weekR, totalR] = await Promise.all([
+            fetch('/api/attendance/employees/'),
+            fetch('/api/attendance/records/?period=today'),
+            fetch('/api/attendance/records/?period=week'),
+            fetch('/api/attendance/records/'),
+        ]);
+        const [empD, todayD, weekD, totalD] = await Promise.all([
+            empR.json(), todayR.json(), weekR.json(), totalR.json()
+        ]);
+        document.getElementById('stat-employees').textContent = empD.employees?.length ?? '—';
+        document.getElementById('stat-today').textContent     = todayD.count ?? '—';
+        document.getElementById('stat-week').textContent      = weekD.count  ?? '—';
+        document.getElementById('stat-total').textContent     = totalD.count ?? '—';
+
+        if (empD.last_sync) {
+            document.getElementById('sync-bar').style.display = 'flex';
+            document.getElementById('last-sync-time').textContent = empD.last_sync;
+            document.getElementById('total-records').textContent  = totalD.count ?? '—';
+        }
+    } catch {}
+}
+
+// ── Sidebar Employees ─────────────────────────────────────────────────────────
+function renderSidebar(list) {
+    const el = document.getElementById('emp-sidebar-list');
+    document.getElementById('sidebar-emp-count').textContent = list.length;
+    if (!list.length) {
+        el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--att-text2);font-size:12px">لا يوجد موظفون</div>`;
+        return;
+    }
+    el.innerHTML = list.map(e => {
+        const initial = (e.name || '؟')[0];
+        const active  = _selectedEmpId === String(e.user_id) ? 'active' : '';
+        return `<div class="emp-item ${active}" onclick="selectEmployee('${e.user_id}','${e.name.replace(/'/g,"\\'")}','${e.id}')">
+            <div class="emp-avatar-sm">${initial}</div>
+            <div class="emp-item-info">
+                <div class="emp-item-name">${e.name}</div>
+                <div class="emp-item-id">UID: ${e.uid} &nbsp;|&nbsp; ID: ${e.user_id}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function filterSidebarEmps() {
+    const q = document.getElementById('emp-sidebar-search').value.trim().toLowerCase();
+    renderSidebar(q ? _employees.filter(e => e.name.toLowerCase().includes(q) || String(e.uid).includes(q)) : _employees);
+}
+
+let _selectedEmpDbId = null;  // DB pk for notes/excused modals
+
+// ── Select Employee → open detail panel ───────────────────────────────────────
+async function selectEmployee(userId, name, empId) {
+    _selectedEmpId   = String(userId);
+    _selectedEmpDbId = empId;
+    filterSidebarEmps(); // re-render sidebar with active class
+
+    const panel = document.getElementById('emp-detail-panel');
+    panel.classList.add('open');
+
+    // fill header
+    document.getElementById('edp-avatar').textContent = (name || '؟')[0];
+    document.getElementById('edp-name').textContent   = name;
+    document.getElementById('edp-meta').textContent   = `رقم الجهاز: ${userId}`;
+    document.getElementById('rename-input').value     = name;
+    document.getElementById('rename-inline').classList.remove('open');
+
+    // Reset detail stats
+    ['edp-stat-present','edp-stat-absent','edp-stat-late','edp-stat-total'].forEach(id => {
+        document.getElementById(id).textContent = '…';
+    });
+    document.getElementById('edp-records-tbody').innerHTML =
+        `<tr class="loading-row"><td colspan="4">جاري التحميل...</td></tr>`;
+
+    // Load stats & records in parallel
+    _edpPeriod = 'today';
+    document.querySelectorAll('.emp-detail-panel .filter-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('edp-filter-today').classList.add('active');
+    await loadEdpRecords();
+
+    // Load this month stats for the mini cards
+    try {
+        const sr = await fetch(`/api/attendance/stats/?period=month&user_id=${userId}`);
+        const sd = await sr.json();
+        const st = (sd.stats || []).find(s => String(s.user_id) === String(userId)) || {};
+        document.getElementById('edp-stat-present').textContent = st.days_present ?? '—';
+        document.getElementById('edp-stat-absent').textContent  = st.days_absent  ?? '—';
+        document.getElementById('edp-stat-late').textContent    = st.late_days    ?? '—';
+    } catch {}
+}
+
+function closeEmpDetail() {
+    _selectedEmpId = null;
+    document.getElementById('emp-detail-panel').classList.remove('open');
+    filterSidebarEmps();
+}
+
+function toggleRenameInline() {
+    document.getElementById('rename-inline').classList.toggle('open');
+}
+
+async function saveRename() {
+    const newName = document.getElementById('rename-input').value.trim();
+    if (!newName) { toast('أدخل اسماً صحيحاً', 'err'); return; }
+    if (!_selectedEmpId) return;
+
+    try {
+        const r = await fetch(`/api/attendance/employees/${_selectedEmpId}/rename/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body: JSON.stringify({ name: newName }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ تم تحديث الاسم بنجاح', 'ok');
+            document.getElementById('edp-name').textContent = newName;
+            document.getElementById('rename-inline').classList.remove('open');
+            // Update local list
+            const emp = _employees.find(e => String(e.user_id) === String(_selectedEmpId));
+            if (emp) { emp.name = newName; filterSidebarEmps(); }
+            // Refresh employees table if visible
+            loadEmployees();
+        } else {
+            toast('✗ ' + (d.error || 'فشل التحديث'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+// ── Employee Detail Records ────────────────────────────────────────────────────
+function setEdpPeriod(period, btn) {
+    _edpPeriod = period;
+    document.querySelectorAll('.emp-detail-panel .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadEdpRecords();
+}
+
+async function loadEdpRecords() {
+    if (!_selectedEmpId) return;
+    const tbody = document.getElementById('edp-records-tbody');
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="4">جاري التحميل...</td></tr>`;
+    try {
+        const r = await fetch(`/api/attendance/records/?period=${_edpPeriod}&user_id=${_selectedEmpId}`);
+        const d = await r.json();
+        document.getElementById('edp-stat-total').textContent = d.count ?? '—';
+        if (!d.records?.length) {
+            tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">📋</div>لا توجد سجلات</div></td></tr>`;
+            return;
+        }
+        tbody.innerHTML = d.records.map(rec => {
+            let badgeClass = 'punch-other';
+            if (rec.punch === 0) badgeClass = 'punch-in';
+            if (rec.punch === 1) badgeClass = 'punch-out';
+            const manualBadge = rec.is_manual
+                ? `<span style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700">✋ يدوي</span>`
+                : '';
+            const timeRaw = rec.time ? rec.time.replace(/\s*(AM|PM)\s*/i,'').trim() : '';
+            let timeVal = '';
+            if (timeRaw) {
+                const [hStr,mStr] = timeRaw.split(':');
+                let h = parseInt(hStr,10), m = mStr||'00';
+                if (/PM/i.test(rec.time) && h!==12) h+=12;
+                if (/AM/i.test(rec.time) && h===12) h=0;
+                timeVal = `${String(h).padStart(2,'0')}:${m}`;
+            }
+            return `<tr id="rec-row-${rec.id}">
+                <td style="color:#64748B;font-size:12px">${rec.date}</td>
+                <td style="font-weight:700;color:#2563EB">${rec.time}</td>
+                <td><span class="punch-badge ${badgeClass}">${rec.punch_label}</span>${manualBadge}</td>
+                <td>
+                    <div style="display:flex;gap:5px;justify-content:center">
+                        <button onclick="openEditPunchModal(${rec.id},'${rec.name}','${rec.date}','${timeVal}',${rec.punch})"
+                            style="padding:4px 10px;border-radius:6px;border:1px solid rgba(37,99,235,.25);background:rgba(37,99,235,.07);color:var(--att-blue);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">✏️</button>
+                        <button onclick="deleteRecord(${rec.id},'${rec.name}','${rec.date} ${rec.time}')"
+                            style="padding:4px 10px;border-radius:6px;border:1px solid rgba(220,38,38,.25);background:rgba(220,38,38,.07);color:var(--att-red);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">🗑️</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    } catch {
+        tbody.innerHTML = `<tr class="loading-row"><td colspan="4">خطأ في التحميل</td></tr>`;
+    }
+}
+
+// ── Employees ─────────────────────────────────────────────────────────────────
+async function loadEmployees() {
+    try {
+        const r = await fetch('/api/attendance/employees/');
+        const d = await r.json();
+        if (!d.success) return;
+        _employees = d.employees;
+        document.getElementById('employees-count').textContent = `${d.employees.length} موظف`;
+
+        // render sidebar
+        renderSidebar(_employees);
+
+        // populate filter select
+        const sel = document.getElementById('rec-emp-filter');
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">كل الموظفين</option>';
+        d.employees.forEach(e => {
+            sel.innerHTML += `<option value="${e.user_id}" ${cur === e.user_id ? 'selected' : ''}>${e.name}</option>`;
+        });
+
+        const tbody = document.getElementById('employees-tbody');
+        if (!d.employees.length) {
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">👥</div>لا يوجد موظفون — قم بمزامنة الجهاز أولاً</div></td></tr>`;
+            return;
+        }
+        tbody.innerHTML = d.employees.map(e => `
+            <tr>
+                <td><strong style="color:#2563EB">${e.uid}</strong></td>
+                <td>
+                    <button onclick="selectEmployee('${e.user_id}','${e.name.replace(/'/g,"\\'")}','${e.id}')"
+                        style="background:none;border:none;cursor:pointer;font-size:13px;font-weight:700;color:#1E3A5F;font-family:inherit;padding:0;text-align:right">
+                        ${e.name}
+                    </button>
+                </td>
+                <td style="color:var(--att-text2);font-size:12px">${e.user_id}</td>
+                <td style="color:var(--att-text2);font-size:12px">${e.last_seen || '—'}</td>
+                <td style="display:flex;gap:6px;align-items:center">
+                    <button type="button" class="btn btn-gold" style="font-size:11px;padding:5px 10px"
+                        onclick="selectEmployee('${e.user_id}','${e.name.replace(/'/g,"\\'")}','${e.id}')">
+                        👁 تفاصيل
+                    </button>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px"
+                        onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}')">
+                        📄 تقرير
+                    </button>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px"
+                        onclick="openNotesModal(${e.id},'${e.name.replace(/'/g,"\\'")}')">
+                        📝 ملاحظة
+                    </button>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px;color:var(--att-blue);border-color:rgba(37,99,235,.3)"
+                        onclick="openExcusedModal(${e.id},'${e.name.replace(/'/g,"\\'")}')">
+                        📋 إذن
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch {
+        document.getElementById('employees-tbody').innerHTML =
+            `<tr class="loading-row"><td colspan="5">خطأ في تحميل البيانات</td></tr>`;
+    }
+}
+
+// ── Records ───────────────────────────────────────────────────────────────────
+function setRecordPeriod(period, btn) {
+    _recPeriod = period;
+    document.querySelectorAll('.filters-row .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const customDiv = document.getElementById('custom-dates');
+    customDiv.style.display = period === 'custom' ? 'flex' : 'none';
+    if (period !== 'custom') loadRecords();
+}
+
+async function loadRecords() {
+    const tbody = document.getElementById('records-tbody');
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="5">جاري التحميل...</td></tr>`;
+
+    let url = '/api/attendance/records/?';
+    if (_recPeriod !== 'custom') {
+        url += `period=${_recPeriod}`;
+    } else {
+        const from = document.getElementById('rec-from').value;
+        const to   = document.getElementById('rec-to').value;
+        if (from) url += `date_from=${from}&`;
+        if (to)   url += `date_to=${to}&`;
+    }
+    const empFilter = document.getElementById('rec-emp-filter')?.value;
+    if (empFilter) url += `&user_id=${empFilter}`;
+
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        document.getElementById('records-count').textContent = `${d.count} سجل`;
+
+        if (!d.records?.length) {
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📋</div>لا توجد سجلات للفترة المحددة</div></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = d.records.map(rec => {
+            let badgeClass = 'punch-other';
+            if (rec.punch === 0) badgeClass = 'punch-in';
+            if (rec.punch === 1) badgeClass = 'punch-out';
+            const manualBadge = rec.is_manual
+                ? `<span title="${rec.manual_reason || ''}" style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;cursor:default">✋ يدوي</span>`
+                : '';
+            // تحويل وقت السجل إلى صيغة HH:MM لحقل time
+            const timeRaw = rec.time ? rec.time.replace(/\s*(AM|PM)\s*/i, '').trim() : '';
+            let timeVal = '';
+            if (timeRaw) {
+                const [hStr, mStr] = timeRaw.split(':');
+                let h = parseInt(hStr, 10);
+                const m = mStr || '00';
+                if (/PM/i.test(rec.time) && h !== 12) h += 12;
+                if (/AM/i.test(rec.time) && h === 12) h = 0;
+                timeVal = `${String(h).padStart(2,'0')}:${m}`;
+            }
+            return `
+                <tr id="rec-row-${rec.id}">
+                    <td><strong style="color:#1E3A5F">${rec.name}</strong></td>
+                    <td style="color:#64748B;font-size:12px">${rec.date}</td>
+                    <td style="font-weight:700;color:#2563EB">${rec.time}</td>
+                    <td><span class="punch-badge ${badgeClass}">${rec.punch_label}</span>${manualBadge}</td>
+                    <td>
+                        <div style="display:flex;gap:5px;justify-content:center">
+                            <button onclick="openEditPunchModal(${rec.id},'${rec.name}','${rec.date}','${timeVal}',${rec.punch})"
+                                style="padding:4px 10px;border-radius:6px;border:1px solid rgba(37,99,235,.25);background:rgba(37,99,235,.07);color:var(--att-blue);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit"
+                                title="تعديل البصمة">✏️</button>
+                            <button onclick="deleteRecord(${rec.id},'${rec.name}','${rec.date} ${rec.time}')"
+                                style="padding:4px 10px;border-radius:6px;border:1px solid rgba(220,38,38,.25);background:rgba(220,38,38,.07);color:var(--att-red);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit"
+                                title="حذف السجل">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    } catch {
+        tbody.innerHTML = `<tr class="loading-row"><td colspan="5">خطأ في تحميل البيانات</td></tr>`;
+    }
+}
+
+// ── Report ────────────────────────────────────────────────────────────────────
+function setReportPeriod(period, btn) {
+    _repPeriod = period;
+    document.querySelectorAll('#tab-report .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const customDiv = document.getElementById('report-custom-dates');
+    customDiv.style.display = period === 'custom' ? 'flex' : 'none';
+    if (period !== 'custom') loadReport();
+}
+
+// ── Statistics ────────────────────────────────────────────────────────────────
+function setStatsPeriod(period, btn) {
+    _statsPeriod = period;
+    document.querySelectorAll('#tab-stats .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cd = document.getElementById('stats-custom-dates');
+    cd.style.display = period === 'custom' ? 'flex' : 'none';
+    if (period !== 'custom') loadStats2();
+}
+
+async function loadStats2() {
+    const tbody = document.getElementById('stats-tbody');
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="10">جاري التحميل...</td></tr>`;
+
+    let url = '/api/attendance/stats/?';
+    if (_statsPeriod !== 'custom') {
+        url += `period=${_statsPeriod}`;
+    } else {
+        const from = document.getElementById('stats-from').value;
+        const to   = document.getElementById('stats-to').value;
+        if (from) url += `date_from=${from}&`;
+        if (to)   url += `date_to=${to}&`;
+    }
+
+    const lateVal = document.getElementById('late-threshold').value || '09:00';
+    const [lh, lm] = lateVal.split(':');
+    url += `&late_hour=${lh}&late_min=${lm}`;
+
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        if (!d.success) { toast('خطأ في جلب الإحصائيات', 'err'); return; }
+
+        // ── بطاقات الملخص ──
+        document.getElementById('ss-present').textContent     = d.present_today;
+        document.getElementById('ss-absent').textContent      = d.absent_today;
+        document.getElementById('ss-workdays').textContent    = d.total_work_days;
+        document.getElementById('ss-total-hours').textContent = d.total_hours_all || '—';
+        document.getElementById('ss-avg-hours').textContent   = d.avg_hours_per_emp || '—';
+        const totalLate = d.stats.reduce((s, e) => s + e.late_days, 0);
+        document.getElementById('ss-late').textContent = totalLate;
+        document.getElementById('stats-period-label').textContent =
+            `${d.period.from} — ${d.period.to} | أيام عمل: ${d.total_work_days}`;
+
+        if (!d.stats.length) {
+            tbody.innerHTML = `<tr><td colspan="14"><div class="empty-state"><div class="empty-icon">📈</div>لا توجد بيانات</div></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = d.stats.map(e => {
+            const presBar = `<div class="prog-wrap">
+                <div class="prog-bar"><div class="prog-fill prog-green" style="width:${e.pct_present}%"></div></div>
+                <span class="prog-pct" style="color:var(--green)">${e.pct_present}%</span></div>`;
+            const absBar  = `<div class="prog-wrap">
+                <div class="prog-bar"><div class="prog-fill prog-red" style="width:${e.pct_absent}%"></div></div>
+                <span class="prog-pct" style="color:var(--red)">${e.pct_absent}%</span></div>`;
+            const lateBar = `<div class="prog-wrap">
+                <div class="prog-bar"><div class="prog-fill prog-gold" style="width:${e.pct_late}%"></div></div>
+                <span class="prog-pct" style="color:var(--gold)">${e.pct_late}%</span></div>`;
+
+            const noHours = e.days_with_full_rec === 0;
+            const hoursColor = noHours ? 'var(--text2)' : '#a78bfa';
+
+            let rating, rClass;
+            if (e.pct_present >= 90 && e.pct_late <= 10)      { rating = '⭐ ممتاز';  rClass = 'status-good'; }
+            else if (e.pct_present >= 75 && e.pct_late <= 25)  { rating = '✓ جيد';    rClass = 'status-good'; }
+            else if (e.pct_present >= 60)                       { rating = '⚠ مقبول';  rClass = 'status-warn'; }
+            else                                                 { rating = '✗ ضعيف';  rClass = 'status-bad';  }
+
+            return `<tr>
+                <td><strong>${e.name}</strong></td>
+                <td>${presBar}</td>
+                <td>${absBar}</td>
+                <td>${lateBar}</td>
+                <td style="color:var(--green);font-weight:700">${e.days_present}</td>
+                <td style="color:var(--red);font-weight:700">${e.days_absent}</td>
+                <td style="color:var(--gold);font-weight:700">${e.late_days}</td>
+                <td style="color:var(--text2);font-size:12px">${e.avg_in}</td>
+                <td style="color:var(--text2);font-size:12px">${e.avg_out}</td>
+                <td style="color:${hoursColor};font-weight:700;font-size:12px">${noHours ? '—' : e.total_hours}</td>
+                <td style="color:${hoursColor};font-size:12px">${noHours ? '—' : e.avg_daily_hours}</td>
+                <td style="color:#2dd4bf;font-size:12px">${noHours ? '—' : e.est_weekly_hours}</td>
+                <td style="color:#2dd4bf;font-size:12px">${noHours ? '—' : e.est_monthly_hours}</td>
+                <td><span class="${rClass}">${rating}</span></td>
+            </tr>`;
+        }).join('');
+
+    } catch {
+        tbody.innerHTML = `<tr class="loading-row"><td colspan="14">خطأ في تحميل البيانات</td></tr>`;
+    }
+}
+
+async function loadReport() {
+    const tbody = document.getElementById('report-tbody');
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="5">جاري التحميل...</td></tr>`;
+
+    let url = '/api/attendance/report/?';
+    if (_repPeriod !== 'custom') {
+        url += `period=${_repPeriod}`;
+    } else {
+        const from = document.getElementById('rep-from').value;
+        const to   = document.getElementById('rep-to').value;
+        if (from) url += `date_from=${from}&`;
+        if (to)   url += `date_to=${to}&`;
+    }
+
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+
+        if (!d.report?.length) {
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📊</div>لا توجد بيانات للفترة المحددة</div></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = d.report.map(row => `
+            <tr>
+                <td><strong>${row.name}</strong></td>
+                <td><span class="report-days">${row.days_present} يوم</span></td>
+                <td style="color:var(--green);font-size:12px">${row.first_in}</td>
+                <td style="color:var(--red);font-size:12px">${row.last_out}</td>
+                <td style="color:var(--text2)">${row.total_punches}</td>
+            </tr>
+        `).join('');
+    } catch {
+        tbody.innerHTML = `<tr class="loading-row"><td colspan="5">خطأ في تحميل البيانات</td></tr>`;
+    }
+}
+
+// ── تصدير Excel ───────────────────────────────────────────────────────────────
+function exportExcel(type) {
+    // type: 'stats' | 'records'
+    let params = new URLSearchParams({ type });
+
+    if (type === 'stats') {
+        if (_statsPeriod !== 'custom') {
+            params.set('period', _statsPeriod);
+        } else {
+            const from = document.getElementById('stats-from').value;
+            const to   = document.getElementById('stats-to').value;
+            if (from) params.set('date_from', from);
+            if (to)   params.set('date_to', to);
+        }
+        const lateVal = document.getElementById('late-threshold').value || '09:00';
+        const [lh, lm] = lateVal.split(':');
+        params.set('late_hour', lh);
+        params.set('late_min',  lm);
+    } else {
+        // records
+        if (_repPeriod !== 'custom') {
+            params.set('period', _repPeriod);
+        } else {
+            const from = document.getElementById('rep-from').value;
+            const to   = document.getElementById('rep-to').value;
+            if (from) params.set('date_from', from);
+            if (to)   params.set('date_to', to);
+        }
+    }
+
+    window.location.href = `/api/attendance/export/excel/?${params.toString()}`;
+    toast('جاري تحضير ملف Excel...', 'ok');
+}
+
+// ── تصدير PDF (طباعة المتصفح) ─────────────────────────────────────────────────
+function exportPDF(section) {
+    // نجمع البيانات المعروضة حالياً ونفتح نافذة طباعة
+    const isStats  = section === 'stats';
+    const tbodyId  = isStats ? 'stats-tbody' : 'report-tbody';
+    const theadEl  = document.querySelector(`#tab-${isStats ? 'stats' : 'report'} table thead`);
+    const tbody    = document.getElementById(tbodyId);
+    const title    = isStats ? 'إحصائيات الحضور والانصراف' : 'تقرير الحضور والانصراف';
+    const period   = isStats
+        ? document.getElementById('stats-period-label').textContent
+        : '';
+
+    const printWin = window.open('', '_blank', 'width=1000,height=700');
+    printWin.document.write(`<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; direction: rtl; background: #fff; color: #111; padding: 24px; }
+  h1 { font-size: 18px; margin-bottom: 4px; color: #0b1120; }
+  .sub { font-size: 12px; color: #666; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #c9a84c; color: #0b1120; padding: 8px 10px; font-weight: 700; text-align: center; border: 1px solid #c9a84c; }
+  td { padding: 7px 10px; text-align: center; border: 1px solid #ddd; }
+  tr:nth-child(even) td { background: #f7f4ee; }
+  .logo { font-size: 22px; font-weight: 900; color: #c9a84c; margin-bottom: 2px; }
+  @media print { body { padding: 8px; } }
+</style>
+</head>
+<body>
+<div class="logo">نظام انترناشونال الموحد</div>
+<h1>${title}</h1>
+<div class="sub">${period} — تاريخ الطباعة: ${new Date().toLocaleDateString('ar-SA')}</div>
+<table>
+  <thead>${theadEl ? theadEl.innerHTML : ''}</thead>
+  <tbody>${tbody ? tbody.innerHTML : ''}</tbody>
+</table>
+</body></html>`);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(() => { printWin.print(); printWin.close(); }, 400);
+}
+
+// ── تقرير موظف فردي ───────────────────────────────────────────────────────────
+let _empReportUserId  = '';
+let _empReportPeriod  = 'week';
+
+function openEmpReportModal(userId, name, period) {
+    _empReportUserId = userId;
+    _empReportPeriod = period || 'week';
+    document.getElementById('emp-report-name').textContent = name;
+    document.getElementById('erp-custom-dates').style.display = 'none';
+    ['erp-week-btn','erp-month-btn','erp-custom-btn'].forEach(id =>
+        document.getElementById(id).classList.remove('active'));
+    const activeBtn = _empReportPeriod === 'month' ? 'erp-month-btn' : 'erp-week-btn';
+    document.getElementById(activeBtn).classList.add('active');
+    document.getElementById('emp-report-modal').style.display = 'flex';
+}
+
+function closeEmpReportModal() {
+    document.getElementById('emp-report-modal').style.display = 'none';
+}
+
+function setEmpReportPeriod(period, btn) {
+    _empReportPeriod = period;
+    ['erp-week-btn','erp-month-btn','erp-custom-btn'].forEach(id =>
+        document.getElementById(id).classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('erp-custom-dates').style.display =
+        period === 'custom' ? 'flex' : 'none';
+}
+
+function downloadEmpReport() {
+    const params = new URLSearchParams({ user_id: _empReportUserId, period: _empReportPeriod });
+    if (_empReportPeriod === 'custom') {
+        const from = document.getElementById('erp-from').value;
+        const to   = document.getElementById('erp-to').value;
+        if (!from || !to) { toast('يرجى تحديد التاريخين', 'err'); return; }
+        params.set('date_from', from);
+        params.set('date_to',   to);
+    }
+    const lateVal = document.getElementById('erp-late').value || '09:00';
+    const [lh, lm] = lateVal.split(':');
+    params.set('late_hour', lh);
+    params.set('late_min',  lm);
+
+    window.location.href = `/api/attendance/export/employee/?${params.toString()}`;
+    toast('جاري تحضير التقرير...', 'ok');
+    setTimeout(closeEmpReportModal, 800);
+}
+
+// ── طباعة كشف حضور للموظف (HTML print — يدعم العربية) ───────────────────────
+async function printEmpPDF() {
+    const userId = _empReportUserId;
+    const name   = document.getElementById('emp-report-name').textContent;
+    const period = _empReportPeriod;
+
+    if (!userId) { toast('لم يتم تحديد موظف', 'err'); return; }
+
+    const params = new URLSearchParams({ user_id: userId, period });
+    let dateFrom = '', dateTo = '';
+    if (period === 'custom') {
+        dateFrom = document.getElementById('erp-from').value;
+        dateTo   = document.getElementById('erp-to').value;
+        if (!dateFrom || !dateTo) { toast('يرجى تحديد التاريخين', 'err'); return; }
+        params.set('date_from', dateFrom);
+        params.set('date_to',   dateTo);
+    }
+    const lateVal = document.getElementById('erp-late').value || '09:00';
+    const [lh, lm] = lateVal.split(':');
+    params.set('late_hour', lh);
+    params.set('late_min',  lm);
+
+    toast('⏳ جاري تحضير الكشف...', 'ok');
+
+    try {
+        const [statsRes, recsRes] = await Promise.all([
+            fetch(`/api/attendance/stats/?${params.toString()}`),
+            fetch(`/api/attendance/records/?${params.toString()}`)
+        ]);
+        const statsData = await statsRes.json();
+        const recsData  = await recsRes.json();
+
+        const st  = (statsData.stats || []).find(s => String(s.user_id) === String(userId)) || {};
+        const recs = (recsData.records || []).filter(r => String(r.user_id) === String(userId));
+
+        const now       = new Date();
+        const printDate = now.toLocaleDateString('ar-SA', { year:'numeric', month:'long', day:'numeric' });
+        const printTime = now.toLocaleTimeString('ar-SA', { hour:'2-digit', minute:'2-digit' });
+        const periodLabel = period === 'week'  ? 'كشف الحضور الأسبوعي'
+                          : period === 'month' ? 'كشف الحضور الشهري'
+                          :                     'كشف الحضور (فترة مخصصة)';
+        const periodBadge = period === 'week'  ? 'أسبوعي'
+                          : period === 'month' ? 'شهري'
+                          :                     'مخصص';
+
+        // ── صفوف الجدول التفصيلي ──────────────────────────────────────────
+        const rowsHtml = recs.length === 0
+            ? `<tr><td colspan="4" style="text-align:center;padding:20px;color:#64748b;font-size:13px">لا توجد سجلات في هذه الفترة</td></tr>`
+            : recs.map((r, idx) => {
+                const punchColor = r.punch_label === 'دخول'           ? '#16a34a'
+                                 : r.punch_label === 'خروج'           ? '#dc2626'
+                                 : r.punch_label && r.punch_label.includes('استراحة') ? '#d97706'
+                                 : '#1e3a5f';
+                const srcLabel = r.is_manual ? 'يدوي' : 'تلقائي';
+                const srcColor = r.is_manual ? '#7c3aed' : '#0891b2';
+                return `<tr style="background:${idx % 2 === 0 ? '#f8faff' : '#ffffff'}">
+                    <td style="padding:9px 12px;border-bottom:1px solid #dbeafe;color:#1e3a5f;font-weight:600">${r.date || '—'}</td>
+                    <td style="padding:9px 12px;border-bottom:1px solid #dbeafe;color:#1e3a5f;font-weight:700;font-size:15px;letter-spacing:.5px">${r.time || '—'}</td>
+                    <td style="padding:9px 12px;border-bottom:1px solid #dbeafe">
+                        <span style="color:${punchColor};font-weight:700;font-size:13px">${r.punch_label || '—'}</span>
+                    </td>
+                    <td style="padding:9px 12px;border-bottom:1px solid #dbeafe">
+                        <span style="color:${srcColor};font-size:11px;background:${srcColor}18;padding:2px 8px;border-radius:20px;font-weight:600">${srcLabel}</span>
+                    </td>
+                </tr>`;
+              }).join('');
+
+        const html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>${periodLabel} — ${name}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+    background: #eff6ff;
+    color: #1e3a5f;
+    direction: rtl;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page { max-width: 794px; margin: 0 auto; background: #fff; }
+
+  /* ── رأس الكشف ── */
+  .header {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    padding: 28px 36px 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,.05);
+    border-radius: 50%;
+    transform: translate(60px, 80px);
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .company-name { font-size: 20px; font-weight: 900; letter-spacing: .5px; }
+  .company-sub  { font-size: 12px; color: #bfdbfe; margin-top: 3px; }
+  .period-badge {
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.35);
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+  }
+  .report-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #bfdbfe;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,.2);
+  }
+  .accent-bar { height: 4px; background: linear-gradient(90deg, #60a5fa, #38bdf8, #34d399); }
+
+  /* ── بطاقة الموظف ── */
+  .emp-card {
+    margin: 22px 28px 0;
+    background: #fff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 12px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 2px 12px rgba(37,99,235,.08);
+  }
+  .emp-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #fff;
+    font-size: 22px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .emp-info { flex: 1; }
+  .emp-name  { font-size: 18px; font-weight: 800; color: #1e3a5f; }
+  .emp-meta  { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .emp-period-box {
+    text-align: center;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 10px 18px;
+  }
+  .emp-period-label { font-size: 11px; color: #64748b; }
+  .emp-period-val   { font-size: 14px; font-weight: 700; color: #2563eb;margin-top: 2px; }
+  .emp-period-dates { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+  /* ── بطاقات الإحصائيات ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 18px 28px 0;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(37,99,235,.06);
+    border-top: 3px solid var(--sc);
+  }
+  .stat-val   { font-size: 28px; font-weight: 900; color: var(--sc); line-height: 1; }
+  .stat-label { font-size: 12px; color: #64748b; margin-top: 6px; font-weight: 600; }
+
+  /* ── صف المتوسطات ── */
+  .avg-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin: 14px 28px 0;
+    background: #fff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(37,99,235,.06);
+  }
+  .avg-item {
+    padding: 12px 10px;
+    text-align: center;
+    border-left: 1px solid #dbeafe;
+  }
+  .avg-item:last-child { border-left: none; }
+  .avg-val   { font-size: 15px; font-weight: 800; color: #1e3a5f; }
+  .avg-label { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+  /* ── جدول السجلات ── */
+  .table-section { margin: 20px 28px 0; }
+  .table-header-bar {
+    background: linear-gradient(135deg, #1d4ed8, #2563EB);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px 8px 0 0;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rec-count {
+    background: rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 2px 12px;
+    font-size: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  tbody tr:hover { background: #eff6ff !important; }
+
+  /* ── تذييل الكشف ── */
+  .footer {
+    margin: 24px 28px 0;
+    padding: 14px 22px;
+    background: #1e40af;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #bfdbfe;
+    font-size: 11px;
+  }
+  .footer-brand { font-weight: 700; color: #fff; font-size: 13px; }
+  .footer-conf  { background: rgba(255,255,255,.15); border-radius: 20px; padding: 3px 12px; }
+
+  .print-date-bar {
+    margin: 10px 28px 28px;
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none !important; }
+    .page { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- رأس الكشف -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="company-name">شركة انترناشونال للخدمات المالية</div>
+        <div class="company-sub">نظام انترناشونال الموحد — إدارة الموارد البشرية</div>
+      </div>
+      <div class="period-badge">${periodBadge}</div>
+    </div>
+    <div class="report-title">${periodLabel}</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <!-- بطاقة معلومات الموظف -->
+  <div class="emp-card">
+    <div class="emp-avatar">${name.trim()[0] || '؟'}</div>
+    <div class="emp-info">
+      <div class="emp-name">${name}</div>
+      <div class="emp-meta">رقم الموظف: ${userId} &nbsp;|&nbsp; تاريخ الطباعة: ${printDate} الساعة ${printTime}</div>
+    </div>
+    <div class="emp-period-box">
+      <div class="emp-period-label">نوع التقرير</div>
+      <div class="emp-period-val">${periodBadge}</div>
+      ${dateFrom && dateTo ? `<div class="emp-period-dates">${dateFrom}<br>${dateTo}</div>` : ''}
+    </div>
+  </div>
+
+  <!-- بطاقات الإحصائيات -->
+  <div class="stats-grid">
+    <div class="stat-card" style="--sc:#16a34a">
+      <div class="stat-val">${st.days_present ?? '—'}</div>
+      <div class="stat-label">أيام الحضور</div>
+    </div>
+    <div class="stat-card" style="--sc:#dc2626">
+      <div class="stat-val">${st.days_absent ?? '—'}</div>
+      <div class="stat-label">أيام الغياب</div>
+    </div>
+    <div class="stat-card" style="--sc:#d97706">
+      <div class="stat-val">${st.late_days ?? '—'}</div>
+      <div class="stat-label">أيام التأخير</div>
+    </div>
+    <div class="stat-card" style="--sc:#2563eb">
+      <div class="stat-val">${st.on_time_days ?? '—'}</div>
+      <div class="stat-label">في الوقت المحدد</div>
+    </div>
+    <div class="stat-card" style="--sc:#0d9488">
+      <div class="stat-val">${st.pct_present ? st.pct_present + '%' : '—'}</div>
+      <div class="stat-label">نسبة الحضور</div>
+    </div>
+    <div class="stat-card" style="--sc:#7c3aed">
+      <div class="stat-val">${st.total_hours ?? '—'}</div>
+      <div class="stat-label">إجمالي ساعات العمل</div>
+    </div>
+  </div>
+
+  <!-- صف المتوسطات -->
+  <div class="avg-row">
+    <div class="avg-item">
+      <div class="avg-val">${st.avg_in || '—'}</div>
+      <div class="avg-label">متوسط وقت الدخول</div>
+    </div>
+    <div class="avg-item">
+      <div class="avg-val">${st.avg_out || '—'}</div>
+      <div class="avg-label">متوسط وقت الخروج</div>
+    </div>
+    <div class="avg-item">
+      <div class="avg-val">${st.avg_daily_hours || '—'}</div>
+      <div class="avg-label">متوسط ساعات اليوم</div>
+    </div>
+    <div class="avg-item">
+      <div class="avg-val">${st.est_weekly_hours || '—'}</div>
+      <div class="avg-label">ساعات أسبوعية (تقديرية)</div>
+    </div>
+  </div>
+
+  <!-- جدول السجلات التفصيلية -->
+  <div class="table-section">
+    <div class="table-header-bar">
+      <span>سجل البصمات التفصيلي</span>
+      <span class="rec-count">${recs.length} سجل</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>التاريخ</th>
+          <th>الوقت</th>
+          <th>نوع البصمة</th>
+          <th>المصدر</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHtml}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- تذييل الكشف -->
+  <div class="footer">
+    <span class="footer-brand">شركة انترناشونال للخدمات المالية</span>
+    <span class="footer-conf">سري — للاستخدام الداخلي فقط</span>
+    <span>جميع الحقوق محفوظة &copy; ${now.getFullYear()}</span>
+  </div>
+  <div class="print-date-bar">تم إصدار هذا الكشف بتاريخ ${printDate} الساعة ${printTime}</div>
+
+</div>
+<script>
+  window.onload = function() { window.print(); };
+<\/script>
+</body>
+</html>`;
+
+        const pw = window.open('', '_blank', 'width=900,height=700');
+        if (!pw) { toast('يرجى السماح بالنوافذ المنبثقة لطباعة الكشف', 'err'); return; }
+        pw.document.write(html);
+        pw.document.close();
+        toast('✅ جاهز للطباعة — اختر "حفظ كـ PDF" من نافذة الطباعة', 'ok');
+
+    } catch(err) {
+        console.error(err);
+        toast('فشل إنشاء الكشف: ' + err.message, 'err');
+    }
+}
+
+// إغلاق الـ modal عند النقر خارجه
+document.getElementById('emp-report-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeEmpReportModal();
+});
+
+// ── استخراج فردي ─────────────────────────────────────────────────────────────
+let _exportAllEmps = [];
+
+async function loadExportEmps() {
+    const grid = document.getElementById('export-emp-grid');
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text2)">جاري التحميل...</div>';
+    try {
+        const r = await fetch('/api/attendance/employees/');
+        const d = await r.json();
+        if (!d.success || !d.employees.length) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text2)">لا يوجد موظفون — قم بمزامنة الجهاز أولاً</div>';
+            return;
+        }
+        _exportAllEmps = d.employees;
+        document.getElementById('export-emp-count').textContent = d.employees.length + ' موظف';
+        renderExportGrid(_exportAllEmps);
+    } catch(e) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--red)">فشل تحميل الموظفين</div>';
+    }
+}
+
+function filterExportEmps() {
+    const q = document.getElementById('export-search').value.trim().toLowerCase();
+    const filtered = q
+        ? _exportAllEmps.filter(e => e.name.toLowerCase().includes(q) || String(e.user_id).includes(q))
+        : _exportAllEmps;
+    renderExportGrid(filtered);
+}
+
+function renderExportGrid(emps) {
+    const grid = document.getElementById('export-emp-grid');
+    if (!emps.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text2)">لا توجد نتائج</div>';
+        return;
+    }
+    grid.innerHTML = emps.map(e => `
+        <div style="background:#0d1626;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s"
+             onmouseover="this.style.borderColor='rgba(201,168,76,.5)'" onmouseout="this.style.borderColor='rgba(201,168,76,.18)'">
+            <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#f0c96b);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#0b1120;flex-shrink:0">
+                    ${e.name.trim()[0] || '؟'}
+                </div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:13px;font-weight:700;color:#e8eaf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.name}</div>
+                    <div style="font-size:11px;color:var(--text2)">رقم: ${e.user_id}</div>
+                </div>
+            </div>
+            <div style="font-size:11px;color:var(--text2)">آخر بصمة: ${e.last_seen || '—'}</div>
+            <div style="display:flex;gap:8px">
+                <button type="button" onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}','week')"
+                    style="flex:1;padding:7px;border-radius:8px;border:none;background:linear-gradient(135deg,#c9a84c,#f0c96b);color:#0b1120;font-size:11px;font-weight:700;cursor:pointer">
+                    📅 أسبوعي
+                </button>
+                <button type="button" onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}','month')"
+                    style="flex:1;padding:7px;border-radius:8px;border:1px solid rgba(201,168,76,.3);background:transparent;color:#c9a84c;font-size:11px;font-weight:700;cursor:pointer">
+                    📆 شهري
+                </button>
+                <button type="button" onclick="_empReportUserId='${e.user_id}';document.getElementById('emp-report-name').textContent='${e.name.replace(/'/g,"\\'")}';_empReportPeriod='month';printEmpPDF()"
+                    style="padding:7px 10px;border-radius:8px;border:none;background:linear-gradient(135deg,#1E40AF,#2563EB);color:#fff;font-size:12px;cursor:pointer" title="طباعة PDF">
+                    🖨
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function quickDownload(userId, name, period) {
+    const params = new URLSearchParams({ user_id: userId, period });
+    window.location.href = `/api/attendance/export/employee/?${params.toString()}`;
+    toast('جاري تحضير ملف ' + name + '...', 'ok');
+}
+
+// ══════════════════════════════════════════════════════
+// ── الدوام اليومي ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+function initDailyDate() {
+    const inp = document.getElementById('daily-date');
+    if (!inp.value) {
+        const today = new Date();
+        inp.value = today.toISOString().slice(0, 10);
+    }
+}
+
+async function loadDaily() {
+    initDailyDate();
+    const dateVal = document.getElementById('daily-date').value;
+    const lateVal = document.getElementById('daily-late').value || '09:00';
+    const [lh, lm] = lateVal.split(':');
+    const tbody = document.getElementById('daily-tbody');
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="6">جاري التحميل...</td></tr>';
+
+    try {
+        const r = await fetch(`/api/attendance/daily/?date=${dateVal}&late_hour=${lh}&late_min=${lm}`);
+        const d = await r.json();
+        if (!d.success) { toast('خطأ في جلب بيانات الدوام', 'err'); return; }
+
+        document.getElementById('dc-present').textContent = d.counts.present;
+        document.getElementById('dc-late').textContent    = d.counts.late;
+        document.getElementById('dc-absent').textContent  = d.counts.absent;
+        document.getElementById('dc-excused').textContent = d.counts.excused;
+
+        if (!d.employees.length) {
+            tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📅</div>لا توجد بيانات لهذا اليوم</div></td></tr>';
+            return;
+        }
+
+        const statusMap = {
+            present: { cls: 'ds-present', lbl: '✓ حاضر' },
+            late:    { cls: 'ds-late',    lbl: '⏰ متأخر' },
+            absent:  { cls: 'ds-absent',  lbl: '✗ غائب'  },
+            excused: { cls: 'ds-excused', lbl: '📋 بإذن'  },
+        };
+
+        tbody.innerHTML = d.employees.map(e => {
+            const s = statusMap[e.status] || { cls: 'ds-absent', lbl: e.status };
+            return `<tr>
+                <td><strong>${e.name}</strong></td>
+                <td><span class="${s.cls}">${s.lbl}</span></td>
+                <td style="color:var(--green);font-weight:700">${e.in_time  || '—'}</td>
+                <td style="color:var(--red);font-weight:700">${e.out_time || '—'}</td>
+                <td>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px"
+                        onclick="openNotesModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
+                        📝 ملاحظة
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:var(--blue);border-color:rgba(59,130,246,.3)"
+                        onclick="openExcusedModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
+                        📋 إذن
+                    </button>
+                </td>
+            </tr>`;
+        }).join('');
+    } catch {
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="6">خطأ في تحميل البيانات</td></tr>';
+    }
+}
+
+// ══════════════════════════════════════════════════════
+// ── تنبيهات الغياب المتكرر ────────────────────────────
+// ══════════════════════════════════════════════════════
+
+function initAlertMonth() {
+    const inp = document.getElementById('alert-month');
+    if (!inp.value) {
+        const now = new Date();
+        inp.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    }
+}
+
+async function loadAlerts() {
+    initAlertMonth();
+    const month = document.getElementById('alert-month').value;
+    const thresh = document.getElementById('alert-threshold').value || 3;
+    const alertsTbody = document.getElementById('alerts-tbody');
+    const normalTbody = document.getElementById('normal-tbody');
+    alertsTbody.innerHTML = '<tr class="loading-row"><td colspan="7">جاري التحميل...</td></tr>';
+    normalTbody.innerHTML = '<tr class="loading-row"><td colspan="6">جاري التحميل...</td></tr>';
+
+    try {
+        const r = await fetch(`/api/attendance/alerts/?month=${month}&threshold=${thresh}`);
+        const d = await r.json();
+        if (!d.success) { toast('خطأ في جلب التنبيهات', 'err'); return; }
+
+        document.getElementById('alerts-summary').textContent =
+            `أيام العمل: ${d.work_days} | تنبيه: ${d.alerts.length} موظف`;
+
+        if (d.alerts.length) {
+            document.getElementById('alerts-section').style.display = 'block';
+            document.getElementById('alerts-title').textContent = `تجاوزوا ${thresh} أيام غياب (${d.alerts.length} موظفين)`;
+            alertsTbody.innerHTML = d.alerts.map(e => `<tr>
+                <td><strong>${e.name}</strong></td>
+                <td style="color:var(--green);font-weight:700">${e.present}</td>
+                <td style="color:var(--red);font-weight:700">${e.absent}</td>
+                <td style="color:var(--blue)">${e.excused}</td>
+                <td style="color:var(--text2)">${e.total_work}</td>
+                <td><span class="alert-badge">⚠ ${e.absent} أيام غياب</span></td>
+                <td>
+                    <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:var(--red);border-color:rgba(255,77,106,.3)"
+                        onclick="openNotesModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
+                        📝 تحذير
+                    </button>
+                </td>
+            </tr>`).join('');
+        } else {
+            document.getElementById('alerts-section').style.display = 'none';
+        }
+
+        normalTbody.innerHTML = d.normal.length ? d.normal.map(e => `<tr>
+            <td><strong>${e.name}</strong></td>
+            <td style="color:var(--green);font-weight:700">${e.present}</td>
+            <td style="color:var(--text2)">${e.absent}</td>
+            <td style="color:var(--blue)">${e.excused}</td>
+            <td style="color:var(--text2)">${e.total_work}</td>
+            <td><span class="normal-badge">✓ منتظم</span></td>
+        </tr>`).join('') : '<tr><td colspan="6"><div class="empty-state">لا توجد بيانات</div></td></tr>';
+
+    } catch {
+        alertsTbody.innerHTML = '<tr class="loading-row"><td colspan="7">خطأ في التحميل</td></tr>';
+        normalTbody.innerHTML = '<tr class="loading-row"><td colspan="6">خطأ في التحميل</td></tr>';
+    }
+}
+
+// ══════════════════════════════════════════════════════
+// ── ملاحظات الموظف ────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+let _notesEmpId = null;
+
+function openNotesModal(empId, name) {
+    _notesEmpId = empId;
+    document.getElementById('notes-emp-name').textContent = name;
+    document.getElementById('note-body').value = '';
+    document.getElementById('note-type-sel').value = 'note';
+    document.getElementById('notes-modal').classList.add('open');
+    loadNotes();
+}
+
+function closeNotesModal() {
+    document.getElementById('notes-modal').classList.remove('open');
+    _notesEmpId = null;
+}
+
+async function loadNotes() {
+    const list = document.getElementById('notes-list');
+    list.innerHTML = '<div style="text-align:center;color:var(--text2);padding:16px">جاري التحميل...</div>';
+    try {
+        const r = await fetch(`/api/attendance/employees/${_notesEmpId}/notes/`);
+        const d = await r.json();
+        if (!d.success) { list.innerHTML = '<div style="color:var(--red);padding:10px">خطأ في التحميل</div>'; return; }
+        if (!d.notes.length) {
+            list.innerHTML = '<div style="text-align:center;color:var(--text2);padding:16px;font-size:12px">لا توجد ملاحظات بعد</div>';
+            return;
+        }
+        const typeMap = { note:'nt-note', warning:'nt-warning', praise:'nt-praise' };
+        list.innerHTML = d.notes.map(n => `
+            <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                    <span class="${typeMap[n.note_type]||'nt-note'}">${n.type_label}</span>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:11px;color:var(--text2)">${n.created_at} · ${n.created_by}</span>
+                        <button type="button" onclick="deleteNote(${n.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:0">🗑</button>
+                    </div>
+                </div>
+                <div style="font-size:13px;color:var(--text1);line-height:1.6">${n.body}</div>
+            </div>
+        `).join('');
+    } catch {
+        list.innerHTML = '<div style="color:var(--red);padding:10px">خطأ في التحميل</div>';
+    }
+}
+
+async function saveNote() {
+    const body = document.getElementById('note-body').value.trim();
+    if (!body) { toast('يرجى كتابة نص الملاحظة', 'err'); return; }
+    const noteType = document.getElementById('note-type-sel').value;
+    try {
+        const r = await fetch(`/api/attendance/employees/${_notesEmpId}/notes/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body: JSON.stringify({ note_type: noteType, body }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ تم حفظ الملاحظة', 'ok');
+            document.getElementById('note-body').value = '';
+            loadNotes();
+        } else {
+            toast('✗ ' + (d.error || 'فشل الحفظ'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+async function deleteNote(noteId) {
+    if (!confirm('هل تريد حذف هذه الملاحظة؟')) return;
+    try {
+        const r = await fetch(`/api/attendance/notes/${noteId}/`, {
+            method: 'DELETE',
+            headers: { 'X-CSRFToken': getCsrf() },
+        });
+        const d = await r.json();
+        if (d.success) { toast('تم الحذف', 'ok'); loadNotes(); }
+        else toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+// إغلاق الـ modal بالنقر خارجه
+document.getElementById('notes-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeNotesModal();
+});
+
+// ══════════════════════════════════════════════════════
+// ── أذونات الغياب ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+let _excusedEmpId = null;
+
+function openExcusedModal(empId, name) {
+    _excusedEmpId = empId;
+    document.getElementById('excused-emp-name').textContent = name;
+    document.getElementById('absence-reason').value = '';
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('absence-from').value = today;
+    document.getElementById('absence-to').value   = today;
+    document.getElementById('excused-modal').classList.add('open');
+    loadExcused();
+}
+
+function closeExcusedModal() {
+    document.getElementById('excused-modal').classList.remove('open');
+    _excusedEmpId = null;
+}
+
+async function loadExcused() {
+    const list = document.getElementById('excused-list');
+    list.innerHTML = '<div style="text-align:center;color:var(--text2);padding:16px">جاري التحميل...</div>';
+    try {
+        const r = await fetch(`/api/attendance/employees/${_excusedEmpId}/excused/`);
+        const d = await r.json();
+        if (!d.success) { list.innerHTML = '<div style="color:var(--red);padding:10px">خطأ</div>'; return; }
+        if (!d.absences.length) {
+            list.innerHTML = '<div style="text-align:center;color:var(--text2);padding:16px;font-size:12px">لا توجد أذونات مسجّلة</div>';
+            return;
+        }
+        list.innerHTML = d.absences.map(a => `
+            <div style="background:var(--bg3);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:12px 14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                    <span class="absence-chip">${a.type_label}</span>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:11px;color:var(--text2)">${a.created_at} · ${a.approved_by}</span>
+                        <button type="button" onclick="deleteExcused(${a.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:0">🗑</button>
+                    </div>
+                </div>
+                <div style="font-size:13px;color:var(--text1)">
+                    📅 ${a.date_from} — ${a.date_to}
+                    <span style="font-size:12px;color:var(--gold);margin-right:8px">${a.days} أيام</span>
+                </div>
+                ${a.reason ? `<div style="font-size:12px;color:var(--text2);margin-top:4px">${a.reason}</div>` : ''}
+            </div>
+        `).join('');
+    } catch {
+        list.innerHTML = '<div style="color:var(--red);padding:10px">خطأ في التحميل</div>';
+    }
+}
+
+async function saveExcused() {
+    const dateFrom = document.getElementById('absence-from').value;
+    const dateTo   = document.getElementById('absence-to').value;
+    if (!dateFrom || !dateTo) { toast('يرجى تحديد التواريخ', 'err'); return; }
+    const absenceType = document.getElementById('absence-type-sel').value;
+    const reason      = document.getElementById('absence-reason').value.trim();
+    try {
+        const r = await fetch(`/api/attendance/employees/${_excusedEmpId}/excused/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body: JSON.stringify({ absence_type: absenceType, date_from: dateFrom, date_to: dateTo, reason }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ ' + d.message, 'ok');
+            document.getElementById('absence-reason').value = '';
+            loadExcused();
+        } else {
+            toast('✗ ' + (d.error || 'فشل التسجيل'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+async function deleteExcused(absenceId) {
+    if (!confirm('هل تريد حذف هذا الإذن؟')) return;
+    try {
+        const r = await fetch(`/api/attendance/excused/${absenceId}/`, {
+            method: 'DELETE',
+            headers: { 'X-CSRFToken': getCsrf() },
+        });
+        const d = await r.json();
+        if (d.success) { toast('تم الحذف', 'ok'); loadExcused(); }
+        else toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+document.getElementById('excused-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeExcusedModal();
+});
+
+// ── بصمة يدوية ───────────────────────────────────────────────────────────────
+
+function openManualPunchModal() {
+    const today = new Date().toISOString().slice(0,10);
+    const now   = new Date().toTimeString().slice(0,5);
+    document.getElementById('mp-date').value = today;
+    document.getElementById('mp-time').value = now;
+    document.getElementById('mp-reason').value = '';
+    document.getElementById('mp-employee').value = '';
+
+    // تعبئة قائمة الموظفين
+    const sel = document.getElementById('mp-employee');
+    if (sel.options.length <= 1 && _employees.length > 0) {
+        _employees.forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e.id;
+            opt.textContent = `${e.name} (${e.user_id})`;
+            sel.appendChild(opt);
+        });
+    }
+
+    document.getElementById('manual-punch-modal').classList.add('open');
+}
+
+function closeManualPunchModal() {
+    document.getElementById('manual-punch-modal').classList.remove('open');
+}
+
+async function saveManualPunch() {
+    const empId  = document.getElementById('mp-employee').value;
+    const punch  = parseInt(document.querySelector('input[name="mp-punch"]:checked').value);
+    const date   = document.getElementById('mp-date').value;
+    const time   = document.getElementById('mp-time').value;
+    const reason = document.getElementById('mp-reason').value.trim();
+
+    if (!empId || !date || !time) { toast('✗ اختر الموظف والتاريخ والوقت', 'err'); return; }
+
+    const btn = document.getElementById('mp-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'جاري الحفظ...';
+
+    try {
+        const r = await fetch('/api/attendance/manual-punch/', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body:    JSON.stringify({ employee_id: parseInt(empId), punch, date, time, reason }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ ' + d.message, 'ok');
+            closeManualPunchModal();
+            loadRecords();
+        } else {
+            toast('✗ ' + (d.error || 'فشل الحفظ'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    finally {
+        btn.disabled = false;
+        btn.textContent = 'حفظ البصمة اليدوية';
+    }
+}
+
+document.getElementById('manual-punch-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeManualPunchModal();
+});
+
+// ── تعديل بصمة ───────────────────────────────────────────────────────────────
+
+function openEditPunchModal(recordId, empName, date, time, punch) {
+    document.getElementById('ep-record-id').value = recordId;
+    document.getElementById('ep-emp-name').textContent = empName;
+    document.getElementById('ep-date').value  = date;
+    document.getElementById('ep-time').value  = time;
+    document.getElementById('ep-punch').value = punch;
+    document.getElementById('ep-reason').value = '';
+    document.getElementById('ep-save-btn').disabled = false;
+    document.getElementById('ep-save-btn').textContent = '💾 حفظ التعديل';
+    document.getElementById('edit-punch-modal').classList.add('open');
+}
+
+function closeEditPunchModal() {
+    document.getElementById('edit-punch-modal').classList.remove('open');
+}
+
+async function saveEditPunch() {
+    const recordId = document.getElementById('ep-record-id').value;
+    const date     = document.getElementById('ep-date').value;
+    const time     = document.getElementById('ep-time').value;
+    const punch    = parseInt(document.getElementById('ep-punch').value);
+    const reason   = document.getElementById('ep-reason').value.trim();
+
+    if (!date || !time) { toast('✗ التاريخ والوقت مطلوبان', 'err'); return; }
+
+    const btn = document.getElementById('ep-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'جاري الحفظ...';
+
+    try {
+        const r = await fetch(`/api/attendance/records/${recordId}/edit/`, {
+            method:  'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+            body:    JSON.stringify({ date, time, punch, reason }),
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ تم تعديل البصمة بنجاح', 'ok');
+            closeEditPunchModal();
+            loadRecords();
+            if (_selectedEmpId) loadEdpRecords();
+        } else {
+            toast('✗ ' + (d.error || 'فشل التعديل'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    finally {
+        btn.disabled = false;
+        btn.textContent = '💾 حفظ التعديل';
+    }
+}
+
+async function deleteRecord(recordId, empName, timeLabel) {
+    if (!confirm(`هل تريد حذف بصمة ${empName} في ${timeLabel}؟\nلا يمكن التراجع عن هذا الإجراء.`)) return;
+
+    try {
+        const r = await fetch(`/api/attendance/records/${recordId}/edit/`, {
+            method:  'DELETE',
+            headers: { 'X-CSRFToken': getCsrf() },
+        });
+        const d = await r.json();
+        if (d.success) {
+            toast('✓ تم حذف السجل', 'ok');
+            // إزالة الصف من الجدول مباشرة دون إعادة تحميل
+            const row = document.getElementById(`rec-row-${recordId}`);
+            if (row) row.remove();
+        } else {
+            toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
+        }
+    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+}
+
+document.getElementById('edit-punch-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditPunchModal();
+});
+</script>
+{% endblock %}

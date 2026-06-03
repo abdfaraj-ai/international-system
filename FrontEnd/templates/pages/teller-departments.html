@@ -1,0 +1,2192 @@
+﻿{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}نظام انترناشونال الموحد - أقسام التلر{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/teller-departments.css' %}?v=20">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/accounts_panel.css' %}?v=6">
+<style>
+  .ap-fab { display: none !important; }
+</style>
+{% endblock %}
+
+{% block theme_init %}
+<script>
+  (function() {
+    document.documentElement.classList.add('theme-initializing');
+    document.documentElement.setAttribute('data-theme', 'teller-dept');
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.remove('theme-initializing');
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══ شريط أسعار العملات ══════════════════════════════════════════════ -->
+<div id="fx-ticker-bar">
+  <div id="fx-ticker-badge">
+    <span class="fx-badge-dot"></span>
+    FX LIVE
+  </div>
+  <div id="fx-ticker-track">
+    <div id="fx-ticker-inner">
+      <span id="fx-ticker-loading">جاري تحميل أسعار العملات...</span>
+    </div>
+  </div>
+  <button id="fx-ticker-refresh" title="تحديث الأسعار">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+    </svg>
+  </button>
+</div>
+
+<canvas class="particles-canvas" id="particles"></canvas>
+<header class="header">
+
+
+    <div class="header-right">
+        <img class="header-logo" src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال">
+        <div><div class="h-title">نظام انترناشونال الموحد</div><div class="h-sub"><span class="status-dot"></span> أقسام التلر ◆ إدارة العمليات المالية</div></div>
+    </div>
+    <div class="h-center"><span class="h-badge" id="deptNameHeader">🏠 القسم الرئيسي</span></div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button class="calc-trigger-btn" onclick="toggleCalc()" title="الحاسبة">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        الحاسبة
+      </button>
+      {% include 'layout/navbar.html' with report_fn="tdOpenReportModal" page_name="teller-departments" page_title="أقسام التلر" %}
+    </div>
+
+</header>
+
+<div class="nav-bar">
+    <div class="nav-tab active" data-dept="main" onclick="switchDept('main')"><span class="nav-tab-icon">🏠</span><span>الرئيسي</span></div>
+    <div class="nav-tab" data-dept="exchange" onclick="switchDept('exchange')"><span class="nav-tab-icon">💱</span><span>الصرافة</span><span class="nav-tab-badge" id="exchCount">0</span></div>
+    <div class="nav-tab" data-dept="international" onclick="switchDept('international')"><span class="nav-tab-icon">🌍</span><span>حوالات دولية</span><span class="nav-tab-badge" id="intlCount">0</span></div>
+    <div class="nav-tab" data-dept="electronic" onclick="switchDept('electronic')"><span class="nav-tab-icon">📲</span><span>إلكترونية</span><span class="nav-tab-badge" id="elecCount">0</span></div>
+    <div class="nav-tab" data-dept="cashdesk" onclick="switchDept('cashdesk')"><span class="nav-tab-icon">🏦</span><span>سحب وإيداع</span><span class="nav-tab-badge" id="cdCount">0</span></div>
+    <div class="nav-tab" data-dept="acctmgr" onclick="switchDept('acctmgr')"><span class="nav-tab-icon">📒</span><span>إدارة الحسابات</span></div>
+</div>
+
+<!-- ══ شريط الصندوق ══ -->
+<div id="sessionBar" style="
+    margin:10px 16px 0;
+    padding:12px 20px;
+    border-radius:14px;
+    border:1px solid rgba(248,113,113,0.2);
+    background:linear-gradient(135deg,rgba(248,113,113,0.08),rgba(239,68,68,0.05));
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;flex-wrap:wrap;
+    transition:all .4s;
+"></div>
+
+<div class="main-area">
+<!-- ══ 1. الرئيسي ══ -->
+<div class="dept-section active" id="dept-main">
+    <!-- صناديق الصنادوق الرئيسية -->
+    <div class="main-boxes-layout">
+        <!-- الصندوق الافتتاحي - يمين -->
+        <div class="opening-box">
+            <div class="ob-header"><div class="ob-icon">📦</div><span>الصندوق الافتتاحي</span><span class="ob-badge">بداية اليوم</span></div>
+            <div class="ob-main-balance"><div class="ob-label">الرصيد الافتتاحي المجموع بالدولار</div><div class="ob-val" id="openingTotal">$0.00</div></div>
+            <div class="ob-currencies">
+                <div class="ob-cur-row"><span class="ob-cur-flag">🇺🇸</span><span class="ob-cur-name">دولار</span><span class="ob-cur-val" id="openingUSD">$0.00</span></div>
+                <div class="ob-cur-row"><span class="ob-cur-flag">🇵🇸</span><span class="ob-cur-name">شيكل</span><span class="ob-cur-val" id="openingILS">₪0.00</span></div>
+                <div class="ob-cur-row"><span class="ob-cur-flag">🇯🇴</span><span class="ob-cur-name">دينار</span><span class="ob-cur-val" id="openingJOD">JD 0.00</span></div>
+            </div>
+            <div class="ob-timestamp"><span>🕐</span> تم الافتتاح: <span id="openingTime">--:--</span></div>
+            <button onclick="openReconcileModal()" id="reconcileBtn" style="
+                width:100%;margin-top:10px;
+                display:flex;align-items:center;justify-content:center;gap:7px;
+                padding:9px 0;
+                background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(99,102,241,0.08));
+                border:1px solid rgba(167,139,250,0.25);
+                border-radius:10px;
+                color:#a78bfa;
+                font-size:12px;font-weight:800;
+                cursor:pointer;font-family:inherit;
+                transition:all .2s;
+            " onmouseover="this.style.background='linear-gradient(135deg,rgba(167,139,250,0.22),rgba(99,102,241,0.16))';this.style.borderColor='rgba(167,139,250,0.5)';this.style.boxShadow='0 4px 14px rgba(167,139,250,0.2)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(167,139,250,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(167,139,250,0.25)';this.style.boxShadow=''">
+                <span style="font-size:14px">⚙️</span> مطابقة الصندوق
+            </button>
+        </div>
+
+        <!-- رصيد الصندوق الحالي - الوسط -->
+        <div class="current-balance-box">
+            <div class="cb-header"><div class="cb-icon-wrap"><div class="cb-icon">💰</div></div><span>رصيد الصندوق الحالي</span><span class="cb-live-dot"></span></div>
+            <div class="cb-main-val" id="mBalance">$0.00</div>
+            <div class="cb-sub-label">مجموع بالدولار الأمريكي</div>
+            <div class="cb-currencies">
+                <div class="cb-cur"><div class="cb-cur-icon">🇺🇸</div><div class="cb-cur-info"><span class="cb-cur-name">دولار</span><span class="cb-cur-val" id="mBalanceUSD">$0.00</span></div></div>
+                <div class="cb-cur"><div class="cb-cur-icon">🇵🇸</div><div class="cb-cur-info"><span class="cb-cur-name">شيكل</span><span class="cb-cur-val" id="mBalanceILS">₪0.00</span></div></div>
+                <div class="cb-cur"><div class="cb-cur-icon">🇯🇴</div><div class="cb-cur-info"><span class="cb-cur-name">دينار</span><span class="cb-cur-val" id="mBalanceJOD">JD 0.00</span></div></div>
+            </div>
+            <div class="cb-stats-mini">
+                <div class="cb-stat-item"><span class="cb-stat-num" id="mOps">0</span><span class="cb-stat-lbl">عمليات اليوم</span></div>
+                <div class="cb-stat-item"><span class="cb-stat-num" id="mExch">0</span><span class="cb-stat-lbl">صرافة</span></div>
+                <div class="cb-stat-item"><span class="cb-stat-num" id="mIntl">0</span><span class="cb-stat-lbl">حوالات</span></div>
+            </div>
+        </div>
+
+        <!-- الصندوق الختامي - يسار -->
+        <div class="closing-box">
+            <div class="cl-header"><div class="cl-icon">📁</div><span>الصندوق الختامي</span><span class="cl-badge">نهاية اليوم</span></div>
+            <div class="cl-main-balance"><div class="cl-label">الرصيد الختامي المجموع بالدولار</div><div class="cl-val" id="closingTotal">$0.00</div></div>
+            <div class="cl-currencies">
+                <div class="cl-cur-row"><span class="cl-cur-flag">🇺🇸</span><span class="cl-cur-name">دولار</span><span class="cl-cur-val" id="closingUSD">$0.00</span></div>
+                <div class="cl-cur-row"><span class="cl-cur-flag">🇵🇸</span><span class="cl-cur-name">شيكل</span><span class="cl-cur-val" id="closingILS">₪0.00</span></div>
+                <div class="cl-cur-row"><span class="cl-cur-flag">🇯🇴</span><span class="cl-cur-name">دينار</span><span class="cl-cur-val" id="closingJOD">JD 0.00</span></div>
+            </div>
+            <div class="cl-diff" id="closingDiff"></div>
+            <button class="btn-carryover" id="carryoverBtn" onclick="carryoverBalances()">
+                <span class="carryover-icon">🔁</span>
+                <span>ترحيل الأرصدة</span>
+                <span class="carryover-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل العمليات</div><span class="badge badge-live">🟢 مباشر</span></div>
+        <div class="main-log-tabs">
+            <div class="main-log-tab mlt-active" onclick="filterMainLog(this,'all')">📊 الكل</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'exchange')">💱 الصرافة</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'international')">🌍 الحوالات</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'electronic')">📲 الإلكترونية</div>
+        </div>
+        <div id="mainLogCount" style="font-size:11px;color:#475569;padding:6px 0;font-weight:700"></div>
+        <div class="table-wrap"><table><thead><tr><th>الرقم</th><th>القسم</th><th>العميل</th><th>التفاصيل</th><th>المبلغ</th><th>الوقت</th></tr></thead><tbody id="mainLogBody"></tbody></table></div>
+        <div id="mainLogEmpty" style="display:none;text-align:center;padding:30px;color:#475569"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-weight:700;color:#334155">لا توجد عمليات بعد</div></div>
+    </div>
+
+    <!-- بطاقة إرسال طلب للمشرف -->
+    <div class="card" style="margin-top:16px">
+        <div class="card-head"><div class="card-title"><div class="ct-icon">📨</div> التواصل مع المشرف</div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;padding:4px 0">
+            <button onclick="openGeneralRequest('urgent')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.08);color:#f87171;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">🚨 طلب عاجل للمشرف</button>
+            <button onclick="openGeneralRequest('normal')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.08);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">🟡 طلب عادي للمشرف</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ 2. الصرافة ══ -->
+<div class="dept-section" id="dept-exchange">
+    <div class="tri-layout">
+        <!-- أزواج العملات -->
+        <div class="right-column">
+            <div class="col-title">⚡ أزواج العملات</div>
+            <div class="pair-card active-pair" onclick="selectPair('USD','JOD')" id="pair-USD-JOD"><div class="pair-flags"><span class="pair-iso">US</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">JO</span></div><div class="pair-name">دولار / دينار</div><div class="pair-rate" id="pairRate-USD-JOD">--</div><div class="pair-code">USD/JOD</div></div>
+            <div class="pair-card" onclick="selectPair('USD','ILS')" id="pair-USD-ILS"><div class="pair-flags"><span class="pair-iso">US</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">PS</span></div><div class="pair-name">دولار / شيكل</div><div class="pair-rate" id="pairRate-USD-ILS">--</div><div class="pair-code">USD/ILS</div></div>
+            <div class="pair-card" onclick="selectPair('ILS','JOD')" id="pair-ILS-JOD"><div class="pair-flags"><span class="pair-iso">PS</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">JO</span></div><div class="pair-name">شيكل / دينار</div><div class="pair-rate" id="pairRate-ILS-JOD">--</div><div class="pair-code">ILS/JOD</div></div>
+            <div class="world-prices-dropdown"><div class="world-prices-header" onclick="toggleWorldPrices()"><span>🌍 أسعار عالمية رئيسية</span><span class="arrow" id="wpArrow">▼</span></div>
+                <div class="world-prices-body" id="wpBody">
+                    <div class="price-section-title">💵 عملات عالمية</div>
+                    <div class="price-row"><span class="p-name">🇪🇺 يورو</span><span><span class="p-change" id="wp-eur-chg">--</span><span class="p-val" id="wp-eur">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇬🇧 جنيه</span><span><span class="p-change" id="wp-gbp-chg">--</span><span class="p-val" id="wp-gbp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇯🇵 ين</span><span><span class="p-change" id="wp-jpy-chg">--</span><span class="p-val" id="wp-jpy">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇨🇭 فرنك</span><span><span class="p-change" id="wp-chf-chg">--</span><span class="p-val" id="wp-chf">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇹🇷 ليرة</span><span><span class="p-change" id="wp-try-chg">--</span><span class="p-val" id="wp-try">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇪🇬 جنيه مصري</span><span><span class="p-change" id="wp-egp-chg">--</span><span class="p-val" id="wp-egp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🇸🇦 ريال</span><span><span class="p-change" id="wp-sar-chg">--</span><span class="p-val" id="wp-sar">--</span></span></div>
+                    <div class="price-section-title">🪙 عملات رقمية</div>
+                    <div class="price-row"><span class="p-name">₿ بيتكوين</span><span><span class="p-change" id="wp-btc-chg">--</span><span class="p-val" id="wp-btc">--</span></span></div>
+                    <div class="price-row"><span class="p-name">Ξ إيثيريوم</span><span><span class="p-change" id="wp-eth-chg">--</span><span class="p-val" id="wp-eth">--</span></span></div>
+                    <div class="price-row"><span class="p-name">💲 تيثر</span><span><span class="p-change" id="wp-usdt-chg">--</span><span class="p-val" id="wp-usdt">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🔵 ريبل</span><span><span class="p-change" id="wp-xrp-chg">--</span><span class="p-val" id="wp-xrp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🟡 سولانا</span><span><span class="p-change" id="wp-sol-chg">--</span><span class="p-val" id="wp-sol">--</span></span></div>
+                    <div class="price-row"><span class="p-name">🟠 دوجكوين</span><span><span class="p-change" id="wp-doge-chg">--</span><span class="p-val" id="wp-doge">--</span></span></div>
+                </div>
+            </div>
+            <!-- قائمة أزواج العملات الإضافية -->
+            <div class="extra-pairs-dropdown">
+                <div class="extra-pairs-header" onclick="toggleExtraPairs()"><span>➕ أزواج عملات إضافية</span><span class="arrow" id="epArrow">▼</span></div>
+                <div class="extra-pairs-body" id="epBody">
+                    <div class="extra-pair-item" id="ep-USD-EUR"><div class="extra-pair-info"><span class="extra-pair-flags">🇺🇸⇌🇪🇺</span><span>دولار / يورو</span><span style="color:var(--text-muted);font-size:10px">USD/EUR</span></div><button class="btn-add-pair" onclick="addExtraPair('USD','EUR','🇺🇸','🇪🇺','دولار / يورو',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-USD-GBP"><div class="extra-pair-info"><span class="extra-pair-flags">🇺🇸⇌🇬🇧</span><span>دولار / جنيه</span><span style="color:var(--text-muted);font-size:10px">USD/GBP</span></div><button class="btn-add-pair" onclick="addExtraPair('USD','GBP','🇺🇸','🇬🇧','دولار / جنيه',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-EUR-ILS"><div class="extra-pair-info"><span class="extra-pair-flags">🇪🇺⇌🇵🇸</span><span>يورو / شيكل</span><span style="color:var(--text-muted);font-size:10px">EUR/ILS</span></div><button class="btn-add-pair" onclick="addExtraPair('EUR','ILS','🇪🇺','🇵🇸','يورو / شيكل',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-EUR-JOD"><div class="extra-pair-info"><span class="extra-pair-flags">🇪🇺⇌🇯🇴</span><span>يورو / دينار</span><span style="color:var(--text-muted);font-size:10px">EUR/JOD</span></div><button class="btn-add-pair" onclick="addExtraPair('EUR','JOD','🇪🇺','🇯🇴','يورو / دينار',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-GBP-ILS"><div class="extra-pair-info"><span class="extra-pair-flags">🇬🇧⇌🇵🇸</span><span>جنيه / شيكل</span><span style="color:var(--text-muted);font-size:10px">GBP/ILS</span></div><button class="btn-add-pair" onclick="addExtraPair('GBP','ILS','🇬🇧','🇵🇸','جنيه / شيكل',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-GBP-JOD"><div class="extra-pair-info"><span class="extra-pair-flags">🇬🇧⇌🇯🇴</span><span>جنيه / دينار</span><span style="color:var(--text-muted);font-size:10px">GBP/JOD</span></div><button class="btn-add-pair" onclick="addExtraPair('GBP','JOD','🇬🇧','🇯🇴','جنيه / دينار',this)">+ إضافة</button></div>
+                    <div class="extra-pair-item" id="ep-JOD-ILS"><div class="extra-pair-info"><span class="extra-pair-flags">🇯🇴⇌🇵🇸</span><span>دينار / شيكل</span><span style="color:var(--text-muted);font-size:10px">JOD/ILS</span></div><button class="btn-add-pair" onclick="addExtraPair('JOD','ILS','🇯🇴','🇵🇸','دينار / شيكل',this)">+ إضافة</button></div>
+                </div>
+            </div>
+        </div>
+        <!-- أداة الصرافة -->
+        <div class="tool-card mode-buy" id="exchangeToolCard">
+
+            <!-- هيدر -->
+            <div class="ex-header">
+                <div class="ex-header-right">
+                    <div class="ex-header-icon">💱</div>
+                    <span class="ex-header-title">عملية صرافة</span>
+                    <span class="badge ex-mode-badge" id="modeLabel">شراء</span>
+                </div>
+                <div class="ex-header-actions">
+                    <button class="ex-action-btn ex-btn-star" id="specialPriceBtn" onclick="toggleSpecialPrice()" title="سعر مميز">⭐</button>
+                    <button class="ex-action-btn ex-btn-pass" id="passTellerBtn" onclick="openPassTeller()" title="باص تلر">🔄</button>
+                    <button class="ex-action-btn ex-btn-capture" onclick="captureSection('exchangeToolCard')" title="التقاط">📸</button>
+                </div>
+            </div>
+
+            <!-- شراء / بيع -->
+            <div class="buysell-toggle">
+                <button class="bs-btn buy-btn active" onclick="setExMode('buy')">📈 شراء</button>
+                <button class="bs-btn sell-btn" onclick="setExMode('sell')">📉 بيع</button>
+            </div>
+
+            <!-- سعر مميز -->
+            <div id="specialPriceBox" style="display:none;background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:12px;padding:12px;margin-bottom:10px">
+                <div style="font-size:11px;font-weight:800;color:#92400E;margin-bottom:8px">⭐ السعر المميز للعملية</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                    <div>
+                        <div class="sp-section-title">📨 طلب موافقة المشرف</div>
+                        <div class="sp-request-box" id="spRequestBox">
+                            <input type="number" class="field-input" id="spRequestedRate" placeholder="السعر المطلوب" dir="ltr" style="text-align:center;font-weight:700;font-size:13px;margin-bottom:6px">
+                            <input type="text" class="field-input" id="spRequestReason" placeholder="سبب الطلب (اختياري)" style="margin-bottom:6px;font-size:12px">
+                            <button class="btn-sp-request" id="spSendBtn" onclick="requestSpecialPrice()">📨 إرسال للمشرف</button>
+                            <div class="sp-status" id="spStatus" style="display:none">
+                                <div class="sp-status-icon" id="spStatusIcon">⏳</div>
+                                <div class="sp-status-text" id="spStatusText">في انتظار موافقة المشرف...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="sp-section-title">✏️ السعر المعتمد</div>
+                        <div class="sp-input-box">
+                            <input type="number" class="field-input" id="specialRateInput" placeholder="أدخل السعر" dir="ltr" style="text-align:center;font-weight:800;font-size:15px" oninput="applySpecialRate()" disabled>
+                            <div class="sp-lock-msg" id="spLockMsg">🔒 يتطلب موافقة المشرف</div>
+                            <div class="sp-approved-msg" id="spApprovedMsg" style="display:none">✅ تم الاعتماد</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- منطقة التحويل — تصميم ATM -->
+            <div class="atm-screen">
+                <!-- صف يدفع -->
+                <div class="atm-row atm-row-from">
+                    <div class="atm-cur-bar">
+                        <select class="field-input ex-cur-select atm-select" id="exFromCur" onchange="calcExchange()">
+                            <option value="USD">🇺🇸 USD — دولار</option>
+                            <option value="JOD">🇯🇴 JOD — دينار</option>
+                            <option value="ILS">🇵🇸 ILS — شيكل</option>
+                        </select>
+                        <span class="atm-label" id="fromLabel">يدفع</span>
+                    </div>
+                    <div class="atm-amount-display">
+                        <input type="number" id="exFrom" placeholder="0.00" oninput="calcExchange()" class="atm-input">
+                    </div>
+                </div>
+                <!-- شريط السعر + زر التبديل -->
+                <div class="atm-mid-bar">
+                    <button class="ex-swap-btn atm-swap" onclick="swapEx()">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                    </button>
+                    <div class="atm-rate-strip" id="exRate">--</div>
+                </div>
+                <!-- صف يستلم -->
+                <div class="atm-row atm-row-to">
+                    <div class="atm-cur-bar">
+                        <select class="field-input ex-cur-select ex-cur-result atm-select" id="exToCur" onchange="calcExchange()">
+                            <option value="JOD">🇯🇴 JOD — دينار</option>
+                            <option value="USD">🇺🇸 USD — دولار</option>
+                            <option value="ILS">🇵🇸 ILS — شيكل</option>
+                        </select>
+                        <span class="atm-label atm-label-to" id="toLabel">يستلم</span>
+                    </div>
+                    <div class="atm-amount-display atm-amount-result" id="exTo">0.00</div>
+                </div>
+            </div>
+
+            <!-- تسليم مزدوج -->
+            <div class="double-delivery-toggle" onclick="toggleDoubleDelivery('ex')">
+                <div class="dd-icon">📋</div>
+                <div class="dd-info">
+                    <div class="dd-label">تسليم مزدوج</div>
+                    <div class="dd-desc">كاش + بنكي بسعرين مختلفين</div>
+                </div>
+                <div class="dd-switch" id="exDdSwitch"></div>
+            </div>
+            <div class="dd-fields" id="exDdFields">
+                <div class="dd-source-info" id="exDdSourceInfo">
+                    <span>💱 المبلغ المراد تصريفه:</span>
+                    <span class="dd-source-val" id="exDdSourceAmt">$0.00</span>
+                </div>
+                <div class="dd-split-container">
+                    <div class="dd-split-card dd-cash-card">
+                        <div class="dd-card-header dd-cash-header"><span>💵</span> كاش</div>
+                        <div class="dd-rate-display">
+                            <span class="dd-rate-label">سعر الكاش</span>
+                            <span class="dd-rate-val" id="exDdCashRateDisplay">0.000</span>
+                            <span class="dd-rate-badge">🔒 المشرف</span>
+                        </div>
+                        <div class="field-group" style="margin-bottom:6px"><label>المبلغ</label><input type="number" class="field-input" id="exDdCashAmt" placeholder="0.00" dir="ltr" style="text-align:center;font-weight:700" oninput="calcDdExchange()"></div>
+                        <input type="hidden" id="exDdCashRate" value="0">
+                        <div class="dd-result-row"><span>يستلم</span><span class="dd-result-val" id="exDdCashResult">₪0.00</span></div>
+                    </div>
+                    <div class="dd-split-card dd-bank-card">
+                        <div class="dd-card-header dd-bank-header"><span>🏦</span> بنكي</div>
+                        <div class="dd-rate-display dd-rate-bank">
+                            <span class="dd-rate-label">سعر البنكي</span>
+                            <span class="dd-rate-val" id="exDdBankRateDisplay">0.000</span>
+                            <span class="dd-rate-badge">🔒 المشرف</span>
+                        </div>
+                        <div class="field-group" style="margin-bottom:6px"><label>المبلغ</label><input type="number" class="field-input" id="exDdBankAmt" placeholder="0.00" dir="ltr" style="text-align:center;font-weight:700" oninput="calcDdExchange()"></div>
+                        <input type="hidden" id="exDdBankRate" value="0">
+                        <div class="dd-result-row"><span>يستلم</span><span class="dd-result-val" id="exDdBankResult">₪0.00</span></div>
+                        <label class="dd-upload-label" id="exBankUploadLabel">
+                            <input type="file" accept="image/*,.pdf" id="exBankNotice" onchange="handleBankNotice(this,'ex')" style="display:none">
+                            <span class="dd-upload-btn">📎 إشعار البنك</span>
+                            <span class="dd-upload-name" id="exBankFileName"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="dd-summary-bar">
+                    <div class="dd-sum-row"><span>المستخدم</span><span class="dd-sum-val" id="exDdUsedAmt">$0.00</span></div>
+                    <div class="dd-sum-row"><span>المتبقي</span><span class="dd-sum-val dd-sum-remain" id="exDdRemain">$0.00</span></div>
+                    <div class="dd-sum-row dd-sum-total"><span>💰 الإجمالي</span><span class="dd-sum-val" id="exDdTotalResult">₪0.00</span></div>
+                </div>
+            </div>
+
+            <!-- بيانات العميل -->
+            <div class="client-toggle" id="exClientToggle" onclick="toggleClientFields()">
+                <span class="client-toggle-icon">👤</span>
+                <span class="client-toggle-text">بيانات العميل</span>
+                <span class="client-toggle-arrow" id="clientArrow">▼</span>
+            </div>
+            <div class="client-info-dropdown" id="exClientFields">
+                <div class="field-group"><label>اسم العميل</label><input type="text" class="field-input" id="exClient" placeholder="اسم العميل"></div>
+                <div class="field-group"><label>رقم الهوية</label><input type="text" class="field-input" id="exClientId" placeholder="رقم الهوية" dir="ltr" style="text-align:right"></div>
+                <div class="field-group full"><label>ملاحظات</label><input type="text" class="field-input" id="exNote" placeholder="ملاحظات إضافية (اختياري)"></div>
+            </div>
+
+            <!-- أزرار التنفيذ -->
+            <div class="ex-actions-bar">
+                <button class="ex-btn-submit" id="exSubmitBtn" onclick="submitExchange()">تنفيذ الشراء 📈</button>
+                <button class="ex-btn-print"  onclick="printExchangeReceipt()">🖨️</button>
+                <button class="ex-btn-clear"  onclick="clearExchange()">✕</button>
+            </div>
+
+        </div>
+        <!-- صندوق التلر -->
+        <div class="teller-box" id="tellerBoxExchange">
+            <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+            <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val" id="tellerTotal">$0.00</div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val" id="tellerUSD">$0.00</div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val" id="tellerILS">₪0.00</div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val" id="tellerJOD">JD 0.00</div></div>
+            <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 ملخص اليوم</div><div class="ts-row"><span class="ts-label">عمليات شراء</span><span class="ts-val" style="color:var(--success)" id="tsBuyCount">0</span></div><div class="ts-row"><span class="ts-label">عمليات بيع</span><span class="ts-val" style="color:var(--danger)" id="tsSellCount">0</span></div><div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsTotalOps">0</span></div><div class="ts-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="ts-label" style="font-weight:700">الأرباح</span><span class="ts-val" style="color:var(--accent);font-size:14px" id="tsProfit">$0.00</span></div></div>
+        </div>
+    </div>
+    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل الصرافة</div><span class="badge badge-count" id="exLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterExLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterExLogs(this,'buy')">📈 شراء</span><span class="filter-chip" onclick="filterExLogs(this,'sell')">📉 بيع</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>النوع</th><th>العميل</th><th>المدفوع</th><th>المستلم</th><th>السعر</th><th>الوقت</th></tr></thead><tbody id="exLogBody"></tbody></table></div></div>
+</div>
+
+<!-- ══ 3. الحوالات الدولية ══ -->
+<div class="dept-section" id="dept-international">
+
+    <!-- ══ شريط الصوت — حوالات ══ -->
+    <div class="vb-bar" id="vbBar-international">
+        <div class="vb-left">
+            <button class="vb-mic-btn" id="vbMic-international" onclick="vtInlineStart('international')" title="أمر صوتي">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm-1 17.93V21h2v-2.07A8 8 0 0 0 20 11h-2a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.93z"/></svg>
+            </button>
+            <div class="vb-info">
+                <span class="vb-label" id="vbLabel-international">اضغط لتحدث</span>
+                <span class="vb-hint" id="vbHint-international">مثال: "حوالة 500 دولار إلى تركيا من أحمد"</span>
+            </div>
+        </div>
+        <div class="vb-right">
+            <div class="vb-spoken-wrap" id="vbSpokenWrap-international" style="display:none">
+                <span class="vb-spoken-text" id="vbSpokenText-international"></span>
+            </div>
+            <button class="vb-toggle-btn" onclick="vtToggleManual('international')" title="تبديل الإدخال اليدوي">
+                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+                <span>يدوي</span>
+            </button>
+        </div>
+    </div>
+    <!-- نتيجة الصوت — تظهر بعد التعرف -->
+    <div class="vb-result-bar" id="vbResult-international" style="display:none">
+        <div class="vb-result-fields" id="vbResultFields-international"></div>
+        <div class="vb-result-actions">
+            <button class="vb-btn-apply" onclick="vtInlineApply('international')">✅ تطبيق مملوء الحقول</button>
+            <button class="vb-btn-cancel" onclick="vtInlineClear('international')">✗ إلغاء</button>
+        </div>
+    </div>
+
+    <!-- تبديل إرسال / استقبال -->
+    <div class="intl-mode-switch">
+        <div class="intl-mode-btn intl-mode-active" id="intlModeOut" onclick="switchIntlMode('out')"><span class="intl-mode-icon">📤</span><span>إرسال حوالة</span></div>
+        <div class="intl-mode-btn" id="intlModeIn" onclick="switchIntlMode('in')"><span class="intl-mode-icon">📥</span><span>استقبال حوالة</span></div>
+        <div class="intl-mode-btn" id="intlModeBankBtn" onclick="openBankTransferModal()" style="background:linear-gradient(135deg,rgba(59,130,246,0.18),rgba(37,99,235,0.10));border:1.5px solid rgba(59,130,246,0.45);color:#60a5fa;font-weight:800;gap:7px;transition:all .22s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(59,130,246,0.32),rgba(37,99,235,0.22))';this.style.borderColor='rgba(59,130,246,0.75)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(59,130,246,0.18),rgba(37,99,235,0.10))';this.style.borderColor='rgba(59,130,246,0.45)'">
+            <span class="intl-mode-icon" style="font-size:17px">🏦</span>
+            <span>حوالة بنكية</span>
+        </div>
+    </div>
+
+    <!-- ═══ وضع الإرسال ═══ -->
+    <div class="intl-panel" id="intlSendPanel">
+        <div class="intl-three-col">
+            <!-- القارات والدول - يمين -->
+            <div class="intl-sidebar">
+                <div class="col-title">🌍 اختر الوجهة</div>
+                <div class="continent-card" onclick="selectContinentNew('asia','out')" id="cont-asia"><div class="cont-icon">🌏</div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
+                <div id="countries-asia" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('europe','out')" id="cont-europe"><div class="cont-icon">🌍</div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
+                <div id="countries-europe" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('africa','out')" id="cont-africa"><div class="cont-icon">🌍</div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
+                <div id="countries-africa" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('americas','out')" id="cont-americas"><div class="cont-icon">🌎</div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
+                <div id="countries-americas" class="countries-list"></div>
+            </div>
+
+            <!-- نموذج الإرسال - الوسط -->
+            <div class="intl-form-area">
+                <div class="intl-selected-dest" id="sendSelectedDest" style="display:none">
+                    <div class="dest-flag" id="sendDestFlag">🌍</div>
+                    <div class="dest-info"><div class="dest-country" id="sendDestCountry">—</div><div class="dest-hint">الوجهة المختارة</div></div>
+                    <button class="dest-change" onclick="clearSendDest()">تغيير ✗</button>
+                </div>
+                <div class="intl-send-methods" id="sendMethodsArea" style="display:none">
+                    <div class="sec-title">📦 طرق الإرسال المتاحة</div>
+                    <div class="send-methods-grid" id="sendMethodsGrid"></div>
+                </div>
+                <div class="tool-card mode-purple" id="sendFormCard">
+                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon">📤</div> بيانات الإرسال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)" id="sendBadge">📤 إرسال</span><button onclick="captureSection('sendFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button></div></div>
+                    <div class="form-grid">
+                        <div class="field-group"><label>اسم المرسل <span style="font-size:10px;color:var(--text-muted)">(اختياري)</span></label><input type="text" class="field-input" id="itSenderName" placeholder="الاسم الكامل"></div>
+                        <div class="field-group"><label>الوجهة <span class="req">*</span></label><select class="field-input" id="itRecvCountry" onchange="onSendCountryChange(this.value)"><option value="">اختر الدولة</option></select></div>
+                        <div class="field-group"><label>المبلغ <span class="req">*</span></label><input type="number" class="field-input" id="itAmount" placeholder="0.00" dir="ltr" style="text-align:right" oninput="calcIntlFee()"></div>
+                        <div class="field-group"><label>العملة</label><select class="field-input" id="itCurrency" onchange="calcIntlFee()"><option value="USD">دولار $</option><option value="EUR">يورو €</option><option value="GBP">جنيه £</option><option value="JOD">دينار JD</option></select></div>
+                        <div class="field-group"><label>رقم التواصل <span class="req">*</span></label><input type="tel" class="field-input" id="itSenderPhone" placeholder="رقم الهاتف" dir="ltr" style="text-align:right"></div>
+                        <div class="field-group"><label>طريقة الإرسال</label><select class="field-input" id="itMethod"><option>كاش</option><option>حساب بنكي</option><option>محفظة إلكترونية</option></select></div>
+                    </div>
+                    <div class="fee-box"><div class="fee-row"><span class="fee-label">المبلغ</span><span class="fee-val" id="itAmtDisp">$0.00</span></div><div class="fee-row"><span class="fee-label">رسوم (2%)</span><span class="fee-val" id="itFeeDisp">$0.00</span></div><div class="fee-row fee-total"><span class="fee-label" style="font-weight:700;color:var(--text-primary)">الإجمالي</span><span class="fee-val fee-hl" id="itTotalDisp">$0.00</span></div></div>
+                    <div class="btn-row">
+                        <button class="btn-purple" onclick="submitIntlSend()" style="flex:2">إرسال الحوالة 📤</button>
+                        <button class="btn-whatsapp" onclick="sendIntlWhatsApp()"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg> واتساب</button>
+                        <button class="btn-secondary" onclick="clearIntlSend()">مسح ✗</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صندوق التلر - يسار -->
+            <div class="intl-teller-box">
+                <div class="teller-box">
+                    <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                    <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                    <div class="teller-summary">
+                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 حوالات اليوم</div>
+                        <div class="ts-row"><span class="ts-label">صادرة</span><span class="ts-val" style="color:var(--danger)" id="tsItOut">0</span></div>
+                        <div class="ts-row"><span class="ts-label">واردة</span><span class="ts-val" style="color:var(--success)" id="tsItIn">0</span></div>
+                        <div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsItTotal">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ وضع الاستقبال ═══ -->
+    <div class="intl-panel" id="intlRecvPanel" style="display:none">
+        <div class="intl-three-col">
+            <!-- القارات - يمين -->
+            <div class="intl-sidebar">
+                <div class="col-title">🌍 اختر دولة المصدر</div>
+                <div class="continent-card" onclick="selectContinentNew('asia','in')" id="cont-recv-asia"><div class="cont-icon">🌏</div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
+                <div id="countries-recv-asia" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('europe','in')" id="cont-recv-europe"><div class="cont-icon">🌍</div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
+                <div id="countries-recv-europe" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('africa','in')" id="cont-recv-africa"><div class="cont-icon">🌍</div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
+                <div id="countries-recv-africa" class="countries-list"></div>
+                <div class="continent-card" onclick="selectContinentNew('americas','in')" id="cont-recv-americas"><div class="cont-icon">🌎</div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
+                <div id="countries-recv-americas" class="countries-list"></div>
+            </div>
+
+            <!-- نموذج الاستقبال -->
+            <div class="intl-form-area">
+                <div class="intl-selected-dest" id="recvSelectedDest" style="display:none">
+                    <div class="dest-flag" id="recvDestFlag">🌍</div>
+                    <div class="dest-info"><div class="dest-country" id="recvDestCountry">—</div><div class="dest-hint">دولة المصدر</div></div>
+                    <button class="dest-change" onclick="clearRecvDest()">تغيير ✗</button>
+                </div>
+                <div class="intl-recv-methods" id="recvMethodsArea" style="display:none">
+                    <div class="sec-title">📦 طرق الاستقبال المتاحة</div>
+                    <div class="recv-methods-grid" id="recvMethodsGrid"></div>
+                </div>
+                <div class="tool-card mode-purple" id="recvFormCard">
+                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon">📥</div> بيانات الاستقبال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)">📥 استقبال</span><button onclick="captureSection('recvFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button></div></div>
+                    <div class="form-grid">
+                        <div class="field-group"><label>اسم المستلم <span class="req">*</span></label><input type="text" class="field-input" id="itRecvName" placeholder="الاسم الكامل"></div>
+                        <div class="field-group"><label>رقم التواصل <span class="req">*</span></label><input type="tel" class="field-input" id="itRecvPhone" placeholder="رقم الهاتف" dir="ltr" style="text-align:right"></div>
+                        <div class="field-group"><label>المبلغ <span class="req">*</span></label><input type="number" class="field-input" id="itRecvAmount" placeholder="0.00" dir="ltr" style="text-align:right" oninput="calcRecvIntlFee()"></div>
+                        <div class="field-group"><label>العملة</label><select class="field-input" id="itRecvCurrency" onchange="calcRecvIntlFee()"><option value="USD">دولار $</option><option value="EUR">يورو €</option><option value="GBP">جنيه £</option><option value="JOD">دينار JD</option></select></div>
+                        <div class="field-group"><label>طريقة الاستقبال</label><select class="field-input" id="itRecvMethod"><option>كاش</option><option>حساب بنكي</option><option>محفظة إلكترونية</option></select></div>
+                        <div class="field-group"><label>دولة المصدر</label><input type="text" class="field-input" id="itRecvFromCountry" placeholder="ستتم التعبئة تلقائياً" readonly></div>
+                    </div>
+                    <div class="fee-box"><div class="fee-row"><span class="fee-label">المبلغ</span><span class="fee-val" id="itRecvAmtDisp">$0.00</span></div><div class="fee-row"><span class="fee-label">رسوم (2%)</span><span class="fee-val" id="itRecvFeeDisp">$0.00</span></div><div class="fee-row fee-total"><span class="fee-label" style="font-weight:700;color:var(--text-primary)">الإجمالي</span><span class="fee-val fee-hl" id="itRecvTotalDisp">$0.00</span></div></div>
+                    <div class="btn-row">
+                        <button class="btn-primary" onclick="submitIntlRecv()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">استقبال الحوالة 📥</button>
+                        <button class="btn-whatsapp" onclick="sendRecvWhatsApp()"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg> واتساب</button>
+                        <button class="btn-secondary" onclick="clearIntlRecv()">مسح ✗</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صندوق التلر - يسار -->
+            <div class="intl-teller-box">
+                <div class="teller-box">
+                    <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                    <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                    <div class="teller-summary">
+                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 حوالات اليوم</div>
+                        <div class="ts-row"><span class="ts-label">صادرة</span><span class="ts-val" style="color:var(--danger)" id="tsItOut2">0</span></div>
+                        <div class="ts-row"><span class="ts-label">واردة</span><span class="ts-val" style="color:var(--success)" id="tsItIn2">0</span></div>
+                        <div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsItTotal2">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- سجل الحوالات — عرض الصفحات -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title"><div class="ct-icon">📋</div> سجل الحوالات</div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <span class="badge badge-count" id="itLogCount">0</span>
+                <span style="font-size:10px;color:var(--text-muted);background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);padding:3px 9px;border-radius:20px;font-weight:700">10 لكل صفحة</span>
+            </div>
+        </div>
+        <div class="filter-bar">
+            <span class="filter-chip fc-on" onclick="filterItLogs(this,'all')">الكل</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'completed')">✅ مكتملة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'pending')">⏳ معلقة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'out')">📤 صادرة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'in')">📥 واردة</span>
+        </div>
+        <!-- شبكة كرت الصفحات -->
+        <div id="itPageCardsGrid" class="it-page-cards-grid"></div>
+        <!-- حالة فارغة -->
+        <div id="itPageEmpty" style="display:none" class="it-page-empty">
+            <div class="it-page-empty-icon">📭</div>
+            <div class="it-page-empty-text">لا توجد حوالات مسجلة</div>
+        </div>
+    </div>
+
+    <!-- نافذة حوالات الصفحة المختبطة placeholder -->
+
+    <!-- نافذة حوالات الصفحة المختبطة -->
+    <div id="itPageModal" class="it-page-modal" style="display:none" onclick="if(event.target===this)closeItPageModal()">
+        <div class="it-page-modal-inner">
+            <div class="it-pm-header">
+                <div class="it-pm-title-wrap">
+                    <div class="it-pm-title" id="itPmTitle">صفحة 1</div>
+                    <div class="it-pm-sub" id="itPmSub"></div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center">
+                    <div class="it-pm-badges">
+                        <span class="it-pm-badge in" id="itPmBadgeIn">📥 0 واردة</span>
+                        <span class="it-pm-badge out" id="itPmBadgeOut">📤 0 صادرة</span>
+                    </div>
+                    <button class="it-pm-close" onclick="closeItPageModal()">✗</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th>النوع</th>
+                            <th>المرسل</th>
+                            <th>المستلم</th>
+                            <th>الدولة</th>
+                            <th>المبلغ</th>
+                            <th>الرسوم</th>
+                            <th>الحالة</th>
+                            <th>الوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itPmBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ 4. المعاملات الإلكترونية ══ -->
+<div class="dept-section" id="dept-electronic">
+
+    <!-- عناصر الصوت المخفية لإبقاء JS يعمل بدون أخطاء -->
+    <div id="vbBar-electronic" style="display:none!important;visibility:hidden!important;width:0!important;height:0!important;overflow:hidden!important;position:absolute!important;">
+        <span id="vbLabel-electronic"></span>
+        <span id="vbHint-electronic"></span>
+        <span id="vbSpokenText-electronic"></span>
+        <div id="vbSpokenWrap-electronic"></div>
+        <button id="vbMic-electronic"></button>
+    </div>
+    <div id="vbResult-electronic" style="display:none!important;visibility:hidden!important;width:0!important;height:0!important;overflow:hidden!important;position:absolute!important;">
+        <div id="vbResultFields-electronic"></div>
+    </div>
+
+    <div class="tri-layout">
+        <!-- المنصات -->
+        <div class="right-column">
+            <div class="col-title">⚡ المنصات</div>
+            <div class="platform-card" onclick="selectPlatform('USDT')" id="plat-usdt"><div class="plat-icon">🪙</div><div class="plat-name">USDT</div><div class="plat-sub">عملة مستقرة — Tether</div></div>
+            <div class="platform-card" onclick="selectPlatform('TikTok')" id="plat-tiktok"><div class="plat-icon">🎵</div><div class="plat-name">TikTok</div><div class="plat-sub">شحن عملات تيك توك</div></div>
+            <div class="platform-card" onclick="selectPlatform('PayPal')" id="plat-paypal"><div class="plat-icon">💳</div><div class="plat-name">PayPal</div><div class="plat-sub">تحويل عالمي</div></div>
+        </div>
+        <!-- ══ أداة المعاملة — تصميم جديد ══ -->
+        <div class="el-tool-card">
+
+            <!-- رأس الأداة -->
+            <div class="el-tool-head">
+                <div class="el-tool-title-wrap">
+                    <div class="el-tool-icon-wrap">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                    </div>
+                    <div>
+                        <div class="el-tool-title">معاملة إلكترونية جديدة</div>
+                        <div class="el-tool-sub">أدخل بيانات العملية أو استخدم الصوت</div>
+                    </div>
+                </div>
+                <div class="el-tool-badges">
+                    <span class="el-plat-badge" id="elPlatLabel">اختر منصة</span>
+                    <span id="elVerifyBadge" class="el-verify-badge" style="display:none">✅ موثق USDT</span>
+                    <button onclick="captureSection('dept-electronic')" class="el-capture-btn" title="التقاط صورة">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                        التقاط
+                    </button>
+                </div>
+            </div>
+
+            <input type="hidden" id="elPlatform">
+
+            <!-- جسم الأداة -->
+            <div class="elec-split-layout" id="elecSplitLayout">
+                <div class="elec-client-side">
+                    <div class="el-fields-dd-row">
+
+                        <!-- الحقول الأساسية -->
+                        <div class="el-fields-grid">
+
+                            <!-- صف 1: اسم العميل + العملة -->
+                            <div class="el-field-wrap">
+                                <label class="el-label">اسم العميل <span class="el-optional">اختياري</span></label>
+                                <div class="el-input-wrap">
+                                    <svg class="el-input-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <input type="text" class="el-input" id="elClient" placeholder="الاسم الكامل">
+                                </div>
+                            </div>
+
+                            <div class="el-field-wrap">
+                                <label class="el-label">العملة</label>
+                                <div class="el-input-wrap">
+                                    <svg class="el-input-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12m-4-6h8"/></svg>
+                                    <select class="el-input el-select" id="elCurrency" onchange="calcElecFee()">
+                                        <option value="USD">🇺🇸 دولار USD</option>
+                                        <option value="USDT">🪙 تيثر USDT</option>
+                                        <option value="EUR">🇪🇺 يورو EUR</option>
+                                        <option value="ILS">🇵🇸 شيكل ILS</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <!-- صف 2: عنوان المحفظة (full width) -->
+                            <div class="el-field-wrap el-field-full">
+                                <label class="el-label">عنوان المحفظة / رقم الحساب <span class="el-req">*</span></label>
+                                <div class="el-input-wrap">
+                                    <svg class="el-input-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                                    <input type="text" class="el-input el-input-mono" id="elAccount" placeholder="0x… أو رقم الحساب" dir="ltr">
+                                </div>
+                            </div>
+
+                            <!-- صف 3: المبلغ (full width) — بارز -->
+                            <div class="el-field-wrap el-field-full">
+                                <label class="el-label">المبلغ <span class="el-req">*</span></label>
+                                <div class="el-amount-wrap">
+                                    <span class="el-amount-sym" id="elAmtSym">$</span>
+                                    <input type="number" class="el-amount-input" id="elAmount" placeholder="0.00" dir="ltr" oninput="calcElecFee()">
+                                    <span class="el-amount-cur" id="elAmtCurLabel">USD</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- منطقة التسليم المزدوج -->
+                        <div id="elDdZone" style="display:none;flex:1;min-width:0">
+                            <div class="el-dd-toggle" onclick="toggleDoubleDelivery('el')" id="elDdToggle">
+                                <span>📋</span>
+                                <span>تسليم مزدوج</span>
+                                <div class="dd-switch" id="elDdSwitch" style="transform:scale(.6);margin-right:auto"></div>
+                            </div>
+                            <div class="dd-fields" id="elDdFields" style="margin-top:0">
+                                <div class="dd-source-info" id="elDdSourceInfo" style="padding:4px 10px;font-size:10px;border-radius:6px;margin-bottom:6px">
+                                    <span>🪙 المبلغ</span>
+                                </div>
+                                <div class="dd-split-container" style="gap:6px">
+                                    <div class="dd-split-card dd-cash-card" style="padding:7px 9px;border-radius:8px">
+                                        <div class="dd-card-header dd-cash-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span>💵</span> كاش</div>
+                                        <div class="dd-rate-display" style="margin-bottom:5px;padding:3px 6px;border-radius:5px">
+                                            <span class="dd-rate-label" style="font-size:9px">السعر</span>
+                                            <span class="dd-rate-val" id="elDdCashRateDisplay" style="font-size:11px">0.000</span>
+                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px">🔒</span>
+                                        </div>
+                                        <input type="number" class="field-input" id="elDdCashAmt" placeholder="المبلغ" dir="ltr" style="text-align:center;font-weight:700;padding:4px 6px;font-size:11px;height:26px" oninput="calcDdElec()">
+                                        <input type="hidden" id="elDdCashRate" value="0">
+                                        <div class="dd-result-row" style="margin-top:5px;font-size:10px">
+                                            <span>يستلم</span><span class="dd-result-val" id="elDdCashResult" style="font-size:11px">₪0.00</span>
+                                        </div>
+                                    </div>
+                                    <div class="dd-split-card dd-bank-card" style="padding:7px 9px;border-radius:8px">
+                                        <div class="dd-card-header dd-bank-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span>🏦</span> بنكي</div>
+                                        <div class="dd-rate-display dd-rate-bank" style="margin-bottom:5px;padding:3px 6px;border-radius:5px">
+                                            <span class="dd-rate-label" style="font-size:9px">السعر</span>
+                                            <span class="dd-rate-val" id="elDdBankRateDisplay" style="font-size:11px">0.000</span>
+                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px">🔒</span>
+                                        </div>
+                                        <input type="number" class="field-input" id="elDdBankAmt" placeholder="المبلغ" dir="ltr" style="text-align:center;font-weight:700;padding:4px 6px;font-size:11px;height:26px" oninput="calcDdElec()">
+                                        <input type="hidden" id="elDdBankRate" value="0">
+                                        <div class="dd-result-row" style="margin-top:5px;font-size:10px">
+                                            <span>يستلم</span><span class="dd-result-val" id="elDdBankResult" style="font-size:11px">₪0.00</span>
+                                        </div>
+                                        <label class="dd-upload-label" id="elBankUploadLabel" style="margin-top:5px">
+                                            <input type="file" accept="image/*,.pdf" id="elBankNotice" onchange="handleBankNotice(this,'el')" style="display:none">
+                                            <span class="dd-upload-btn" style="font-size:9px;padding:3px 7px">📎 إشعار</span>
+                                            <span class="dd-upload-name" id="elBankFileName" style="font-size:9px"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="dd-summary-bar" style="padding:5px 10px;border-radius:6px;margin-top:6px">
+                                    <span style="display:none" id="elDdUsedAmt">$0.00</span>
+                                    <span style="display:none" id="elDdRemain">$0.00</span>
+                                    <div class="dd-sum-row dd-sum-total" style="font-size:11px;margin:0"><span>💰 الإجمالي</span><span class="dd-sum-val" id="elDdTotalResult">₪0.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ملخص المبالغ -->
+            <div class="el-summary-strip">
+                <div class="el-sum-item">
+                    <span class="el-sum-label">المبلغ</span>
+                    <span class="el-sum-val" id="elAmtDisp">$0.00</span>
+                </div>
+                <div class="el-sum-sep"></div>
+                <div class="el-sum-item">
+                    <span class="el-sum-label">رسوم 3%</span>
+                    <span class="el-sum-val el-sum-fee" id="elFeeDisp">$0.00</span>
+                </div>
+                <div class="el-sum-sep"></div>
+                <div class="el-sum-item el-sum-total-item">
+                    <span class="el-sum-label">الإجمالي</span>
+                    <span class="el-sum-val el-sum-total" id="elTotalDisp">$0.00</span>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراء -->
+            <div class="el-actions">
+                <button class="el-btn-primary" onclick="submitElec()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    تنفيذ المعاملة
+                </button>
+                <button class="el-btn-whatsapp" onclick="sendElecWhatsApp()" title="إرسال واتساب">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+                </button>
+                <button class="el-btn-clear" onclick="clearElec()" title="مسح الحقول">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+                    مسح
+                </button>
+            </div>
+
+        </div>
+        <!-- صندوق التلر + QR Code لـUSDT -->
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="teller-box">
+                <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 معاملات اليوم</div><div class="ts-row"><span class="ts-label">عدد المعاملات</span><span class="ts-val" style="color:var(--blue)" id="tsElCount">0</span></div><div class="ts-row"><span class="ts-label">إجمالي المبالغ</span><span class="ts-val" style="color:var(--primary)" id="tsElVol">$0</span></div></div>
+            </div>
+            <!-- QR Code + عنوان الشركة — يظهر أسفل صندوق التلر عند اختيار USDT -->
+            <div class="elec-qr-side" id="elecQrSide" style="display:none">
+                <div class="qr-company-box">
+                    <div class="qr-header-bar">
+                    <div class="qr-title">📱 عنوان استقبال USDT</div>
+                        <div class="qr-live-price" id="usdtLivePrice">
+                            <span class="qr-price-dot"></span>
+                            <span>1 USDT = </span>
+                            <span class="qr-price-val" id="usdtPriceVal">$1.000</span>
+                        </div>
+                    </div>
+                    <div class="qr-network-badge" id="usdtNetBadge">TRON (TRC-20)</div>
+                    <div class="qr-code-wrap" id="qrCodeWrap">
+                        <canvas id="qrCanvas" width="180" height="180"></canvas>
+                        <div class="qr-logo-overlay">🪙</div>
+                    </div>
+                    <div class="qr-address-box">
+                        <div class="qr-address-label">عنوان المحفظة — <span id="usdtNetLabel">TRC-20</span></div>
+                        <div class="qr-address-val" id="companyTrcAddress">TJYk9nGd5L...</div>
+                        <div class="qr-address-actions">
+                            <button class="qr-copy-btn" onclick="copyTrcAddress()">📋 نسخ</button>
+                            <button class="qr-share-btn" onclick="shareUsdtAddress()">📤 مشاركة</button>
+                        </div>
+                    </div>
+                    <div class="qr-tx-checker">
+                        <div class="qr-tx-title">🔍 تتبع المعاملة</div>
+                        <div class="qr-tx-input-row">
+                            <input type="text" class="field-input qr-tx-input" id="usdtTxHash" placeholder="أدخل TX Hash للتحقق" dir="ltr">
+                            <button class="qr-verify-btn" onclick="verifyUsdtTx()">تحقق ✓</button>
+                        </div>
+                        <div class="qr-tx-status" id="usdtTxStatus" style="display:none"></div>
+                    </div>
+                    <div class="qr-warning">⚠️ أرسل فقط USDT عبر الشبكة المحددة — الإرسال لشبكة خاطئة يعني خسارة الأموال</div>
+                    <div class="qr-stats-mini">
+                        <div class="qr-stat"><span class="qr-stat-val" id="usdtTodayCount">0</span><span class="qr-stat-lbl">معاملات اليوم</span></div>
+                        <div class="qr-stat"><span class="qr-stat-val" id="usdtTodayVol">$0</span><span class="qr-stat-lbl">حجم التداول</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل المعاملات</div><span class="badge badge-count" id="elLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterElLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterElLogs(this,'completed')">✅ مكتملة</span><span class="filter-chip" onclick="filterElLogs(this,'pending')">⏳ معلقة</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>العميل</th><th>المنصة</th><th>المبلغ</th><th>الرسوم</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody id="elLogBody"></tbody></table></div></div>
+</div>
+<!-- ══ 5. سحب وإيداع ══ -->
+<div class="dept-section" id="dept-cashdesk">
+
+    <!-- ══ شريط الصوت — سحب/إيداع ══ -->
+    <div class="vb-bar vb-bar-green" id="vbBar-cashdesk">
+        <div class="vb-left">
+            <button class="vb-mic-btn vb-mic-green" id="vbMic-cashdesk" onclick="vtInlineStart('cashdesk')" title="أمر صوتي">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm-1 17.93V21h2v-2.07A8 8 0 0 0 20 11h-2a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.93z"/></svg>
+            </button>
+            <div class="vb-info">
+                <span class="vb-label" id="vbLabel-cashdesk">اضغط لتحدث</span>
+                <span class="vb-hint" id="vbHint-cashdesk">مثال: "سحب 300 دولار من حساب خالد" أو "إيداع 500 شيكل"</span>
+            </div>
+        </div>
+        <div class="vb-right">
+            <div class="vb-spoken-wrap" id="vbSpokenWrap-cashdesk" style="display:none">
+                <span class="vb-spoken-text" id="vbSpokenText-cashdesk"></span>
+            </div>
+            <button class="vb-toggle-btn" onclick="vtToggleManual('cashdesk')" title="تبديل الإدخال اليدوي">
+                <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+                <span>يدوي</span>
+            </button>
+        </div>
+    </div>
+    <div class="vb-result-bar" id="vbResult-cashdesk" style="display:none">
+        <div class="vb-result-fields" id="vbResultFields-cashdesk"></div>
+        <div class="vb-result-actions">
+            <button class="vb-btn-apply" onclick="vtInlineApply('cashdesk')">✅ تطبيق مملوء الحقول</button>
+            <button class="vb-btn-cancel" onclick="vtInlineClear('cashdesk')">✗ إلغاء</button>
+        </div>
+    </div>
+
+  <!-- HEADER -->
+  <div class="cd2-header">
+    <div class="cd2-hbg"></div>
+    <div class="cd2-hcontent">
+      <div class="cd2-htitle-block">
+        <div class="cd2-hicon">🏦</div>
+        <div>
+          <div class="cd2-htitle">السحب والإيداع</div>
+          <div class="cd2-hsub">إدارة حركات الصندوق — Cash &amp; Bank Operations</div>
+        </div>
+      </div>
+      <div class="cd2-mode-toggle">
+        <button class="cd2-mode-btn cd2-deposit cd2-active" id="cd2ModeDeposit" onclick="switchCd2Mode('deposit')">
+          <span class="cd2-micon">📥</span><span class="cd2-mlabel">إيداع</span></button>
+        </button>
+        <button class="cd2-mode-btn cd2-withdraw" id="cd2ModeWithdraw" onclick="switchCd2Mode('withdraw')">
+          <span class="cd2-micon">📤</span><span class="cd2-mlabel">سحب</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPE CARDS -->
+  <div class="cd2-type-row">
+    <div class="cd2-tc cd2-tc-cash cd2-tc-active" id="cd2TypeCash" onclick="selectCd2Type('cash')">
+      <div class="cd2-tc-glow cash"></div>
+      <div class="cd2-tc-top">
+        <div class="cd2-tc-icon cash">💵</div>
+        <div class="cd2-tc-info">
+          <div class="cd2-tc-name">كاش</div>
+          <div class="cd2-tc-sub">Cash Payment</div>
+        </div>
+      <div class="cd2-tc-badge cash" id="cd2CashBadge">✓ محدد</div>
+      </div>
+      <div class="cd2-tc-rate-wrap">
+        <span class="cd2-tc-rlabel">السعر بالشيكل</span>
+        <div class="cd2-tc-rinput-wrap">
+          <input class="cd2-tc-rinput" id="cd2CashRate" type="number" min="0" step="0.0001" placeholder="0.0000" oninput="updateCd2Calc()">
+          <span class="cd2-tc-rsym cash">₪</span>
+        </div>
+      </div>
+    </div>
+    <div class="cd2-tc cd2-tc-bank" id="cd2TypeBank" onclick="selectCd2Type('bank')">
+      <div class="cd2-tc-glow bank"></div>
+      <div class="cd2-tc-top">
+        <div class="cd2-tc-icon bank">🏦</div>
+        <div class="cd2-tc-info">
+          <div class="cd2-tc-name">بنكي</div>
+          <div class="cd2-tc-sub">Bank Transfer</div>
+        </div>
+      <div class="cd2-tc-badge bank hidden" id="cd2BankBadge">✓ محدد</div>
+      </div>
+      <div class="cd2-tc-rate-wrap">
+        <span class="cd2-tc-rlabel">السعر بالشيكل</span>
+        <div class="cd2-tc-rinput-wrap">
+          <input class="cd2-tc-rinput" id="cd2BankRate" type="number" min="0" step="0.0001" placeholder="0.0000" oninput="updateCd2Calc()">
+          <span class="cd2-tc-rsym bank">₪</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card cd2-main">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="ct-icon" id="cd2CardIcon">📥</div>
+        <span id="cd2CardTitle">تفاصيل الإيداع</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="badge cd2-op-badge" id="cd2OpBadge" style="background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.25)">💵 كاش · إيداع</span>
+        <button onclick="captureSection('dept-cashdesk')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button>
+      </div>
+    </div>
+
+    <!-- Currency Selector -->
+    <div class="cd2-cur-row">
+      <div class="cd2-cur-card cd2-cc-active" data-cur="USD" onclick="selectCd2Cur(this,'USD')">
+        <div class="cd2-cc-flag">🇺🇸</div>
+        <div class="cd2-cc-info"><span class="cd2-cc-code">USD</span><span class="cd2-cc-name">دولار أمريكي</span></div>
+        <span class="cd2-cc-bal" id="cd2BalUSD">$0.00</span>
+        <div class="cd2-cc-bar"></div>
+      </div>
+      <div class="cd2-cur-card" data-cur="JOD" onclick="selectCd2Cur(this,'JOD')">
+        <div class="cd2-cc-flag">🇯🇴</div>
+        <div class="cd2-cc-info"><span class="cd2-cc-code">JOD</span><span class="cd2-cc-name">دينار أردني</span></div>
+        <span class="cd2-cc-bal" id="cd2BalJOD">JD 0.00</span>
+        <div class="cd2-cc-bar"></div>
+      </div>
+      <div class="cd2-cur-card" data-cur="ILS" onclick="selectCd2Cur(this,'ILS')">
+        <div class="cd2-cc-flag">🇵🇸</div>
+        <div class="cd2-cc-info"><span class="cd2-cc-code">ILS</span><span class="cd2-cc-name">شيكل إسرائيلي</span></div>
+        <span class="cd2-cc-bal" id="cd2BalILS">₪0.00</span>
+        <div class="cd2-cc-bar"></div>
+      </div>
+    </div>
+
+    <!-- Form + Calc -->
+    <div class="cd2-form-calc-row">
+      <div class="cd2-fields">
+        <div class="form-grid">
+          <div class="field-group">
+            <label>اسم العميل <span style="font-size:10px;color:var(--text-muted)">(اختياري)</span></label>
+            <input class="field-input" id="cd2Client" type="text" placeholder="الاسم الكامل للعميل">
+          </div>
+          <div class="field-group">
+            <label>رقم الهوية / الجواز</label>
+            <input class="field-input" id="cd2ClientId" type="text" placeholder="رقم الهوية أو جواز السفر">
+          </div>
+          <div class="field-group">
+            <label>المبلغ <span class="req">*</span></label>
+            <div class="cd2-amt-wrap">
+              <span class="cd2-amt-sym" id="cd2Sym">$</span>
+              <input class="field-input cd2-amt-input" id="cd2Amount" type="number" min="0" step="0.01" placeholder="0.00" oninput="updateCd2Calc()">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>رقم المرجع / الحساب</label>
+            <input class="field-input" id="cd2Ref" type="text" placeholder="رقم الحساب أو المرجع">
+          </div>
+          <div class="field-group full">
+            <label>ملاحظات</label>
+            <input class="field-input" id="cd2Note" type="text" placeholder="ملاحظات إضافية...">
+          </div>
+        </div>
+      </div>
+      <!-- Live Calc Panel -->
+      <div class="cd2-calc-panel">
+        <div class="cd2-calc-header">
+          <span class="cd2-calc-icon" id="cd2CalcIcon">💵</span>
+          <span class="cd2-calc-title">الحساب الآلي</span>
+        </div>
+        <div class="cd2-calc-body">
+          <div class="cd2-calc-row"><span class="cd2-calc-label">المبلغ</span><span class="cd2-calc-val" id="cd2CalcAmt">—</span></div>
+          <div class="cd2-calc-row"><span class="cd2-calc-label">السعر</span><span class="cd2-calc-val" id="cd2CalcRate">—</span></div>
+          <div class="cd2-calc-divider"></div>
+          <div class="cd2-calc-equiv-label">المعادل بالشيكل</div>
+          <div class="cd2-calc-equiv" id="cd2CalcEquiv">—</div>
+          <div class="cd2-calc-type" id="cd2CalcType">💵 كاش · إيداع</div>
+        </div>
+        <div class="cd2-calc-bal-row">
+          <span class="cd2-calc-label">رصيد الصندوق</span>
+          <span class="cd2-calc-bal" id="cd2CalcBal">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:18px">
+      <button class="btn-primary" id="cd2SubmitBtn" onclick="submitCd2()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">تنفيذ الإيداع 📥</button>
+      <button class="btn-secondary" onclick="clearCd2()">مسح ✗</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><div class="ct-icon">📋</div> سجل السحب والإيداع</div>
+      <span class="badge badge-count" id="cdLogCount">0 عملية</span>
+    </div>
+    <div class="filter-bar">
+      <span class="filter-chip fc-on" onclick="filterCdLogs(this,'all')">الكل</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'deposit')">📥 إيداع</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'withdraw')">📤 سحب</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'cash')">💵 كاش</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'bank')">🏦 بنكي</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>الرقم</th><th>النوع</th><th>الطريقة</th><th>العميل</th>
+          <th>المبلغ</th><th>السعر</th><th>المعادل ₪</th><th>المرجع</th><th>الوقت</th>
+        </tr></thead>
+        <tbody id="cdLogBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ إدارة الحسابات ══ -->
+<div class="dept-section" id="dept-acctmgr">
+  <div style="padding:18px 20px 10px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:12px;">
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏦</div>
+    <div>
+      <div style="font-size:14px;font-weight:800;color:var(--text-main,#e9edef);">إدارة الحسابات والصناديق</div>
+      <div style="font-size:11px;color:var(--text-sub,#4a6280);margin-top:2px;">القيود · الحوالات · التسوية · كشف الحساب</div>
+    </div>
+  </div>
+
+  <!-- شبكة الأدوات -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;padding:18px 16px;">
+
+    <!-- حركة جديدة -->
+    <button onclick="apOpenSwitch('new-move')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(245,158,11,.14)';this.style.borderColor='rgba(245,158,11,.5)'" onmouseout="this.style.background='rgba(245,158,11,.07)';this.style.borderColor='rgba(245,158,11,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(245,158,11,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#fbbf24;">حركة جديدة</span>
+    </button>
+
+    <!-- تبديل عملات -->
+    <button onclick="apOpenSwitch('exchange')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(16,185,129,.14)';this.style.borderColor='rgba(16,185,129,.5)'" onmouseout="this.style.background='rgba(16,185,129,.07)';this.style.borderColor='rgba(16,185,129,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(16,185,129,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#34d399;">تبديل عملات</span>
+    </button>
+
+    <!-- قص وإغلاق -->
+    <button onclick="apOpenSwitch('cut')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(6,182,212,.14)';this.style.borderColor='rgba(6,182,212,.5)'" onmouseout="this.style.background='rgba(6,182,212,.07)';this.style.borderColor='rgba(6,182,212,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#06b6d4,#0891b2);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(6,182,212,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#22d3ee;">قص وإغلاق</span>
+    </button>
+
+    <!-- قيد تسوية -->
+    <button onclick="apOpenSwitch('settle')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(139,92,246,.14)';this.style.borderColor='rgba(139,92,246,.5)'" onmouseout="this.style.background='rgba(139,92,246,.07)';this.style.borderColor='rgba(139,92,246,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(139,92,246,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#a78bfa;">قيد تسوية</span>
+    </button>
+
+    <!-- قيد متقدم -->
+    <button onclick="apOpenSwitch('adv-entry')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(236,72,153,.07);border:1px solid rgba(236,72,153,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(236,72,153,.14)';this.style.borderColor='rgba(236,72,153,.5)'" onmouseout="this.style.background='rgba(236,72,153,.07)';this.style.borderColor='rgba(236,72,153,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#ec4899,#db2777);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(236,72,153,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#f472b6;">قيد متقدم</span>
+    </button>
+
+    <!-- قيد جديد -->
+    <button onclick="apOpenSwitch('entry')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(239,68,68,.14)';this.style.borderColor='rgba(239,68,68,.5)'" onmouseout="this.style.background='rgba(239,68,68,.07)';this.style.borderColor='rgba(239,68,68,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(239,68,68,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#f87171;">قيد جديد</span>
+    </button>
+
+    <!-- غير مستلمة -->
+    <button onclick="apOpenSwitch('unreceived')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(248,113,113,.14)';this.style.borderColor='rgba(248,113,113,.5)'" onmouseout="this.style.background='rgba(248,113,113,.07)';this.style.borderColor='rgba(248,113,113,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#f87171,#ef4444);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(248,113,113,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#fca5a5;">غير مستلمة</span>
+    </button>
+
+    <!-- مستلمة -->
+    <button onclick="apOpenSwitch('received')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(74,222,128,.14)';this.style.borderColor='rgba(74,222,128,.5)'" onmouseout="this.style.background='rgba(74,222,128,.07)';this.style.borderColor='rgba(74,222,128,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#4ade80,#16a34a);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(74,222,128,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#4ade80;">مستلمة</span>
+    </button>
+
+    <!-- جميع الحوالات -->
+    <button onclick="apOpenSwitch('all')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(96,165,250,.14)';this.style.borderColor='rgba(96,165,250,.5)'" onmouseout="this.style.background='rgba(96,165,250,.07)';this.style.borderColor='rgba(96,165,250,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#60a5fa,#2563eb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(96,165,250,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#93c5fd;">جميع الحوالات</span>
+    </button>
+
+    <!-- كشف حساب -->
+    <button onclick="apOpenSwitch('statement')" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:16px;background:rgba(29,78,216,.07);border:1px solid rgba(29,78,216,.25);cursor:pointer;transition:all .18s;font-family:inherit;" onmouseover="this.style.background='rgba(29,78,216,.14)';this.style.borderColor='rgba(29,78,216,.5)'" onmouseout="this.style.background='rgba(29,78,216,.07)';this.style.borderColor='rgba(29,78,216,.25)'">
+      <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#1d4ed8,#1e3a8a);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(29,78,216,.35);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#93c5fd;">كشف حساب</span>
+    </button>
+
+  </div><!-- /grid -->
+</div><!-- /dept-acctmgr -->
+
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="confirmModal"><div class="modal-box"><div class="modal-icon" id="cmIcon">🔔</div><div class="modal-title" id="cmTitle">تأكيد</div><div class="modal-desc">يرجى مراجعة التفاصيل</div><div class="confirm-details" id="cmDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="confirmAction()">✅ تأكيد</button><button class="btn-secondary" onclick="closeModal('confirmModal')">إلغاء</button></div></div></div>
+<div class="modal-overlay" id="successModal"><div class="modal-box"><div class="modal-icon">✅</div><div class="modal-title" id="smTitle">تمت بنجاح</div><div class="modal-desc" id="smDesc"></div><div class="confirm-details" id="smDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="closeModal('successModal')">حسناً 👍</button></div></div></div>
+<!-- Modal طلب للمشرف -->
+<div class="modal-overlay" id="generalRequestModal">
+    <div class="modal-box" style="text-align:right;max-width:400px">
+        <div class="modal-icon" id="grIcon">📨</div>
+        <div class="modal-title">إرسال طلب للمشرف</div>
+        <div class="modal-fields" style="margin:14px 0">
+            <div class="field-group" style="margin-bottom:10px">
+                <label style="font-size:12px;color:var(--text-sub);margin-bottom:6px;display:block">نوع الطلب</label>
+                <div id="grTypeLabel" style="padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700"></div>
+            </div>
+            <div class="field-group">
+                <label style="font-size:12px;color:var(--text-sub);margin-bottom:6px;display:block">نص الطلب</label>
+                <textarea class="field-input" id="grText" rows="3" placeholder="اكتب تفاصيل طلبك هنا..." style="resize:vertical;min-height:80px;width:100%;box-sizing:border-box"></textarea>
+            </div>
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary" onclick="sendGeneralRequest()">📨 إرسال للمشرف</button>
+            <button class="btn-secondary" onclick="closeModal('generalRequestModal')">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<footer class="app-footer">نظام انترناشونال الموحد &copy; 2025 — <a href="#">شركة انترناشونال للخدمات المالية والمجوهرات</a></footer>
+
+<!-- ══ نافذة الحوالة البنكية — خارج main-area لضمان تغطية المودر ══ -->
+<div id="bankTransferModal" onclick="if(event.target===this)closeBankTransferModal()"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:99999;align-items:center;justify-content:center;">
+    <div id="bankTransferCard"
+        style="background:linear-gradient(160deg,#0b1220 0%,#0f1a2e 60%,#0c1525 100%);border:1px solid rgba(59,130,246,0.35);border-radius:22px;width:min(580px,95vw);max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(59,130,246,0.1),inset 0 1px 0 rgba(255,255,255,0.04);transform:scale(0.88);opacity:0;transition:transform .28s cubic-bezier(.34,1.4,.64,1),opacity .22s ease;">
+
+        <!-- Header -->
+        <div style="padding:20px 24px 16px;border-bottom:1px solid rgba(59,130,246,0.14);background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(37,99,235,0.05));border-radius:22px 22px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1;">
+            <div style="display:flex;align-items:center;gap:13px;">
+                <div style="width:44px;height:44px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 6px 18px rgba(59,130,246,0.45);flex-shrink:0;">🏦</div>
+                <div>
+                    <div style="font-size:15px;font-weight:900;color:#e2e8f0;letter-spacing:.3px;">حوالة بنكية جديدة</div>
+                    <div style="font-size:10px;color:#60a5fa;font-weight:700;margin-top:2px;display:flex;align-items:center;gap:5px;">
+                        <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                        إرسال تحويل مباشر عبر البنك
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeBankTransferModal()"
+                style="width:34px;height:34px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);border-radius:9px;color:#f87171;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:all .2s;flex-shrink:0;"
+                onmouseover="this.style.background='rgba(239,68,68,0.22)';this.style.borderColor='rgba(239,68,68,0.55)'"
+                onmouseout="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.22)'">✗</button>
+        </div>
+
+        <!-- Body -->
+        <div style="padding:22px 24px 20px;">
+
+            <!-- §1 بيانات المرسل -->
+            <div style="font-size:10px;font-weight:900;color:#60a5fa;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                <span style="width:18px;height:1.5px;background:rgba(59,130,246,0.5);display:inline-block;"></span>بيانات المُرسِل
+                <span style="flex:1;height:1px;background:rgba(59,130,246,0.12);"></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px;">
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">اسم المرسل <span style="color:#f87171;">*</span></label>
+                    <input id="btm-sender" type="text" placeholder="الاسم الكامل"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(59,130,246,0.2);border-radius:10px;padding:10px 13px;color:#e2e8f0;font-size:13px;font-weight:600;font-family:inherit;outline:none;transition:all .2s;"
+                        onfocus="this.style.borderColor='rgba(59,130,246,0.65)';this.style.background='rgba(59,130,246,0.07)';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'"
+                        onblur="this.style.borderColor='rgba(59,130,246,0.2)';this.style.background='rgba(255,255,255,0.04)';this.style.boxShadow='none'">
+                </div>
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">رقم الهوية</label>
+                    <input id="btm-sender-id" type="text" placeholder="رقم الهوية الوطنية" dir="ltr"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(59,130,246,0.2);border-radius:10px;padding:10px 13px;color:#e2e8f0;font-size:13px;font-weight:600;font-family:inherit;outline:none;transition:all .2s;"
+                        onfocus="this.style.borderColor='rgba(59,130,246,0.65)';this.style.background='rgba(59,130,246,0.07)';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'"
+                        onblur="this.style.borderColor='rgba(59,130,246,0.2)';this.style.background='rgba(255,255,255,0.04)';this.style.boxShadow='none'">
+                </div>
+            </div>
+
+            <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.18),transparent);margin-bottom:16px;"></div>
+
+            <!-- §2 بيانات المستفيد -->
+            <div style="font-size:10px;font-weight:900;color:#34d399;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                <span style="width:18px;height:1.5px;background:rgba(52,211,153,0.5);display:inline-block;"></span>بيانات المستفيد
+                <span style="flex:1;height:1px;background:rgba(52,211,153,0.12);"></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px;">
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">اسم المستفيد <span style="color:#f87171;">*</span></label>
+                    <input id="btm-receiver" type="text" placeholder="الاسم كما هو في البنك"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(52,211,153,0.2);border-radius:10px;padding:10px 13px;color:#e2e8f0;font-size:13px;font-weight:600;font-family:inherit;outline:none;transition:all .2s;"
+                        onfocus="this.style.borderColor='rgba(52,211,153,0.65)';this.style.background='rgba(52,211,153,0.06)';this.style.boxShadow='0 0 0 3px rgba(52,211,153,0.08)'"
+                        onblur="this.style.borderColor='rgba(52,211,153,0.2)';this.style.background='rgba(255,255,255,0.04)';this.style.boxShadow='none'">
+                </div>
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">رقم الحساب / IBAN <span style="color:#f87171;">*</span></label>
+                    <input id="btm-iban" type="text" placeholder="PS92ARAB000000..." dir="ltr"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(52,211,153,0.2);border-radius:10px;padding:10px 13px;color:#34d399;font-size:11.5px;font-weight:800;font-family:monospace;outline:none;transition:all .2s;"
+                        onfocus="this.style.borderColor='rgba(52,211,153,0.65)';this.style.background='rgba(52,211,153,0.06)';this.style.boxShadow='0 0 0 3px rgba(52,211,153,0.08)'"
+                        onblur="this.style.borderColor='rgba(52,211,153,0.2)';this.style.background='rgba(255,255,255,0.04)';this.style.boxShadow='none'">
+                </div>
+            </div>
+
+            <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,0.18),transparent);margin-bottom:16px;"></div>
+
+            <!-- §3 تفاصيل التحويل -->
+            <div style="font-size:10px;font-weight:900;color:#fbbf24;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                <span style="width:18px;height:1.5px;background:rgba(251,191,36,0.5);display:inline-block;"></span>تفاصيل التحويل
+                <span style="flex:1;height:1px;background:rgba(251,191,36,0.12);"></span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:11px;margin-bottom:12px;">
+
+                <!-- البنك — Custom Dropdown -->
+                <div style="position:relative;" id="btm-bank-wrap">
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">البنك المستقبل <span style="color:#f87171;">*</span></label>
+                    <div id="btm-bank-trigger" onclick="btmToggle('bank')"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(251,191,36,0.22);border-radius:10px;padding:10px 13px;color:#64748b;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;user-select:none;"
+                        onmouseover="this.style.borderColor='rgba(251,191,36,0.5)'"
+                        onmouseout="if(document.getElementById('btm-bank-menu').style.display!=='block')this.style.borderColor='rgba(251,191,36,0.22)'">
+                        <span id="btm-bank-label">اختر البنك...</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" id="btm-bank-arrow"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <input type="hidden" id="btm-bank">
+                    <div id="btm-bank-menu" style="display:none;position:absolute;top:calc(100% + 4px);right:0;left:0;background:#0a1628;border:1.5px solid rgba(251,191,36,0.3);border-radius:12px;padding:5px;box-shadow:0 20px 50px rgba(0,0,0,0.8);z-index:10;">
+                        <div onclick="btmPickBank('البنك العربي','#fbbf24','🏛️')"           style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(251,191,36,0.1)'" onmouseout="this.style.background='transparent'"><span>🏛️</span><span style="font-size:12px;font-weight:700;color:#fbbf24;">البنك العربي</span></div>
+                        <div onclick="btmPickBank('بنك فلسطيني','#34d399','🇵🇸')"            style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(52,211,153,0.1)'" onmouseout="this.style.background='transparent'"><span>🇵🇸</span><span style="font-size:12px;font-weight:700;color:#34d399;">بنك فلسطيني</span></div>
+                        <div onclick="btmPickBank('البنك الوطني','#60a5fa','🏦')"            style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(96,165,250,0.1)'" onmouseout="this.style.background='transparent'"><span>🏦</span><span style="font-size:12px;font-weight:700;color:#60a5fa;">البنك الوطني</span></div>
+                        <div onclick="btmPickBank('بنك القاهرة عمان','#a78bfa','🏢️')"       style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(167,139,250,0.1)'" onmouseout="this.style.background='transparent'"><span>🏢️</span><span style="font-size:12px;font-weight:700;color:#a78bfa;">بنك القاهرة عمان</span></div>
+                        <div onclick="btmPickBank('بنك الأردن','#f472b6','🇯🇴')"             style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(244,114,182,0.1)'" onmouseout="this.style.background='transparent'"><span>🇯🇴</span><span style="font-size:12px;font-weight:700;color:#f472b6;">بنك الأردن</span></div>
+                        <div onclick="btmPickBank('البنك الإسلامي العربي','#38bdf8','☪️')"   style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(56,189,248,0.1)'" onmouseout="this.style.background='transparent'"><span>☪️</span><span style="font-size:12px;font-weight:700;color:#38bdf8;">البنك الإسلامي العربي</span></div>
+                        <div onclick="btmPickBank('بنك الاستثمار الفلسطيني','#fb923c','🏦')" style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(251,146,60,0.1)'" onmouseout="this.style.background='transparent'"><span>🏦</span><span style="font-size:12px;font-weight:700;color:#fb923c;">بنك الاستثمار الفلسطيني</span></div>
+                        <div style="height:1px;background:rgba(255,255,255,0.06);margin:3px 0;"></div>
+                        <div onclick="btmPickBank('أخرى','#94a3b8','🏧')"                    style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(148,163,184,0.1)'" onmouseout="this.style.background='transparent'"><span>🏧</span><span style="font-size:12px;font-weight:700;color:#94a3b8;">أخرى</span></div>
+                    </div>
+                </div>
+
+                <!-- المبلغ -->
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">المبلغ <span style="color:#f87171;">*</span></label>
+                    <input id="btm-amount" type="number" placeholder="0.00" oninput="btmCalcFee()" dir="ltr"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(252,211,77,0.22);border-radius:10px;padding:10px 13px;color:#fcd34d;font-size:14px;font-weight:900;font-family:inherit;outline:none;text-align:right;transition:all .2s;"
+                        onfocus="this.style.borderColor='rgba(252,211,77,0.65)';this.style.background='rgba(252,211,77,0.06)';this.style.boxShadow='0 0 0 3px rgba(252,211,77,0.08)'"
+                        onblur="this.style.borderColor='rgba(252,211,77,0.22)';this.style.background='rgba(255,255,255,0.04)';this.style.boxShadow='none'">
+                </div>
+
+                <!-- العملة — Custom Dropdown -->
+                <div style="position:relative;" id="btm-cur-wrap">
+                    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">العملة</label>
+                    <div id="btm-cur-trigger" onclick="btmToggle('cur')"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(96,165,250,0.25);border-radius:10px;padding:10px 13px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:all .2s;user-select:none;color:#60a5fa;"
+                        onmouseover="this.style.borderColor='rgba(96,165,250,0.55)'"
+                        onmouseout="if(document.getElementById('btm-cur-menu').style.display!=='block')this.style.borderColor='rgba(96,165,250,0.25)'">
+                        <span id="btm-cur-label" style="display:flex;align-items:center;gap:7px;">🇺🇸 <span style="color:#60a5fa;">USD</span></span>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" id="btm-cur-arrow"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <input type="hidden" id="btm-currency" value="USD">
+                    <div id="btm-cur-menu" style="display:none;position:absolute;top:calc(100% + 4px);right:0;left:0;background:#0a1628;border:1.5px solid rgba(96,165,250,0.3);border-radius:12px;padding:5px;box-shadow:0 20px 50px rgba(0,0,0,0.8);z-index:10;">
+                        <div onclick="btmPickCur('USD','🇺🇸 <span style=\'color:#60a5fa;\'>USD</span>','#60a5fa')" style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(96,165,250,0.12)'" onmouseout="this.style.background='transparent'">
+                            <span style="font-size:18px;">🇺🇸</span><div><div style="font-size:13px;font-weight:900;color:#60a5fa;">USD</div><div style="font-size:10px;color:#475569;">دولار أمريكي</div></div>
+                        </div>
+                        <div onclick="btmPickCur('ILS','🇵🇸 <span style=\'color:#34d399;\'>ILS</span>','#34d399')" style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(52,211,153,0.12)'" onmouseout="this.style.background='transparent'">
+                            <span style="font-size:18px;">🇵🇸</span><div><div style="font-size:13px;font-weight:900;color:#34d399;">ILS</div><div style="font-size:10px;color:#475569;">شيكل إسرائيلي</div></div>
+                        </div>
+                        <div onclick="btmPickCur('JOD','🇯🇴 <span style=\'color:#fbbf24;\'>JOD</span>','#fbbf24')" style="padding:8px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:9px;" onmouseover="this.style.background='rgba(251,191,36,0.12)'" onmouseout="this.style.background='transparent'">
+                            <span style="font-size:18px;">🇯🇴</span><div><div style="font-size:13px;font-weight:900;color:#fbbf24;">JOD</div><div style="font-size:10px;color:#475569;">دينار أردني</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ملاحظات -->
+            <div style="margin-bottom:16px;">
+                <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">ملاحظات</label>
+                <input id="btm-notes" type="text" placeholder="أي ملاحظات إضافية عن التحويل..."
+                    style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(59,130,246,0.15);border-radius:10px;padding:10px 13px;color:#cbd5e1;font-size:13px;font-weight:600;font-family:inherit;outline:none;transition:all .2s;"
+                    onfocus="this.style.borderColor='rgba(59,130,246,0.5)';this.style.background='rgba(59,130,246,0.04)'"
+                    onblur="this.style.borderColor='rgba(59,130,246,0.15)';this.style.background='rgba(255,255,255,0.04)'">
+            </div>
+
+            <!-- صندوق الرسوم -->
+            <div id="btm-fee-box" style="display:none;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18);border-radius:12px;padding:12px 16px;margin-bottom:18px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:11px;color:#64748b;font-weight:700;">المبلغ الأصلي</span><span id="btm-fee-amt" style="font-size:13px;color:#e2e8f0;font-weight:800;">$0.00</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:11px;color:#64748b;font-weight:700;">رسوم التحويل (1.5%)</span><span id="btm-fee-fee" style="font-size:13px;color:#fbbf24;font-weight:800;">$0.00</span></div>
+                <div style="height:1px;background:rgba(59,130,246,0.2);margin-bottom:8px;"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#60a5fa;font-weight:900;">الإجمالي المطلوب</span><span id="btm-fee-total" style="font-size:17px;color:#34d399;font-weight:900;">$0.00</span></div>
+            </div>
+
+            <!-- الأزرار -->
+            <div style="display:flex;gap:10px;">
+                <button onclick="closeBankTransferModal()"
+                    style="flex:1;padding:12px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#e2e8f0'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.color='#94a3b8'">إلغاء</button>
+                <button onclick="submitBankTransferFromTeller()" id="btm-submit-btn"
+                    style="flex:3;padding:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:11px;color:#fff;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 4px 18px rgba(59,130,246,0.4);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;"
+                    onmouseover="this.style.background='linear-gradient(135deg,#60a5fa,#3b82f6)';this.style.boxShadow='0 6px 26px rgba(59,130,246,0.55)'"
+                    onmouseout="this.style.background='linear-gradient(135deg,#3b82f6,#1d4ed8)';this.style.boxShadow='0 4px 18px rgba(59,130,246,0.4)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                    إرسال التحويل للبنك
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qz-tray@2.2.4/qz-tray.js"></script>
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script src="{% static 'js/teller-departments.js' %}?v=22"></script>
+<script src="{% static 'js/calculator.js' %}"></script>
+<script src="{% static 'js/voice-teller.js' %}?v=3"></script>
+
+<!-- ══════════════════════════════════════════ نافذة رفع التقارير ══════════════════════════════════════════ -->
+<div id="tdReportOverlay" onclick="if(event.target===this)tdCloseReportModal()" style="display:none;position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#12101f,#0f0d1e);border:1px solid rgba(139,92,246,0.22);border-radius:22px;padding:30px 28px;width:500px;max-width:94vw;box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(139,92,246,0.07);direction:rtl;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(139,92,246,0.12);border:1.5px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 22px rgba(139,92,246,0.14);">📤</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;letter-spacing:-0.2px;">رفع تقرير للإدارة</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:3px;font-weight:600;">يصل مباشرة إلى صفحة الإدارة العامة</div>
+        </div>
+      </div>
+      <button onclick="tdCloseReportModal()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:10px;color:#8696a0;cursor:pointer;font-size:16px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.12)';this.style.color='#f87171'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#8696a0'">✗</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">عنوان التقرير <span style="color:#f87171;">*</span></label>
+        <input id="tdRptTitle" type="text" placeholder="مثال: تقرير جرد القسم كشف العمليات اليومي..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.16);border-radius:12px;padding:11px 14px;color:rgba(255,255,255,0.85);font-size:13px;font-weight:700;font-family:inherit;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(139,92,246,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">
+      </div>
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">الملف المرفق <span style="color:#f87171;">*</span></label>
+        <input type="file" id="tdRptFileInput" accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="tdRptFileChosen(this)">
+        <div id="tdRptDropZone" onclick="document.getElementById('tdRptFileInput').click()" ondragover="event.preventDefault();this.style.borderColor='rgba(139,92,246,0.6)';this.style.background='rgba(139,92,246,0.06)'" ondragleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)'" ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)';tdRptFileDrop(event)" style="border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.22s;background:rgba(255,255,255,0.02);">
+          <div style="font-size:30px;margin-bottom:8px;opacity:0.4;">📁</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.38);">انقر لاختيار ملف أو اسحبه هنا</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.18);margin-top:5px;font-weight:600;">PDF · Excel · Word · صورة — حتى 10 MB</div>
+        </div>
+        <div id="tdRptFilePreview" style="display:none;margin-top:10px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.22);border-radius:12px;padding:11px 14px;align-items:center;gap:12px;">
+          <div id="tdRptFileIcon" style="font-size:24px;flex-shrink:0;">📄</div>
+          <div style="flex:1;min-width:0;">
+            <div id="tdRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="tdRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
+          </div>
+          <button onclick="tdRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✗ إزالة</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">القسم</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);" id="tdRptDeptDisplay">قسم التلر</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">المرسل</div>
+          <div style="font-size:13px;font-weight:800;color:#a78bfa;" id="tdRptSenderDisplay">موظف التلر</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button onclick="tdSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(167,139,250,0.8));border:none;color:#fff;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(139,92,246,0.25);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="tdCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal باص تلر -->
+<div class="modal-overlay" id="passTellerModal">
+  <div class="pt-modal">
+    <!-- Header -->
+    <div class="pt-modal-hd">
+      <div class="pt-modal-hd-left">
+        <div class="pt-modal-icon-wrap">
+          <span class="pt-modal-icon">🔄</span>
+        </div>
+        <div>
+          <div class="pt-modal-title">باص تلر</div>
+          <div class="pt-modal-sub">تحويل العملية إلى تلر آخر</div>
+        </div>
+      </div>
+      <button class="pt-close" onclick="closeModal('passTellerModal')">✗</button>
+    </div>
+
+    <!-- Transaction Summary Strip -->
+    <div class="pt-tx-strip" id="ptTxStrip">
+      <div class="pt-tx-item">
+        <span class="pt-tx-label">نوع العملية</span>
+        <span class="pt-tx-val" id="ptTxType">—</span>
+      </div>
+      <div class="pt-tx-sep"></div>
+      <div class="pt-tx-item">
+        <span class="pt-tx-label">المدفوع</span>
+        <span class="pt-tx-val" id="ptTxFrom">—</span>
+      </div>
+      <div class="pt-tx-sep"></div>
+      <div class="pt-tx-item">
+        <span class="pt-tx-label">المستلم</span>
+        <span class="pt-tx-val" id="ptTxTo">—</span>
+      </div>
+      <div class="pt-tx-sep"></div>
+      <div class="pt-tx-item">
+        <span class="pt-tx-label">السعر</span>
+        <span class="pt-tx-val" id="ptTxRate">—</span>
+      </div>
+    </div>
+
+    <!-- Client Info row -->
+    <div class="pt-client-row" id="ptClientRow">
+      <div class="pt-client-avatar" id="ptClientAvatar">ط</div>
+      <div class="pt-client-info">
+        <div class="pt-client-name" id="ptClientName">لم يتم إدخال العميل</div>
+        <div class="pt-client-id" id="ptClientId">—</div>
+      </div>
+      <div class="pt-client-badge" id="ptModeBadge">شراء</div>
+    </div>
+
+    <!-- Form -->
+    <div class="pt-form">
+      <div class="field-group">
+        <label style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;display:block">التلر المستلم <span class="req">*</span></label>
+        <select class="field-input" id="ptTargetTeller">
+          <option value="">— اختر التلر —</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;display:block">ملاحظات التحويل</label>
+        <input class="field-input" id="ptNote" type="text" placeholder="سبب التحويل أو ملاحظات إضافية...">
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn-primary pt-confirm-btn" onclick="confirmPassTeller()" style="flex:2;background:linear-gradient(135deg,#7c3aed,#6d28d9)">
+        <span>🔄</span> تأكيد التحويل
+      </button>
+      <button class="btn-secondary" onclick="closeModal('passTellerModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة الصندوق الافتتاحي — من المشرف ══ -->
+<div class="modal-overlay" id="boxOpenModal" style="display:none;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px)">
+  <div id="boxOpenBox" style="
+    background:linear-gradient(145deg,#0f1923,#131f2e);
+    border:1px solid rgba(50,184,198,0.3);
+    border-radius:24px;
+    padding:0;
+    width:min(440px,92vw);
+    box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 60px rgba(50,184,198,0.08);
+    overflow:hidden;
+    animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  ">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));padding:24px 28px 20px;border-bottom:1px solid rgba(50,184,198,0.15);position:relative">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.2));border:2px solid rgba(50,184,198,0.4);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🏦</div>
+        <div>
+          <div style="font-size:17px;font-weight:800;color:#e2e8f0;margin-bottom:3px">صندوق افتتاحي جديد</div>
+          <div style="font-size:12px;color:rgba(50,184,198,0.85);font-weight:600">تم تعيين رصيد الصندوق من المشرف</div>
+        </div>
+      </div>
+      <!-- نبضة حية -->
+      <div style="position:absolute;top:20px;left:24px;display:flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;animation:pulse 1.4s ease infinite"></span>
+        <span style="font-size:10px;color:#22c55e;font-weight:700">مباشر</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:24px 28px">
+
+      <!-- أرصدة العملات الثلاث -->
+      <div style="background:linear-gradient(135deg,rgba(50,184,198,0.08),rgba(99,102,241,0.05));border:1px solid rgba(50,184,198,0.2);border-radius:16px;padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;color:rgba(200,210,220,0.6);font-weight:700;margin-bottom:12px;letter-spacing:.5px;text-align:center">💰 الصندوق الافتتاحي</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇺🇸 دولار</div>
+            <div id="boxOpenUSD" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">$0</div>
+          </div>
+          <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇵🇸 شيكل</div>
+            <div id="boxOpenILS" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">₪0</div>
+          </div>
+          <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇯🇴 دينار</div>
+            <div id="boxOpenJOD" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">JD 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تفاصيل -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:12px">
+          <div style="font-size:10px;color:rgba(200,210,220,0.5);font-weight:600;margin-bottom:4px">المشرف</div>
+          <div id="boxOpenSupervisor" style="font-size:13px;font-weight:700;color:#cbd5e1">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:12px">
+          <div style="font-size:10px;color:rgba(200,210,220,0.5);font-weight:600;margin-bottom:4px">وقت الفتح</div>
+          <div id="boxOpenTime" style="font-size:12px;font-weight:700;color:#cbd5e1;direction:ltr;text-align:right">—</div>
+        </div>
+      </div>
+
+      <!-- ملاحظة -->
+      <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px 14px;margin-bottom:18px;display:flex;gap:8px;align-items:flex-start">
+        <span style="font-size:14px;flex-shrink:0">ℹ️</span>
+        <span style="font-size:11px;color:rgba(200,210,220,0.75);line-height:1.6">تم تحديث رصيد صندوقك تلقائياً. يمكنك البدأ بالعمل فور الضغط على "تأكيد الاستلام".</span>
+      </div>
+
+      <!-- زر التأكيد -->
+      <button onclick="closeBoxOpenModal()" style="
+        width:100%;
+        padding:14px;
+        background:linear-gradient(135deg,#32b8c6,#6366f1);
+        border:none;
+        border-radius:14px;
+        color:#fff;
+        font-size:14px;
+        font-weight:800;
+        cursor:pointer;
+        font-family:inherit;
+        letter-spacing:.3px;
+        transition:all .2s;
+        box-shadow:0 6px 20px rgba(50,184,198,0.3);
+      " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(50,184,198,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(50,184,198,0.3)'">
+        ✅ تأكيد الاستلام — ابدأ العمل
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes boxOpenIn{from{opacity:0;transform:scale(.85) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+</style>
+
+<!-- ══ نافذة مطابقة الصندوق ══ -->
+<div class="modal-overlay" id="reconcileModal" style="display:none;z-index:9998;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px)">
+  <div id="reconcileBox" style="
+    background:linear-gradient(145deg,#0f1923,#131f2e);
+    border:1px solid rgba(167,139,250,0.3);
+    border-radius:24px;
+    width:min(500px,94vw);
+    overflow:hidden;
+    box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 60px rgba(167,139,250,0.06);
+    animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  ">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(99,102,241,0.1));padding:22px 26px 18px;border-bottom:1px solid rgba(167,139,250,0.15);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,rgba(167,139,250,0.25),rgba(99,102,241,0.2));border:2px solid rgba(167,139,250,0.4);display:flex;align-items:center;justify-content:center;font-size:20px">⚖️</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#e2e8f0">مطابقة الصندوق</div>
+          <div style="font-size:11px;color:rgba(167,139,250,0.8);font-weight:600;margin-top:2px">مقارنة الرصيد الافتتاحي مع الحالي</div>
+        </div>
+      </div>
+      <button onclick="closeReconcileModal()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.18);border-radius:8px;color:#94a3b8;width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✗</button>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:22px 26px">
+      <!-- جدول المطابقة -->
+      <div style="border:1px solid rgba(50,184,198,0.13);border-radius:14px;overflow:hidden;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:rgba(255,255,255,0.04);padding:10px 14px;font-size:10px;font-weight:700;color:rgba(200,210,220,0.5);letter-spacing:.5px">
+          <span>العملة</span><span style="text-align:center">افتتاحي</span><span style="text-align:center">حالي</span><span style="text-align:center">الفارق</span>
+        </div>
+        <div id="reconcileRows"></div>
+      </div>
+
+      <!-- ملاحظة -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:11px;font-weight:700;color:rgba(200,210,220,0.6);display:block;margin-bottom:6px">ملاحظة (اختياري)</label>
+        <textarea id="reconcileNote" rows="2" placeholder="أدخل أي ملاحظة حول الفارق..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);border-radius:10px;padding:10px 12px;color:#e2e8f0;font-size:12px;font-family:inherit;resize:none;box-sizing:border-box;outline:none"></textarea>
+      </div>
+
+      <!-- أزرار -->
+      <div style="display:flex;gap:10px">
+        <button onclick="submitReconcile()" style="flex:1;padding:12px;background:linear-gradient(135deg,#a78bfa,#6366f1);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">✅ تأكيد المطابقة</button>
+        <button onclick="closeReconcileModal()" style="padding:12px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة فتح الصندوق ══ -->
+<div id="sessionOpenModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(34,197,94,0.3);border-radius:24px;width:min(420px,92vw);overflow:hidden;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
+    <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(16,185,129,0.1));padding:22px 26px 18px;border-bottom:1px solid rgba(34,197,94,0.15);display:flex;align-items:center;gap:12px">
+      <div style="width:46px;height:46px;border-radius:50%;background:rgba(34,197,94,0.2);border:2px solid rgba(34,197,94,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔓</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#e2e8f0">فتح الصندوق</div>
+        <div style="font-size:11px;color:rgba(34,197,94,0.85);font-weight:600;margin-top:2px" id="sessionOpenNum">SES-2026-001</div>
+      </div>
+    </div>
+    <div style="padding:20px 26px">
+      <div style="font-size:12px;color:rgba(200,210,220,0.6);font-weight:600;margin-bottom:12px">الرصيد الافتتاحي المثبت</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px">
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.13);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:3px">دولار</div>
+          <div id="sessionOpenUSD" style="font-size:15px;font-weight:800;color:#32b8c6;direction:ltr">$0</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.13);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:3px">شيكل</div>
+          <div id="sessionOpenILS" style="font-size:15px;font-weight:800;color:#a78bfa;direction:ltr">₪0</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.13);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:3px">دينار</div>
+          <div id="sessionOpenJOD" style="font-size:15px;font-weight:800;color:#34d399;direction:ltr">JD 0</div>
+        </div>
+      </div>
+      <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:11px;color:rgba(200,210,220,0.7);line-height:1.6">
+        ℹ️ بفتح الصندوق تتحمل مسؤولية الصندوق وجميع العمليات المنجزة خلال الجلسة حتى الإغلاق.
+      </div>
+      <div style="display:flex;gap:10px">
+        <button onclick="confirmOpenSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✅ فتح الصندوق والبدأ</button>
+        <button onclick="document.getElementById('sessionOpenModal').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة إغلاق الصندوق ══ -->
+<div id="closeSessionModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(248,113,113,0.3);border-radius:24px;width:min(520px,94vw);max-height:90vh;overflow-y:auto;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
+    <div style="background:linear-gradient(135deg,rgba(248,113,113,0.12),rgba(239,68,68,0.08));padding:22px 26px 18px;border-bottom:1px solid rgba(248,113,113,0.15);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:1">
+      <div style="width:46px;height:46px;border-radius:50%;background:rgba(248,113,113,0.2);border:2px solid rgba(248,113,113,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔒</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#e2e8f0">إغلاق الصندوق — مطابقة نهائية</div>
+        <div style="font-size:11px;color:rgba(248,113,113,0.85);font-weight:600;margin-top:2px">أدخل الأرصدة الفعلية بعد العد</div>
+      </div>
+    </div>
+    <div style="padding:20px 26px">
+      <!-- رأس الجدول -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;background:rgba(255,255,255,0.04);border-radius:10px 10px 0 0;padding:9px 12px;font-size:10px;font-weight:700;color:rgba(200,210,220,0.5);letter-spacing:.4px;margin-bottom:1px">
+        <span>العملة</span><span style="text-align:center">الأرصدة</span><span style="text-align:center">فعلي (أدخل)</span><span style="text-align:center">الفارق</span>
+      </div>
+      <!-- صفوف العملات -->
+      <div style="border:1px solid rgba(50,184,198,0.13);border-radius:0 0 12px 12px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px;border-bottom:1px solid rgba(50,184,198,0.09)">
+          <div style="display:flex;align-items:center;gap:6px"><span>🇺🇸</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">USD</span></div>
+          <div id="csExpUSD" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">$0</div>
+          <input id="csActUSD" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
+          <div id="csDiffUSD" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px;border-bottom:1px solid rgba(50,184,198,0.09)">
+          <div style="display:flex;align-items:center;gap:6px"><span>🇵🇸</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">ILS</span></div>
+          <div id="csExpILS" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">₪0</div>
+          <input id="csActILS" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
+          <div id="csDiffILS" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px">
+          <div style="display:flex;align-items:center;gap:6px"><span>🇯🇴</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">JOD</span></div>
+          <div id="csExpJOD" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">JD 0</div>
+          <input id="csActJOD" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
+          <div id="csDiffJOD" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
+        </div>
+      </div>
+      <!-- مؤشر المطابقة الإجمالي -->
+      <div id="csMatchIndicator" style="text-align:center;margin:14px 0;font-size:13px;font-weight:800;color:#94a3b8"></div>
+      <!-- ملاحظة -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:11px;font-weight:700;color:rgba(200,210,220,0.5);display:block;margin-bottom:5px">ملاحظة (اختياري)</label>
+        <textarea id="csNote" rows="2" placeholder="أي ملاحظة عن الفارق أو سبب الاختلاف..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);border-radius:10px;padding:10px;color:#e2e8f0;font-size:12px;font-family:inherit;resize:none;box-sizing:border-box;outline:none"></textarea>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button onclick="confirmCloseSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#f87171,#ef4444);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🔒 إغلاق الصندوق نهائياً</button>
+        <button onclick="document.getElementById('closeSessionModal').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة دفتر القيود ══ -->
+<div id="journalModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(99,102,241,0.3);border-radius:24px;width:min(580px,95vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(79,70,229,0.1));padding:18px 24px;border-bottom:1px solid rgba(99,102,241,0.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">📒</span>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:#e2e8f0">دفتر القيود</div>
+          <div style="font-size:11px;color:rgba(99,102,241,0.85);font-weight:600" id="journalSessionId">الجلسة الحالية</div>
+        </div>
+      </div>
+      <button onclick="document.getElementById('journalModal').style.display='none'" style="background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.18);border-radius:8px;color:#94a3b8;width:30px;height:30px;cursor:pointer;font-size:13px">✗</button>
+    </div>
+    <!-- رأس الجدول -->
+    <div style="display:grid;grid-template-columns:90px 1fr 90px 90px;gap:0;padding:9px 18px;background:rgba(255,255,255,0.03);font-size:10px;font-weight:700;color:rgba(200,210,220,0.4);letter-spacing:.5px;flex-shrink:0">
+      <span>الوقت</span><span>البيان</span><span style="text-align:center">مدين</span><span style="text-align:center">دائن</span>
+    </div>
+    <div id="journalEntries" style="overflow-y:auto;flex:1;padding:0 6px 10px"></div>
+    <div style="padding:12px 18px;border-top:1px solid rgba(50,184,198,0.11);display:grid;grid-template-columns:90px 1fr 90px 90px;font-size:11px;font-weight:800;color:#cbd5e1;flex-shrink:0" id="journalTotals"></div>
+  </div>
+</div>
+
+<script>
+function toggleUserDropdown(e){e.stopPropagation();document.getElementById("userDropdown").classList.toggle("open");}
+document.addEventListener("click",function(){var d=document.getElementById("userDropdown");if(d)d.classList.remove("open");});
+document.addEventListener("DOMContentLoaded",function(){var obs=new MutationObserver(function(){var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");var mn=document.getElementById("ud-menu-name"),mr=document.getElementById("ud-menu-role");if(n&&mn)mn.textContent=n.textContent;if(r&&mr)mr.textContent=r.textContent;});var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");if(n)obs.observe(n,{childList:true,characterData:true,subtree:true});if(r)obs.observe(r,{childList:true,characterData:true,subtree:true});});
+</script>
+
+<!-- ══ نافذة طلب التعديل البرمجي ══ -->
+<style>
+.dr-modal-box{background:var(--card-bg,#1e2b33);border-radius:18px;padding:28px 28px 22px;max-width:500px;width:95%;text-align:right;border:1px solid rgba(50,184,198,0.15);box-shadow:0 24px 64px rgba(0,0,0,0.6);}
+.dr-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.dr-hdr-icon{width:46px;height:46px;background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.dr-hdr-title{font-size:17px;font-weight:900;color:var(--text-main,#e9edef);}
+.dr-hdr-sub{font-size:11px;color:var(--text-sub,#8696a0);margin-top:2px;}
+.dr-field{margin-bottom:14px;}
+.dr-label{font-size:11px;font-weight:700;color:var(--text-sub,#8696a0);margin-bottom:6px;display:block;letter-spacing:.3px;}
+.dr-input,.dr-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;color:var(--text-main,#e9edef);outline:none;transition:border .2s;direction:rtl;}
+.dr-input:focus,.dr-textarea:focus{border-color:rgba(50,184,198,0.5);}
+.dr-textarea{resize:vertical;min-height:90px;}
+.dr-type-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dr-type-btn{flex:1;min-width:120px;padding:9px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-sub,#8696a0);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.dr-type-btn.active-improve{border-color:rgba(34,197,94,0.5);background:rgba(34,197,94,0.1);color:#22c55e;}
+.dr-type-btn.active-feature{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.1);color:#818cf8;}
+.dr-type-btn.active-bug{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.1);color:#f87171;}
+.dr-attach-lbl{display:flex;align-items:center;gap:8px;padding:10px 13px;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text-sub,#8696a0);transition:border .2s;}
+.dr-attach-lbl:hover{border-color:rgba(50,184,198,0.4);}
+.dr-attach-files{font-size:11px;color:#32b8c6;margin-top:5px;min-height:14px;}
+.dr-footer{display:flex;gap:10px;margin-top:6px;}
+.dr-btn-send{flex:1;padding:11px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;transition:opacity .2s;}
+.dr-btn-send:hover{opacity:.85;}
+.dr-btn-cancel{padding:11px 18px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:var(--text-sub,#8696a0);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.dr-btn-cancel:hover{background:rgba(255,255,255,0.1);}
+html:not([data-theme="dark"]) body .dr-modal-box{background:#ffffff;border-color:rgba(50,184,198,0.2);box-shadow:0 24px 64px rgba(0,0,0,0.12);}
+html:not([data-theme="dark"]) body .dr-input,html:not([data-theme="dark"]) body .dr-textarea{background:#f8fbfd;border-color:rgba(0,0,0,0.12);color:#0f172a;}
+html:not([data-theme="dark"]) body .dr-type-btn{background:#f1f5f9;border-color:#e2e8f0;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-attach-lbl{background:#f8fbfd;border-color:#cbd5e1;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-color:#e2e8f0;color:#475569;}
+</style>
+<div class="modal-overlay" id="devRequestModal" style="display:none;z-index:9500" onclick="if(event.target===this)closeDevRequestModal()">
+  <div class="dr-modal-box">
+    <div class="dr-hdr">
+      <div class="dr-hdr-icon">🛠️</div>
+      <div>
+        <div class="dr-hdr-title">طلب تعديل برمجي</div>
+        <div class="dr-hdr-sub">سيتم إرسال الطلب مباشرة إلى الإدارة</div>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">عنوان الطلب</label>
+      <input class="dr-input" id="drTitle" type="text" placeholder="اكتب عنوان مركزاً للطلب...">
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">نوع الطلب</label>
+      <div class="dr-type-btns">
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تقاجدية</button>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">نص الطلب بالتفصيل</label>
+      <textarea class="dr-textarea" id="drDesc" rows="4" placeholder="اشرح المشكلة أو التحسين المطلوب بوضوح..."></textarea>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">مرفقات (اختياري)</label>
+      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
+      <div class="dr-attach-files" id="drAttachFiles"></div>
+    </div>
+    <div class="dr-footer">
+      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _drType=null;
+function openDevRequestModal(){
+  _drType=null;
+  document.getElementById('drTitle').value='';
+  document.getElementById('drDesc').value='';
+  document.getElementById('drAttach').value='';
+  document.getElementById('drAttachFiles').textContent='';
+  ['improve','feature','bug'].forEach(function(t){document.getElementById('drType-'+t).className='dr-type-btn';});
+  document.getElementById('devRequestModal').style.display='flex';
+}
+function closeDevRequestModal(){document.getElementById('devRequestModal').style.display='none';}
+function selectDrType(t){
+  _drType=t;
+  ['improve','feature','bug'].forEach(function(x){document.getElementById('drType-'+x).className='dr-type-btn';});
+  document.getElementById('drType-'+t).className='dr-type-btn active-'+t;
+}
+function updateDrAttachLabel(){
+  var files=document.getElementById('drAttach').files;
+  var names=[];for(var i=0;i<files.length;i++)names.push(files[i].name);
+  document.getElementById('drAttachFiles').textContent=names.length?names.join(' • '):''; 
+}
+async function submitDevRequest(){
+  var title=document.getElementById('drTitle').value.trim();
+  var desc=document.getElementById('drDesc').value.trim();
+  if(!title){alert('يرجى كتابة عنوان الطلب');return;}
+  if(!_drType){alert('يرجى اختيار نوع الطلب');return;}
+  if(!desc){alert('يرجى كتابة نص الطلب');return;}
+  var csrf=(document.cookie.split(';').find(function(c){return c.trim().startsWith('csrftoken=');})||'').split('=')[1]||'';
+  try{
+    var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'teller-departments'})});
+    var data=await res.json();
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    else{alert(data.error||'حدث خطأ أثناء الإرسال');}
+  }catch(e){alert('تعذر الاتصال بالخادم');}
+}
+</script>
+
+<!-- ══ الأزرار الصوتية ══ -->
+<style>
+.voice-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:28px;border-radius:8px;background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.22);color:#32b8c6;cursor:pointer;font-size:13px;transition:all 0.2s;padding:0;line-height:1;flex-shrink:0;}
+.voice-btn:hover{background:rgba(50,184,198,0.18);border-color:rgba(50,184,198,0.45);}
+.voice-btn.voice-listening{background:rgba(248,113,113,0.15);border-color:rgba(248,113,113,0.5);color:#f87171;}
+@keyframes voicePulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,0.5);}50%{box-shadow:0 0 0 7px rgba(248,113,113,0);}}
+.voice-input-wrap{display:flex;align-items:center;gap:6px;width:100%;}
+.voice-input-wrap>.field-input,.voice-input-wrap>input,.voice-input-wrap>select{flex:1;min-width:0;}
+.voice-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(15,22,35,0.96);border:1px solid rgba(50,184,198,0.3);border-radius:12px;padding:10px 18px;color:#e9edef;font-size:13px;font-weight:700;direction:rtl;z-index:99999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:8px;}
+.voice-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+<div class="voice-toast" id="voiceToast">🎤 <span id="voiceToastMsg">جاري الاستماع...</span></div>
+<script>
+(function(){
+  var VOICE_FIELDS=[
+    {id:'exFrom',       num:true },
+    {id:'exClient',     num:false},
+    {id:'exClientId',   num:false},
+    {id:'exNote',       num:false},
+    {id:'itSenderName', num:false},
+    {id:'itAmount',     num:true },
+    {id:'itSenderPhone',num:false},
+    {id:'itRecvName',   num:false},
+    {id:'itRecvPhone',  num:false},
+    {id:'itRecvAmount', num:true },
+    {id:'cd2Client',    num:false},
+    {id:'cd2ClientId',  num:false},
+    {id:'cd2Ref',       num:false},
+    {id:'cd2Note',      num:false},
+    {id:'cd2Amount',    num:true },
+  ];
+
+  function attachBtn(fieldId,isNumber){
+    var inp=document.getElementById(fieldId);
+    if(!inp)return;
+    var btn=document.createElement('button');
+    btn.className='voice-btn';
+    btn.title='إدخال صوتي';
+    btn.textContent='🎤';
+    btn.addEventListener('click',function(){startVoice(btn,fieldId,isNumber);});
+    var wrap=document.createElement('div');
+    wrap.className='voice-input-wrap';
+    inp.parentNode.insertBefore(wrap,inp);
+    wrap.appendChild(inp);
+    wrap.appendChild(btn);
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    VOICE_FIELDS.forEach(function(f){attachBtn(f.id,f.num);});
+  });
+})();
+
+/* ════════ دالة الإدخال الصوتي ════════ */
+function startVoice(btn,fieldId,isNumber){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+  if(!SR){
+    alert('المتصفح لا يدعم الإدخال الصوتي.\nيُنصح باستخدام Chrome أو Edge.');
+  }
+  // إيقاف أي جلسة مشطة
+  if(window._activeVoiceBtn&&window._activeVoiceBtn!==btn){
+    window._activeVoiceBtn.classList.remove('voice-listening');
+    window._activeVoiceBtn.textContent='🎤';
+  }
+  if(window._activeVoiceRec){try{window._activeVoiceRec.abort();}catch(e){}}
+
+  var rec=new SR();
+  rec.lang='ar-SA';
+  rec.interimResults=false;
+  rec.maxAlternatives=1;
+  rec.continuous=false;
+  window._activeVoiceRec=rec;
+  window._activeVoiceBtn=btn;
+
+  btn.classList.add('voice-listening');
+  btn.textContent='⏹';
+  btn.title='انقر للإيقاف';
+
+  var toast=document.getElementById('voiceToast');
+  var toastMsg=document.getElementById('voiceToastMsg');
+  if(toast){toastMsg.textContent='🎤 جاري الاستماع... تكلم الآن';toast.classList.add('show');}
+
+  rec.onresult=function(e){
+    var text=e.results[0][0].transcript.trim();
+    if(isNumber){
+      // تحويل الأرقام العربية والهندية إلى أرقام غربية
+      text=text.replace(/[٠١٢٣٤٥٦٧٨٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d);});
+      text=text.replace(/[^\d.]/g,'');
+    }
+    var el=document.getElementById(fieldId);
+    if(el){
+      el.value=text;
+      el.dispatchEvent(new Event('input',{bubbles:true}));
+      el.dispatchEvent(new Event('change',{bubbles:true}));
+      el.focus();
+    }
+    if(toast){toastMsg.textContent='✅ تم: "'+text+'"';setTimeout(function(){toast.classList.remove('show');},2000);}
+  };
+
+  rec.onerror=function(ev){
+    btn.classList.remove('voice-listening');
+    btn.textContent='🎤';
+    btn.title='إدخال صوتي';
+    window._activeVoiceRec=null;
+    window._activeVoiceBtn=null;
+    if(toast)toast.classList.remove('show');
+    if(ev.error==='not-allowed'){alert('يرجى السماح للمتصفح بالوصول إلى الميكروفون.');}
+    else if(ev.error!=='aborted'&&ev.error!=='no-speech'){
+      btn.textContent='⚠️';
+      setTimeout(function(){btn.textContent='🎤';},1500);
+    }
+  };
+
+  rec.onend=function(){
+    btn.classList.remove('voice-listening');
+    btn.title='إدخال صوتي';
+    window._activeVoiceRec=null;
+    window._activeVoiceBtn=null;
+    setTimeout(function(){if(toast)toast.classList.remove('show');},2500);
+  };
+
+  // انقر مرة أخرى للإيقاف
+  btn._stopHandler=function(){
+    try{rec.stop();}catch(e){}
+    btn.removeEventListener('click',btn._stopHandler);
+  };
+  btn.addEventListener('click',btn._stopHandler);
+
+  try{rec.start();}catch(e){
+    btn.classList.remove('voice-listening');
+    btn.textContent='🎤';
+  }
+}
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     نافذة الأوامر الصوتية — تظهر عند استقبال أمر من الأندرويد
+     ══════════════════════════════════════════════════════════════════════════════ -->
+<div id="voicePopup" style="
+    display:none;
+    position:fixed;
+    bottom:24px;
+    left:24px;
+    z-index:9999;
+    min-width:300px;
+    max-width:380px;
+    background:var(--card-bg,#1e293b);
+    border:1px solid rgba(96,165,250,0.35);
+    border-radius:14px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.45);
+    padding:16px 18px;
+    direction:rtl;
+">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <span style="font-size:22px;">🎙️</span>
+    <span style="font-weight:700;color:var(--text-primary,#f1f5f9);font-size:15px;">أمر صوتي جديد</span>
+    <button onclick="document.getElementById('voicePopup').style.display='none'"
+            style="margin-right:auto;background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;line-height:1;">✗</button>
+  </div>
+  <div id="voicePopupLabel" style="color:#60a5fa;font-weight:600;font-size:14px;margin-bottom:6px;"></div>
+  <div id="voicePopupDetail" style="
+      background:rgba(30,64,175,0.22);
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:13px;
+      color:var(--text-primary,#f1f5f9);
+      line-height:1.8;
+  "></div>
+  <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+    <span id="voicePopupStatus" style="font-size:13px;"></span>
+    <div style="height:3px;background:rgba(96,165,250,0.2);border-radius:2px;flex:1;overflow:hidden;">
+      <div id="voicePopupBar" style="height:100%;width:100%;background:#3b82f6;"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes _vpSlide { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+</style>
+
+<script>
+(function(){
+  var _timer = null;
+
+  function _label(r){
+    var t=r.type||'';
+    return t==='exchange'?'🔁 صرافة':t==='hawala'?'📤 حوالة':t==='deposit'?'📥 إيداع نقدي':t==='withdrawal'?'📤 سحب نقدي':'⚙️ '+t;
+  }
+
+  function _detail(r){
+    var lines=[], t=r.type||'';
+    if(r.text) lines.push('📝 '+r.text);
+    if(t==='exchange'){
+      if(r.amount)      lines.push('المبلغ: <b>'+r.amount+' '+(r.from_currency||'')+'</b>');
+      if(r.result)      lines.push('الناتج: <b>'+parseFloat(r.result).toFixed(2)+' '+(r.to_currency||'')+'</b>');
+      if(r.rate)        lines.push('السعر: '+r.rate);
+    } else if(t==='hawala'){
+      if(r.sender_name)   lines.push('من: '+r.sender_name);
+      if(r.receiver_name) lines.push('إلى: '+r.receiver_name);
+      if(r.amount)        lines.push('المبلغ: <b>'+r.amount+' '+(r.currency||'')+'</b>');
+      if(r.destination)   lines.push('الوجهة: '+r.destination);
+    } else {
+      if(r.amount)      lines.push('المبلغ: <b>'+r.amount+' '+(r.currency||'')+'</b>');
+      if(r.client_name) lines.push('العميل: '+r.client_name);
+    }
+      if(r.operator) lines.push('التلر: '+r.operator);
+    return lines.join('<br>');
+  }
+
+  function showVoicePopup(result){
+    var popup = document.getElementById('voicePopup');
+    document.getElementById('voicePopupLabel').textContent  = _label(result);
+    document.getElementById('voicePopupDetail').innerHTML   = _detail(result);
+    var stat = document.getElementById('voicePopupStatus');
+    stat.innerHTML   = result.success ? '✅ منفَّذ' : '❌ '+(result.message||'خطأ');
+    stat.style.color = result.success ? '#22c55e' : '#ef4444';
+
+    var bar = document.getElementById('voicePopupBar');
+    bar.style.transition='none'; bar.style.width='100%';
+    popup.style.display='block';
+    popup.style.animation='none';
+    void popup.offsetWidth;
+    popup.style.animation='_vpSlide 0.3s ease';
+    setTimeout(function(){ bar.style.transition='width 8s linear'; bar.style.width='0%'; }, 50);
+
+    if(_timer) clearTimeout(_timer);
+    _timer = setTimeout(function(){ popup.style.display='none'; }, 8000);
+  }
+
+  // تطبيق نتيجة الأمر الصوتي على سجلات الصفحة عبر WebSocket
+  function _applyVoiceResult(r){
+    if(!r || !r.success) return;
+    var now = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+    var t = r.type || '';
+
+    if(t === 'exchange'){
+      var id = 'EX-V' + Date.now();
+      var from = r.from_currency || r.from || '';
+      var to   = r.to_currency   || r.to   || '';
+      var amt  = parseFloat(r.amount) || 0;
+      var res  = parseFloat(r.result) || 0;
+      var rate = r.rate ? String(r.rate) : '—';
+      var op   = r.operator || '';
+      if(typeof exLogs !== 'undefined'){
+        exLogs.unshift({id:id, client:op, mode:'buy', from:from, to:to, fromAmt:amt, toAmt:res, rate:rate, time:now});
+        if(typeof renderExLogs === 'function') renderExLogs();
+      }
+      if(typeof tellerBalances !== 'undefined'){
+        tellerBalances[from] = (tellerBalances[from]||0) - amt;
+        tellerBalances[to]   = (tellerBalances[to]  ||0) + res;
+        if(typeof updateTellerBox === 'function') updateTellerBox();
+      }
+      if(typeof allRecent !== 'undefined'){
+        allRecent.unshift({icon:'🔁',type:'conv',name:'صرف صوتي — '+op,desc:(SYMBOLS[from]||from)+amt+' → '+(SYMBOLS[to]||to)+res,time:now,amount:'-'+(SYMBOLS[from]||from)+amt,cls:'neg'});
+        if(typeof renderMainRecent === 'function') renderMainRecent();
+      }
+
+    } else if(t === 'hawala'){
+      var id = 'IT-V' + Date.now();
+      var amt = parseFloat(r.amount) || 0;
+      var cur = r.currency || 'USD';
+      if(typeof itLogs !== 'undefined'){
+        itLogs.unshift({id:id, sender:r.sender_name||r.sender||'—', recipient:r.receiver_name||r.receiver||'—', country:r.destination||'—', amount:amt, currency:cur, fee:0, status:'completed', direction:'out', time:now});
+        if(typeof renderItLogs === 'function') renderItLogs();
+      }
+      if(typeof tellerBalances !== 'undefined'){
+        tellerBalances[cur] = (tellerBalances[cur]||0) - amt;
+        if(typeof updateTellerBox === 'function') updateTellerBox();
+      }
+      allRecent.unshift({icon:'📤',type:'intl',name:'حوالة صوتية — '+(r.sender_name||r.sender||''),desc:(r.receiver_name||r.receiver||'')+(r.destination?' ('+r.destination+')':''),time:now,amount:'-'+(SYMBOLS[cur]||cur)+amt,cls:'neg'});
+        allRecent.unshift({icon:'🌍',type:'intl',name:'حوالة صوتية — '+(r.sender_name||r.sender||''),desc:(r.receiver_name||r.receiver||'')+(r.destination?' ('+r.destination+')':''),time:now,amount:'-'+(SYMBOLS[cur]||cur)+amt,cls:'neg'});
+        if(typeof renderMainRecent === 'function') renderMainRecent();
+      }
+
+    } else if(t === 'withdrawal' || t === 'deposit'){
+      var id  = (t==='deposit'?'DEP':'WDR')+'-V'+Date.now();
+      var isD = t === 'deposit';
+      var amt = parseFloat(r.amount) || 0;
+      var cur = r.currency || 'USD';
+      var cli = r.client_name || r.client || '—';
+      if(typeof cdLogs !== 'undefined'){
+        cdLogs.unshift({id:id, mode:t, payType:'cash', client:cli, amount:amt, currency:cur, rate:0, ref:'', time:now});
+        if(typeof renderCdLogs === 'function') renderCdLogs();
+      }
+      if(typeof tellerBalances !== 'undefined'){
+        tellerBalances[cur] = (tellerBalances[cur]||0) + (isD ? amt : -amt);
+        if(typeof updateTellerBox === 'function') updateTellerBox();
+      }
+      if(typeof allRecent !== 'undefined'){
+        allRecent.unshift({icon:isD?'📥':'📤',type:'cashdesk',name:(isD?'إيداع':'سحب')+' صوتي — '+cli,desc:(SYMBOLS[cur]||cur)+amt,time:now,amount:(isD?'+':'-')+(SYMBOLS[cur]||cur)+amt,cls:isD?'pos':'neg'});
+        if(typeof renderMainRecent === 'function') renderMainRecent();
+      }
+    }
+
+    if(typeof updateCounts === 'function') updateCounts();
+  }
+
+  window.addEventListener('ws:voice_result', function(e){
+    var msg = e.detail || {};
+    var result = msg.result || msg;
+    _applyVoiceResult(result);
+    showVoicePopup(result);
+  });
+})();
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+<script src="{% static 'js/accounts_panel.js' %}?v=7"></script>
+
+{% include 'layout/accounts_panel.html' %}
+{% endblock content %}

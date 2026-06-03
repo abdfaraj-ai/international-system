@@ -1,0 +1,2180 @@
+﻿{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}إنترناشونال - لوحة تحكم المشرف{% endblock %}
+
+{% block theme_init %}
+<script>
+  (function() {
+    document.documentElement.classList.add('theme-initializing');
+    document.documentElement.setAttribute('data-theme', 'intl-sv');
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.remove('theme-initializing');
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+<link rel="stylesheet" href="{% static 'css/transactions-supervisor.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/accounts_panel.css' %}?v=6">
+{% endblock %}
+
+{% block content %}
+<div id="fx-ticker-bar"><div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div><div id="fx-ticker-track"><div id="fx-ticker-inner">جاري تحميل أسعار العملات...</div></div><button id="fx-ticker-refresh" title="تحديث"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
+
+<header class="custom-header">
+
+
+  <div class="header-right">
+    <div class="header-brand">
+      <img src="{% static 'images/الشعار-01.png' %}" alt="logo" style="width:60px;height:60px;border-radius:0;object-fit:contain;box-shadow:0 4px 16px rgba(50,184,198,0.3),0 0 0 2px rgba(50,184,198,0.15);">
+      <div>
+        <div class="main-title">نظام انترناشونال الموحد - إدارة الحوالات</div>
+        <div class="header-subtitle">
+          <span class="status-dot"></span>
+          لوحة تحكم المشرف
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-center-group">
+    <div class="sv-header-center-info">
+      <div class="sv-header-role"><i class="fas fa-user-shield"></i> مشرف الحوالات</div>
+      <div class="sv-header-name" id="sv-center-name">مشرف الحوالات</div>
+    </div>
+  </div>
+  <div class="header-left">
+    <div class="header-left-top">
+      <button onclick="location.href='/transactions/'" class="hdr-btn" style="background:rgba(50,184,198,0.08);color:#32b8c6;border:1px solid rgba(50,184,198,0.2);"><i class="fa-solid fa-arrow-right-to-bracket" style="font-size:11px;"></i> نظام الحوالات</button>
+    </div>
+    <div class="header-left-bottom">
+
+    </div>
+  </div>
+    {% include 'layout/navbar.html' with report_fn="svOpenReportModal" page_name="transactions-supervisor" page_title="مشرف الحوالات" %}
+
+</header>
+
+<div class="sv-wrap">
+  <aside class="sv-sidebar">
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">القائمة الرئيسية</div>
+      <a class="sv-nav-item active" onclick="svNav(this)"><i class="fa-solid fa-gauge-high"></i>لوحة التحكم</a>
+      <a class="sv-nav-item" onclick="svNav(this,'transfers')"><i class="fa-solid fa-right-left"></i>إدارة الحوالات<span class="sv-nav-badge cyan">67</span></a>
+      <a class="sv-nav-item" onclick="svNav(this,'bot')"><i class="fa-solid fa-robot"></i>إدارة بوت الحوالات</a>
+    </div>
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">الإدارة</div>
+      <a class="sv-nav-item" onclick="svNav(this,'employees')"><i class="fa-solid fa-users"></i>إدارة الموظفين<span class="sv-nav-badge cyan" id="emp-nav-badge">5</span></a>
+      <a class="sv-nav-item" onclick="svNav(this,'clients')"><i class="fa-solid fa-user-group"></i>مجموعات العملاء<span class="sv-nav-badge cyan" id="clt-nav-badge">3</span></a>
+      <a class="sv-nav-item" onclick="svNav(this,'agents')"><i class="fa-solid fa-handshake"></i>وكلاء التنفيذ<span class="sv-nav-badge cyan" id="agt-nav-badge">3</span></a>
+      <a class="sv-nav-item" onclick="svOpenReportModal()"><i class="fa-solid fa-chart-bar"></i>رفع تقرير</a>
+    </div>
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">الإدارة العامة</div>
+      <a class="sv-nav-item" id="adminMsgsNavItem" onclick="svNav(this,'admin-msgs')"><i class="fa-solid fa-clipboard-list"></i>تعليمات الإدارة<span class="sv-nav-badge" id="svInstrBadge" style="display:none;background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:900;margin-right:auto">0</span></a>
+    </div>
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">التسعيرة</div>
+      <a class="sv-nav-item" onclick="openRatesModal()"><i class="fa-solid fa-tag"></i>تحديد الأسعار</a>
+    </div>
+    <div class="sv-nav-section">
+      <div class="sv-nav-label">النظام</div>
+      <a class="sv-nav-item" onclick="svNav(this)"><i class="fa-solid fa-gear"></i>الإعدادات</a>
+      <a class="sv-nav-item" href="/transactions/"><i class="fa-solid fa-arrow-right-from-bracket"></i>نظام الحوالات</a>
+      <a class="sv-nav-item" href="/accounts/manage/"><i class="fa-solid fa-book"></i>إدارة الحسابات</a>
+    </div>
+    <div class="sv-sidebar-stats">
+      <div style="font-size:10px;font-weight:800;color:#475569;letter-spacing:0.8px;margin-bottom:8px;">إحصاء سريع</div>
+      <div class="sv-sidebar-stat-row"><span>حوالات اليوم</span><span>67</span></div>
+      <div class="sv-sidebar-stat-row"><span>إجمالي المبالغ</span><span>$128,450</span></div>
+      <div class="sv-sidebar-stat-row"><span>الموظفون النشطون</span><span>3 / 5</span></div>
+      <div class="sv-sidebar-stat-row"><span>دقة البوت</span><span>97.2%</span></div>
+    </div>
+  </aside>
+
+  <main class="sv-content">
+<div id="sv-dash-content">
+    <!-- Title -->
+    <div class="sv-page-title">
+      <div><h1>🖥️ لوحة تحكم المشرف</h1><p>نظرة شاملة على النظام والعمليات الجارية</p></div>
+      <div class="sv-date-badge"><i class="fa-solid fa-calendar-days"></i><span id="sv-date-badge">—</span></div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="sv-cards">
+      <div class="sv-card c-blue"><div class="sv-card-icon"><i class="fa-solid fa-right-left"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-total">0</div><div class="sv-card-lbl">إجمالي الحوالات</div><div class="sv-card-delta delta-same">من صفحة الحوالات</div></div></div>
+      <div class="sv-card c-yellow"><div class="sv-card-icon"><i class="fa-solid fa-hourglass-half"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-exec">0</div><div class="sv-card-lbl">قيد التنفيذ</div><div class="sv-card-delta delta-same">انتظار + تنفيذ</div></div></div>
+      <div class="sv-card c-green"><div class="sv-card-icon"><i class="fa-solid fa-circle-check"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-done">0</div><div class="sv-card-lbl">تم التنفيذ</div><div class="sv-card-delta delta-same">في السجل</div></div></div>
+      <div class="sv-card c-red"><div class="sv-card-icon"><i class="fa-solid fa-ban"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-cancelled">0</div><div class="sv-card-lbl">ملغاة</div><div class="sv-card-delta delta-same">هذه الجلسة</div></div></div>
+      <div class="sv-card c-cyan"><div class="sv-card-icon"><i class="fa-solid fa-users"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-employees">0</div><div class="sv-card-lbl">موظفون نشطون</div><div class="sv-card-delta delta-same">من إدارة الموظفين</div></div></div>
+      <div class="sv-card c-purple"><div class="sv-card-icon"><i class="fa-solid fa-handshake"></i></div><div class="sv-card-body"><div class="sv-card-num" id="card-agents">0</div><div class="sv-card-lbl">وكلاء نشطون</div><div class="sv-card-delta delta-same">من إدارة الوكلاء</div></div></div>
+    </div>
+
+    <!-- Agent Status + Recent History -->
+    <div class="sv-panels-row">
+      <div class="sv-panel">
+        <div class="sv-panel-hdr"><h3><i class="fa-solid fa-handshake" style="color:#34d399;margin-left:6px;"></i> حالة وكلاء التنفيذ</h3><span id="bot-last-update" style="font-size:10px;color:#475569;">يتحدث تلقائياً</span></div>
+        <div class="sv-panel-body" id="dash-agents-panel" style="display:flex;flex-direction:column;gap:0;min-height:120px;">
+          <div style="text-align:center;color:#475569;padding:20px;font-size:11px;">جارٍ التحميل…</div>
+        </div>
+      </div>
+
+      <div class="sv-panel">
+        <div class="sv-panel-hdr"><h3><i class="fa-solid fa-clock-rotate-left" style="color:#32b8c6;margin-left:6px;"></i> آخر الحوالات المنفذة</h3></div>
+        <div class="sv-panel-body" id="dash-history-panel" style="display:flex;flex-direction:column;gap:0;min-height:120px;">
+          <div style="text-align:center;color:#475569;padding:20px;font-size:11px;">جارٍ التحميل…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfers Table -->
+    <div>
+      <div class="sv-section-hdr">
+        <h2><i class="fa-solid fa-table-list" style="color:#32b8c6;margin-left:6px;"></i> جدول الحوالات</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="sv-filter-btn active" onclick="svFilter('all',this)">الكل</button>
+          <button class="sv-filter-btn" onclick="svFilter('completed',this)">منفذة</button>
+          <button class="sv-filter-btn" onclick="svFilter('cancelled',this)">ملغاة</button>
+          <button class="sv-export-btn" onclick="svToast('جاري تصدير البيانات...','success')"><i class="fa-solid fa-file-export"></i> تصدير</button>
+        </div>
+      </div>
+      <div class="sv-table-wrap">
+        <div class="sv-table-toolbar">
+          <input class="sv-search" type="text" placeholder="🔍 بحث بالاسم أو رقم الحوالة..." oninput="svSearch(this.value)">
+          <span style="font-size:11px;color:#475569;" id="sv-table-count">عرض 10 من 67 حوالة</span>
+        </div>
+        <div class="sv-table-scroll">
+          <table class="sv-table"><thead><tr><th>رقم الحوالة</th><th>المرسل</th><th>المستلم</th><th>المبلغ</th><th>العملة</th><th>الحالة</th><th>المنفذ</th><th>التاريخ</th><th>الإجراءات</th></tr></thead><tbody id="sv-transfers-body"></tbody></table>
+        </div>
+        <div style="padding:12px 18px;border-top:1px solid rgba(50,184,198,0.09);display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:11px;color:#475569;">الصفحة 1 من 7</div>
+          <div style="display:flex;gap:6px;">
+            <button class="sv-btn sv-btn-view"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="sv-btn sv-btn-view" style="background:rgba(50,184,198,0.18);border-color:rgba(50,184,198,0.5);">1</button>
+            <button class="sv-btn sv-btn-view" onclick="svToast('الصفحة 2','info')">2</button>
+            <button class="sv-btn sv-btn-view"><i class="fa-solid fa-chevron-left"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="sv-bottom-row">
+      <div>
+        <div class="sv-section-hdr"><h2><i class="fa-solid fa-users" style="color:#34d399;margin-left:6px;"></i> نشاط الموظفين</h2><button class="sv-btn sv-btn-details" onclick="svToast('إدارة الموظفين','info')"><i class="fa-solid fa-arrow-left"></i> إدارة الكل</button></div>
+        <div class="sv-table-wrap"><div class="sv-table-scroll"><table class="sv-table"><thead><tr><th>الموظف</th><th>الحوالات اليوم</th><th>حجم المعاملات</th><th>متوسط الوقت</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="sv-tellers-body"></tbody></table></div></div>
+      </div>
+      <div>
+        <div class="sv-section-hdr"><h2><i class="fa-solid fa-chart-pie" style="color:#a78bfa;margin-left:6px;"></i> ملخص النظام</h2></div>
+        <div class="sv-panel">
+          <div class="sv-panel-body" style="display:flex;flex-direction:column;gap:14px;">
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:5px;"><span>نسبة الإتمام</span><span id="perf-done-txt" style="color:#34d399;font-weight:700;">—</span></div><div class="sv-prog-bar" style="height:7px;"><div class="sv-prog-fill" id="perf-done" style="width:0%;background:linear-gradient(90deg,#10b981,#06b6d4);transition:width 0.6s;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:5px;"><span>قيد التنفيذ</span><span id="perf-pend-txt" style="color:#fcd34d;font-weight:700;">—</span></div><div class="sv-prog-bar" style="height:7px;"><div class="sv-prog-fill" id="perf-pend" style="width:0%;background:linear-gradient(90deg,#f59e0b,#fcd34d);transition:width 0.6s;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:5px;"><span>ملغاة</span><span id="perf-fail-txt" style="color:#f87171;font-weight:700;">—</span></div><div class="sv-prog-bar" style="height:7px;"><div class="sv-prog-fill" id="perf-fail" style="width:0%;background:linear-gradient(90deg,#ef4444,#f97316);transition:width 0.6s;"></div></div></div>
+            <div style="border-top:1px solid rgba(50,184,198,0.11);padding-top:12px;">
+              <div style="text-align:center;padding:10px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.12);border-radius:10px;"><div id="perf-avg-amount" style="font-size:18px;font-weight:900;color:#34d399;">—</div><div style="font-size:10px;color:#475569;margin-top:2px;">متوسط قيمة الحوالة</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div><!-- end sv-dash-content -->
+
+<!-- TRANSFERS MANAGEMENT SECTION -->
+<div id="sv-transfers-section" class="sv-mgmt-section">
+  <div class="sv-page-title">
+    <div>
+      <h1><i class="fa-solid fa-right-left" style="color:#32b8c6;margin-left:8px;font-size:16px;"></i>إدارة الحوالات</h1>
+      <p>عرض وتعديل وإلغاء وإرسال حوالات النظام</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button onclick="svOpenMigrationModal()" style="background:rgba(232,192,74,0.12);border:1px solid rgba(232,192,74,0.35);color:#e8c04a;border-radius:10px;padding:8px 16px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s;" onmouseover="this.style.background='rgba(232,192,74,0.22)'" onmouseout="this.style.background='rgba(232,192,74,0.12)'">
+        <i class="fa-solid fa-box-archive"></i> ترحيل السجل
+      </button>
+      <button class="sv-btn-send-new" onclick="openSendTransfer()">
+        <i class="fa-solid fa-plus"></i> إرسال حوالة جديدة
+      </button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+    <div class="sv-card c-blue" style="padding:14px 16px;gap:12px;">
+      <div class="sv-card-icon" style="width:40px;height:40px;font-size:17px;"><i class="fa-solid fa-list-check"></i></div>
+      <div class="sv-card-body"><div class="sv-card-num" id="mgmt-total" style="font-size:22px;">0</div><div class="sv-card-lbl">إجمالي</div></div>
+    </div>
+    <div class="sv-card c-yellow" style="padding:14px 16px;gap:12px;">
+      <div class="sv-card-icon" style="width:40px;height:40px;font-size:17px;"><i class="fa-solid fa-clock"></i></div>
+      <div class="sv-card-body"><div class="sv-card-num" id="mgmt-pending" style="font-size:22px;">0</div><div class="sv-card-lbl">معلقة</div></div>
+    </div>
+    <div class="sv-card c-green" style="padding:14px 16px;gap:12px;">
+      <div class="sv-card-icon" style="width:40px;height:40px;font-size:17px;"><i class="fa-solid fa-circle-check"></i></div>
+      <div class="sv-card-body"><div class="sv-card-num" id="mgmt-done" style="font-size:22px;">0</div><div class="sv-card-lbl">مكتملة</div></div>
+    </div>
+    <div class="sv-card c-red" style="padding:14px 16px;gap:12px;">
+      <div class="sv-card-icon" style="width:40px;height:40px;font-size:17px;"><i class="fa-solid fa-xmark"></i></div>
+      <div class="sv-card-body"><div class="sv-card-num" id="mgmt-cancelled" style="font-size:22px;">0</div><div class="sv-card-lbl">ملغاة</div></div>
+    </div>
+  </div>
+
+  <div class="sv-table-wrap">
+    <div class="sv-table-toolbar" style="flex-wrap:wrap;gap:10px;">
+      <input class="sv-mgmt-search" type="text" id="mgmt-search-inp"
+             placeholder="بحث بالاسم أو رقم الحوالة أو المبلغ..."
+             oninput="mgmtSearch(this.value)">
+      <div class="sv-mgmt-filter">
+        <button class="sv-mgmt-filter-btn active" onclick="mgmtFilter('all',this)">الكل</button>
+        <button class="sv-mgmt-filter-btn" onclick="mgmtFilter('pending',this)">معلقة</button>
+        <button class="sv-mgmt-filter-btn" onclick="mgmtFilter('completed',this)">مكتملة</button>
+        <button class="sv-mgmt-filter-btn" onclick="mgmtFilter('failed',this)">فاشلة</button>
+        <button class="sv-mgmt-filter-btn" onclick="mgmtFilter('cancelled',this)">ملغاة</button>
+      </div>
+    </div>
+    <div class="sv-table-scroll">
+      <table class="sv-table">
+        <thead><tr>
+          <th>رقم الحوالة</th><th>المرسل</th><th>المستلم</th><th>المبلغ</th>
+          <th>العملة</th><th>الحالة</th><th>المنفذ</th><th>المصدر</th><th>التاريخ</th><th>الإجراءات</th>
+        </tr></thead>
+        <tbody id="mgmt-tbody"></tbody>
+      </table>
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid rgba(50,184,198,0.09);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:11px;color:#475569;" id="mgmt-count">--</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="sv-mgmt-filter-btn" onclick="mgmtPrev()" id="mgmt-prev">السابق</button>
+        <span style="font-size:11px;color:#475569;padding:6px 10px;" id="mgmt-page-lbl">صفحة 1</span>
+        <button class="sv-mgmt-filter-btn" onclick="mgmtNext()" id="mgmt-next">التالي</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEND / EDIT TRANSFER MODAL -->
+<div class="sv-send-overlay" id="sv-send-overlay" onclick="if(event.target===this)closeSendTransfer()">
+  <div class="sv-send-modal">
+    <div class="sv-send-hdr">
+      <h3 id="sv-send-title"><i class="fa-solid fa-paper-plane" style="color:#32b8c6;margin-left:6px;"></i>إرسال حوالة جديدة</h3>
+      <button class="sv-send-close" onclick="closeSendTransfer()">✕</button>
+    </div>
+    <div class="sv-send-body">
+      <input type="hidden" id="sv-edit-id" value="">
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">اسم المرسل</label>
+          <input class="sv-form-input" id="sv-f-sender" type="text" placeholder="اسم المرسل">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">اسم المستلم</label>
+          <input class="sv-form-input" id="sv-f-receiver" type="text" placeholder="اسم المستلم">
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">المبلغ</label>
+          <input class="sv-form-input" id="sv-f-amount" type="number" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">العملة</label>
+          <select class="sv-form-select" id="sv-f-currency">
+            <option value="USD">USD — دولار</option>
+            <option value="EUR">EUR — يورو</option>
+            <option value="TRY">TRY — ليرة تركية</option>
+            <option value="IQD">IQD — دينار عراقي</option>
+            <option value="SAR">SAR — ريال سعودي</option>
+            <option value="AED">AED — درهم إماراتي</option>
+          </select>
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">المنفذ</label>
+          <select class="sv-form-select" id="sv-f-agent">
+            <option value="برهوم">برهوم</option>
+            <option value="وكيل 2">وكيل 2</option>
+            <option value="وكيل 3">وكيل 3</option>
+            <option value="وكيل 4">وكيل 4</option>
+          </select>
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">الأولوية</label>
+          <select class="sv-form-select" id="sv-f-priority">
+            <option value="عادية">عادية</option>
+            <option value="عالية">عالية</option>
+            <option value="منخفضة">منخفضة</option>
+          </select>
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">مصدر الحوالة</label>
+          <select class="sv-form-select" id="sv-f-source">
+            <option value="مجموعة الأساور">مجموعة الأساور</option>
+            <option value="مجموعة أبو هاشم">مجموعة أبو هاشم</option>
+            <option value="مجموعة عشوائية">مجموعة عشوائية</option>
+            <option value="إدخال مشرف">إدخال مشرف</option>
+          </select>
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">الحالة</label>
+          <select class="sv-form-select" id="sv-f-status">
+            <option value="pending">معلقة</option>
+            <option value="completed">مكتملة</option>
+            <option value="failed">فاشلة</option>
+          </select>
+        </div>
+      </div>
+      <div class="sv-form-group" style="grid-column:1/-1;">
+        <label class="sv-form-label">ملاحظات</label>
+        <textarea class="sv-form-input" id="sv-f-notes" rows="3"
+                  placeholder="ملاحظات إضافية..." style="resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="sv-send-footer">
+      <button class="sv-btn-cancel-modal" onclick="closeSendTransfer()">إلغاء</button>
+      <button class="sv-btn-submit" onclick="submitTransfer()">
+        <i class="fa-solid fa-paper-plane" style="margin-left:5px;"></i>
+        <span id="sv-submit-lbl">إرسال الحوالة</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL CONFIRM DIALOG -->
+<div class="sv-confirm-overlay" id="sv-cancel-overlay">
+  <div class="sv-confirm-box">
+    <div class="sv-confirm-icon"><i class="fa-solid fa-triangle-exclamation" style="color:#f87171;font-size:36px;"></i></div>
+    <div class="sv-confirm-title">تأكيد إلغاء الحوالة</div>
+    <div class="sv-confirm-sub" id="sv-cancel-sub">هل أنت متأكد من إلغاء هذه الحوالة؟ لا يمكن التراجع.</div>
+    <div class="sv-confirm-btns">
+      <button class="sv-confirm-no" onclick="closeCancelConfirm()">تراجع</button>
+      <button class="sv-confirm-yes" onclick="confirmCancel()">تأكيد الإلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- EMPLOYEES MANAGEMENT SECTION -->
+<div id="sv-employees-section" class="sv-mgmt-section">
+  <div class="sv-page-title">
+    <div>
+      <h1><i class="fa-solid fa-users" style="color:#34d399;margin-left:8px;"></i>إدارة موظفي الحوالات</h1>
+      <p>إضافة وتعديل الموظفين والتحكم بصلاحياتهم وربطهم بنظام الحوالات</p>
+    </div>
+    <button class="sv-send-btn" onclick="openAddEmployee()">
+      <i class="fa-solid fa-user-plus"></i> إضافة موظف جديد
+    </button>
+  </div>
+
+  <!-- Mini stat cards -->
+  <div class="sv-emp-stats">
+    <div class="sv-emp-stat-card" style="border-color:rgba(52,211,153,0.25);">
+      <i class="fa-solid fa-users" style="color:#34d399;font-size:18px;"></i>
+      <div><div class="sv-emp-stat-num" id="emp-total">0</div><div class="sv-emp-stat-lbl">إجمالي الموظفين</div></div>
+    </div>
+    <div class="sv-emp-stat-card" style="border-color:rgba(50,184,198,0.25);">
+      <i class="fa-solid fa-circle" style="color:#22c55e;font-size:10px;"></i>
+      <div><div class="sv-emp-stat-num" id="emp-online">0</div><div class="sv-emp-stat-lbl">نشطون الآن</div></div>
+    </div>
+    <div class="sv-emp-stat-card" style="border-color:rgba(239,68,68,0.25);">
+      <i class="fa-solid fa-ban" style="color:#f87171;font-size:16px;"></i>
+      <div><div class="sv-emp-stat-num" id="emp-suspended">0</div><div class="sv-emp-stat-lbl">موقوفون</div></div>
+    </div>
+    <div class="sv-emp-stat-card" style="border-color:rgba(245,158,11,0.25);">
+      <i class="fa-solid fa-right-left" style="color:#fcd34d;font-size:16px;"></i>
+      <div><div class="sv-emp-stat-num" id="emp-today-total">0</div><div class="sv-emp-stat-lbl">حوالات اليوم</div></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="sv-table-wrap">
+    <div class="sv-table-toolbar">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <button class="sv-emp-filter active" onclick="empFilter('all',this)">الكل</button>
+        <button class="sv-emp-filter" onclick="empFilter('online',this)">نشطون</button>
+        <button class="sv-emp-filter" onclick="empFilter('offline',this)">غير نشطين</button>
+        <button class="sv-emp-filter" onclick="empFilter('suspended',this)">موقوفون</button>
+      </div>
+      <input class="sv-search" placeholder="🔍  ابحث باسم الموظف أو اسم المستخدم..." oninput="empSearch(this.value)" style="width:280px;">
+    </div>
+
+    <div class="sv-table-scroll">
+      <table class="sv-table">
+        <thead>
+          <tr>
+            <th>الموظف</th>
+            <th>اسم المستخدم</th>
+            <th>الدور</th>
+            <th>الحالة</th>
+            <th>حوالات اليوم</th>
+            <th>الصلاحيات</th>
+            <th>آخر نشاط</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="emp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT EMPLOYEE MODAL -->
+<div class="sv-send-overlay" id="sv-emp-overlay" onclick="if(event.target===this)closeEmpModal()">
+  <div class="sv-send-modal" style="max-width:560px;">
+    <div class="sv-send-hdr">
+      <h2 id="sv-emp-title"><i class="fa-solid fa-user-plus" style="color:#34d399;margin-left:6px;"></i>إضافة موظف جديد</h2>
+      <button class="sv-send-close" onclick="closeEmpModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="sv-send-body">
+      <input type="hidden" id="sv-emp-id">
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">الاسم الكامل *</label>
+          <input class="sv-form-input" id="sv-emp-name" placeholder="مثال: أحمد محمد">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">اسم المستخدم *</label>
+          <input class="sv-form-input" id="sv-emp-username" placeholder="مثال: ahmed.teller" dir="ltr">
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">رمز الدخول (PIN) *</label>
+          <input class="sv-form-input" id="sv-emp-pin" type="text" placeholder="4 أرقام" maxlength="6" dir="ltr">
+        </div>
+      </div>
+
+      <!-- Permissions -->
+      <div class="sv-perm-section">
+        <div class="sv-perm-title"><i class="fa-solid fa-shield-halved" style="color:#a78bfa;"></i> الصلاحيات</div>
+        <div class="sv-perm-grid">
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-send" checked>
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-paper-plane" style="color:#32b8c6;"></i> إرسال حوالات</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-view-all">
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-eye" style="color:#60a5fa;"></i> عرض جميع الحوالات</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-edit">
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-pen" style="color:#a78bfa;"></i> تعديل الحوالات</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-cancel">
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-ban" style="color:#f87171;"></i> إلغاء الحوالات</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-bot" checked>
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-robot" style="color:#fcd34d;"></i> استخدام وضع البوت</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-export">
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-file-export" style="color:#34d399;"></i> تصدير التقارير</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-history" checked>
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-clock-rotate-left" style="color:#fb923c;"></i> عرض السجل</span>
+          </label>
+          <label class="sv-perm-item">
+            <input type="checkbox" id="perm-multi-currency">
+            <span class="sv-perm-check"></span>
+            <span><i class="fa-solid fa-coins" style="color:#fbbf24;"></i> تعدد العملات</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sv-send-footer">
+        <button class="sv-send-cancel-btn" onclick="closeEmpModal()">إلغاء</button>
+        <button class="sv-send-submit-btn" onclick="submitEmployee()">
+          <i class="fa-solid fa-floppy-disk"></i> <span id="sv-emp-submit-lbl">حفظ الموظف</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE PERMISSIONS QUICK VIEW -->
+<div class="sv-send-overlay" id="sv-perm-overlay" onclick="if(event.target===this)closePermView()">
+  <div class="sv-send-modal" style="max-width:420px;">
+    <div class="sv-send-hdr">
+      <h2 id="sv-perm-emp-name"><i class="fa-solid fa-shield-halved" style="color:#a78bfa;margin-left:6px;"></i>صلاحيات الموظف</h2>
+      <button class="sv-send-close" onclick="closePermView()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="sv-send-body">
+      <div id="sv-perm-view-body"></div>
+      <div class="sv-send-footer" style="margin-top:16px;">
+        <button class="sv-send-cancel-btn" onclick="closePermView()">إغلاق</button>
+        <button class="sv-send-submit-btn" style="background:linear-gradient(135deg,#a78bfa,#818cf8);" onclick="editEmpFromPerm()">
+          <i class="fa-solid fa-pen"></i> تعديل الصلاحيات
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENTS MANAGEMENT SECTION -->
+<div id="sv-clients-section" class="sv-mgmt-section">
+  <div class="sv-page-title">
+    <div>
+      <h1><i class="fa-solid fa-user-group" style="color:#60a5fa;margin-left:8px;"></i>مجموعات العملاء</h1>
+      <p>المجموعات التي ترسل الحوالات — ربطها بنظام الحوالات يتيح تتبع المصدر تلقائياً</p>
+    </div>
+    <button class="sv-send-btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);" onclick="openAddClient()">
+      <i class="fa-solid fa-plus"></i> إضافة مجموعة عميل
+    </button>
+  </div>
+
+  <div class="sv-cg-stats">
+    <div class="sv-cg-stat" style="border-color:rgba(96,165,250,0.25);">
+      <i class="fa-solid fa-user-group" style="color:#60a5fa;font-size:18px;"></i>
+      <div><div class="sv-cg-num" id="clt-total">0</div><div class="sv-cg-lbl">إجمالي المجموعات</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(34,197,94,0.25);">
+      <i class="fa-solid fa-circle" style="color:#22c55e;font-size:10px;"></i>
+      <div><div class="sv-cg-num" id="clt-active">0</div><div class="sv-cg-lbl">نشطة</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(252,211,77,0.25);">
+      <i class="fa-solid fa-right-left" style="color:#fcd34d;font-size:16px;"></i>
+      <div><div class="sv-cg-num" id="clt-today">0</div><div class="sv-cg-lbl">حوالات اليوم</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(167,139,250,0.25);">
+      <i class="fa-solid fa-dollar-sign" style="color:#a78bfa;font-size:16px;"></i>
+      <div><div class="sv-cg-num" id="clt-volume">$0</div><div class="sv-cg-lbl">حجم اليوم</div></div>
+    </div>
+  </div>
+
+  <div class="sv-table-wrap">
+    <div class="sv-table-toolbar">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="sv-emp-filter active" onclick="cltFilter('all',this)">الكل</button>
+        <button class="sv-emp-filter" onclick="cltFilter('active',this)">نشطة</button>
+        <button class="sv-emp-filter" onclick="cltFilter('paused',this)">موقوفة</button>
+      </div>
+      <input class="sv-search" placeholder="🔍  ابحث باسم المجموعة..." oninput="cltSearch(this.value)" style="width:260px;">
+    </div>
+    <div class="sv-table-scroll">
+      <table class="sv-table">
+        <thead>
+          <tr>
+            <th>المجموعة</th>
+            <th>العملة</th>
+            <th>الحالة</th>
+            <th>حوالات اليوم</th>
+            <th>المسؤول</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="clt-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS MANAGEMENT SECTION -->
+<div id="sv-agents-section" class="sv-mgmt-section">
+  <div class="sv-page-title">
+    <div>
+      <h1><i class="fa-solid fa-handshake" style="color:#34d399;margin-left:8px;"></i>وكلاء التنفيذ</h1>
+      <p>المجموعات التي تستقبل وتنفذ الحوالات — ربطها يتيح توجيه الحوالات تلقائياً للوكيل المناسب</p>
+    </div>
+    <button class="sv-send-btn" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="openAddAgent()">
+      <i class="fa-solid fa-plus"></i> إضافة وكيل تنفيذ
+    </button>
+  </div>
+
+  <div class="sv-cg-stats">
+    <div class="sv-cg-stat" style="border-color:rgba(52,211,153,0.25);">
+      <i class="fa-solid fa-handshake" style="color:#34d399;font-size:16px;"></i>
+      <div><div class="sv-cg-num" id="agt-total">0</div><div class="sv-cg-lbl">إجمالي الوكلاء</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(34,197,94,0.25);">
+      <i class="fa-solid fa-circle" style="color:#22c55e;font-size:10px;"></i>
+      <div><div class="sv-cg-num" id="agt-active">0</div><div class="sv-cg-lbl">نشطون</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(252,211,77,0.25);">
+      <i class="fa-solid fa-right-left" style="color:#fcd34d;font-size:16px;"></i>
+      <div><div class="sv-cg-num" id="agt-today">0</div><div class="sv-cg-lbl">منفذة اليوم</div></div>
+    </div>
+    <div class="sv-cg-stat" style="border-color:rgba(251,146,60,0.25);">
+      <i class="fa-solid fa-gauge" style="color:#fb923c;font-size:16px;"></i>
+      <div><div class="sv-cg-num" id="agt-load">0%</div><div class="sv-cg-lbl">متوسط التحميل</div></div>
+    </div>
+  </div>
+
+  <div class="sv-table-wrap">
+    <div class="sv-table-toolbar">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="sv-emp-filter active" onclick="agtFilter('all',this)">الكل</button>
+        <button class="sv-emp-filter" onclick="agtFilter('active',this)">نشطون</button>
+        <button class="sv-emp-filter" onclick="agtFilter('busy',this)">مشغولون</button>
+        <button class="sv-emp-filter" onclick="agtFilter('offline',this)">غير متاحين</button>
+      </div>
+      <input class="sv-search" placeholder="🔍  ابحث باسم الوكيل..." oninput="agtSearch(this.value)" style="width:260px;">
+    </div>
+    <div class="sv-table-scroll">
+      <table class="sv-table">
+        <thead>
+          <tr>
+            <th>الوكيل</th>
+            <th>الحالة</th>
+            <th>اللون / الأيقونة</th>
+            <th>التحميل الحالي</th>
+            <th>الطاقة القصوى</th>
+            <th>العملات</th>
+            <th>عمولة %</th>
+            <th>المسؤول</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="agt-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT ADD/EDIT MODAL -->
+<div class="sv-send-overlay" id="sv-clt-overlay" onclick="if(event.target===this)closeCltModal()">
+  <div class="sv-send-modal" style="max-width:520px;">
+    <div class="sv-send-hdr">
+      <h2 id="sv-clt-title"><i class="fa-solid fa-plus" style="color:#60a5fa;margin-left:6px;"></i>إضافة مجموعة عميل</h2>
+      <button class="sv-send-close" onclick="closeCltModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="sv-send-body">
+      <input type="hidden" id="sv-clt-id">
+      <input type="hidden" id="sv-clt-key">
+      <div class="sv-form-row">
+        <div class="sv-form-group" style="grid-column:1/-1;">
+          <label class="sv-form-label">اسم المجموعة *</label>
+          <input class="sv-form-input" id="sv-clt-name" placeholder="مثال: الأساور">
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group" style="grid-column:1/-1;">
+          <label class="sv-form-label">العملة الافتراضية</label>
+          <select class="sv-form-input" id="sv-clt-currency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="TRY">TRY</option>
+            <option value="IQD">IQD</option>
+            <option value="JOD">JOD</option>
+            <option value="ILS">ILS</option>
+          </select>
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">اسم المسؤول</label>
+          <input class="sv-form-input" id="sv-clt-contact" placeholder="اسم المسؤول عن المجموعة">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">لون التمييز</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:6px;" id="sv-clt-color-picker">
+            <span class="cg-color-opt" data-color="#60a5fa" style="background:#60a5fa;" onclick="selectColor('clt','#60a5fa',this)"></span>
+            <span class="cg-color-opt" data-color="#34d399" style="background:#34d399;" onclick="selectColor('clt','#34d399',this)"></span>
+            <span class="cg-color-opt" data-color="#a78bfa" style="background:#a78bfa;" onclick="selectColor('clt','#a78bfa',this)"></span>
+            <span class="cg-color-opt" data-color="#fcd34d" style="background:#fcd34d;" onclick="selectColor('clt','#fcd34d',this)"></span>
+            <span class="cg-color-opt" data-color="#f87171" style="background:#f87171;" onclick="selectColor('clt','#f87171',this)"></span>
+            <span class="cg-color-opt" data-color="#fb923c" style="background:#fb923c;" onclick="selectColor('clt','#fb923c',this)"></span>
+          </div>
+          <input type="hidden" id="sv-clt-color" value="#60a5fa">
+        </div>
+      </div>
+      <div class="sv-form-group" style="grid-column:1/-1;">
+        <label class="sv-form-label">ملاحظات</label>
+        <input class="sv-form-input" id="sv-clt-notes" placeholder="أي ملاحظات إضافية...">
+      </div>
+      <div class="sv-send-footer">
+        <button class="sv-send-cancel-btn" onclick="closeCltModal()">إلغاء</button>
+        <button class="sv-send-submit-btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);" onclick="submitClient()">
+          <i class="fa-solid fa-floppy-disk"></i> <span id="sv-clt-submit-lbl">حفظ المجموعة</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENT ADD/EDIT MODAL -->
+<div class="sv-send-overlay" id="sv-agt-overlay" onclick="if(event.target===this)closeAgtModal()">
+  <div class="sv-send-modal" style="max-width:600px;max-height:90vh;overflow-y:auto;">
+    <div class="sv-send-hdr">
+      <h2 id="sv-agt-title"><i class="fa-solid fa-plus" style="color:#34d399;margin-left:6px;"></i>إضافة وكيل تنفيذ</h2>
+      <button class="sv-send-close" onclick="closeAgtModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="sv-send-body">
+      <input type="hidden" id="sv-agt-id">
+      <input type="hidden" id="sv-agt-key">
+
+      <!-- ─ الاسم والهاتف ─ -->
+      <div class="sv-form-row">
+        <div class="sv-form-group" style="grid-column:1/-1;">
+          <label class="sv-form-label">اسم الوكيل *</label>
+          <input class="sv-form-input" id="sv-agt-name" placeholder="مثال: برهوم تونس">
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">رقم الهاتف</label>
+          <input class="sv-form-input" id="sv-agt-phone" placeholder="+216xxxxxxxx" dir="ltr">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">📱 رقم واتساب <small style="color:#25D366;font-size:10px;">(للإرسال التلقائي)</small></label>
+          <input class="sv-form-input" id="sv-agt-whatsapp" placeholder="962791234567 بدون +" dir="ltr"
+                 style="border-color:rgba(37,211,102,0.3);">
+        </div>
+      </div>
+      <div class="sv-form-row">
+        <div class="sv-form-group" style="grid-column:1/-1;">
+          <label class="sv-form-label">اسم المسؤول / جهة الاتصال</label>
+          <input class="sv-form-input" id="sv-agt-contact" placeholder="اسم المسؤول">
+        </div>
+      </div>
+
+      <!-- ─ الطاقة والعمولة ─ -->
+      <div class="sv-form-row">
+        <div class="sv-form-group">
+          <label class="sv-form-label">الطاقة القصوى (حوالة/يوم)</label>
+          <input class="sv-form-input" id="sv-agt-capacity" type="number" placeholder="20" min="1">
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">نسبة العمولة الافتراضية %</label>
+          <input class="sv-form-input" id="sv-agt-commission" type="number" placeholder="2.5" step="0.1" min="0">
+        </div>
+      </div>
+
+      <!-- ─ مناطق العمل ─ -->
+      <div style="margin-top:14px;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <label class="sv-form-label" style="margin:0;">📍 مناطق العمل</label>
+          <button type="button" onclick="agtAddLocationRow()" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">+ إضافة منطقة</button>
+        </div>
+        <div id="sv-agt-locations" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+
+      <!-- ─ العملات ─ -->
+      <div class="sv-form-row" style="margin-top:10px;">
+        <div class="sv-form-group">
+          <label class="sv-form-label">العملات المدعومة</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:6px;">
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-USD" value="USD" checked><span class="sv-perm-check"></span><span style="font-size:11px;">USD</span></label>
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-EUR" value="EUR"><span class="sv-perm-check"></span><span style="font-size:11px;">EUR</span></label>
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-TRY" value="TRY"><span class="sv-perm-check"></span><span style="font-size:11px;">TRY</span></label>
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-IQD" value="IQD"><span class="sv-perm-check"></span><span style="font-size:11px;">IQD</span></label>
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-JOD" value="JOD"><span class="sv-perm-check"></span><span style="font-size:11px;">JOD</span></label>
+            <label class="sv-perm-item" style="padding:5px 9px;"><input type="checkbox" id="agt-cur-ILS" value="ILS"><span class="sv-perm-check"></span><span style="font-size:11px;">ILS</span></label>
+          </div>
+        </div>
+        <div class="sv-form-group">
+          <label class="sv-form-label">اللون / الأيقونة</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:6px;" id="sv-agt-color-picker">
+            <span class="cg-color-opt" data-color="#60a5fa" style="background:#60a5fa;" onclick="selectColor('agt','#60a5fa',this)">🔵</span>
+            <span class="cg-color-opt" data-color="#34d399" style="background:#34d399;" onclick="selectColor('agt','#34d399',this)">🟢</span>
+            <span class="cg-color-opt" data-color="#fcd34d" style="background:#fcd34d;" onclick="selectColor('agt','#fcd34d',this)">🟡</span>
+            <span class="cg-color-opt" data-color="#f87171" style="background:#f87171;" onclick="selectColor('agt','#f87171',this)">🔴</span>
+            <span class="cg-color-opt" data-color="#a78bfa" style="background:#a78bfa;" onclick="selectColor('agt','#a78bfa',this)">🟣</span>
+            <span class="cg-color-opt" data-color="#fb923c" style="background:#fb923c;" onclick="selectColor('agt','#fb923c',this)">🟠</span>
+          </div>
+          <input type="hidden" id="sv-agt-color" value="#60a5fa">
+          <input type="hidden" id="sv-agt-icon" value="🔵">
+        </div>
+      </div>
+
+      <div class="sv-form-group" style="margin-top:10px;">
+        <label class="sv-form-label">ملاحظات</label>
+        <input class="sv-form-input" id="sv-agt-notes" placeholder="ملاحظات...">
+      </div>
+
+      <!-- ─ بوابة الوكيل (PIN + بريد) ─ -->
+      <div style="margin-top:18px;padding:14px 16px;background:rgba(139,92,246,0.07);border:1.5px solid rgba(139,92,246,0.22);border-radius:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:16px;">🔑</span>
+            <span style="font-size:13px;font-weight:800;color:#c4b5fd;">بوابة الوكيل</span>
+          </div>
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:#94a3b8;">
+            <input type="checkbox" id="sv-agt-portal-active" style="accent-color:#a78bfa;width:15px;height:15px;">
+            <span>تفعيل البوابة</span>
+          </label>
+        </div>
+        <div class="sv-form-row">
+          <div class="sv-form-group">
+            <label class="sv-form-label" style="color:#c4b5fd;">البريد الإلكتروني للوكيل</label>
+            <input class="sv-form-input" id="sv-agt-email" type="email" placeholder="agent@example.com" dir="ltr" style="border-color:rgba(139,92,246,0.3);">
+          </div>
+          <div class="sv-form-group">
+            <label class="sv-form-label" style="color:#c4b5fd;">الدولة (للبوابة)</label>
+            <input class="sv-form-input" id="sv-agt-portal-country" placeholder="مثال: تونس" style="border-color:rgba(139,92,246,0.3);">
+          </div>
+        </div>
+        <div class="sv-form-group" style="margin-top:10px;">
+          <label class="sv-form-label" style="color:#c4b5fd;">رمز PIN <span style="font-size:10px;color:#64748b;">(6 أرقام — اتركه فارغاً لعدم التغيير)</span></label>
+          <div style="display:flex;gap:8px;direction:ltr;" id="sv-agt-pin-boxes">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,0)" onkeydown="agtPinBack(this,0,event)">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,1)" onkeydown="agtPinBack(this,1,event)">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,2)" onkeydown="agtPinBack(this,2,event)">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,3)" onkeydown="agtPinBack(this,3,event)">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,4)" onkeydown="agtPinBack(this,4,event)">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="agt-pin-box" style="width:42px;height:42px;text-align:center;font-size:20px;font-weight:800;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.35);border-radius:10px;color:#c4b5fd;outline:none;font-family:monospace;" oninput="agtPinMove(this,5)" onkeydown="agtPinBack(this,5,event)">
+          </div>
+          <div id="sv-agt-pin-status" style="margin-top:6px;font-size:11px;color:#64748b;"></div>
+        </div>
+      </div>
+
+      <div class="sv-send-footer">
+        <button class="sv-send-cancel-btn" onclick="closeAgtModal()">إلغاء</button>
+        <button class="sv-send-submit-btn" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="submitAgent()">
+          <i class="fa-solid fa-floppy-disk"></i> <span id="sv-agt-submit-lbl">حفظ الوكيل</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة بيانات دخول الوكيل (تظهر مرة واحدة بعد الإنشاء) ══ -->
+<div id="sv-agt-creds-overlay" style="display:none;position:fixed;inset:0;z-index:70000;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#0f1923,#0a1520);border:2px solid rgba(139,92,246,0.4);border-radius:22px;padding:30px 28px;width:440px;max-width:95vw;box-shadow:0 24px 72px rgba(0,0,0,0.8);direction:rtl;text-align:center;">
+    <div style="font-size:36px;margin-bottom:10px;">🔑</div>
+    <div style="font-size:16px;font-weight:900;color:#c4b5fd;margin-bottom:4px;">بيانات دخول الوكيل</div>
+    <div style="font-size:12px;color:#f87171;margin-bottom:20px;">احفظ هذه البيانات الآن — لن تُعرض مجدداً</div>
+
+    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:16px;text-align:right;margin-bottom:16px;">
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;color:#64748b;margin-bottom:3px;">رابط البوابة</div>
+        <div id="sv-creds-link" style="font-size:13px;color:#60a5fa;font-family:monospace;direction:ltr;text-align:left;word-break:break-all;"></div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;color:#64748b;margin-bottom:3px;">البريد الإلكتروني / المعرّف</div>
+        <div id="sv-creds-email" style="font-size:14px;color:#e2e8f0;font-family:monospace;direction:ltr;text-align:left;"></div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:#64748b;margin-bottom:3px;">رمز PIN</div>
+        <div id="sv-creds-pin" style="font-size:28px;font-weight:900;color:#c4b5fd;font-family:monospace;letter-spacing:10px;"></div>
+      </div>
+    </div>
+
+    <button onclick="document.getElementById('sv-agt-creds-overlay').style.display='none'" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:10px 28px;cursor:pointer;font-family:inherit;width:100%;">
+      ✅ تم الحفظ — إغلاق
+    </button>
+  </div>
+</div>
+
+<!-- ══ نافذة تسعير الحوالات لوكيل ══ -->
+<div id="sv-agt-rates-overlay" onclick="if(event.target===this)closeAgtRates()" style="display:none;position:fixed;inset:0;z-index:60000;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;">
+  <div style="background:linear-gradient(160deg,#0f1923,#0a1520);border:1px solid rgba(50,184,198,0.25);border-radius:22px;padding:28px;width:700px;max-width:96vw;box-shadow:0 24px 72px rgba(0,0,0,0.7);direction:rtl;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(50,184,198,0.12);border:1.5px solid rgba(50,184,198,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;">💱</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;">تسعير الحوالات</div>
+          <div style="font-size:12px;color:#64748b;margin-top:2px;" id="sar-agent-label"></div>
+        </div>
+      </div>
+      <button onclick="closeAgtRates()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.2);border-radius:9px;color:#8696a0;cursor:pointer;font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+
+    <!-- Add rate row -->
+    <div style="background:rgba(50,184,198,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:14px;padding:16px;margin-bottom:18px;">
+      <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">➕ إضافة / تحديث سعر لدولة</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">البلد *</label>
+          <input id="sar-country" type="text" placeholder="مثال: تونس" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">العملة</label>
+          <select id="sar-currency" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;">
+            <option>USD</option><option>EUR</option><option>TRY</option>
+            <option>IQD</option><option>JOD</option><option>ILS</option>
+            <option>EGP</option><option>TND</option><option>SAR</option>
+            <option>AED</option><option>MAD</option><option>LYD</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">سعر الصرف (مقابل USD)</label>
+          <input id="sar-rate" type="number" step="0.0001" placeholder="1.0000" dir="ltr" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">عمولة %</label>
+          <input id="sar-fee-pct" type="number" step="0.001" placeholder="0.000" dir="ltr" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">رسوم ثابتة (USD)</label>
+          <input id="sar-fee-flat" type="number" step="0.01" placeholder="0.00" dir="ltr" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">حد أدنى (USD)</label>
+          <input id="sar-min" type="number" step="1" placeholder="0" dir="ltr" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">حد أقصى (0=بلا حد)</label>
+          <input id="sar-max" type="number" step="1" placeholder="0" dir="ltr" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="sar-notes" type="text" placeholder="ملاحظة اختيارية..." style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
+        <button onclick="sarSaveRate()" style="padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;">💾 حفظ السعر</button>
+      </div>
+    </div>
+
+    <!-- Rates table -->
+    <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">📋 الأسعار المحفوظة</div>
+    <div id="sar-rates-list" style="display:flex;flex-direction:column;gap:8px;min-height:60px;">
+      <div style="text-align:center;color:#475569;padding:20px;font-size:12px;">جارٍ التحميل...</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="sv-bot-section" class="sv-bot-section" style="display:none;">
+  <!-- ── Header ── -->
+  <div style="
+    padding:20px 22px 16px;
+    background:linear-gradient(135deg,#0d0f2b 0%,#1a1744 100%);
+    border-bottom:1px solid rgba(99,102,241,0.18);
+    display:flex;align-items:center;gap:14px;overflow:hidden;
+  ">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(59,130,246,0.07) 0%,transparent 60%);pointer-events:none;"></div>
+    <div style="
+      width:48px;height:48px;border-radius:14px;flex-shrink:0;
+      background:linear-gradient(135deg,#312e81,#4f46e5);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 6px 20px rgba(99,102,241,0.5),0 0 0 1px rgba(139,92,246,0.3);
+    ">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="6" width="8" height="8" rx="1.5" stroke="white" stroke-width="1.4"/>
+        <line x1="9" y1="1.5" x2="9" y2="6" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="11" y1="1.5" x2="11" y2="6" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="9" y1="14" x2="9" y2="18.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="11" y1="14" x2="11" y2="18.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="1.5" y1="9" x2="6" y2="9" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="1.5" y1="11" x2="6" y2="11" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="14" y1="9" x2="18.5" y2="9" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="14" y1="11" x2="18.5" y2="11" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="10" cy="10" r="2" fill="white"/>
+      </svg>
+    </div>
+    <div style="flex:1;min-width:0;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:17px;font-weight:800;color:#e2e8f0;letter-spacing:.3px;">إعدادات البوت</div>
+        <span style="font-size:9px;font-weight:700;color:#818cf8;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:5px;padding:1px 7px;letter-spacing:1px;font-family:monospace;">AI CORE</span>
+      </div>
+      <div style="font-size:11px;color:#818cf8;margin-top:3px;display:flex;align-items:center;gap:6px;">
+        <span id="bc-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;animation:onlinePulse 2s infinite;"></span>
+        <span id="bc-status-label">نظام الذكاء الاصطناعي نشط • يراقب جميع المجموعات</span>
+      </div>
+    </div>
+    <!-- global bot on/off -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;color:#94a3b8;">البوت</span>
+      <div id="bc-master-track" onclick="bcToggleMaster()" style="
+        width:44px;height:24px;border-radius:12px;cursor:pointer;transition:background .3s;
+        background:#1d4ed8;position:relative;box-shadow:0 2px 8px rgba(29,78,216,0.5);
+      ">
+        <div id="bc-master-thumb" style="
+          position:absolute;top:3px;left:22px;width:18px;height:18px;border-radius:50%;
+          background:#fff;transition:left .25s;box-shadow:0 2px 6px rgba(0,0,0,0.3);
+        "></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabs ── -->
+  <div style="display:flex;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(96,165,250,0.1);flex-shrink:0;overflow-x:auto;">
+    <button class="bc-tab active" id="bc-tab-general"  onclick="bcTab('general',this)">⚙️ عام</button>
+    <button class="bc-tab"        id="bc-tab-tasks"    onclick="bcTab('tasks',this)">🤖 مهام</button>
+    <button class="bc-tab"        id="bc-tab-security" onclick="bcTab('security',this)">🛡️ أمان</button>
+    <button class="bc-tab"        id="bc-tab-groups"   onclick="bcTab('groups',this)">💬 مجموعات</button>
+    <button class="bc-tab"        id="bc-tab-agents"   onclick="bcTab('agents',this)">👷 منفذون</button>
+    <button class="bc-tab"        id="bc-tab-advanced" onclick="bcTab('advanced',this)">🔧 متقدم</button>
+  </div>
+
+  <!-- ── Body ── -->
+  <div style="flex:1;overflow-y:auto;padding:20px 22px;">
+
+    <!-- ── PANEL: GENERAL ── -->
+    <div id="bc-panel-general" class="bc-panel">
+
+      <!-- ── قسم 1: الإشعارات والمراقبة ── -->
+      <div class="bc-section-title">الإشعارات والمراقبة</div>
+      <div class="bc-settings-list" style="margin-bottom:18px;">
+
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔔 إشعار عند وصول رسالة جديدة</div>
+            <div class="bc-row-desc">يظهر تنبيه في أسفل الشاشة بمجرد وصول حوالة جديدة من أي مجموعة — مفيد لمتابعة النشاط بدون مراقبة مستمرة للقائمة</div>
+          </div>
+          <div id="bc-t-notify" class="bc-toggle on" onclick="bcToggle(this,'notify')"><div class="bc-tog-thumb"></div></div>
+        </div>
+
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔐 توليد كود الأمان تلقائياً</div>
+            <div class="bc-row-desc">يُنشئ البوت كوداً فريداً لكل حوالة عند إنشائها، ويُرسل ضمن وصل التأكيد — يُستخدم للمراجعة والتحقق لاحقاً</div>
+          </div>
+          <div id="bc-t-seccode" class="bc-toggle on" onclick="bcToggle(this,'seccode')"><div class="bc-tog-thumb"></div></div>
+        </div>
+
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">📸 حفظ لقطة شاشة لكل رسالة</div>
+            <div class="bc-row-desc">يحتفظ البوت بصورة من كل رسالة واردة داخل سجل الحوالات — مفيد عند الرجوع لأي حوالة قديمة أو التحقق منها</div>
+          </div>
+          <div id="bc-t-screenshot" class="bc-toggle on" onclick="bcToggle(this,'screenshot')"><div class="bc-tog-thumb"></div></div>
+        </div>
+
+      </div>
+
+      <!-- ── قسم 2: الإعدادات الافتراضية ── -->
+      <div class="bc-section-title">الإعدادات الافتراضية</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+
+        <!-- المنفذ الافتراضي -->
+        <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="bc-row-info" style="width:100%;">
+            <div class="bc-row-name">👷 المنفذ الافتراضي</div>
+            <div class="bc-row-desc">المنفذ الذي يتم اختياره تلقائياً عند إرسال حوالة جديدة للتنفيذ — يمكن تغييره يدوياً في كل حوالة على حدة</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="bc-speed-btn active" id="bc-agent-auto" onclick="bcSetDefaultAgent('auto',this)">🔀 تلقائي (الأخف)</button>
+            <button class="bc-speed-btn" id="bc-agent-barhoum" onclick="bcSetDefaultAgent('barhoum',this)">🔵 برهوم</button>
+            <button class="bc-speed-btn" id="bc-agent-agent2"  onclick="bcSetDefaultAgent('agent2',this)">🟢 وكيل 2</button>
+            <button class="bc-speed-btn" id="bc-agent-agent3"  onclick="bcSetDefaultAgent('agent3',this)">🟡 وكيل 3</button>
+          </div>
+        </div>
+
+        <!-- العملة الافتراضية -->
+        <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="bc-row-info" style="width:100%;">
+            <div class="bc-row-name">💱 العملة الافتراضية</div>
+            <div class="bc-row-desc">العملة التي تُختار مسبقاً في حقل النموذج عند فتح حوالة جديدة — يوفر وقت التعديل اليدوي في حال كانت معظم الحوالات بعملة واحدة</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="bc-speed-btn active" id="bc-cur-def-USD" onclick="bcSetDefaultCurrency('USD',this)">💵 USD</button>
+            <button class="bc-speed-btn" id="bc-cur-def-EUR" onclick="bcSetDefaultCurrency('EUR',this)">💶 EUR</button>
+            <button class="bc-speed-btn" id="bc-cur-def-TRY" onclick="bcSetDefaultCurrency('TRY',this)">🇹🇷 TRY</button>
+            <button class="bc-speed-btn" id="bc-cur-def-IQD" onclick="bcSetDefaultCurrency('IQD',this)">🇮🇶 IQD</button>
+          </div>
+        </div>
+
+        <!-- الأولوية الافتراضية -->
+        <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="bc-row-info" style="width:100%;">
+            <div class="bc-row-name">🎯 الأولوية الافتراضية للحوالات</div>
+            <div class="bc-row-desc">مستوى الأولوية الذي يُعيَّن لكل حوالة جديدة تدخل قائمة التنفيذ — الأولوية العالية تُعالَج أولاً عند وجود ازدحام</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="bc-speed-btn" id="bc-pri-high"   onclick="bcSetDefaultPriority('high',this)">🔴 عالية</button>
+            <button class="bc-speed-btn active" id="bc-pri-normal" onclick="bcSetDefaultPriority('normal',this)">🟡 عادية</button>
+            <button class="bc-speed-btn" id="bc-pri-low"    onclick="bcSetDefaultPriority('low',this)">🟢 منخفضة</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── قسم 3: حد المبلغ ── -->
+      <div class="bc-section-title">حد المبلغ الأدنى المقبول</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);margin-bottom:18px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#cbd5e1;">أقل مبلغ يعالجه البوت</div>
+            <div style="font-size:11px;color:#64748b;margin-top:3px;line-height:1.5;">الحوالات التي يكون مبلغها أقل من هذا الرقم يتجاهلها البوت تلقائياً ولا يُدرجها في قائمة التنفيذ — مفيد لتصفية الرسائل غير الجدية</div>
+          </div>
+          <span id="bc-minamt-val" style="font-size:16px;font-weight:800;color:#60a5fa;white-space:nowrap;margin-right:12px;">10 $</span>
+        </div>
+        <input type="range" id="bc-minamt-slider" min="0" max="500" value="10" step="5"
+               oninput="bcUpdateMinAmount(this.value)"
+               style="width:100%;accent-color:#3b82f6;cursor:pointer;margin-top:6px;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:#475569;">
+          <span>0$ (بدون حد)</span><span>250$</span><span>500$</span>
+        </div>
+      </div>
+
+      <!-- ── قسم 4: سرعة البوت ── -->
+      <div class="bc-section-title">سرعة جلب الرسائل</div>
+      <div class="bc-settings-list" style="margin-bottom:18px;">
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">⏱ الفاصل الزمني بين الرسائل</div>
+            <div class="bc-row-desc">يحدد كم يتأخر البوت بين استقبال كل رسالة والتالية — الوضع البطيء يُخفف الضغط على الموظف، والسريع يناسب أوقات الذروة</div>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="bc-speed-btn" onclick="bcSetSpeed('slow',this)">بطيء</button>
+            <button class="bc-speed-btn active" onclick="bcSetSpeed('normal',this)">عادي</button>
+            <button class="bc-speed-btn" onclick="bcSetSpeed('fast',this)">سريع</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── قسم 5: سجل النشاط ── -->
+      <div class="bc-section-title">سجل نشاط البوت</div>
+      <div id="bc-log" style="
+        background:rgba(0,0,0,0.35);border:1px solid rgba(96,165,250,0.08);border-radius:10px;
+        padding:10px 14px;font-size:11px;font-family:monospace;color:#64748b;
+        max-height:130px;overflow-y:auto;direction:ltr;line-height:1.7;
+      ">
+        <div style="color:#22c55e;">[البوت] تم التشغيل بنجاح</div>
+        <div style="color:#60a5fa;">[البوت] يراقب: الأساور — أبو هاشم — عشوائية</div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: TASKS ── -->
+    <div id="bc-panel-tasks" class="bc-panel" style="display:none;">
+      <div class="bc-section-title">المهام التلقائية</div>
+      <div class="bc-settings-list">
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔍 التحقق التلقائي من البيانات</div>
+            <div class="bc-row-desc">يتحقق البوت من صحة الاسم والمبلغ والعملة قبل التنفيذ</div>
+          </div>
+          <div id="bc-t-autovalidate" class="bc-toggle on" onclick="bcToggle(this,'autovalidate')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">⚡ التنفيذ التلقائي (وضع ذكي)</div>
+            <div class="bc-row-desc">تنفيذ الحوالات أوتوماتيكياً عند تفعيل الوضع الذكي</div>
+          </div>
+          <div id="bc-t-autoexec" class="bc-toggle on" onclick="bcToggle(this,'autoexec')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔀 التوزيع الذكي على المنفذين</div>
+            <div class="bc-row-desc">اختيار المنفذ الأقل حملاً تلقائياً</div>
+          </div>
+          <div id="bc-t-loadbalance" class="bc-toggle on" onclick="bcToggle(this,'loadbalance')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">⚠️ كشف الحوالات المكررة</div>
+            <div class="bc-row-desc">تحذير عند رصد نفس الحوالة خلال 10 دقائق</div>
+          </div>
+          <div id="bc-t-dedup" class="bc-toggle on" onclick="bcToggle(this,'dedup')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">📨 إرسال وصل للمصدر تلقائياً</div>
+            <div class="bc-row-desc">إرسال رسالة تأكيد للمجموعة بعد التنفيذ</div>
+          </div>
+          <div id="bc-t-autoreceipt" class="bc-toggle on" onclick="bcToggle(this,'autoreceipt')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🕐 مؤقت SLA (تنبيه التأخير)</div>
+            <div class="bc-row-desc">تلوين الحوالات حسب مدة الانتظار: أخضر/أصفر/أحمر</div>
+          </div>
+          <div id="bc-t-sla" class="bc-toggle on" onclick="bcToggle(this,'sla')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔼 أولوية تلقائية للمبالغ الكبيرة</div>
+            <div class="bc-row-desc">الحوالات التي تتجاوز حد المبلغ تُعطى أولوية عالية تلقائياً</div>
+          </div>
+          <div id="bc-t-autopriority" class="bc-toggle on" onclick="bcToggle(this,'autopriority')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔁 إعادة توزيع عند انتهاء SLA</div>
+            <div class="bc-row-desc">بدلاً من الإلغاء — يُعاد توزيع الحوالة على منفذ آخر</div>
+          </div>
+          <div id="bc-t-slareassign" class="bc-toggle off" onclick="bcToggle(this,'slareassign')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">📦 أرشفة تلقائية بعد التنفيذ</div>
+            <div class="bc-row-desc">نقل الحوالات المكتملة للأرشيف بعد فترة محددة</div>
+          </div>
+          <div id="bc-t-autoarchive" class="bc-toggle on" onclick="bcToggle(this,'autoarchive')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🧠 التحقق الذكي من العملة</div>
+            <div class="bc-row-desc">كشف العملة من نص الرسالة تلقائياً وتصحيحها</div>
+          </div>
+          <div id="bc-t-currencydetect" class="bc-toggle on" onclick="bcToggle(this,'currencydetect')"><div class="bc-tog-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Processing delay slider -->
+      <div class="bc-section-title" style="margin-top:18px;">المدة الزمنية للمعالجة التلقائية</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:11px;color:#94a3b8;">مدة معالجة كل حوالة</span>
+          <span id="bc-delay-val" style="font-size:13px;font-weight:700;color:#60a5fa;">4 ثوانٍ</span>
+        </div>
+        <input type="range" id="bc-delay-slider" min="2" max="10" value="4" step="1"
+               oninput="bcUpdateDelay(this.value)"
+               style="width:100%;accent-color:#3b82f6;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#475569;">
+          <span>2 ث (سريع)</span><span>6 ث (عادي)</span><span>10 ث (بطيء)</span>
+        </div>
+      </div>
+
+      <!-- SLA Timeout -->
+      <div class="bc-section-title" style="margin-top:18px;">مهلة SLA للتنفيذ</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:11px;color:#94a3b8;">الوقت المسموح قبل انتهاء الحوالة</span>
+          <span id="bc-sla-val" style="font-size:13px;font-weight:700;color:#f87171;">60 ثانية</span>
+        </div>
+        <input type="range" id="bc-sla-slider" min="30" max="300" value="60" step="30"
+               oninput="bcUpdateSlaTimeout(this.value)"
+               style="width:100%;accent-color:#ef4444;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#475569;">
+          <span>30 ث (صارم)</span><span>2 دق (متوسط)</span><span>5 دق (مرن)</span>
+        </div>
+      </div>
+
+      <!-- Auto-priority threshold -->
+      <div class="bc-section-title" style="margin-top:18px;">حد المبلغ للأولوية التلقائية</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:11px;color:#94a3b8;">أعلى من هذا المبلغ → أولوية عالية تلقائياً</span>
+          <span id="bc-autopri-val" style="font-size:13px;font-weight:700;color:#fbbf24;">1000 $</span>
+        </div>
+        <input type="range" id="bc-autopri-slider" min="100" max="10000" value="1000" step="100"
+               oninput="bcUpdateAutoPriority(this.value)"
+               style="width:100%;accent-color:#fbbf24;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#475569;">
+          <span>100$</span><span>5000$</span><span>10,000$</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: SECURITY ── -->
+    <div id="bc-panel-security" class="bc-panel" style="display:none;">
+
+      <!-- Risk level header -->
+      <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(251,191,36,0.06));border:1px solid rgba(239,68,68,0.2);border-radius:14px;margin-bottom:18px;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🛡️</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fca5a5;">إدارة المخاطر والأمان</div>
+          <div style="font-size:10px;color:#475569;margin-top:2px;">تحكم كامل في حدود التنفيذ وصلاحيات الموافقة</div>
+        </div>
+        <div style="margin-right:auto;text-align:left;">
+          <div style="font-size:9px;color:#475569;">مستوى الحماية</div>
+          <div id="bc-risk-level" style="font-size:12px;font-weight:800;color:#22c55e;">● عالي</div>
+        </div>
+      </div>
+
+      <!-- Amount Limits -->
+      <div class="bc-section-title">حدود المبالغ</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);margin-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div style="font-size:11px;color:#94a3b8;">الحد الأقصى لمبلغ الحوالة الواحدة</div>
+            <div style="font-size:9px;color:#475569;">فوق هذا الحد → يتطلب موافقة المشرف</div>
+          </div>
+          <span id="bc-maxamt-val" style="font-size:14px;font-weight:800;color:#fbbf24;">5,000 $</span>
+        </div>
+        <input type="range" id="bc-maxamt-slider" min="500" max="50000" value="5000" step="500"
+               oninput="bcUpdateMaxAmount(this.value)"
+               style="width:100%;accent-color:#fbbf24;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#475569;">
+          <span>500$</span><span>25,000$</span><span>50,000$</span>
+        </div>
+      </div>
+
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);margin-bottom:18px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div style="font-size:11px;color:#94a3b8;">الحد اليومي الإجمالي للتنفيذ</div>
+            <div style="font-size:9px;color:#475569;">إجمالي المبالغ المنفذة في اليوم الواحد</div>
+          </div>
+          <span id="bc-dailylimit-val" style="font-size:14px;font-weight:800;color:#f87171;">100,000 $</span>
+        </div>
+        <input type="range" id="bc-dailylimit-slider" min="10000" max="500000" value="100000" step="10000"
+               oninput="bcUpdateDailyLimit(this.value)"
+               style="width:100%;accent-color:#ef4444;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#475569;">
+          <span>10K$</span><span>250K$</span><span>500K$</span>
+        </div>
+      </div>
+
+      <!-- Approval rules -->
+      <div class="bc-section-title">قواعد الموافقة</div>
+      <div class="bc-settings-list" style="margin-bottom:18px;">
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔐 موافقة مشرف للمبالغ الكبيرة</div>
+            <div class="bc-row-desc">إيقاف التنفيذ التلقائي وطلب موافقة يدوية لمبالغ تتجاوز الحد</div>
+          </div>
+          <div id="bc-t-supervisorapprove" class="bc-toggle on" onclick="bcToggle(this,'supervisorapprove')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">⛔ رفض تلقائي للمبالغ الخطرة</div>
+            <div class="bc-row-desc">رفض أي حوالة تتجاوز حد الخطر الأقصى مباشرة</div>
+          </div>
+          <div id="bc-t-autoreject" class="bc-toggle off" onclick="bcToggle(this,'autoreject')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">⚠️ تنبيه الوصول للحد اليومي</div>
+            <div class="bc-row-desc">تحذير عند بلوغ 80% من الحد اليومي المسموح</div>
+          </div>
+          <div id="bc-t-dailywarn" class="bc-toggle on" onclick="bcToggle(this,'dailywarn')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔒 تجميد عند تجاوز الحد اليومي</div>
+            <div class="bc-row-desc">إيقاف البوت تلقائياً عند الوصول للحد اليومي</div>
+          </div>
+          <div id="bc-t-dailyfreeze" class="bc-toggle on" onclick="bcToggle(this,'dailyfreeze')"><div class="bc-tog-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Fraud Detection -->
+      <div class="bc-section-title">كشف الاحتيال</div>
+      <div class="bc-settings-list" style="margin-bottom:18px;">
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🕵️ تحليل نمط الرسائل</div>
+            <div class="bc-row-desc">كشف رسائل مشبوهة بناءً على التكرار غير الطبيعي</div>
+          </div>
+          <div id="bc-t-patterndetect" class="bc-toggle on" onclick="bcToggle(this,'patterndetect')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🚨 تنبيه تسلسل مشبوه</div>
+            <div class="bc-row-desc">تنبيه عند وصول 3+ حوالات لنفس الشخص خلال 5 دقائق</div>
+          </div>
+          <div id="bc-t-rapidfire" class="bc-toggle on" onclick="bcToggle(this,'rapidfire')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔍 التحقق من تطابق الاسم والمبلغ</div>
+            <div class="bc-row-desc">رصد إذا أُرسلت نفس البيانات من مجموعات مختلفة</div>
+          </div>
+          <div id="bc-t-crossgroupcheck" class="bc-toggle on" onclick="bcToggle(this,'crossgroupcheck')"><div class="bc-tog-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Currency Filter -->
+      <div class="bc-section-title">العملات المسموح بها</div>
+      <div style="padding:12px 14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <label class="bc-currency-chip" id="bc-cur-USD">
+            <input type="checkbox" checked onchange="bcToggleCurrency('USD',this.checked)" style="display:none;">
+            <span>💵 USD</span>
+          </label>
+          <label class="bc-currency-chip" id="bc-cur-EUR">
+            <input type="checkbox" checked onchange="bcToggleCurrency('EUR',this.checked)" style="display:none;">
+            <span>💶 EUR</span>
+          </label>
+          <label class="bc-currency-chip" id="bc-cur-TRY">
+            <input type="checkbox" checked onchange="bcToggleCurrency('TRY',this.checked)" style="display:none;">
+            <span>🇹🇷 TRY</span>
+          </label>
+          <label class="bc-currency-chip" id="bc-cur-IQD">
+            <input type="checkbox" checked onchange="bcToggleCurrency('IQD',this.checked)" style="display:none;">
+            <span>🇮🇶 IQD</span>
+          </label>
+          <label class="bc-currency-chip" id="bc-cur-SAR">
+            <input type="checkbox" onchange="bcToggleCurrency('SAR',this.checked)" style="display:none;">
+            <span>🇸🇦 SAR</span>
+          </label>
+          <label class="bc-currency-chip" id="bc-cur-AED">
+            <input type="checkbox" onchange="bcToggleCurrency('AED',this.checked)" style="display:none;">
+            <span>🇦🇪 AED</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: GROUPS ── -->
+    <div id="bc-panel-groups" class="bc-panel" style="display:none;">
+      <div class="bc-section-title">المجموعات المُراقَبة</div>
+      <div class="bc-settings-list">
+        <div class="bc-row">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(192,132,252,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🟣</div>
+            <div class="bc-row-info">
+              <div class="bc-row-name">مجموعة الأساور</div>
+              <div class="bc-row-desc">
+                العمولة: <input id="bc-comm-aswar" type="number" value="2" min="0" max="20" step="0.5" onchange="bcUpdateComm('aswar',this.value)" style="width:45px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">%
+                &nbsp;|&nbsp; الحد الأقصى للرسائل: <input id="bc-maxmsgs-aswar" type="number" value="9" min="1" max="100" onchange="bcUpdateMaxMsgs('aswar',this.value)" style="width:42px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">
+              </div>
+            </div>
+          </div>
+          <div id="bc-t-grp-aswar" class="bc-toggle on" onclick="bcToggle(this,'grp-aswar')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(96,165,250,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🔵</div>
+            <div class="bc-row-info">
+              <div class="bc-row-name">مجموعة أبو هاشم</div>
+              <div class="bc-row-desc">
+                العمولة: <input id="bc-comm-abuhashim" type="number" value="1.5" min="0" max="20" step="0.5" onchange="bcUpdateComm('abuhashim',this.value)" style="width:45px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">%
+                &nbsp;|&nbsp; الحد الأقصى للرسائل: <input id="bc-maxmsgs-abuhashim" type="number" value="9" min="1" max="100" onchange="bcUpdateMaxMsgs('abuhashim',this.value)" style="width:42px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">
+              </div>
+            </div>
+          </div>
+          <div id="bc-t-grp-abuhashim" class="bc-toggle on" onclick="bcToggle(this,'grp-abuhashim')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(253,224,71,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🟡</div>
+            <div class="bc-row-info">
+              <div class="bc-row-name">مجموعة عشوائية</div>
+              <div class="bc-row-desc">
+                العمولة: <input id="bc-comm-random" type="number" value="3" min="0" max="20" step="0.5" onchange="bcUpdateComm('random',this.value)" style="width:45px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">%
+                &nbsp;|&nbsp; الحد الأقصى للرسائل: <input id="bc-maxmsgs-random" type="number" value="9" min="1" max="100" onchange="bcUpdateMaxMsgs('random',this.value)" style="width:42px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.20);border-radius:5px;color:#e2e8f0;padding:1px 4px;font-size:11px;">
+              </div>
+            </div>
+          </div>
+          <div id="bc-t-grp-random" class="bc-toggle on" onclick="bcToggle(this,'grp-random')"><div class="bc-tog-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Message parser keywords -->
+      <div class="bc-section-title" style="margin-top:18px;">كلمات تشغيل التحليل</div>
+      <div style="padding:12px 14px;background:rgba(0,0,0,0.25);border-radius:10px;border:1px solid rgba(50,184,198,0.11);font-size:11px;color:#64748b;line-height:1.9;">
+        <span style="color:#22c55e;">سلم</span> •
+        <span style="color:#22c55e;">حول</span> •
+        <span style="color:#22c55e;">أرسل</span> •
+        <span style="color:#22c55e;">حوالة</span> •
+        <span style="color:#22c55e;">الى / إلى</span> •
+        <span style="color:#22c55e;">على اسم</span> •
+        <span style="color:#22c55e;">send / transfer / to</span>
+      </div>
+    </div>
+
+    <!-- ── PANEL: AGENTS ── -->
+    <div id="bc-panel-agents" class="bc-panel" style="display:none;">
+      <div class="bc-section-title">إدارة المنفذين</div>
+      <div class="bc-settings-list" id="bc-agents-list">
+        <!-- Filled by JS -->
+      </div>
+
+      <!-- Priority weights -->
+      <div class="bc-section-title" style="margin-top:18px;">ترتيب الأولوية في التوزيع</div>
+      <div style="padding:14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);">
+        <div style="font-size:10px;color:#64748b;margin-bottom:10px;">الحد الأقصى للحوالات النشطة لكل منفذ قبل الانتقال للتالي</div>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="bc-agent-caps"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: ADVANCED ── -->
+    <div id="bc-panel-advanced" class="bc-panel" style="display:none;">
+
+      <!-- Logging -->
+      <div class="bc-section-title">الإعدادات المتقدمة</div>
+      <div class="bc-settings-list" style="margin-bottom:18px;">
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">📝 تسجيل كامل للأحداث</div>
+            <div class="bc-row-desc">حفظ كل عملية البوت في سجل تفصيلي</div>
+          </div>
+          <div id="bc-t-verboselog" class="bc-toggle on" onclick="bcToggle(this,'verboselog')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔄 إعادة محاولة تلقائية عند الفشل</div>
+            <div class="bc-row-desc">إعادة معالجة الرسائل الفاشلة مرة واحدة تلقائياً</div>
+          </div>
+          <div id="bc-t-autoretry" class="bc-toggle on" onclick="bcToggle(this,'autoretry')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">💾 حفظ تلقائي للإعدادات</div>
+            <div class="bc-row-desc">حفظ جميع التغييرات في الذاكرة المحلية فور تطبيقها</div>
+          </div>
+          <div id="bc-t-autosave" class="bc-toggle on" onclick="bcToggle(this,'autosave')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🔔 صوت التنبيهات</div>
+            <div class="bc-row-desc">تشغيل صوت عند وصول رسائل جديدة أو تنبيهات أمان</div>
+          </div>
+          <div id="bc-t-soundalert" class="bc-toggle off" onclick="bcToggle(this,'soundalert')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">📡 وضع الاستعداد (Standby)</div>
+            <div class="bc-row-desc">إبقاء البوت في وضع المراقبة فقط بدون تنفيذ تلقائي</div>
+          </div>
+          <div id="bc-t-standby" class="bc-toggle off" onclick="bcToggle(this,'standby')"><div class="bc-tog-thumb"></div></div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-row-info">
+            <div class="bc-row-name">🌐 وضع متعدد العملاء</div>
+            <div class="bc-row-desc">السماح لأكثر من موظف بالعمل على نفس قائمة الحوالات</div>
+          </div>
+          <div id="bc-t-multiuser" class="bc-toggle off" onclick="bcToggle(this,'multiuser')"><div class="bc-tog-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Message format config -->
+      <div class="bc-section-title">تنسيق رسالة التأكيد</div>
+      <div style="padding:12px 14px;background:rgba(0,0,0,0.25);border-radius:12px;border:1px solid rgba(50,184,198,0.11);margin-bottom:18px;">
+        <div style="font-size:10px;color:#475569;margin-bottom:8px;">عناصر تُضمَّن في وصل التأكيد:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-name"   checked onchange="bcToggleReceiptField('name',this.checked)"   style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">اسم المستلم</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-amount" checked onchange="bcToggleReceiptField('amount',this.checked)" style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">المبلغ والعملة</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-code"   checked onchange="bcToggleReceiptField('code',this.checked)"   style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">كود الأمان</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-agent"  checked onchange="bcToggleReceiptField('agent',this.checked)"  style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">اسم المنفذ</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-time"   checked onchange="bcToggleReceiptField('time',this.checked)"   style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">وقت التنفيذ</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="bc-rcpt-comm"   onchange="bcToggleReceiptField('comm',this.checked)"            style="accent-color:#6366f1;width:14px;height:14px;">
+            <span style="font-size:11px;color:#94a3b8;">قيمة العمولة</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="bc-section-title" style="color:#f87171;">⚠️ منطقة الخطر</div>
+      <div style="padding:14px;background:rgba(239,68,68,0.04);border-radius:12px;border:1px solid rgba(239,68,68,0.15);">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="bcClearHistory()" style="
+            padding:7px 14px;border-radius:8px;border:1px solid rgba(239,68,68,0.3);
+            background:rgba(239,68,68,0.08);color:#f87171;font-size:10px;font-weight:700;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+          " onmouseover="this.style.background='rgba(239,68,68,0.18)'"
+             onmouseout="this.style.background='rgba(239,68,68,0.08)'">🗑️ مسح السجل</button>
+          <button onclick="bcClearExec()" style="
+            padding:7px 14px;border-radius:8px;border:1px solid rgba(251,191,36,0.3);
+            background:rgba(251,191,36,0.08);color:#fbbf24;font-size:10px;font-weight:700;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+          " onmouseover="this.style.background='rgba(251,191,36,0.18)'"
+             onmouseout="this.style.background='rgba(251,191,36,0.08)'">⚡ مسح التنفيذ</button>
+          <button onclick="bcExportLog()" style="
+            padding:7px 14px;border-radius:8px;border:1px solid rgba(96,165,250,0.3);
+            background:rgba(96,165,250,0.08);color:#60a5fa;font-size:10px;font-weight:700;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+          " onmouseover="this.style.background='rgba(96,165,250,0.18)'"
+             onmouseout="this.style.background='rgba(96,165,250,0.08)'">📤 تصدير السجل</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end body -->
+
+  <!-- ── Footer ── -->
+  <div style="
+    padding:13px 22px;border-top:1px solid rgba(96,165,250,0.1);flex-shrink:0;
+    background:rgba(0,0,0,0.2);display:flex;align-items:center;gap:8px;
+  ">
+    <button onclick="bcResetAll()" style="
+      padding:7px 16px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);
+      background:rgba(239,68,68,0.08);color:#f87171;font-size:11px;font-weight:700;
+      cursor:pointer;font-family:inherit;transition:all .2s;
+    " onmouseover="this.style.background='rgba(239,68,68,0.18)'"
+       onmouseout="this.style.background='rgba(239,68,68,0.08)'">↺ إعادة تعيين</button>
+    <div style="flex:1;font-size:10px;color:#334155;text-align:center;">
+      التغييرات تُطبَّق فورياً
+    </div>
+    <button onclick="bcSaveAndClose()" style="
+      padding:7px 20px;border-radius:10px;border:none;
+      background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+      color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;
+      box-shadow:0 3px 12px rgba(59,130,246,0.35);transition:all .2s;
+    " onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 18px rgba(59,130,246,0.5)'"
+       onmouseout="this.style.transform='';this.style.boxShadow='0 3px 12px rgba(59,130,246,0.35)'">حفظ وإغلاق</button>
+  </div>
+
+</div><!-- end panel -->
+</div><!-- end sv-bot-section -->
+
+<!-- ═══ قسم تعليمات الإدارة (transfers supervisor) ═══ -->
+<!-- ══ نافذة التسعيرة المنبثقة — مشرف الحوالات ══ -->
+<div id="sv-rates-modal" onclick="if(event.target===this)closeRatesModal()" style="display:none;position:fixed;inset:0;z-index:55000;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);overflow-y:auto;padding:20px 16px;">
+<div id="sv-rates-section" style="background:linear-gradient(160deg,#0f1923,#0a1520);border:1px solid rgba(50,184,198,0.2);border-radius:20px;max-width:780px;margin:0 auto;padding:28px 24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,rgba(50,184,198,0.2),rgba(99,102,241,0.1));border:1px solid rgba(50,184,198,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;">💱</div>
+      <div>
+        <div style="font-size:17px;font-weight:900;color:#e9edef;font-family:Tajawal,sans-serif;">قائمة أسعار الصرف</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px;">يدوياً أو صوتياً من تطبيق الأندرويد</div>
+      </div>
+    </div>
+    <button onclick="closeRatesModal()" style="width:34px;height:34px;border-radius:10px;border:1px solid rgba(50,184,198,0.2);background:rgba(255,255,255,0.04);color:#8696a0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(239,68,68,0.12)';this.style.color='#ef4444'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.color='#8696a0'">✕</button>
+  </div>
+  <div style="height:1px;background:rgba(50,184,198,0.12);margin:0 0 18px;"></div>
+  <div id="sv-rates-status" style="display:none;padding:10px 16px;border-radius:10px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:#34d399;font-size:13px;font-weight:700;margin-bottom:16px;"></div>
+
+  <!-- بطاقات الأسعار -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+
+    <!-- دينار أردني -->
+    <div class="sv-rate-card" id="rc-JOD">
+      <div class="sv-rate-flag">🇯🇴</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">دينار أردني</div>
+        <div class="sv-rate-pair">JOD / USD</div>
+      </div>
+      <input id="sv-rate-jod" type="number" step="0.0001" value="0.709" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-JOD')">
+    </div>
+
+    <!-- فودافون كاش -->
+    <div class="sv-rate-card" id="rc-VOD">
+      <div class="sv-rate-flag">📱</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">فودافون كاش</div>
+        <div class="sv-rate-pair">VOD / USD</div>
+      </div>
+      <input id="sv-rate-vod" type="number" step="0.01" value="48.00" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-VOD')">
+    </div>
+
+    <!-- جنيه مصري -->
+    <div class="sv-rate-card" id="rc-EGP">
+      <div class="sv-rate-flag">🇪🇬</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">جنيه مصري</div>
+        <div class="sv-rate-pair">EGP / USD</div>
+      </div>
+      <input id="sv-rate-egp" type="number" step="0.01" value="48.50" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-EGP')">
+    </div>
+
+    <!-- دينار تونسي -->
+    <div class="sv-rate-card" id="rc-TND">
+      <div class="sv-rate-flag">🇹🇳</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">دينار تونسي</div>
+        <div class="sv-rate-pair">TND / USD</div>
+      </div>
+      <input id="sv-rate-tnd" type="number" step="0.001" value="3.10" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-TND')">
+    </div>
+
+    <!-- درهم إماراتي -->
+    <div class="sv-rate-card" id="rc-AED">
+      <div class="sv-rate-flag">🇦🇪</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">درهم إماراتي</div>
+        <div class="sv-rate-pair">AED / USD</div>
+      </div>
+      <input id="sv-rate-aed" type="number" step="0.001" value="3.672" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-AED')">
+    </div>
+
+    <!-- يورو -->
+    <div class="sv-rate-card" id="rc-EUR">
+      <div class="sv-rate-flag">🇪🇺</div>
+      <div class="sv-rate-info">
+        <div class="sv-rate-name">يورو أوروبي</div>
+        <div class="sv-rate-pair">EUR / USD</div>
+      </div>
+      <input id="sv-rate-eur" type="number" step="0.001" value="0.92" dir="ltr"
+             class="sv-rate-input" oninput="svRateHighlight('rc-EUR')">
+    </div>
+
+  </div>
+
+  <!-- آخر تحديث + أزرار -->
+  <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div id="sv-rates-last-updated" style="font-size:11px;color:#475569;direction:ltr;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="svResetRates()" style="padding:9px 16px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#8696a0;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">↺ إعادة تعيين</button>
+      <button onclick="svSaveRates()" style="padding:9px 22px;border-radius:9px;background:linear-gradient(135deg,#32b8c6,#1a8a95);border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        نشر الأسعار
+      </button>
+    </div>
+  </div>
+
+  <!-- ── قسم عمولة البوابة ── -->
+  <div style="height:1px;background:rgba(50,184,198,0.12);margin:24px 0 20px;"></div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));border:1px solid rgba(212,175,55,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;">🌍</div>
+    <div>
+      <div style="font-size:15px;font-weight:800;color:#e9edef;font-family:Tajawal,sans-serif;">عمولة الحوالات — البوابة</div>
+      <div style="font-size:11px;color:#64748b;margin-top:1px;">نسبة العمولة المخصومة من مبلغ التحويل لكل دولة</div>
+    </div>
+  </div>
+  <div id="sv-fee-status" style="display:none;padding:9px 14px;border-radius:9px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:#34d399;font-size:12px;font-weight:700;margin-bottom:14px;"></div>
+  <div id="sv-fee-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;">
+    <div style="color:#475569;font-size:12px;padding:20px;text-align:center;">جاري التحميل...</div>
+  </div>
+  <div style="margin-top:16px;display:flex;justify-content:flex-end;">
+    <button onclick="svSaveFees()" style="padding:9px 22px;border-radius:9px;background:linear-gradient(135deg,#d4af37,#a07c1e);border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      حفظ العمولات
+    </button>
+  </div>
+
+</div><!-- end sv-rates-section -->
+</div><!-- end sv-rates-modal -->
+
+<style>
+.sv-rate-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(50,184,198,0.18);
+  border-radius:14px;padding:16px;
+  display:flex;flex-direction:column;gap:8px;
+  transition:border-color .25s, box-shadow .25s;
+}
+.sv-rate-card.sv-rate-highlight{
+  border-color:rgba(52,211,153,0.6);
+  box-shadow:0 0 16px rgba(52,211,153,0.15);
+}
+.sv-rate-flag{font-size:26px;line-height:1;}
+.sv-rate-info{flex:1;}
+.sv-rate-name{font-size:13px;font-weight:800;color:#e9edef;font-family:Tajawal,sans-serif;}
+.sv-rate-pair{font-size:10px;color:#8696a0;margin-top:2px;direction:ltr;}
+.sv-rate-input{
+  width:100%;padding:10px 8px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(50,184,198,0.22);
+  border-radius:8px;
+  color:#e9edef;font-size:18px;font-weight:800;
+  text-align:center;direction:ltr;
+  font-family:'Courier New',monospace;
+  transition:border-color .2s;outline:none;
+  box-sizing:border-box;
+}
+.sv-rate-input:focus{border-color:rgba(50,184,198,0.6);}
+</style>
+
+<div id="sv-admin-msgs-section" class="sv-mgmt-section" style="padding:24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">📋 تعليمات الإدارة العامة</h2>
+    <button onclick="svSendMessageToAdmin()" style="padding:8px 16px;border-radius:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);color:#32b8c6;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">📤 إرسال رسالة للإدارة</button>
+  </div>
+  <div id="sv-instr-list-tr"></div>
+</div>
+
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="sv-modal-overlay" id="sv-modal">
+  <div class="sv-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;"><h2 style="margin:0;">📋 تفاصيل الحوالة</h2><button class="sv-btn sv-btn-danger" onclick="closeSvModal()">✕ إغلاق</button></div>
+    <div id="sv-modal-body"></div>
+  </div>
+</div>
+<!-- MIGRATION MODAL (Supervisor) -->
+<div id="sv-migrationOverlay" onclick="if(event.target===this)svCloseMigrationModal()" style="
+  display:none;position:fixed;inset:0;z-index:50000;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+">
+  <div style="
+    background:linear-gradient(160deg,#131d30,#0f1923);
+    border:1px solid rgba(232,192,74,0.25);border-radius:20px;
+    padding:28px 30px;width:520px;max-width:94vw;
+    box-shadow:0 24px 64px rgba(0,0,0,0.6);
+    direction:rtl;
+  ">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(232,192,74,0.12);border:1px solid rgba(232,192,74,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;">📦</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#e8c04a;">ترحيل السجل</div>
+          <div style="font-size:11px;color:#4d6080;margin-top:2px;">تصدير وأرشفة الحوالات المنجزة</div>
+        </div>
+      </div>
+      <button onclick="svCloseMigrationModal()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:8px;color:#8696a0;cursor:pointer;font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div id="sv-migSummary" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;"></div>
+    <div id="sv-migDateRange" style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:10px;padding:10px 14px;margin-bottom:20px;font-size:11px;color:#8696a0;"></div>
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:#7b96be;margin-bottom:10px;letter-spacing:.5px;">صيغة التصدير</div>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="svMigFmt" value="json" checked style="display:none;">
+          <div class="sv-mig-fmt-btn" data-val="json" onclick="svSelectMigFormat('json')" style="padding:10px;border-radius:10px;border:1px solid rgba(232,192,74,0.4);background:rgba(232,192,74,0.08);text-align:center;">
+            <div style="font-size:18px;margin-bottom:4px;">{ }</div>
+            <div style="font-size:11px;font-weight:700;color:#e8c04a;">JSON</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">للبرامج والأنظمة</div>
+          </div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="svMigFmt" value="csv" style="display:none;">
+          <div class="sv-mig-fmt-btn" data-val="csv" onclick="svSelectMigFormat('csv')" style="padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);background:rgba(255,255,255,0.03);text-align:center;">
+            <div style="font-size:18px;margin-bottom:4px;">📊</div>
+            <div style="font-size:11px;font-weight:700;color:#8696a0;">CSV</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">للجداول والإكسيل</div>
+          </div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="svMigFmt" value="txt" style="display:none;">
+          <div class="sv-mig-fmt-btn" data-val="txt" onclick="svSelectMigFormat('txt')" style="padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);background:rgba(255,255,255,0.03);text-align:center;">
+            <div style="font-size:18px;margin-bottom:4px;">📄</div>
+            <div style="font-size:11px;font-weight:700;color:#8696a0;">TXT</div>
+            <div style="font-size:10px;color:#4d6080;margin-top:2px;">ملف نصي بسيط</div>
+          </div>
+        </label>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,80,80,0.05);border:1px solid rgba(255,80,80,0.15);border-radius:10px;padding:12px 14px;margin-bottom:22px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#e9edef;">مسح السجل بعد الترحيل</div>
+        <div style="font-size:10px;color:#4d6080;margin-top:2px;">يُفرّغ السجل الحالي بعد التصدير</div>
+      </div>
+      <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;">
+        <input type="checkbox" id="sv-migClearAfter" style="opacity:0;width:0;height:0;">
+        <span onclick="document.getElementById('sv-migClearAfter').click()" style="position:absolute;inset:0;border-radius:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(50,184,198,0.25);transition:background 0.3s;cursor:pointer;" id="sv-migToggleTrack">
+          <span id="sv-migToggleThumb" style="position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#4d6080;transition:all 0.3s;"></span>
+        </span>
+      </label>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="svExecuteMigration()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#b8860b,#e8c04a);border:none;color:#000;font-size:13px;font-weight:800;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        📦 تنفيذ الترحيل
+      </button>
+      <button onclick="svCloseMigrationModal()" style="padding:12px 20px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="sv-toast-wrap" id="sv-toast-wrap"></div>
+
+<!-- ══════════════════════════════════════════
+     نافذة رفع التقارير للإدارة العامة
+     ══════════════════════════════════════════ -->
+<div id="svReportOverlay" onclick="if(event.target===this)svCloseReportModal()" style="display:none;position:fixed;inset:0;z-index:50000;background:rgba(0,0,0,0.78);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#0d1b2a,#0a1520);border:1px solid rgba(50,184,198,0.25);border-radius:22px;padding:30px 28px;width:500px;max-width:94vw;box-shadow:0 24px 72px rgba(0,0,0,0.7),0 0 0 1px rgba(50,184,198,0.08);direction:rtl;max-height:90vh;overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(50,184,198,0.12);border:1.5px solid rgba(50,184,198,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 20px rgba(50,184,198,0.15);">📤</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;letter-spacing:-0.2px;">رفع تقرير للإدارة</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,0.38);margin-top:3px;font-weight:600;">يصل مباشرةً إلى لوحة الإدارة العامة</div>
+        </div>
+      </div>
+      <button onclick="svCloseReportModal()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:10px;color:#8696a0;cursor:pointer;font-size:16px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.12)';this.style.color='#f87171'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#8696a0'">✕</button>
+    </div>
+
+    <!-- Fields -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- عنوان التقرير -->
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.45);margin-bottom:7px;display:block;letter-spacing:0.3px;">عنوان التقرير <span style="color:#f87171;">*</span></label>
+        <input id="svRptTitle" type="text" placeholder="مثال: تقرير حوالات اليوم، كشف الحوالات المعلقة..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.16);border-radius:12px;padding:11px 14px;color:rgba(255,255,255,0.85);font-size:13px;font-weight:700;font-family:inherit;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(50,184,198,0.45)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">
+      </div>
+
+      <!-- رفع الملف -->
+      <div>
+        <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.45);margin-bottom:7px;display:block;letter-spacing:0.3px;">الملف المرفق <span style="color:#f87171;">*</span></label>
+        <input type="file" id="svRptFileInput" accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="svRptFileChosen(this)">
+        <!-- Drop zone -->
+        <div id="svRptDropZone"
+             onclick="document.getElementById('svRptFileInput').click()"
+             ondragover="event.preventDefault();this.style.borderColor='rgba(50,184,198,0.6)';this.style.background='rgba(50,184,198,0.07)'"
+             ondragleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)'"
+             ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)';svRptFileDrop(event)"
+             style="border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.22s;background:rgba(255,255,255,0.02);">
+          <div style="font-size:30px;margin-bottom:8px;opacity:0.45;">📂</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.4);">انقر لاختيار ملف أو اسحبه هنا</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:5px;font-weight:600;">PDF · Excel · Word · صورة &mdash; حتى 10 MB</div>
+        </div>
+        <!-- File preview -->
+        <div id="svRptFilePreview" style="display:none;margin-top:10px;background:rgba(50,184,198,0.06);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:11px 14px;align-items:center;gap:12px;">
+          <div id="svRptFileIcon" style="font-size:24px;flex-shrink:0;">📄</div>
+          <div style="flex:1;min-width:0;">
+            <div id="svRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="svRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
+          </div>
+          <button onclick="svRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✕ إزالة</button>
+        </div>
+      </div>
+
+      <!-- معلومات تلقائية -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">القسم</div>
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);">مشرف الحوالات</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(50,184,198,0.13);border-radius:12px;padding:11px 14px;">
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);margin-bottom:4px;letter-spacing:0.5px;">المرسل</div>
+          <div style="font-size:13px;font-weight:800;color:#32b8c6;" id="svRptSenderDisplay">مشرف الحوالات</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button onclick="svSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(50,184,198,0.9),rgba(34,211,238,0.8));border:none;color:#04101a;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(50,184,198,0.25);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        <i class="fa-solid fa-paper-plane" style="margin-left:6px;"></i>إرسال للإدارة
+      </button>
+      <button onclick="svCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ Modal: إرسال رسالة للإدارة (transfers supervisor) ══ -->
+<div id="svTrMsgModal" onclick="if(event.target===this)document.getElementById('svTrMsgModal').style.display='none'" style="display:none;position:fixed;inset:0;z-index:60000;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:linear-gradient(160deg,#0f1923,#0a1520);border:1px solid rgba(50,184,198,0.15);border-radius:20px;width:100%;max-width:500px;padding:28px 24px;direction:rtl">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(50,184,198,0.12);border:1px solid rgba(50,184,198,0.3);display:flex;align-items:center;justify-content:center;font-size:20px">📤</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef">رسالة للإدارة العامة</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px">سيتم إرسال رسالتك مباشرة</div>
+        </div>
+      </div>
+      <button onclick="document.getElementById('svTrMsgModal').style.display='none'" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(50,184,198,0.18);background:rgba(255,255,255,0.04);color:#8696a0;cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <textarea id="svTrMsgText" rows="4" placeholder="اكتب رسالتك للإدارة..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#e9edef;font-size:13px;font-family:inherit;padding:12px 14px;resize:vertical;direction:rtl;outline:none;box-sizing:border-box;margin-bottom:16px"></textarea>
+    <div style="display:flex;gap:10px">
+      <button onclick="svTrDoSendMsg()" style="flex:1;padding:10px;border-radius:10px;background:rgba(50,184,198,0.2);border:1px solid rgba(50,184,198,0.4);color:#32b8c6;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">إرسال</button>
+      <button onclick="document.getElementById('svTrMsgModal').style.display='none'" style="padding:10px 20px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ نافذة إعداد بوابة الوكيل الخارجي ══ -->
+<div id="sv-portal-setup-overlay" onclick="if(event.target===this)closePortalSetup()" style="display:none;position:fixed;inset:0;z-index:60000;background:rgba(0,0,0,0.78);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#0f1923,#0a1520);border:1px solid rgba(99,102,241,0.3);border-radius:22px;padding:30px 28px;width:460px;max-width:94vw;box-shadow:0 24px 72px rgba(0,0,0,0.7);direction:rtl;">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(99,102,241,0.15);border:1.5px solid rgba(99,102,241,0.35);display:flex;align-items:center;justify-content:center;font-size:22px;">🔑</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#e9edef;">إعداد بوابة الوكيل</div>
+          <div style="font-size:12px;color:#818cf8;margin-top:2px;" id="sp-agent-name"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="sp-portal-badge" style="font-size:11px;font-weight:700;color:#64748b;"></span>
+        <button onclick="closePortalSetup()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(99,102,241,0.2);border-radius:9px;color:#8696a0;cursor:pointer;font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+    </div>
+
+    <!-- Email & Country -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <div>
+        <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">البريد الإلكتروني</label>
+        <input id="sp-email" type="email" placeholder="agent@example.com" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.2);border-radius:10px;padding:9px 12px;color:#e2e8f0;font-size:13px;font-family:inherit;outline:none;direction:ltr;" onfocus="this.style.borderColor='rgba(99,102,241,0.55)'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;">البلد</label>
+        <input id="sp-country" type="text" placeholder="مثال: تونس، تركيا..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.2);border-radius:10px;padding:9px 12px;color:#e2e8f0;font-size:13px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(99,102,241,0.55)'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
+      </div>
+    </div>
+
+    <!-- PIN -->
+    <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:7px;">رمز PIN (6 خانات) — اتركه فارغاً للاحتفاظ بالرمز الحالي</label>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px;">
+      <input id="sp-p1" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="this.value&&document.getElementById('sp-p2').focus()" onkeydown="if(event.key==='Backspace'&&!this.value){}">
+      <input id="sp-p2" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="this.value&&document.getElementById('sp-p3').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('sp-p1').focus()">
+      <input id="sp-p3" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="this.value&&document.getElementById('sp-p4').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('sp-p2').focus()">
+      <input id="sp-p4" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="this.value&&document.getElementById('sp-p5').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('sp-p3').focus()">
+      <input id="sp-p5" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="this.value&&document.getElementById('sp-p6').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('sp-p4').focus()">
+      <input id="sp-p6" class="pin-box" type="password" maxlength="1" inputmode="numeric" style="width:48px;height:52px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(99,102,241,0.25);border-radius:10px;text-align:center;font-size:1.3rem;color:#e2e8f0;outline:none;font-family:inherit;" oninput="" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('sp-p5').focus()">
+    </div>
+
+    <!-- Portal Active Toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.18);border-radius:12px;padding:12px 16px;margin-bottom:18px;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#e9edef;">تفعيل البوابة الخارجية</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px;">السماح للوكيل بتسجيل الدخول عبر الرابط</div>
+      </div>
+      <label style="position:relative;display:inline-block;width:42px;height:23px;cursor:pointer;">
+        <input type="checkbox" id="sp-active" checked style="opacity:0;width:0;height:0;">
+        <span onclick="document.getElementById('sp-active').click()" style="position:absolute;inset:0;border-radius:12px;background:#4f46e5;border:1px solid rgba(99,102,241,0.4);cursor:pointer;transition:background .3s;">
+          <span style="position:absolute;top:3px;right:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:all .25s;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></span>
+        </span>
+      </label>
+    </div>
+
+    <!-- Status message (shown after save) -->
+    <div id="sp-status-msg" style="display:none;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);border-radius:10px;padding:10px 14px;font-size:12px;margin-bottom:14px;word-break:break-all;"></div>
+
+    <!-- Footer -->
+    <div style="display:flex;gap:10px;">
+      <button id="sp-save-btn" onclick="savePortalSetup()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#818cf8);border:none;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">حفظ الإعدادات</button>
+      <button onclick="closePortalSetup()" style="padding:12px 20px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(99,102,241,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/ws-notifications.js' %}"></script>
+<script src="{% static 'js/transactions-supervisor.js' %}"></script>
+<script src="{% static 'js/transactions-bot-panel.js' %}"></script>
+<script>
+function toggleUserDropdown(e){e.stopPropagation();document.getElementById("userDropdown").classList.toggle("open");}
+document.addEventListener("click",function(){var d=document.getElementById("userDropdown");if(d)d.classList.remove("open");});
+document.addEventListener("DOMContentLoaded",function(){var obs=new MutationObserver(function(){var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");var mn=document.getElementById("ud-menu-name"),mr=document.getElementById("ud-menu-role");if(n&&mn)mn.textContent=n.textContent;if(r&&mr)mr.textContent=r.textContent;});var n=document.getElementById("userDisplayName"),r=document.getElementById("userDisplayRole");if(n)obs.observe(n,{childList:true,characterData:true,subtree:true});if(r)obs.observe(r,{childList:true,characterData:true,subtree:true});});
+function svOpenReportModal(){var o=document.getElementById('svReportOverlay');if(!o)return;try{var t=document.getElementById('svRptTitle');if(t)t.value='';var p=document.getElementById('svRptFilePreview');var dz=document.getElementById('svRptDropZone');if(p)p.style.display='none';if(dz)dz.style.display='';}catch(e){}o.style.setProperty('display','flex','important');}
+function svCloseReportModal(){var o=document.getElementById('svReportOverlay');if(o)o.style.setProperty('display','none','important');}
+</script>
+
+<!-- ══ نافذة طلب التعديل البرمجي ══ -->
+<style>
+.dr-modal-box{background:var(--card-bg,#1e2b33);border-radius:18px;padding:28px 28px 22px;max-width:500px;width:95%;text-align:right;border:1px solid rgba(50,184,198,0.15);box-shadow:0 24px 64px rgba(0,0,0,0.6);}
+.dr-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.dr-hdr-icon{width:46px;height:46px;background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.dr-hdr-title{font-size:17px;font-weight:900;color:var(--text-main,#e9edef);}
+.dr-hdr-sub{font-size:11px;color:var(--text-sub,#8696a0);margin-top:2px;}
+.dr-field{margin-bottom:14px;}
+.dr-label{font-size:11px;font-weight:700;color:var(--text-sub,#8696a0);margin-bottom:6px;display:block;letter-spacing:.3px;}
+.dr-input,.dr-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;color:var(--text-main,#e9edef);outline:none;transition:border .2s;direction:rtl;}
+.dr-input:focus,.dr-textarea:focus{border-color:rgba(50,184,198,0.5);}
+.dr-textarea{resize:vertical;min-height:90px;}
+.dr-type-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dr-type-btn{flex:1;min-width:120px;padding:9px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-sub,#8696a0);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.dr-type-btn.active-improve{border-color:rgba(34,197,94,0.5);background:rgba(34,197,94,0.1);color:#22c55e;}
+.dr-type-btn.active-feature{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.1);color:#818cf8;}
+.dr-type-btn.active-bug{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.1);color:#f87171;}
+.dr-attach-lbl{display:flex;align-items:center;gap:8px;padding:10px 13px;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text-sub,#8696a0);transition:border .2s;}
+.dr-attach-lbl:hover{border-color:rgba(50,184,198,0.4);}
+.dr-attach-files{font-size:11px;color:#32b8c6;margin-top:5px;min-height:14px;}
+.dr-footer{display:flex;gap:10px;margin-top:6px;}
+.dr-btn-send{flex:1;padding:11px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;transition:opacity .2s;}
+.dr-btn-send:hover{opacity:.85;}
+.dr-btn-cancel{padding:11px 18px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:var(--text-sub,#8696a0);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.dr-btn-cancel:hover{background:rgba(255,255,255,0.1);}
+html:not([data-theme="dark"]) body .dr-modal-box{background:#ffffff;border-color:rgba(50,184,198,0.2);box-shadow:0 24px 64px rgba(0,0,0,0.12);}
+html:not([data-theme="dark"]) body .dr-input,html:not([data-theme="dark"]) body .dr-textarea{background:#f8fbfd;border-color:rgba(0,0,0,0.12);color:#0f172a;}
+html:not([data-theme="dark"]) body .dr-type-btn{background:#f1f5f9;border-color:#e2e8f0;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-attach-lbl{background:#f8fbfd;border-color:#cbd5e1;color:#64748b;}
+html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-color:#e2e8f0;color:#475569;}
+</style>
+<div class="modal-overlay" id="devRequestModal" style="display:none;z-index:9500" onclick="if(event.target===this)closeDevRequestModal()">
+  <div class="dr-modal-box">
+    <div class="dr-hdr">
+      <div class="dr-hdr-icon">🛠️</div>
+      <div>
+        <div class="dr-hdr-title">طلب تعديل برمجي</div>
+        <div class="dr-hdr-sub">سيتم إرسال الطلب مباشرة إلى الإدارة</div>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">عنوان الطلب</label>
+      <input class="dr-input" id="drTitle" type="text" placeholder="اكتب عنواناً موجزاً للطلب...">
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">نوع الطلب</label>
+      <div class="dr-type-btns">
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+      </div>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">وصف الطلب بالتفصيل</label>
+      <textarea class="dr-textarea" id="drDesc" rows="4" placeholder="اشرح المشكلة أو التحسين المطلوب بوضوح..."></textarea>
+    </div>
+    <div class="dr-field">
+      <label class="dr-label">مرفقات (اختياري)</label>
+      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
+      <div class="dr-attach-files" id="drAttachFiles"></div>
+    </div>
+    <div class="dr-footer">
+      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _drType=null;
+function openDevRequestModal(){
+  _drType=null;
+  document.getElementById('drTitle').value='';
+  document.getElementById('drDesc').value='';
+  document.getElementById('drAttach').value='';
+  document.getElementById('drAttachFiles').textContent='';
+  ['improve','feature','bug'].forEach(function(t){document.getElementById('drType-'+t).className='dr-type-btn';});
+  document.getElementById('devRequestModal').style.display='flex';
+}
+function closeDevRequestModal(){document.getElementById('devRequestModal').style.display='none';}
+function selectDrType(t){
+  _drType=t;
+  ['improve','feature','bug'].forEach(function(x){document.getElementById('drType-'+x).className='dr-type-btn';});
+  document.getElementById('drType-'+t).className='dr-type-btn active-'+t;
+}
+function updateDrAttachLabel(){
+  var files=document.getElementById('drAttach').files;
+  var names=[];for(var i=0;i<files.length;i++)names.push(files[i].name);
+  document.getElementById('drAttachFiles').textContent=names.length?names.join(' • '):'';
+}
+async function submitDevRequest(){
+  var title=document.getElementById('drTitle').value.trim();
+  var desc=document.getElementById('drDesc').value.trim();
+  if(!title){alert('يرجى كتابة عنوان الطلب');return;}
+  if(!_drType){alert('يرجى اختيار نوع الطلب');return;}
+  if(!desc){alert('يرجى كتابة وصف الطلب');return;}
+  var csrf=(document.cookie.split(';').find(function(c){return c.trim().startsWith('csrftoken=');})||'').split('=')[1]||'';
+  try{
+    var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'transactions-supervisor'})});
+    var data=await res.json();
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    else{alert(data.error||'حدث خطأ أثناء الإرسال');}
+  }catch(e){alert('تعذّر الاتصال بالخادم');}
+}
+
+// ── مستمع WebSocket: أسعار الصرف الواردة من تطبيق الأندرويد ──────────────
+document.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('ws:voice_rates', function(e) {
+    var rates = (e.detail || {}).rates || {};
+    var fields = { JOD:'sv-rate-jod', VOD:'sv-rate-vod', EGP:'sv-rate-egp', TND:'sv-rate-tnd', AED:'sv-rate-aed', EUR:'sv-rate-eur' };
+    var changed = [];
+    Object.keys(fields).forEach(function(cur) {
+      if (rates[cur] != null) {
+        var inp = document.getElementById(fields[cur]);
+        if (inp) {
+          inp.value = rates[cur];
+          if (typeof svRateHighlight === 'function') svRateHighlight('rc-' + cur);
+          changed.push(cur + ' = ' + rates[cur]);
+        }
+      }
+    });
+    if (changed.length) {
+      // افتح النافذة المنبثقة تلقائياً عند ورود أسعار جديدة
+      openRatesModal();
+      if (window.WsNotif) WsNotif.showToast('📱 تحديث أسعار بالصوت', changed.join(' | '), 'success');
+      var st = document.getElementById('sv-rates-status');
+      if (st) { st.textContent = '✅ وصلت أسعار جديدة بالصوت — ' + new Date().toLocaleTimeString('ar'); st.style.display='block'; setTimeout(function(){st.style.display='none';},6000); }
+      var lu = document.getElementById('sv-rates-last-updated');
+      if (lu) lu.textContent = 'Last updated: ' + new Date().toLocaleString('ar');
+    }
+  });
+});
+</script>
+
+<script>
+(function(){
+  try {
+    ['intl_agents','intl_clients','_defaultEmployees','intl_botSettings','_agents_db_only_v1'].forEach(function(k){
+      localStorage.removeItem(k);
+    });
+  } catch(e){}
+})();
+</script>
+
+<script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
+<script src="{% static 'js/accounts_panel.js' %}?v=7"></script>
+
+{% include 'layout/accounts_panel.html' %}
+{% endblock content %}

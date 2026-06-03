@@ -1,0 +1,618 @@
+/*
+ * ui-enhancements.css — تحسينات واجهة المستخدم
+ * يُحمَّل على جميع الصفحات بعد responsive.css
+ * Modern UI: Glassmorphism · Animations · Hover Effects · Visual Polish
+ */
+
+/* ══════════════════════════════════════════════════════════════════
+   1. PAGE LOAD ANIMATION — دخول الصفحة
+═══════════════════════════════════════════════════════════════════ */
+@keyframes ui-fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ui-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ui-slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes ui-scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ui-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes ui-pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.7; }
+  70%  { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+@keyframes ui-count-bounce {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+@keyframes ui-skeleton {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ui-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Staggered entrance for main content sections ── */
+.main-content > *,
+.tab-pane.active > *,
+.tab-pane > .card,
+.tab-pane > .scard {
+  animation: ui-fadeInUp 0.35s ease both;
+}
+.main-content > *:nth-child(1) { animation-delay: 0.02s; }
+.main-content > *:nth-child(2) { animation-delay: 0.06s; }
+.main-content > *:nth-child(3) { animation-delay: 0.10s; }
+.main-content > *:nth-child(4) { animation-delay: 0.14s; }
+.main-content > *:nth-child(5) { animation-delay: 0.18s; }
+.main-content > *:nth-child(6) { animation-delay: 0.22s; }
+
+/* ══════════════════════════════════════════════════════════════════
+   2. CARDS — بطاقات محسّنة
+═══════════════════════════════════════════════════════════════════ */
+
+/* Smooth card hover: lift + glow */
+.card, .scard, .stat-box, .iq-card, .sv-card, .prc-card, .wf-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+  will-change: transform;
+}
+.card:hover, .scard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2) !important;
+  border-color: var(--border-2) !important;
+}
+
+/* Section/stat cards color-coded top border on hover */
+.stat-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3) !important;
+}
+
+/* Glass inner highlight on cards */
+[data-theme="dark"] .card::before,
+[data-theme="dark"] .scard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .card,
+[data-theme="dark"] .scard {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Colored top accent line on specific stat cards */
+.stat-box.stat-success { border-top: 2px solid var(--success) !important; }
+.stat-box.stat-danger  { border-top: 2px solid var(--danger)  !important; }
+.stat-box.stat-warning { border-top: 2px solid var(--warning) !important; }
+.stat-box.stat-info    { border-top: 2px solid var(--info)    !important; }
+.stat-box.stat-purple  { border-top: 2px solid var(--purple)  !important; }
+
+/* ══════════════════════════════════════════════════════════════════
+   3. BUTTONS — أزرار محسّنة
+═══════════════════════════════════════════════════════════════════ */
+
+/* Shimmer shine on hover */
+.btn, .au-btn, .au-btn-primary, .au-btn-secondary, .au-btn-ghost,
+.th-btn, button[class*="btn"] {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease !important;
+}
+.btn::after, .au-btn::after, .au-btn-primary::after,
+.au-btn-secondary::after, .th-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: skewX(-15deg);
+  transition: left 0.4s ease;
+  pointer-events: none;
+}
+.btn:hover::after, .au-btn:hover::after, .au-btn-primary:hover::after,
+.au-btn-secondary:hover::after, .th-btn:hover::after {
+  left: 140%;
+}
+.btn:hover, .au-btn:hover, .au-btn-primary:hover,
+.au-btn-secondary:hover, .th-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+}
+.btn:active, .au-btn:active, .au-btn-primary:active,
+.au-btn-secondary:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* Better focus ring */
+.btn:focus-visible, .au-btn:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   4. INPUTS & FORMS — حقول الإدخال
+═══════════════════════════════════════════════════════════════════ */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+select, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.07), 0 0 0 1px var(--border-input-focus) !important;
+}
+
+/* Label animation */
+label {
+  transition: color 0.18s ease !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. SIDEBAR — شريط جانبي محسّن
+═══════════════════════════════════════════════════════════════════ */
+
+/* Active nav item: glowing right-border indicator (RTL = right side) */
+.nav-item {
+  position: relative;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+  border-radius: 8px;
+  margin: 2px 8px;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s ease, height 0.2s ease;
+}
+.nav-item.active::before { opacity: 1; }
+.nav-item.active {
+  background: linear-gradient(to left, rgba(255,255,255,0.1), rgba(255,255,255,0.04)) !important;
+}
+.nav-item:hover:not(.active) {
+  transform: translateX(-2px);
+}
+
+/* Sidebar brand gradient text animation */
+.sidebar-brand-title {
+  animation: ui-gradient-shift 4s ease infinite;
+  background-size: 200% auto;
+}
+
+/* Sidebar footer stat badges */
+.sidebar-stat-val {
+  font-weight: 800;
+  transition: transform 0.2s ease;
+}
+.sidebar-stat-row:hover .sidebar-stat-val {
+  transform: scale(1.15);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. HEADER — الهيدر العلوي
+═══════════════════════════════════════════════════════════════════ */
+
+/* Clock subtle pulse */
+.clock-time {
+  transition: color 0.3s ease;
+}
+
+/* Section name badge hover */
+#header-section-name {
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+}
+#header-section-name:hover {
+  transform: translateY(-1px);
+}
+
+/* User dropdown smooth */
+.user-dropdown {
+  transition: all 0.2s ease;
+}
+.ud-menu {
+  animation: ui-scaleIn 0.18s ease both;
+  transform-origin: top left;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   7. TABS — شريط التبويب
+═══════════════════════════════════════════════════════════════════ */
+.tab-btn, .nav-tab, .tabs-bar .btn {
+  position: relative;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease !important;
+}
+.tab-btn::after, .nav-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.tab-btn.active::after, .nav-tab.active::after {
+  transform: scaleX(1);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   8. TABLES — الجداول
+═══════════════════════════════════════════════════════════════════ */
+tbody tr {
+  transition: background 0.15s ease !important;
+}
+/* Grid-based table rows */
+[class*="tbl-row"]:not(.tbl-head):hover,
+.list-row:hover {
+  background: var(--surface-hover) !important;
+  transition: background 0.15s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   9. BADGES & STATUS — الشارات والحالات
+═══════════════════════════════════════════════════════════════════ */
+.badge, .status-badge, .nav-badge {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.badge:hover, .status-badge:hover { transform: scale(1.08); }
+
+/* Live pulse badge */
+.badge-live, .badge-online, .pulse-badge {
+  position: relative;
+}
+.badge-live::before, .badge-online::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: var(--success);
+  opacity: 0.4;
+  animation: ui-pulse-ring 1.8s ease infinite;
+  z-index: -1;
+}
+
+/* Pulse dot improvement */
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: var(--success);
+  opacity: 0.4;
+  animation: ui-pulse-ring 1.8s ease infinite;
+}
+
+/* Nav badge animation */
+.nav-badge {
+  animation: ui-count-bounce 0.4s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   10. MODALS — النوافذ المنبثقة
+═══════════════════════════════════════════════════════════════════ */
+.modal-bg, .modal-overlay, .overlay-bg, .dm-overlay {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.modal, .dm-panel {
+  animation: ui-scaleIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+/* Modal header accent line */
+.modal-title, .dm-title {
+  position: relative;
+  padding-bottom: 12px;
+}
+.modal-title::after, .dm-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 40px; height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   11. SECTION TITLES — عناوين الأقسام
+═══════════════════════════════════════════════════════════════════ */
+.sec-title, .section-title, h3.title {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.sec-title::before, .section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   12. SCROLLBAR — شريط التمرير
+═══════════════════════════════════════════════════════════════════ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+/* ══════════════════════════════════════════════════════════════════
+   13. SKELETON LOADERS — حالة التحميل
+═══════════════════════════════════════════════════════════════════ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: ui-skeleton 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+.skeleton * { visibility: hidden !important; }
+
+/* ══════════════════════════════════════════════════════════════════
+   14. STAT NUMBERS — أرقام الإحصاءات
+═══════════════════════════════════════════════════════════════════ */
+.stat-value, .stat-num, .main-box-val,
+[class*="stat-val"], [class*="val-num"] {
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+}
+/* Highlight on value change */
+.stat-value.updated {
+  animation: ui-count-bounce 0.4s ease;
+  color: var(--accent) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   15. TOAST NOTIFICATIONS — الإشعارات
+═══════════════════════════════════════════════════════════════════ */
+.toast, .th-toast, .notif-toast {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-2) !important;
+  animation: ui-slideInRight 0.3s ease both !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   16. HEADER — شريط الرأس
+═══════════════════════════════════════════════════════════════════ */
+
+/* Logo subtle glow */
+.logo-title {
+  transition: text-shadow 0.3s ease;
+}
+.logo-wrap:hover .logo-title {
+  text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+/* Header height subtle border bottom glow */
+#header, .header {
+  box-shadow: 0 1px 0 var(--border), 0 4px 24px rgba(0,0,0,0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   17. TRANSFER / OPERATION ROWS — صفوف العمليات
+═══════════════════════════════════════════════════════════════════ */
+.acct-row, .tx-row, .msg-row, .list-item, .op-row {
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease !important;
+  border-radius: 8px;
+}
+.acct-row:hover, .tx-row:hover, .msg-row:hover, .list-item:hover {
+  transform: translateX(-2px);
+  box-shadow: inset 3px 0 0 var(--accent) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   18. BRANCH TREE — شجرة الفروع
+═══════════════════════════════════════════════════════════════════ */
+.branch-node, .tree-node {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.branch-node:hover, .tree-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   19. CURRENCY BADGES — شارات العملات
+═══════════════════════════════════════════════════════════════════ */
+.cur-badge, .currency-badge {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.cur-badge:hover, .currency-badge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   20. TELLER BOXES — صناديق التلرات
+═══════════════════════════════════════════════════════════════════ */
+.teller-box, .teller-card, .sv-teller-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  position: relative;
+}
+.teller-box:hover, .teller-card:hover, .sv-teller-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3) !important;
+}
+/* Online indicator glow */
+.teller-box.online, .sv-teller-item.online {
+  border-color: var(--success) !important;
+  box-shadow: 0 0 0 1px rgba(34,197,94,0.2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   21. SELECT / DROPDOWN IMPROVEMENTS
+═══════════════════════════════════════════════════════════════════ */
+select {
+  cursor: pointer;
+  appearance: auto;
+}
+select:hover {
+  border-color: var(--border-2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   22. LINKS — الروابط
+═══════════════════════════════════════════════════════════════════ */
+a:not([class]) {
+  transition: color 0.18s ease, opacity 0.18s ease;
+}
+a:not([class]):hover { opacity: 0.8; }
+
+/* ══════════════════════════════════════════════════════════════════
+   23. PORTAL CARDS — بطاقات البوابة
+═══════════════════════════════════════════════════════════════════ */
+.portal-card, .portal-item {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+}
+.portal-card:hover, .portal-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35) !important;
+  border-color: var(--border-2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   24. STATS ROW — شريط الإحصاءات العلوي
+═══════════════════════════════════════════════════════════════════ */
+.stats-row > *, #dash-stats-row > * {
+  animation: ui-fadeInUp 0.35s ease both;
+}
+.stats-row > *:nth-child(1), #dash-stats-row > *:nth-child(1) { animation-delay: 0.05s; }
+.stats-row > *:nth-child(2), #dash-stats-row > *:nth-child(2) { animation-delay: 0.10s; }
+.stats-row > *:nth-child(3), #dash-stats-row > *:nth-child(3) { animation-delay: 0.15s; }
+.stats-row > *:nth-child(4), #dash-stats-row > *:nth-child(4) { animation-delay: 0.20s; }
+.stats-row > *:nth-child(5), #dash-stats-row > *:nth-child(5) { animation-delay: 0.25s; }
+
+/* ══════════════════════════════════════════════════════════════════
+   25. WORKFLOW STEPS — خطوات سير العمل
+═══════════════════════════════════════════════════════════════════ */
+.wf-step {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.wf-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+}
+.wf-step-arrow {
+  transition: transform 0.2s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   26. RATE CARDS — بطاقات الأسعار
+═══════════════════════════════════════════════════════════════════ */
+.rate-card, .prc-card, .sv-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.rate-card:hover, .prc-card:hover, .sv-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-2) !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   27. LOGIN PAGE — صفحة تسجيل الدخول
+═══════════════════════════════════════════════════════════════════ */
+.role-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+.role-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35) !important;
+}
+.role-btn.selected {
+  animation: ui-scaleIn 0.2s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   28. GENERAL HELPER CLASSES — فئات مساعدة
+═══════════════════════════════════════════════════════════════════ */
+
+/* Accent glow effect */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(255,255,255,0.1) !important;
+}
+/* Animated number */
+.num-anim {
+  animation: ui-count-bounce 0.4s ease;
+}
+/* Fade in utility */
+.ui-fade-in {
+  animation: ui-fadeIn 0.4s ease both;
+}
+/* Shimmer text */
+.shimmer-text {
+  background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent) 50%, var(--text-primary) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: ui-shimmer 3s linear infinite;
+}
+/* Hover scale */
+.hover-scale {
+  transition: transform 0.2s ease !important;
+}
+.hover-scale:hover { transform: scale(1.04); }
+
+/* ══════════════════════════════════════════════════════════════════
+   29. DIVIDERS — الفواصل
+═══════════════════════════════════════════════════════════════════ */
+hr, .divider {
+  border-color: var(--border) !important;
+  opacity: 0.5;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   30. FOCUS MANAGEMENT — إدارة التركيز
+═══════════════════════════════════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+}
+:focus:not(:focus-visible) {
+  outline: none !important;
+}

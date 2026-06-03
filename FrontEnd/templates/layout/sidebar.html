@@ -1,0 +1,64 @@
+{% load static %}
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ═══ Sidebar Right ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🏦</div>
+      <div class="sidebar-brand-title">الإدارة العامة</div>
+      <div class="sidebar-brand-sub">International Financial Services</div>
+    </div>
+
+    <div class="sidebar-label">القائمة الرئيسية</div>
+
+    <div class="nav-item active" data-tab="0" onclick="switchTab(0)">
+      <div class="nav-icon">📊</div>
+      <span>لوحة التحكم</span>
+    </div>
+
+    <div class="nav-item" data-tab="9" onclick="switchTab(9)">
+      <div class="nav-icon">🏛️</div>
+      <span>أقسام النظام</span>
+    </div>
+
+    <div class="nav-item" data-tab="11" onclick="typeof switchTab==='function'?switchTab(11):window.location.href='/dashboard/'">
+      <div class="nav-icon">📈</div>
+      <span>التقارير</span>
+      <span class="nav-badge" id="sb-reports" style="background:rgba(251,191,36,0.15);color:#fbbf24">0</span>
+    </div>
+
+    <!-- ══ قسم إدارة النظام ══ -->
+    <div class="sidebar-label sys">إدارة النظام</div>
+
+    <div class="nav-item" data-tab="10" onclick="typeof switchTab==='function'?switchTab(10):window.location.href='/dashboard/'">
+      <div class="nav-icon">⚙️</div>
+      <span>إدارة النظام</span>
+    </div>
+
+    <!-- قسم التصميم — مخفي مؤقتاً -->
+    <div class="nav-item" data-tab="8" onclick="switchTab(8)" style="display:none">
+      <div class="nav-icon">🎨</div>
+      <span>قسم التصميم</span>
+    </div>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">الفروع</span>
+        <span class="sidebar-stat-val text-blue" id="sf-branches">1</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">المشرفون</span>
+        <span class="sidebar-stat-val text-orange" id="sf-sups">2</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">الصناديق</span>
+        <span class="sidebar-stat-val text-green" id="sf-boxes">4</span>
+      </div>
+      <div class="sidebar-status">
+        <div class="pulse-dot"></div>
+        متصل — النظام يعمل بكفاءة
+      </div>
+    </div>
+  </aside>

@@ -1,0 +1,3299 @@
+/* ══════════════════════════════════════════════════════════════
+   INTERNATIONAL SYSTEM — Global Theme Enforcement
+   Version 5.0  —  Strict Black / White
+
+   Enforces the global black/white design system globally.
+   All elements inherit from CSS variables defined in theme.css.
+   Light mode = :root (white bg, black text)
+   Dark mode  = [data-theme="dark"] (black bg, white text)
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   1.  PAGE BODY
+───────────────────────────────────────────────────────────── */
+html { background: var(--bg-page); }
+body {
+  background: var(--bg-page) !important;
+  color: var(--text-body) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2.  HEADER  (black bar in BOTH modes)
+───────────────────────────────────────────────────────────── */
+#header, .header, header {
+  background: var(--surface-header) !important;
+  border-bottom: var(--header-border-b) !important;
+  box-shadow: var(--shadow-header) !important;
+  color: var(--text-nav) !important;
+}
+.logo-title, .header-logo-text { color: var(--text-nav-active) !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   3.  SIDEBAR  (black bar in BOTH modes)
+───────────────────────────────────────────────────────────── */
+.sidebar, .sidebar-wrap, .sb-wrap {
+  background: var(--surface-sidebar) !important;
+  border-color: var(--border) !important;
+  color: var(--text-nav) !important;
+}
+.sidebar-brand-title, .sidebar-brand-sub, .sidebar-logo-text {
+  color: var(--text-nav-active) !important;
+}
+.nav-item { color: var(--text-nav) !important; border-color: transparent !important; }
+.nav-item:hover, .nav-item.active {
+  color: var(--text-nav-active) !important;
+  border-color: var(--text-nav-active) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4.  NAV BAR / TAB BAR
+───────────────────────────────────────────────────────────── */
+.nav-bar, .navbar:not(.ud-menu), .nav-tabs, .tab-bar, .nav-tab-bar {
+  background: var(--surface-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.nav-tab {
+  background: var(--primary-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+  transition: var(--transition-fast);
+}
+.nav-tab:hover {
+  background: var(--primary-bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-2) !important;
+}
+.nav-tab.active {
+  background: var(--primary-bg-hover) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5.  CARDS / SURFACES
+───────────────────────────────────────────────────────────── */
+.card, .scard, .stat-box, .session-bar,
+.panel, .pane, .wf-card, .ntf-card,
+.iq-card, .sv-card, .prc-card {
+  background: var(--surface-card) !important;
+  border-color: var(--border-card) !important;
+  color: var(--text-body) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6.  MODALS / OVERLAYS
+───────────────────────────────────────────────────────────── */
+.modal-overlay > *, .modal-box, .modal-content {
+  background: var(--surface-modal) !important;
+  border-color: var(--border-card) !important;
+  color: var(--text-body) !important;
+}
+.modal-overlay, .overlay-bg { background: var(--modal-overlay) !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   7.  FORM ELEMENTS
+───────────────────────────────────────────────────────────── */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+select, textarea, .field-input {
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+input::placeholder, textarea::placeholder, .field-input::placeholder {
+  color: var(--input-placeholder) !important;
+}
+input:focus, select:focus, textarea:focus, .field-input:focus {
+  border-color: var(--border-input-focus) !important;
+  box-shadow: var(--shadow-input) !important;
+  outline: none !important;
+}
+select option { background: var(--surface-card) !important; color: var(--text-body) !important; }
+label { color: var(--text-label) !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   8.  TABLES
+───────────────────────────────────────────────────────────── */
+table { background: var(--surface-card) !important; }
+thead th {
+  background: var(--table-header-bg) !important;
+  color: var(--table-header-text) !important;
+  border-color: var(--table-header-border) !important;
+}
+td, th { color: var(--text-body) !important; border-color: var(--table-row-border) !important; }
+tbody tr:hover td { background: var(--table-row-hover) !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   9.  EXCHANGE SECTION  (black bar lock in BOTH modes)
+───────────────────────────────────────────────────────────── */
+#dept-exchange {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+#dept-exchange * { color: #ffffff !important; }
+#dept-exchange input, #dept-exchange select, #dept-exchange .field-input {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+}
+#exchangeToolCard {
+  background: #000000 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10.  CORPORATE THEME OVERRIDES  [data-theme="corporate"]
+        White header + white sidebar with blue accents
+───────────────────────────────────────────────────────────── */
+[data-theme="corporate"] #header,
+[data-theme="corporate"] .header,
+[data-theme="corporate"] header {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10) !important;
+}
+
+[data-theme="corporate"] .logo-title,
+[data-theme="corporate"] .header-logo-text,
+[data-theme="corporate"] .logo-sub {
+  color: #1E3A5F !important;
+}
+
+[data-theme="corporate"] .sidebar,
+[data-theme="corporate"] .sidebar-wrap,
+[data-theme="corporate"] .sb-wrap {
+  background: #FFFFFF !important;
+  border-left: 1px solid rgba(37, 99, 235, 0.12) !important;
+  border-color: rgba(37, 99, 235, 0.12) !important;
+}
+
+[data-theme="corporate"] .nav-item {
+  color: #1E3A5F !important;
+  border-color: transparent !important;
+}
+
+[data-theme="corporate"] .nav-item:hover {
+  color: #2563EB !important;
+  background: rgba(37, 99, 235, 0.07) !important;
+  border-color: transparent !important;
+}
+
+[data-theme="corporate"] .nav-item.active {
+  color: #2563EB !important;
+  background: rgba(37, 99, 235, 0.10) !important;
+  border-color: #2563EB !important;
+  font-weight: 700;
+}
+
+[data-theme="corporate"] .clock-time {
+  color: #1E3A5F !important;
+}
+
+[data-theme="corporate"] .clock-date {
+  color: rgba(30, 58, 95, 0.60) !important;
+}
+
+[data-theme="corporate"] .ud-avatar,
+[data-theme="corporate"] .user-dropdown {
+  border-color: rgba(37, 99, 235, 0.20) !important;
+  background: rgba(37, 99, 235, 0.04) !important;
+}
+
+[data-theme="corporate"] .ud-name { color: #1E3A5F !important; }
+[data-theme="corporate"] .ud-role { color: rgba(30, 58, 95, 0.60) !important; }
+
+[data-theme="corporate"] .theme-toggle-btn {
+  border-color: rgba(37, 99, 235, 0.20) !important;
+  background: rgba(37, 99, 235, 0.05) !important;
+  color: #2563EB !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   11.  CORPORATE — TYPOGRAPHY  (numbers + tables)
+───────────────────────────────────────────────────────────── */
+
+/* ── أرقام الإحصائيات: gradient أزرق ── */
+[data-theme="corporate"] .stat-value,
+[data-theme="corporate"] .stat-num,
+[data-theme="corporate"] .main-box-val,
+[data-theme="corporate"] .th-stat-value,
+[data-theme="corporate"] [class*="stat-val"],
+[data-theme="corporate"] [class*="val-num"] {
+  background: linear-gradient(135deg, #2563EB, #0EA5E9) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px;
+}
+
+/* ── نصوص الجداول: أزرق داكن مريح ── */
+[data-theme="corporate"] td,
+[data-theme="corporate"] .th-table tbody td {
+  color: #1E3A5F !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="corporate"] thead th,
+[data-theme="corporate"] .th-table thead th {
+  color: #2563EB !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   12.  CORPORATE — SECTION & CARD TYPOGRAPHY
+───────────────────────────────────────────────────────────── */
+
+/* ── عناوين الكاردات وأسماء الأقسام: أزرق داكن Bold ── */
+[data-theme="corporate"] .card-title,
+[data-theme="corporate"] .section-title,
+[data-theme="corporate"] .panel-title,
+[data-theme="corporate"] .th-section-title,
+[data-theme="corporate"] .th-panel-title,
+[data-theme="corporate"] .stat-label,
+[data-theme="corporate"] .th-stat-label,
+[data-theme="corporate"] .box-title,
+[data-theme="corporate"] .pane-title,
+[data-theme="corporate"] .modal-title,
+[data-theme="corporate"] h1, [data-theme="corporate"] h2,
+[data-theme="corporate"] h3, [data-theme="corporate"] h4,
+[data-theme="corporate"] h5 {
+  color: #1E3A5F !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+}
+
+[data-theme="corporate"] h1 { font-size: 22px !important; }
+[data-theme="corporate"] h2 { font-size: 18px !important; }
+[data-theme="corporate"] h3 { font-size: 16px !important; }
+[data-theme="corporate"] h4 { font-size: 15px !important; }
+[data-theme="corporate"] h5 { font-size: 13px !important; }
+
+/* ── أسماء الأقسام الكبيرة (section headers) ── */
+[data-theme="corporate"] .page-title,
+[data-theme="corporate"] .th-section-title {
+  color: #1E3A5F !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* ── Labels داخل النماذج: رمادي مزرق Slate ── */
+[data-theme="corporate"] label,
+[data-theme="corporate"] .field-label,
+[data-theme="corporate"] .form-label,
+[data-theme="corporate"] .input-label {
+  color: #64748B !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* ── النصوص الفرعية والوصفية: Slate رمادي ── */
+[data-theme="corporate"] .text-sub,
+[data-theme="corporate"] .text-muted,
+[data-theme="corporate"] .text-secondary,
+[data-theme="corporate"] .th-section-sub,
+[data-theme="corporate"] .th-stat-label,
+[data-theme="corporate"] .stat-sub,
+[data-theme="corporate"] .card-sub,
+[data-theme="corporate"] small,
+[data-theme="corporate"] .small {
+  color: #64748B !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   13.  CORPORATE — SYSTEM DEPARTMENTS CARDS (Tab 9)
+        Top Accent style — Azure Portal
+───────────────────────────────────────────────────────────── */
+
+/* عنوان القسم وعنوانه الفرعي */
+[data-theme="corporate"] .sec-header-title {
+  color: #1E3A5F !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+[data-theme="corporate"] .sec-header-sub {
+  color: #64748B !important;
+  font-size: 13px !important;
+}
+
+/* البطاقة الرئيسية — أبيض نظيف + خط علوي بلون القسم */
+[data-theme="corporate"] .sys-dept-card {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+  border-top: 4px solid var(--dc) !important;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08) !important;
+  border-radius: 14px !important;
+}
+[data-theme="corporate"] .sys-dept-card:hover {
+  background: #F8FBFF !important;
+  border-color: rgba(37, 99, 235, 0.20) !important;
+  border-top-color: var(--dc) !important;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.14) !important;
+  transform: translateY(-4px);
+}
+
+/* إخفاء الـ glow — لا يناسب الخلفية البيضاء */
+[data-theme="corporate"] .sys-dept-glow {
+  display: none !important;
+}
+
+/* أيقونة القسم */
+[data-theme="corporate"] .sys-dept-icon-wrap {
+  background: rgba(var(--dc-rgb), 0.08) !important;
+  border-color: rgba(var(--dc-rgb), 0.18) !important;
+}
+
+/* اسم القسم: أزرق داكن */
+[data-theme="corporate"] .sys-dept-name {
+  color: #1E3A5F !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+
+/* وصف القسم: Slate رمادي */
+[data-theme="corporate"] .sys-dept-desc {
+  color: #64748B !important;
+  font-size: 12px !important;
+}
+
+/* الشيبس: Slate محايد */
+[data-theme="corporate"] .sys-dept-chip {
+  background: #F1F5F9 !important;
+  color: #475569 !important;
+  border-color: #E2E8F0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+[data-theme="corporate"] .sys-dept-chip:hover {
+  background: #E2E8F0 !important;
+  color: #1E3A5F !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* السهم */
+[data-theme="corporate"] .sys-dept-arrow {
+  color: var(--dc) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   14.  CORPORATE — PERMISSIONS PANEL  (syspane-perms)
+        White/light Corporate style matching the page theme
+───────────────────────────────────────────────────────────── */
+
+/* ── Layout wrapper ── */
+[data-theme="corporate"] .pm-layout {
+  border: 1px solid rgba(37,99,235,0.10) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+/* ── Sidebar ── */
+[data-theme="corporate"] .pm-sidebar {
+  background: #F8FBFF !important;
+  border-left: 1px solid rgba(37,99,235,0.10) !important;
+}
+
+[data-theme="corporate"] .pm-sidebar-hdr {
+  background: #EFF6FF !important;
+  border-bottom: 1px solid rgba(37,99,235,0.10) !important;
+}
+
+[data-theme="corporate"] .pm-sidebar-title {
+  color: #1E3A5F !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+[data-theme="corporate"] .pm-sidebar-sub {
+  color: #64748B !important;
+}
+
+/* ── Roles list ── */
+[data-theme="corporate"] .pm-role-item:hover {
+  background: rgba(37,99,235,0.05) !important;
+}
+[data-theme="corporate"] .pm-role-item.active {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.20) !important;
+  box-shadow: inset -3px 0 0 #2563EB !important;
+}
+[data-theme="corporate"] .pm-role-icon {
+  background: #F1F5F9 !important;
+  border-color: rgba(37,99,235,0.12) !important;
+  color: #64748B !important;
+}
+[data-theme="corporate"] .pm-role-item.active .pm-role-icon {
+  background: rgba(37,99,235,0.10) !important;
+  border-color: rgba(37,99,235,0.25) !important;
+  color: #2563EB !important;
+  box-shadow: none !important;
+}
+[data-theme="corporate"] .pm-role-name {
+  color: #475569 !important;
+}
+[data-theme="corporate"] .pm-role-item.active .pm-role-name {
+  color: #2563EB !important;
+}
+[data-theme="corporate"] .pm-role-count {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+[data-theme="corporate"] .pm-role-item.active .pm-role-count {
+  background: rgba(37,99,235,0.10) !important;
+  color: #2563EB !important;
+}
+
+/* ── Sessions section ── */
+[data-theme="corporate"] .pm-sessions-hdr {
+  color: #64748B !important;
+  border-top: 1px solid rgba(37,99,235,0.08) !important;
+}
+[data-theme="corporate"] .pm-session-name {
+  color: #1E3A5F !important;
+}
+[data-theme="corporate"] .pm-session-role {
+  color: #64748B !important;
+}
+[data-theme="corporate"] .pm-session-empty {
+  color: #94A3B8 !important;
+}
+
+/* ── Main content area ── */
+[data-theme="corporate"] .pm-main {
+  background: #FFFFFF !important;
+}
+
+/* ── Topbar ── */
+[data-theme="corporate"] .pm-topbar {
+  background: #F8FBFF !important;
+  border-bottom: 1px solid rgba(37,99,235,0.10) !important;
+}
+[data-theme="corporate"] .pm-topbar-name {
+  color: #1E3A5F !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+[data-theme="corporate"] .pm-topbar-desc {
+  color: #64748B !important;
+}
+
+/* ── Action buttons ── */
+[data-theme="corporate"] .pm-btn {
+  font-family: 'Cairo', sans-serif !important;
+}
+[data-theme="corporate"] .pm-btn-all-on {
+  background: rgba(22,163,74,0.08) !important;
+  color: #16A34A !important;
+  border-color: rgba(22,163,74,0.22) !important;
+}
+[data-theme="corporate"] .pm-btn-all-off {
+  background: rgba(220,38,38,0.08) !important;
+  color: #DC2626 !important;
+  border-color: rgba(220,38,38,0.20) !important;
+}
+[data-theme="corporate"] .pm-btn-reset {
+  background: #F1F5F9 !important;
+  color: #475569 !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ── Stats bar ── */
+[data-theme="corporate"] .pm-statsbar {
+  background: #FAFCFF !important;
+  border-bottom: 1px solid rgba(37,99,235,0.07) !important;
+}
+[data-theme="corporate"] .pm-stat-on {
+  background: rgba(22,163,74,0.07) !important;
+  color: #16A34A !important;
+  border-color: rgba(22,163,74,0.18) !important;
+}
+[data-theme="corporate"] .pm-stat-off {
+  background: rgba(220,38,38,0.07) !important;
+  color: #DC2626 !important;
+  border-color: rgba(220,38,38,0.16) !important;
+}
+
+/* ── Page cards grid ── */
+[data-theme="corporate"] .pm-page-card {
+  background: #F8FBFF !important;
+  border: 1px solid rgba(37,99,235,0.10) !important;
+  box-shadow: 0 1px 4px rgba(37,99,235,0.06) !important;
+}
+[data-theme="corporate"] .pm-page-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.10) !important;
+  border-color: rgba(37,99,235,0.20) !important;
+}
+[data-theme="corporate"] .pm-page-card.on {
+  background: rgba(37,99,235,0.05) !important;
+  border-color: rgba(37,99,235,0.22) !important;
+}
+
+[data-theme="corporate"] .pm-page-ico {
+  background: #EFF6FF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+  color: #2563EB !important;
+}
+[data-theme="corporate"] .pm-page-card.on .pm-page-ico {
+  background: rgba(37,99,235,0.10) !important;
+  border-color: rgba(37,99,235,0.25) !important;
+  color: #2563EB !important;
+  box-shadow: none !important;
+}
+
+[data-theme="corporate"] .pm-page-name {
+  color: #475569 !important;
+}
+[data-theme="corporate"] .pm-page-card.on .pm-page-name {
+  color: #1E3A5F !important;
+  font-weight: 700 !important;
+}
+[data-theme="corporate"] .pm-page-file {
+  color: #94A3B8 !important;
+}
+
+/* ── Toggle switch ── */
+[data-theme="corporate"] .pm-toggle {
+  background: #E2E8F0 !important;
+}
+[data-theme="corporate"] .pm-page-card.on .pm-toggle {
+  background: #2563EB !important;
+  box-shadow: 0 0 8px rgba(37,99,235,0.30) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   15.  CORPORATE — ATTENDANCE / FINGERPRINT SECTION
+        #att-quick-section — white cards + corporate colors
+───────────────────────────────────────────────────────────── */
+
+/* عنوان القسم */
+[data-theme="corporate"] #att-quick-section .tree-title {
+  color: #1E3A5F !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+/* رابط "عرض التفاصيل" */
+[data-theme="corporate"] #att-quick-section a[href="/attendance/"] {
+  color: #2563EB !important;
+  border-color: rgba(37,99,235,0.25) !important;
+  background: rgba(37,99,235,0.06) !important;
+}
+
+/* بطاقات الإحصائيات الأربع */
+[data-theme="corporate"] #att-quick-section .stat-card {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08) !important;
+}
+[data-theme="corporate"] #att-quick-section .stat-card:hover {
+  box-shadow: 0 6px 20px rgba(37,99,235,0.12) !important;
+  border-color: rgba(37,99,235,0.22) !important;
+}
+
+/* label فوق الرقم */
+[data-theme="corporate"] #att-quick-section .stat-label {
+  color: #64748B !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+/* النص الصغير أسفل الرقم */
+[data-theme="corporate"] #att-quick-section .stat-sub {
+  color: #94A3B8 !important;
+  font-size: 10px !important;
+}
+
+/* الأرقام الكبيرة — احتفظ بألوانها الدلالية لكن اجعلها أوضح */
+[data-theme="corporate"] #att-quick-section #aq-present { color: #16A34A !important; }
+[data-theme="corporate"] #att-quick-section #aq-absent  { color: #DC2626 !important; }
+[data-theme="corporate"] #att-quick-section #aq-pct     { color: #D97706 !important; }
+[data-theme="corporate"] #att-quick-section #aq-total   { color: #2563EB !important; }
+
+/* حاوية قائمة آخر البصمات */
+[data-theme="corporate"] #att-quick-section > div:last-child {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.10) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.06) !important;
+}
+
+/* header "آخر بصمات اليوم" */
+[data-theme="corporate"] #att-quick-section > div:last-child > div:first-child {
+  background: #F8FBFF !important;
+  border-bottom-color: rgba(37,99,235,0.08) !important;
+}
+[data-theme="corporate"] #att-quick-section > div:last-child > div:first-child span:first-child {
+  color: #1E3A5F !important;
+  font-weight: 700 !important;
+}
+[data-theme="corporate"] #att-quick-section > div:last-child > div:first-child span:last-child {
+  color: #94A3B8 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INTL-SV THEME  [data-theme="intl-sv"]
+   Azure Corporate — صفحة مشرف الحوالات الدولية
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── الخلفية ── */
+[data-theme="intl-sv"] body,
+[data-theme="intl-sv"] html           { background: #EFF6FF !important; }
+[data-theme="intl-sv"] body::before   { display: none !important; }
+[data-theme="intl-sv"] .sv-wrap       { background: #EFF6FF !important; }
+
+/* ── الهيدر ── */
+[data-theme="intl-sv"] .custom-header,
+[data-theme="intl-sv"] header {
+  background: #FFFFFF !important;
+  border-bottom: 3px solid #2563EB !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.10) !important;
+}
+[data-theme="intl-sv"] .main-title       { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .header-subtitle  { color: #475569 !important; opacity: 1 !important; }
+[data-theme="intl-sv"] .header-brand img { box-shadow: 0 4px 16px rgba(37,99,235,0.20) !important; }
+[data-theme="intl-sv"] .sv-header-name   { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .sv-header-role   { color: #475569 !important; }
+[data-theme="intl-sv"] .hdr-btn {
+  background: rgba(37,99,235,0.07) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #1E40AF !important;
+}
+
+/* ── الشريط الجانبي ── */
+[data-theme="intl-sv"] .sv-sidebar {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+  box-shadow: 4px 0 16px rgba(37,99,235,0.07) !important;
+}
+[data-theme="intl-sv"] .sv-nav-label     { color: #94A3B8 !important; font-weight: 700 !important; font-size: 10px !important; }
+[data-theme="intl-sv"] .sv-nav-item      { color: #334155 !important; border-radius: 10px !important; }
+[data-theme="intl-sv"] .sv-nav-item:hover { background: rgba(37,99,235,0.06) !important; color: #1E40AF !important; }
+[data-theme="intl-sv"] .sv-nav-item.active {
+  background: rgba(37,99,235,0.10) !important;
+  color: #1E40AF !important;
+  border-right: 3px solid #2563EB !important;
+  font-weight: 800 !important;
+}
+[data-theme="intl-sv"] .sv-nav-badge      { background: #EF4444 !important; color: #FFFFFF !important; }
+[data-theme="intl-sv"] .sv-nav-badge.cyan { background: #2563EB !important; color: #FFFFFF !important; }
+[data-theme="intl-sv"] .sv-sidebar-stats  { background: #F0F7FF !important; border-color: rgba(37,99,235,0.12) !important; border-radius: 12px !important; }
+[data-theme="intl-sv"] .sv-sidebar-stat-row { color: #334155 !important; }
+
+/* ── بطاقات الإحصاء (.sv-card) ── */
+[data-theme="intl-sv"] .sv-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 14px rgba(37,99,235,0.07) !important;
+}
+[data-theme="intl-sv"] .sv-card-num   { color: #0F172A !important; font-weight: 900 !important; }
+[data-theme="intl-sv"] .sv-card-lbl   { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="intl-sv"] .sv-card-delta { font-weight: 700 !important; }
+[data-theme="intl-sv"] .sv-card.c-blue   { border-top: 4px solid #2563EB !important; }
+[data-theme="intl-sv"] .sv-card.c-green  { border-top: 4px solid #16A34A !important; }
+[data-theme="intl-sv"] .sv-card.c-yellow { border-top: 4px solid #D97706 !important; }
+[data-theme="intl-sv"] .sv-card.c-red    { border-top: 4px solid #DC2626 !important; }
+[data-theme="intl-sv"] .sv-card.c-purple { border-top: 4px solid #7C3AED !important; }
+[data-theme="intl-sv"] .sv-card.c-cyan   { border-top: 4px solid #0891B2 !important; }
+[data-theme="intl-sv"] .sv-card-icon     { border-radius: 10px !important; }
+
+/* بطاقات الموظفين والعملاء */
+[data-theme="intl-sv"] .sv-emp-stat-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-radius: 12px !important;
+}
+[data-theme="intl-sv"] .sv-emp-stat-num { color: #0F172A !important; font-weight: 900 !important; }
+[data-theme="intl-sv"] .sv-emp-stat-lbl { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="intl-sv"] .sv-cg-stat      { background: #F0F7FF !important; border-color: rgba(37,99,235,0.12) !important; border-radius: 10px !important; }
+[data-theme="intl-sv"] .sv-cg-num       { color: #0F172A !important; font-weight: 900 !important; }
+[data-theme="intl-sv"] .sv-cg-lbl       { color: #475569 !important; font-weight: 700 !important; }
+
+/* ── الـ panels ── */
+[data-theme="intl-sv"] .sv-panel {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-top: 4px solid #2563EB !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 14px rgba(37,99,235,0.07) !important;
+}
+[data-theme="intl-sv"] .sv-panel-hdr {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 14px 18px !important;
+  margin: -1px -1px 0 !important;
+}
+[data-theme="intl-sv"] .sv-panel-hdr *   { color: #FFFFFF !important; }
+
+/* ── عنوان الصفحة ── */
+[data-theme="intl-sv"] .sv-page-title    { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .sv-date-badge    { background: rgba(37,99,235,0.09) !important; color: #1E40AF !important; border-color: rgba(37,99,235,0.20) !important; }
+[data-theme="intl-sv"] .sv-section-hdr   { color: #1E3A5F !important; font-weight: 800 !important; }
+
+/* ── الجداول ── */
+[data-theme="intl-sv"] .sv-table thead th {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+[data-theme="intl-sv"] .sv-table tbody td { color: #1E293B !important; border-color: rgba(37,99,235,0.08) !important; }
+[data-theme="intl-sv"] .sv-table tbody tr:hover td { background: rgba(37,99,235,0.04) !important; }
+
+/* badges الجدول */
+[data-theme="intl-sv"] .sv-badge.pending  { background: rgba(217,119,6,0.10) !important;  color: #B45309 !important; }
+[data-theme="intl-sv"] .sv-badge.done     { background: rgba(22,163,74,0.10) !important;   color: #16A34A !important; }
+[data-theme="intl-sv"] .sv-badge.failed   { background: rgba(220,38,38,0.10) !important;   color: #DC2626 !important; }
+[data-theme="intl-sv"] .sv-badge.bot      { background: rgba(37,99,235,0.10) !important;   color: #1E40AF !important; }
+[data-theme="intl-sv"] .sv-badge.online   { background: rgba(22,163,74,0.10) !important;   color: #16A34A !important; }
+[data-theme="intl-sv"] .sv-badge.offline  { background: rgba(148,163,184,0.15) !important; color: #64748B !important; }
+
+/* ── شريط البحث والفلاتر ── */
+[data-theme="intl-sv"] .sv-table-toolbar  { background: #F0F7FF !important; border-color: rgba(37,99,235,0.12) !important; border-radius: 12px !important; }
+[data-theme="intl-sv"] .sv-search         { background: #FFFFFF !important; border-color: rgba(37,99,235,0.18) !important; color: #1E293B !important; }
+[data-theme="intl-sv"] .sv-search::placeholder { color: #94A3B8 !important; }
+[data-theme="intl-sv"] .sv-filter-btn     { background: #FFFFFF !important; border-color: rgba(37,99,235,0.18) !important; color: #334155 !important; }
+[data-theme="intl-sv"] .sv-filter-btn.active { background: rgba(37,99,235,0.10) !important; color: #1E40AF !important; border-color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .sv-export-btn     { background: linear-gradient(135deg,#1E40AF,#2563EB) !important; color: #FFFFFF !important; border: none !important; }
+[data-theme="intl-sv"] .sv-mgmt-filter-btn       { background: #FFFFFF !important; border-color: rgba(37,99,235,0.18) !important; color: #334155 !important; }
+[data-theme="intl-sv"] .sv-mgmt-filter-btn.active { background: rgba(37,99,235,0.10) !important; color: #1E40AF !important; border-color: #2563EB !important; }
+[data-theme="intl-sv"] .sv-emp-filter       { color: #334155 !important; background: #FFFFFF !important; border-color: rgba(37,99,235,0.15) !important; }
+[data-theme="intl-sv"] .sv-emp-filter.active { color: #1E40AF !important; background: rgba(37,99,235,0.09) !important; border-color: #2563EB !important; }
+
+/* ── أزرار الإجراءات ── */
+[data-theme="intl-sv"] .sv-btn-view    { background: rgba(37,99,235,0.09) !important;  color: #1E40AF !important; border-color: rgba(37,99,235,0.20) !important; }
+[data-theme="intl-sv"] .sv-btn-edit    { background: rgba(217,119,6,0.09) !important;  color: #B45309 !important; border-color: rgba(217,119,6,0.22) !important; }
+[data-theme="intl-sv"] .sv-btn-details { background: rgba(124,58,237,0.09) !important; color: #6D28D9 !important; border-color: rgba(124,58,237,0.22) !important; }
+[data-theme="intl-sv"] .sv-btn-danger  { background: rgba(220,38,38,0.09) !important;  color: #DC2626 !important; border-color: rgba(220,38,38,0.22) !important; }
+[data-theme="intl-sv"] .sv-send-btn    { background: linear-gradient(135deg,#1E40AF,#2563EB) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 4px 14px rgba(37,99,235,0.25) !important; }
+
+/* أزرار الموظفين */
+[data-theme="intl-sv"] .emp-btn-edit     { background: rgba(37,99,235,0.09) !important;  color: #1E40AF !important; }
+[data-theme="intl-sv"] .emp-btn-perms    { background: rgba(124,58,237,0.09) !important; color: #6D28D9 !important; }
+[data-theme="intl-sv"] .emp-btn-suspend  { background: rgba(220,38,38,0.09) !important;  color: #DC2626 !important; }
+[data-theme="intl-sv"] .emp-btn-activate { background: rgba(22,163,74,0.09) !important;  color: #16A34A !important; }
+[data-theme="intl-sv"] .emp-status-dot.online    { background: #16A34A !important; box-shadow: 0 0 0 3px rgba(22,163,74,0.2) !important; }
+[data-theme="intl-sv"] .emp-status-dot.offline   { background: #94A3B8 !important; }
+[data-theme="intl-sv"] .emp-status-dot.suspended { background: #DC2626 !important; }
+[data-theme="intl-sv"] .emp-name-lbl { color: #0F172A !important; font-weight: 700 !important; }
+[data-theme="intl-sv"] .emp-id-lbl   { color: #64748B !important; font-weight: 600 !important; }
+
+/* ── الـ modals ── */
+[data-theme="intl-sv"] .sv-modal,
+[data-theme="intl-sv"] .sv-send-modal,
+[data-theme="intl-sv"] .sv-confirm-box {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.14) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 60px rgba(30,58,95,0.18) !important;
+}
+[data-theme="intl-sv"] .sv-send-hdr {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border-radius: 16px 16px 0 0 !important;
+}
+[data-theme="intl-sv"] .sv-send-hdr *      { color: #FFFFFF !important; }
+[data-theme="intl-sv"] .sv-confirm-title   { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .sv-confirm-sub     { color: #475569 !important; }
+[data-theme="intl-sv"] .sv-confirm-yes     { background: linear-gradient(135deg,#1E40AF,#2563EB) !important; color: #FFFFFF !important; border: none !important; }
+[data-theme="intl-sv"] .sv-confirm-no      { background: rgba(30,58,95,0.06) !important; color: #334155 !important; border: none !important; }
+[data-theme="intl-sv"] .sv-modal-overlay,
+[data-theme="intl-sv"] .sv-send-overlay,
+[data-theme="intl-sv"] .sv-confirm-overlay { background: rgba(30,58,95,0.50) !important; backdrop-filter: blur(8px) !important; }
+
+/* ── حقول الإدخال ── */
+[data-theme="intl-sv"] .sv-form-input,
+[data-theme="intl-sv"] .sv-form-select,
+[data-theme="intl-sv"] .sv-mgmt-search,
+[data-theme="intl-sv"] .sv-search {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #0F172A !important;
+}
+[data-theme="intl-sv"] .sv-form-input:focus,
+[data-theme="intl-sv"] .sv-form-select:focus { border-color: #2563EB !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important; }
+[data-theme="intl-sv"] .sv-form-label { color: #334155 !important; font-weight: 700 !important; }
+
+/* ── progress bars ── */
+[data-theme="intl-sv"] .mini-prog        { background: rgba(37,99,235,0.10) !important; border-radius: 10px !important; }
+[data-theme="intl-sv"] .mini-prog-fill   { background: linear-gradient(90deg,#1E40AF,#2563EB) !important; }
+[data-theme="intl-sv"] .sv-prog-bar      { background: rgba(37,99,235,0.10) !important; }
+[data-theme="intl-sv"] .sv-prog-fill     { background: linear-gradient(90deg,#1E40AF,#2563EB) !important; }
+[data-theme="intl-sv"] .agt-load-bar     { background: rgba(37,99,235,0.10) !important; }
+[data-theme="intl-sv"] .agt-load-fill    { background: linear-gradient(90deg,#1E40AF,#2563EB) !important; }
+
+/* ── delta indicators ── */
+[data-theme="intl-sv"] .delta-up   { color: #16A34A !important; font-weight: 700 !important; }
+[data-theme="intl-sv"] .delta-down { color: #DC2626 !important; font-weight: 700 !important; }
+[data-theme="intl-sv"] .delta-same { color: #64748B !important; }
+
+/* ── fraud alerts ── */
+[data-theme="intl-sv"] .fraud-alert.warn { background: rgba(239,68,68,0.07) !important; border-color: rgba(239,68,68,0.20) !important; }
+[data-theme="intl-sv"] .fraud-alert.info { background: rgba(37,99,235,0.07) !important; border-color: rgba(37,99,235,0.18) !important; }
+[data-theme="intl-sv"] .fraud-title      { color: #1E293B !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .fraud-sub        { color: #475569 !important; }
+[data-theme="intl-sv"] .fraud-time       { color: #64748B !important; }
+
+/* ── نصوص عامة ── */
+[data-theme="intl-sv"] .sv-content       { background: #EFF6FF !important; }
+[data-theme="intl-sv"] .teller-name      { color: #0F172A !important; font-weight: 800 !important; }
+[data-theme="intl-sv"] .teller-sub       { color: #475569 !important; }
+[data-theme="intl-sv"] .status-dot       { background: #16A34A !important; }
+
+/* ── FX ticker ── */
+[data-theme="intl-sv"] #fx-ticker-bar    { background: #1E40AF !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER THEME  [data-theme="teller"]
+   Teal Corporate — صفحة مشرف التلر
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── الهيدر ── */
+[data-theme="teller"] #header,
+[data-theme="teller"] .header,
+[data-theme="teller"] header {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid rgba(13,148,136,0.15) !important;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.10) !important;
+}
+[data-theme="teller"] .h-title,
+[data-theme="teller"] .logo-title,
+[data-theme="teller"] .header-logo-text {
+  color: #134E4A !important;
+}
+[data-theme="teller"] .h-sub,
+[data-theme="teller"] .logo-sub { color: #5EEAD4 !important; }
+
+[data-theme="teller"] .clock-time { color: #134E4A !important; }
+[data-theme="teller"] .clock-date { color: rgba(19,78,74,0.60) !important; }
+
+[data-theme="teller"] .ud-name   { color: #134E4A !important; }
+[data-theme="teller"] .ud-role   { color: rgba(19,78,74,0.60) !important; }
+[data-theme="teller"] .user-dropdown {
+  border-color: rgba(13,148,136,0.20) !important;
+  background: rgba(13,148,136,0.04) !important;
+}
+
+/* ── الشريط الجانبي ── */
+[data-theme="teller"] .sidebar,
+[data-theme="teller"] .sidebar-wrap,
+[data-theme="teller"] .sb-wrap {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .sidebar-section {
+  color: rgba(13,148,136,0.70) !important;
+  letter-spacing: 1px;
+}
+[data-theme="teller"] .nav-item { color: #134E4A !important; }
+[data-theme="teller"] .nav-item:hover {
+  background: rgba(13,148,136,0.06) !important;
+  color: #0D9488 !important;
+}
+[data-theme="teller"] .nav-item.active {
+  background: rgba(13,148,136,0.10) !important;
+  color: #0D9488 !important;
+  border-color: #0D9488 !important;
+  font-weight: 700;
+}
+
+/* ── الخلفية والـ body ── */
+[data-theme="teller"] body,
+[data-theme="teller"] html { background: #F0FDFA !important; }
+
+[data-theme="teller"] body::before { display: none !important; }
+
+/* ── الكاردات العامة ── */
+[data-theme="teller"] .card {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.12) !important;
+  box-shadow: 0 2px 12px rgba(13,148,136,0.08) !important;
+}
+[data-theme="teller"] .card::before {
+  background: linear-gradient(90deg, transparent, #0D9488, transparent) !important;
+}
+[data-theme="teller"] .card-title { color: #134E4A !important; }
+
+/* ── بطاقات الإحصائيات العلوية ── */
+[data-theme="teller"] .t-stat {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.10) !important;
+  box-shadow: 0 1px 6px rgba(13,148,136,0.08) !important;
+}
+[data-theme="teller"] .t-stat:hover {
+  border-color: rgba(13,148,136,0.25) !important;
+  box-shadow: 0 4px 16px rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .t-stat-value {
+  color: #134E4A !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+[data-theme="teller"] .t-stat-label {
+  color: #5EEAD4 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller"] .t-stat:nth-child(1)::after { background: #0D9488 !important; }
+[data-theme="teller"] .t-stat:nth-child(2)::after { background: #16A34A !important; }
+[data-theme="teller"] .t-stat:nth-child(3)::after { background: #D97706 !important; }
+[data-theme="teller"] .t-stat:nth-child(4)::after { background: #7C3AED !important; }
+[data-theme="teller"] .t-stat:nth-child(5)::after { background: #DC2626 !important; }
+
+/* ── بطاقات التلرات ── */
+[data-theme="teller"] .teller-card {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.10) !important;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.07) !important;
+}
+[data-theme="teller"] .teller-card:hover {
+  border-color: rgba(13,148,136,0.25) !important;
+  box-shadow: 0 6px 20px rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .teller-card.online {
+  border-right-color: #16A34A !important;
+}
+[data-theme="teller"] .teller-card.offline {
+  border-right-color: #DC2626 !important;
+}
+[data-theme="teller"] .teller-name { color: #134E4A !important; font-weight: 700 !important; }
+[data-theme="teller"] .teller-id   { color: #5EEAD4 !important; }
+
+[data-theme="teller"] .teller-meta-item {
+  background: rgba(13,148,136,0.04) !important;
+  border-radius: 8px;
+}
+[data-theme="teller"] .teller-meta-label { color: rgba(13,148,136,0.70) !important; }
+[data-theme="teller"] .teller-meta-value { color: #134E4A !important; }
+
+/* ── الجداول ── */
+[data-theme="teller"] thead th {
+  background: rgba(13,148,136,0.05) !important;
+  color: #0D9488 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+[data-theme="teller"] td { color: #134E4A !important; }
+[data-theme="teller"] tbody tr:hover td {
+  background: rgba(13,148,136,0.04) !important;
+}
+
+/* ── Labels والنماذج ── */
+[data-theme="teller"] label,
+[data-theme="teller"] .field-group label { color: #5EEAD4 !important; font-weight: 600 !important; }
+[data-theme="teller"] .field-input {
+  background: #F0FDFA !important;
+  border-color: rgba(13,148,136,0.18) !important;
+  color: #134E4A !important;
+}
+[data-theme="teller"] .field-input:focus {
+  border-color: #0D9488 !important;
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.12) !important;
+}
+
+/* ── أزرار التلر ── */
+[data-theme="teller"] .t-btn-primary {
+  background: rgba(13,148,136,0.10) !important;
+  color: #0D9488 !important;
+  border-color: rgba(13,148,136,0.25) !important;
+}
+[data-theme="teller"] .t-btn-primary:hover {
+  background: rgba(13,148,136,0.18) !important;
+}
+
+/* ── Badge الهيدر ── */
+[data-theme="teller"] .h-badge {
+  background: rgba(13,148,136,0.08) !important;
+  border-color: rgba(13,148,136,0.20) !important;
+  color: #0D9488 !important;
+}
+
+/* ── عناوين الأقسام ── */
+[data-theme="teller"] h1, [data-theme="teller"] h2,
+[data-theme="teller"] h3, [data-theme="teller"] h4 {
+  color: #134E4A !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller"] .page-title { color: #134E4A !important; }
+
+/* ── النصوص الثانوية ── */
+[data-theme="teller"] .text-sub,
+[data-theme="teller"] .text-muted,
+[data-theme="teller"] small { color: #5EEAD4 !important; }
+
+/* ── عناوين أقسام الصفحة (tsh / rqs / prc2) ── */
+[data-theme="teller"] .tsh-title,
+[data-theme="teller"] .rqs-hero-title,
+[data-theme="teller"] .prc2-bar-title {
+  color: #134E4A !important;
+  font-weight: 900 !important;
+}
+[data-theme="teller"] .tsh-sub,
+[data-theme="teller"] .rqs-hero-sub,
+[data-theme="teller"] .prc2-bar-sub {
+  color: rgba(13,148,136,0.70) !important;
+  font-weight: 600 !important;
+}
+[data-theme="teller"] .tsh-live-dot { background: #0D9488 !important; }
+
+/* ── قسم الأرصدة — sv-session ── */
+[data-theme="teller"] .sv-session-card {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.15) !important;
+  box-shadow: 0 2px 12px rgba(13,148,136,0.08) !important;
+}
+[data-theme="teller"] .sv-session-header {
+  background: linear-gradient(135deg, rgba(13,148,136,0.08), rgba(13,148,136,0.04)) !important;
+  border-bottom-color: rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .sv-session-header-title {
+  color: #134E4A !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller"] .sv-session-header-sub {
+  color: rgba(13,148,136,0.70) !important;
+}
+[data-theme="teller"] .sv-session-header-badge {
+  background: rgba(13,148,136,0.10) !important;
+  color: #0D9488 !important;
+  border-color: rgba(13,148,136,0.25) !important;
+}
+[data-theme="teller"] .sv-session-header-icon {
+  background: rgba(13,148,136,0.10) !important;
+  border-color: rgba(13,148,136,0.20) !important;
+}
+
+/* ── حقول النموذج ── */
+[data-theme="teller"] .sv-field-label { color: rgba(13,148,136,0.65) !important; }
+[data-theme="teller"] .sv-cur-card {
+  background: #F0FDFA !important;
+  border-color: rgba(13,148,136,0.18) !important;
+}
+[data-theme="teller"] .sv-cur-card:focus-within {
+  border-color: #0D9488 !important;
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .sv-cur-name { color: #134E4A !important; font-weight: 700 !important; }
+[data-theme="teller"] .sv-cur-code { color: rgba(13,148,136,0.65) !important; }
+[data-theme="teller"] .sv-cur-sym  { color: #0D9488 !important; font-weight: 900 !important; }
+[data-theme="teller"] .sv-cur-input {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.18) !important;
+  color: #134E4A !important;
+}
+[data-theme="teller"] .sv-cur-input::placeholder { color: rgba(13,148,136,0.40) !important; }
+[data-theme="teller"] .sv-divider { color: rgba(13,148,136,0.60) !important; border-color: rgba(13,148,136,0.12) !important; }
+[data-theme="teller"] .sv-divider span {
+  background: #FFFFFF !important;
+  color: rgba(13,148,136,0.60) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+[data-theme="teller"] .sv-total-row {
+  background: rgba(13,148,136,0.04) !important;
+  border-color: rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .sv-total-label { color: rgba(13,148,136,0.65) !important; font-weight: 700 !important; }
+[data-theme="teller"] .sv-total-val   { color: #0D9488 !important; font-weight: 900 !important; }
+[data-theme="teller"] .sv-submit-btn {
+  background: linear-gradient(135deg, #0D9488, #0F766E) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(13,148,136,0.30) !important;
+}
+[data-theme="teller"] .sv-action-toggle {
+  background: rgba(13,148,136,0.05) !important;
+  border-color: rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .sv-toggle-btn { color: rgba(13,148,136,0.60) !important; }
+[data-theme="teller"] .sv-toggle-btn.active {
+  background: #FFFFFF !important;
+  color: #0D9488 !important;
+  border-color: rgba(13,148,136,0.25) !important;
+  box-shadow: 0 2px 6px rgba(13,148,136,0.10) !important;
+}
+
+/* ── قسم أرصدة التلرات ── */
+[data-theme="teller"] .bal-overview-panel {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.12) !important;
+}
+[data-theme="teller"] .bal-ov-title { color: #134E4A !important; font-weight: 800 !important; }
+[data-theme="teller"] .bal-overview-header { border-color: rgba(13,148,136,0.10) !important; }
+
+/* ── قسم الطلبات ── */
+[data-theme="teller"] .rqs-mini-stat.s-pending {
+  background: rgba(217,119,6,0.06) !important;
+  border-color: rgba(217,119,6,0.20) !important;
+}
+[data-theme="teller"] .rqs-mini-stat.s-urgent {
+  background: rgba(220,38,38,0.06) !important;
+  border-color: rgba(220,38,38,0.20) !important;
+}
+[data-theme="teller"] .rqs-mini-stat.s-done {
+  background: rgba(13,148,136,0.08) !important;
+  border-color: rgba(13,148,136,0.20) !important;
+}
+[data-theme="teller"] .rqs-mini-stat.s-done .rqs-mini-num { color: #0D9488 !important; }
+[data-theme="teller"] .rqs-mini-lbl { color: rgba(13,148,136,0.65) !important; }
+
+[data-theme="teller"] .rqs-pill {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.15) !important;
+  color: rgba(19,78,74,0.65) !important;
+}
+[data-theme="teller"] .rqs-pill:hover {
+  background: rgba(13,148,136,0.06) !important;
+  color: #0D9488 !important;
+  border-color: rgba(13,148,136,0.30) !important;
+}
+[data-theme="teller"] .rqs-pill.active {
+  background: rgba(13,148,136,0.10) !important;
+  border-color: rgba(13,148,136,0.35) !important;
+  color: #0D9488 !important;
+}
+
+/* ── قسم التسعيرة ── */
+[data-theme="teller"] .prc2-bar {
+  background: #FFFFFF !important;
+  border-color: rgba(13,148,136,0.12) !important;
+  box-shadow: 0 2px 10px rgba(13,148,136,0.08) !important;
+}
+[data-theme="teller"] .prc2-dd-title { color: #134E4A !important; font-weight: 700 !important; }
+[data-theme="teller"] .prc2-dd-sub   { color: rgba(13,148,136,0.65) !important; }
+[data-theme="teller"] .prc2-tp-title { color: #134E4A !important; font-weight: 800 !important; }
+
+/* ── النصوص العامة غير المغطاة ── */
+[data-theme="teller"] .main-content,
+[data-theme="teller"] .page-section { color: #1E293B !important; }
+
+[data-theme="teller"] .tellers-section-header,
+[data-theme="teller"] .sec-header { color: #134E4A !important; }
+
+/* عناوين الكاردات والـ badge count */
+[data-theme="teller"] .badge-count {
+  background: rgba(13,148,136,0.08) !important;
+  color: #0D9488 !important;
+  border-color: rgba(13,148,136,0.20) !important;
+}
+
+/* أيقونات الكارد */
+[data-theme="teller"] .card-title .ct-icon {
+  background: rgba(13,148,136,0.08) !important;
+  border-color: rgba(13,148,136,0.18) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER THEME v2 — Azure Corporate Override
+   يطغى على الـ teal القديم ويحوّل كل الصفحة للأزرق الكوربوريت
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── متغيرات أساسية ── */
+[data-theme="teller"] {
+  --primary:        #2563EB !important;
+  --primary-dark:   #1D4ED8 !important;
+  --primary-darker: #1E40AF !important;
+  --primary-light:  #3B82F6 !important;
+  --primary-bg:     rgba(37,99,235,0.07) !important;
+  --primary-bg-hover: rgba(37,99,235,0.13) !important;
+  --primary-border: rgba(37,99,235,0.22) !important;
+  --bg:             #EFF6FF !important;
+  --surface:        #FFFFFF !important;
+  --surface-2:      #F0F7FF !important;
+  --surface-3:      #DBEAFE !important;
+  --surface-header: #FFFFFF !important;
+  --border:         rgba(37,99,235,0.12) !important;
+  --text-primary:   #1E3A5F !important;
+  --text-secondary: #334155 !important;
+  --text-muted:     #475569 !important;
+  --text-heading:   #0F172A !important;
+}
+
+/* ── الخلفية العامة ── */
+[data-theme="teller"] body,
+[data-theme="teller"] html          { background: #EFF6FF !important; }
+[data-theme="teller"] body::before  { display: none !important; }
+
+/* ── الهيدر ── */
+[data-theme="teller"] .header,
+[data-theme="teller"] header {
+  background: #FFFFFF !important;
+  border-bottom: 3px solid #2563EB !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller"] .h-title      { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .h-sub        { color: #475569 !important; opacity: 1 !important; }
+[data-theme="teller"] .h-badge      { background: rgba(37,99,235,0.09) !important; color: #1E40AF !important; border-color: rgba(37,99,235,0.20) !important; }
+[data-theme="teller"] .clock-time   { color: #1E3A5F !important; }
+[data-theme="teller"] .clock-date   { color: #475569 !important; }
+[data-theme="teller"] .ud-name      { color: #1E3A5F !important; }
+[data-theme="teller"] .ud-role      { color: #475569 !important; }
+[data-theme="teller"] .user-dropdown { background: rgba(37,99,235,0.05) !important; border-color: rgba(37,99,235,0.18) !important; }
+
+/* ── الشريط الجانبي ── */
+[data-theme="teller"] .sidebar,
+[data-theme="teller"] .sidebar-wrap,
+[data-theme="teller"] .sb-wrap {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller"] .nav-item          { color: #334155 !important; }
+[data-theme="teller"] .nav-item:hover    { background: rgba(37,99,235,0.06) !important; color: #1E40AF !important; }
+[data-theme="teller"] .nav-item.active   { background: rgba(37,99,235,0.10) !important; color: #1E40AF !important; border-right: 3px solid #2563EB !important; }
+[data-theme="teller"] .nav-badge         { background: #EF4444 !important; color: #FFFFFF !important; }
+[data-theme="teller"] .sidebar-section   { color: #94A3B8 !important; font-size: 10px !important; font-weight: 700 !important; }
+
+/* ── الكاردات العامة ── */
+[data-theme="teller"] .card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-top: 4px solid #2563EB !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.07) !important;
+  border-radius: 16px !important;
+}
+[data-theme="teller"] .card::before { display: none !important; }
+[data-theme="teller"] .card-head    { border-bottom: 1px solid rgba(37,99,235,0.10) !important; padding-bottom: 14px !important; margin-bottom: 16px !important; }
+[data-theme="teller"] .card-title   { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .card-title .ct-icon {
+  background: rgba(37,99,235,0.09) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller"] .badge-count  { background: rgba(37,99,235,0.09) !important; color: #1E40AF !important; border-color: rgba(37,99,235,0.20) !important; }
+[data-theme="teller"] .badge-live   { background: rgba(34,197,94,0.10) !important; color: #16A34A !important; border-color: rgba(34,197,94,0.22) !important; }
+
+/* ── بطاقات الإحصاء العلوية (5 بطاقات) ── */
+[data-theme="teller"] .top-stats     { gap: 14px !important; }
+[data-theme="teller"] .t-stat {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 14px rgba(37,99,235,0.07) !important;
+}
+[data-theme="teller"] .t-stat-value  { color: #0F172A !important; font-weight: 900 !important; }
+[data-theme="teller"] .t-stat-label  { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller"] .t-stat-icon   { border-radius: 10px !important; }
+
+/* ── بطاقات التلر ── */
+[data-theme="teller"] .teller-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 12px rgba(37,99,235,0.07) !important;
+}
+[data-theme="teller"] .teller-card.online  { border-right: 4px solid #16A34A !important; }
+[data-theme="teller"] .teller-card.offline { border-right: 4px solid #94A3B8 !important; }
+[data-theme="teller"] .teller-name         { color: #0F172A !important; font-weight: 800 !important; }
+[data-theme="teller"] .teller-id           { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller"] .teller-meta-label   { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller"] .teller-meta-value   { color: #1E293B !important; font-weight: 700 !important; }
+[data-theme="teller"] .teller-status-dot.online  { background: #16A34A !important; box-shadow: 0 0 0 3px rgba(22,163,74,0.2) !important; }
+[data-theme="teller"] .teller-status-dot.offline { background: #94A3B8 !important; }
+
+/* ── قسم الأرصدة — Session card ── */
+[data-theme="teller"] .sv-session-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.08) !important;
+}
+[data-theme="teller"] .sv-session-header {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border-radius: 14px 14px 0 0 !important;
+  padding: 16px 20px !important;
+  margin: -1px -1px 0 !important;
+}
+[data-theme="teller"] .sv-session-header-title { color: #FFFFFF !important; font-weight: 800 !important; }
+[data-theme="teller"] .sv-session-header-sub   { color: rgba(255,255,255,0.75) !important; }
+[data-theme="teller"] .sv-session-header-badge { background: rgba(255,255,255,0.18) !important; color: #FFFFFF !important; }
+[data-theme="teller"] .sv-session-header-icon  { background: rgba(255,255,255,0.18) !important; }
+[data-theme="teller"] .sv-total-label          { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller"] .sv-total-val            { color: #1E40AF !important; font-weight: 900 !important; font-size: 28px !important; }
+[data-theme="teller"] .sv-field-label          { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller"] .sv-divider              { border-color: rgba(37,99,235,0.12) !important; }
+[data-theme="teller"] .sv-toggle-btn           { color: #334155 !important; background: #F0F7FF !important; border-color: rgba(37,99,235,0.18) !important; }
+[data-theme="teller"] .sv-toggle-btn.active    { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; color: #FFFFFF !important; border-color: transparent !important; }
+[data-theme="teller"] .sv-submit-btn           { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 4px 14px rgba(37,99,235,0.28) !important; }
+
+/* بطاقات العملات في الأرصدة */
+[data-theme="teller"] .sv-cur-card {
+  background: #F0F7FF !important;
+  border: 1.5px solid rgba(37,99,235,0.15) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller"] .sv-cur-name  { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .sv-cur-code  { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller"] .sv-cur-sym   { color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="teller"] .sv-cur-input { color: #0F172A !important; font-weight: 800 !important; background: #FFFFFF !important; border-color: rgba(37,99,235,0.18) !important; }
+[data-theme="teller"] .sv-cur-input:focus { border-color: #2563EB !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important; }
+
+/* نظرة عامة على الأرصدة */
+[data-theme="teller"] .bal-overview-panel,
+[data-theme="teller"] .bal-form-panel    { background: #FFFFFF !important; border: 1.5px solid rgba(37,99,235,0.12) !important; border-radius: 14px !important; }
+[data-theme="teller"] .bal-ov-title      { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .bal-tc            { background: #F8FAFF !important; border: 1px solid rgba(37,99,235,0.10) !important; border-radius: 12px !important; }
+[data-theme="teller"] .bal-tc.online     { border-right: 3px solid #16A34A !important; }
+[data-theme="teller"] .bal-tc.offline    { border-right: 3px solid #94A3B8 !important; }
+[data-theme="teller"] .bal-tc-name       { color: #0F172A !important; font-weight: 700 !important; }
+[data-theme="teller"] .bal-tc-id         { color: #475569 !important; }
+[data-theme="teller"] .bal-tc-total      { color: #1E40AF !important; font-weight: 800 !important; }
+[data-theme="teller"] .bal-tc-cur        { color: #334155 !important; }
+[data-theme="teller"] .bal-action-btn         { color: #334155 !important; background: #F0F7FF !important; border-color: rgba(37,99,235,0.18) !important; }
+[data-theme="teller"] .bal-action-btn.active  { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; color: #FFFFFF !important; border-color: transparent !important; }
+[data-theme="teller"] .bal-cur-chip           { background: #F0F7FF !important; border-color: rgba(37,99,235,0.18) !important; color: #334155 !important; }
+[data-theme="teller"] .bal-cur-chip.active    { background: rgba(37,99,235,0.12) !important; border-color: #2563EB !important; color: #1E40AF !important; font-weight: 800 !important; }
+[data-theme="teller"] .bal-submit-btn         { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 4px 14px rgba(37,99,235,0.25) !important; }
+[data-theme="teller"] .bal-label              { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller"] .bal-amount-input       { color: #0F172A !important; font-weight: 800 !important; }
+
+/* ── قسم الأسعار ── */
+[data-theme="teller"] .prc2-bar {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border-radius: 14px !important;
+  padding: 16px 20px !important;
+  margin-bottom: 16px !important;
+}
+[data-theme="teller"] .prc2-bar-title   { color: #FFFFFF !important; font-weight: 800 !important; }
+[data-theme="teller"] .prc2-bar-sub     { color: rgba(255,255,255,0.75) !important; }
+[data-theme="teller"] .prc2-publish-btn { background: #FFFFFF !important; color: #1E40AF !important; font-weight: 800 !important; border: none !important; box-shadow: 0 3px 10px rgba(15,23,42,0.15) !important; }
+[data-theme="teller"] .prc2-reset-btn   { background: rgba(255,255,255,0.15) !important; color: #FFFFFF !important; border-color: rgba(255,255,255,0.3) !important; }
+[data-theme="teller"] .prc2-live-dot    { background: #4ADE80 !important; }
+[data-theme="teller"] .prc2-live-lbl    { color: rgba(255,255,255,0.85) !important; }
+
+[data-theme="teller"] .prc2-block {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-top: 4px solid #2563EB !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 14px rgba(37,99,235,0.07) !important;
+}
+[data-theme="teller"] .prc2-block-head       { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; border-radius: 10px 10px 0 0 !important; padding: 12px 16px !important; }
+[data-theme="teller"] .prc2-block-head *     { color: #FFFFFF !important; }
+[data-theme="teller"] .prc2-pair-code        { color: #1E40AF !important; font-weight: 800 !important; }
+[data-theme="teller"] .prc2-pair-name        { color: #334155 !important; font-weight: 600 !important; }
+[data-theme="teller"] .prc2-rate-input       { color: #0F172A !important; font-weight: 800 !important; border-color: rgba(37,99,235,0.18) !important; background: #F0F7FF !important; }
+[data-theme="teller"] .prc2-rate-input:focus { border-color: #2563EB !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important; }
+[data-theme="teller"] .prc2-rate-sym         { color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="teller"] .prc2-rate-badge       { background: rgba(37,99,235,0.09) !important; color: #1E40AF !important; border-color: rgba(37,99,235,0.20) !important; }
+[data-theme="teller"] .prc2-rate-row.changed { background: rgba(37,99,235,0.05) !important; border-right: 3px solid #2563EB !important; }
+[data-theme="teller"] .prc2-spread-val       { color: #1E40AF !important; font-weight: 900 !important; }
+[data-theme="teller"] .prc2-spread-lbl       { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller"] .prc2-dd-card {
+  background: #F0F7FF !important;
+  border: 1.5px solid rgba(37,99,235,0.15) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller"] .prc2-dd-title  { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .prc2-dd-sub    { color: #475569 !important; }
+[data-theme="teller"] .prc2-dd-input  { color: #0F172A !important; font-weight: 800 !important; background: #FFFFFF !important; border-color: rgba(37,99,235,0.18) !important; }
+[data-theme="teller"] .prc2-dd-icon-cash { color: #16A34A !important; }
+[data-theme="teller"] .prc2-dd-icon-bank { color: #1E40AF !important; }
+[data-theme="teller"] .prc2-tp-head {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+[data-theme="teller"] .prc2-tp-title,
+[data-theme="teller"] .prc2-tp-bank-title,
+[data-theme="teller"] .prc2-tp-cash-title { color: #FFFFFF !important; font-weight: 700 !important; }
+
+/* ── قسم الطلبات ── */
+[data-theme="teller"] .rqs-hero {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 20px !important;
+}
+[data-theme="teller"] .rqs-hero-title    { color: #FFFFFF !important; font-weight: 900 !important; }
+[data-theme="teller"] .rqs-hero-sub      { color: rgba(255,255,255,0.75) !important; }
+[data-theme="teller"] .rqs-mini-stat     { background: rgba(255,255,255,0.15) !important; border-radius: 12px !important; padding: 12px 16px !important; }
+[data-theme="teller"] .rqs-mini-num      { color: #FFFFFF !important; font-weight: 900 !important; }
+[data-theme="teller"] .rqs-mini-lbl      { color: rgba(255,255,255,0.75) !important; }
+
+[data-theme="teller"] .rqs-pill          { background: #FFFFFF !important; color: #334155 !important; border: 1.5px solid rgba(37,99,235,0.18) !important; font-weight: 700 !important; border-radius: 20px !important; }
+[data-theme="teller"] .rqs-pill:hover    { border-color: #2563EB !important; color: #1E40AF !important; }
+[data-theme="teller"] .rqs-pill.active   { background: rgba(37,99,235,0.10) !important; color: #1E40AF !important; border-color: #2563EB !important; }
+[data-theme="teller"] .rqs-pill.active-urgent  { background: rgba(239,68,68,0.10) !important; color: #DC2626 !important; border-color: #EF4444 !important; }
+[data-theme="teller"] .rqs-pill.active-done    { background: rgba(22,163,74,0.10) !important; color: #16A34A !important; border-color: #22C55E !important; }
+[data-theme="teller"] .rqs-pill-cnt      { background: rgba(37,99,235,0.12) !important; color: #1E40AF !important; border-radius: 10px !important; padding: 1px 7px !important; }
+
+[data-theme="teller"] .request-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 12px rgba(37,99,235,0.07) !important;
+}
+[data-theme="teller"] .request-card.urgent   { border-right: 4px solid #EF4444 !important; }
+[data-theme="teller"] .request-card.normal   { border-right: 4px solid #F59E0B !important; }
+[data-theme="teller"] .request-card.resolved { border-right: 4px solid #22C55E !important; opacity: 0.8 !important; }
+[data-theme="teller"] .req-name              { color: #0F172A !important; font-weight: 800 !important; }
+[data-theme="teller"] .req-time              { color: #64748B !important; font-weight: 600 !important; }
+[data-theme="teller"] .req-priority.urgent   { background: rgba(239,68,68,0.10) !important; color: #DC2626 !important; }
+[data-theme="teller"] .req-priority.normal   { background: rgba(245,158,11,0.10) !important; color: #B45309 !important; }
+[data-theme="teller"] .req-priority.resolved { background: rgba(22,163,74,0.10) !important; color: #16A34A !important; }
+[data-theme="teller"] .req-body              { color: #334155 !important; }
+[data-theme="teller"] .rqs-empty-title       { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller"] .rqs-empty-sub         { color: #475569 !important; }
+
+/* ── الجداول ── */
+[data-theme="teller"] table th {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller"] table td         { color: #1E293B !important; border-color: rgba(37,99,235,0.08) !important; }
+[data-theme="teller"] table tr:hover td { background: rgba(37,99,235,0.04) !important; }
+[data-theme="teller"] .ops-table th    { background: linear-gradient(135deg, #1E293B, #334155) !important; color: #FFFFFF !important; }
+[data-theme="teller"] .op-type.send    { background: rgba(239,68,68,0.09) !important; color: #DC2626 !important; }
+[data-theme="teller"] .op-type.receive { background: rgba(22,163,74,0.09) !important; color: #16A34A !important; }
+[data-theme="teller"] .op-type.convert { background: rgba(37,99,235,0.09) !important; color: #1E40AF !important; }
+[data-theme="teller"] .op-amount.pos   { color: #16A34A !important; font-weight: 800 !important; }
+[data-theme="teller"] .op-amount.neg   { color: #DC2626 !important; font-weight: 800 !important; }
+
+/* ── حقول الإدخال والأزرار ── */
+[data-theme="teller"] .field-input {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #0F172A !important;
+}
+[data-theme="teller"] .field-input:focus  { border-color: #2563EB !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important; }
+[data-theme="teller"] .field-input::placeholder { color: #94A3B8 !important; }
+[data-theme="teller"] .field-group label  { color: #334155 !important; font-weight: 700 !important; }
+
+[data-theme="teller"] .btn-primary  {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important; border: none !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.28) !important;
+}
+[data-theme="teller"] .btn-secondary {
+  background: rgba(30,58,95,0.06) !important;
+  color: #334155 !important; border: none !important;
+}
+
+/* ── النصوص العامة ── */
+[data-theme="teller"] .main-content,
+[data-theme="teller"] .page-section  { color: #1E293B !important; }
+[data-theme="teller"] .tellers-section-header,
+[data-theme="teller"] .sec-header    { color: #1E3A5F !important; font-weight: 800 !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER-DEPT THEME  [data-theme="teller-dept"]
+   Azure Corporate — صفحة أقسام التلر — مثل الإدارة العامة
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── الخلفية ── */
+[data-theme="teller-dept"] body,
+[data-theme="teller-dept"] html { background: #EFF6FF !important; }
+[data-theme="teller-dept"] body::before { display: none !important; }
+[data-theme="teller-dept"] .particles-canvas { display: none !important; }
+
+/* ── الهيدر ── */
+[data-theme="teller-dept"] .header,
+[data-theme="teller-dept"] header {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid rgba(37,99,235,0.15) !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08) !important;
+}
+[data-theme="teller-dept"] .h-title { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .h-sub   { color: #64748B !important; }
+[data-theme="teller-dept"] .h-badge {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.20) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .calc-trigger-btn {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .calc-trigger-btn:hover {
+  background: rgba(37,99,235,0.12) !important;
+}
+
+/* ── شريط التنقل nav-bar ── */
+[data-theme="teller-dept"] .nav-bar {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid rgba(37,99,235,0.10) !important;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.06) !important;
+}
+[data-theme="teller-dept"] .nav-tab {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+  color: #64748B !important;
+}
+[data-theme="teller-dept"] .nav-tab:hover {
+  background: rgba(37,99,235,0.05) !important;
+  border-color: rgba(37,99,235,0.28) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .nav-tab.active {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .nav-tab-badge {
+  background: rgba(37,99,235,0.10) !important;
+  color: #2563EB !important;
+}
+
+/* ── الكاردات العامة ── */
+[data-theme="teller-dept"] .card,
+[data-theme="teller-dept"] .tool-card,
+[data-theme="teller-dept"] .teller-box,
+[data-theme="teller-dept"] .opening-box,
+[data-theme="teller-dept"] .current-balance-box {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+  box-shadow: 0 2px 12px rgba(37,99,235,0.07) !important;
+}
+[data-theme="teller-dept"] .card::before {
+  background: linear-gradient(90deg, transparent, #2563EB, transparent) !important;
+}
+[data-theme="teller-dept"] .teller-box::before {
+  background: linear-gradient(90deg, #1E40AF, #2563EB, #1E40AF) !important;
+}
+
+/* ── عناوين الكاردات ── */
+[data-theme="teller-dept"] .card-title,
+[data-theme="teller-dept"] .card-head .card-title { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .card-title .ct-icon,
+[data-theme="teller-dept"] .ct-icon {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .badge-live {
+  background: rgba(22,163,74,0.08) !important;
+  color: #16A34A !important;
+  border-color: rgba(22,163,74,0.20) !important;
+}
+[data-theme="teller-dept"] .badge-count {
+  background: rgba(37,99,235,0.08) !important;
+  color: #2563EB !important;
+  border-color: rgba(37,99,235,0.20) !important;
+}
+
+/* ── بطاقات الإحصائيات stat-box ── */
+[data-theme="teller-dept"] .stats-row .stat-box {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] .stat-box:hover {
+  border-color: rgba(37,99,235,0.28) !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] .stat-val  { color: #1E3A5F !important; font-weight: 900 !important; }
+[data-theme="teller-dept"] .stat-lbl  { color: #64748B !important; }
+
+/* ── النصوص الرئيسية ── */
+[data-theme="teller-dept"] .main-area,
+[data-theme="teller-dept"] .dept-section { color: #1E293B !important; }
+[data-theme="teller-dept"] .sec-title { color: #2563EB !important; border-color: rgba(37,99,235,0.15) !important; }
+
+/* ── بطاقة الصندوق الافتتاحي ── */
+[data-theme="teller-dept"] .opening-box {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .ob-header { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .ob-icon {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .ob-badge {
+  background: rgba(37,99,235,0.08) !important;
+  color: #2563EB !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .ob-label { color: #64748B !important; }
+[data-theme="teller-dept"] .ob-val   { color: #1E40AF !important; font-weight: 900 !important; }
+[data-theme="teller-dept"] .ob-cur-name { color: #1E3A5F !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .ob-cur-val  { color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .ob-timestamp { color: #94A3B8 !important; }
+
+/* ── بطاقة الرصيد الحالي ── */
+[data-theme="teller-dept"] .current-balance-box { border-color: rgba(37,99,235,0.14) !important; }
+[data-theme="teller-dept"] .cb-header { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .cb-icon-wrap,
+[data-theme="teller-dept"] .cb-icon {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .cb-main-val {
+  color: #1E40AF !important;
+  font-weight: 900 !important;
+  font-size: 32px !important;
+}
+[data-theme="teller-dept"] .cb-sub-label { color: #64748B !important; }
+[data-theme="teller-dept"] .cb-cur-name  { color: #1E3A5F !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .cb-cur-val   { color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .cb-stat-num  {
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="teller-dept"] .cb-stat-lbl  { color: #64748B !important; }
+[data-theme="teller-dept"] .cb-live-dot  { background: #16A34A !important; }
+
+/* ── صندوق التلر (teller-box) ── */
+[data-theme="teller-dept"] .teller-box-title { color: #2563EB !important; }
+[data-theme="teller-dept"] .teller-box-title .tb-icon {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .teller-balance {
+  background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02)) !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .teller-balance-label { color: #64748B !important; }
+[data-theme="teller-dept"] .teller-balance-val { color: #1E40AF !important; font-weight: 900 !important; }
+[data-theme="teller-dept"] .teller-currency-row {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] .teller-currency-row:hover { border-color: rgba(37,99,235,0.25) !important; }
+[data-theme="teller-dept"] .tcr-name { color: #1E3A5F !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .tcr-val  { color: #2563EB !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .teller-summary {
+  background: rgba(37,99,235,0.05) !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .ts-label { color: #64748B !important; }
+[data-theme="teller-dept"] .ts-val   { color: #1E3A5F !important; }
+
+/* ── بطاقات الأزواج والدول والمنصات ── */
+[data-theme="teller-dept"] .pair-card,
+[data-theme="teller-dept"] .continent-card,
+[data-theme="teller-dept"] .platform-card {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .pair-card:hover,
+[data-theme="teller-dept"] .continent-card:hover,
+[data-theme="teller-dept"] .platform-card:hover {
+  border-color: rgba(37,99,235,0.35) !important;
+  box-shadow: 0 6px 20px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] .pair-card.active-pair,
+[data-theme="teller-dept"] .continent-card.active-cont,
+[data-theme="teller-dept"] .platform-card.active-plat {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: #2563EB !important;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .pair-name,
+[data-theme="teller-dept"] .cont-name,
+[data-theme="teller-dept"] .plat-name  { color: #1E3A5F !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .pair-rate  { color: #2563EB !important; }
+[data-theme="teller-dept"] .pair-code,
+[data-theme="teller-dept"] .cont-sub,
+[data-theme="teller-dept"] .plat-sub   { color: #94A3B8 !important; }
+[data-theme="teller-dept"] .pair-arrow { color: #2563EB !important; }
+[data-theme="teller-dept"] .col-title {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .countries-list { background: #F8FAFF !important; border-color: rgba(37,99,235,0.12) !important; }
+[data-theme="teller-dept"] .country-item   { color: #1E3A5F !important; }
+[data-theme="teller-dept"] .country-item:hover { background: rgba(37,99,235,0.06) !important; color: #2563EB !important; }
+
+/* ── أداة التحويل (tool-card) ── */
+[data-theme="teller-dept"] .tool-card { background: #FFFFFF !important; }
+[data-theme="teller-dept"] .tool-card.mode-buy  { border-color: rgba(22,163,74,0.22) !important; }
+[data-theme="teller-dept"] .tool-card.mode-sell { border-color: rgba(220,38,38,0.22) !important; }
+[data-theme="teller-dept"] .buysell-toggle {
+  background: #F1F5F9 !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .bs-btn {
+  background: #F8FAFF !important;
+  color: #64748B !important;
+}
+[data-theme="teller-dept"] .bs-btn.buy-btn.active  { background: rgba(22,163,74,0.08) !important; color: #16A34A !important; }
+[data-theme="teller-dept"] .bs-btn.sell-btn.active { background: rgba(220,38,38,0.08) !important; color: #DC2626 !important; }
+[data-theme="teller-dept"] .conv-label  { color: #64748B !important; }
+[data-theme="teller-dept"] .conv-amount {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.16) !important;
+  color: #1E40AF !important;
+}
+[data-theme="teller-dept"] .conv-amount input { color: #1E40AF !important; }
+[data-theme="teller-dept"] .conv-amount input::placeholder { color: #94A3B8 !important; }
+[data-theme="teller-dept"] .swap-circle { background: #2563EB !important; box-shadow: 0 4px 14px rgba(37,99,235,0.30) !important; }
+[data-theme="teller-dept"] .swap-circle svg { stroke: #FFFFFF !important; }
+[data-theme="teller-dept"] .rate-chip {
+  background: rgba(37,99,235,0.05) !important;
+  color: #64748B !important;
+}
+
+/* ── أسعار العالم dropdown ── */
+[data-theme="teller-dept"] .world-prices-dropdown {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .world-prices-header {
+  background: #F8FAFF !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .world-prices-header:hover { background: #EFF6FF !important; }
+[data-theme="teller-dept"] .price-section-title { color: #94A3B8 !important; border-color: rgba(37,99,235,0.10) !important; }
+[data-theme="teller-dept"] .price-row .p-name  { color: #1E3A5F !important; }
+[data-theme="teller-dept"] .price-row .p-val   { color: #2563EB !important; }
+
+/* ── الجداول ── */
+[data-theme="teller-dept"] th {
+  background: rgba(37,99,235,0.04) !important;
+  color: #2563EB !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] td {
+  color: #1E3A5F !important;
+  border-color: rgba(37,99,235,0.08) !important;
+}
+[data-theme="teller-dept"] tr:hover td { background: rgba(37,99,235,0.03) !important; }
+[data-theme="teller-dept"] .amount-cell      { color: #1E3A5F !important; }
+[data-theme="teller-dept"] .amount-cell.pos  { color: #16A34A !important; }
+[data-theme="teller-dept"] .amount-cell.neg  { color: #DC2626 !important; }
+
+/* ── حقول الإدخال ── */
+[data-theme="teller-dept"] .field-input {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #1E3A5F !important;
+}
+[data-theme="teller-dept"] .field-input::placeholder { color: #94A3B8 !important; }
+[data-theme="teller-dept"] .field-input:focus {
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] .field-group label { color: #64748B !important; font-weight: 600 !important; }
+select.field-input option { background: #FFFFFF !important; color: #1E3A5F !important; }
+
+/* ── أزرار الإجراءات ── */
+[data-theme="teller-dept"] .btn-primary {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.28) !important;
+}
+[data-theme="teller-dept"] .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(37,99,235,0.38) !important;
+}
+[data-theme="teller-dept"] .btn-secondary {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .btn-secondary:hover {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: rgba(37,99,235,0.32) !important;
+}
+
+/* ── شريط الجلسة (sessionBar) ── */
+[data-theme="teller-dept"] #sessionBar {
+  background: linear-gradient(135deg, rgba(37,99,235,0.07), rgba(37,99,235,0.03)) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+
+/* ── double-delivery ── */
+[data-theme="teller-dept"] .double-delivery-toggle {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle.dd-active {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: #2563EB !important;
+}
+[data-theme="teller-dept"] .dd-label { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .dd-desc  { color: #64748B !important; }
+[data-theme="teller-dept"] .dd-switch { background: #CBD5E1 !important; }
+[data-theme="teller-dept"] .dd-active .dd-switch { background: #2563EB !important; }
+[data-theme="teller-dept"] .dd-switch::after { background: #FFFFFF !important; }
+[data-theme="teller-dept"] .dd-total-val { color: #2563EB !important; }
+[data-theme="teller-dept"] .dd-result-val { color: #2563EB !important; }
+[data-theme="teller-dept"] .dd-sum-total .dd-sum-val { color: #2563EB !important; }
+[data-theme="teller-dept"] .dd-rate-val { color: #D97706 !important; }
+[data-theme="teller-dept"] .dd-rate-display.dd-rate-bank .dd-rate-val { color: #2563EB !important; }
+[data-theme="teller-dept"] .dd-source-info {
+  background: rgba(217,119,6,0.05) !important;
+  border-color: rgba(217,119,6,0.18) !important;
+}
+[data-theme="teller-dept"] .dd-summary-bar {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .dd-sum-row { color: #64748B !important; border-color: rgba(37,99,235,0.08) !important; }
+[data-theme="teller-dept"] .dd-bank-header { color: #2563EB !important; }
+[data-theme="teller-dept"] .dd-bank-card {
+  background: rgba(37,99,235,0.03) !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+
+/* ── sv-panel (مشرف التلر في الصفحة) ── */
+[data-theme="teller-dept"] .sv-panel-header {
+  background: rgba(37,99,235,0.05) !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .sv-sec-title  { color: #1E3A5F !important; }
+[data-theme="teller-dept"] .sv-rate-item  {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.12) !important;
+}
+[data-theme="teller-dept"] .sv-rate-name  { color: #64748B !important; }
+[data-theme="teller-dept"] .sv-diff { background: rgba(37,99,235,0.05) !important; border-color: rgba(37,99,235,0.12) !important; color: #2563EB !important; }
+[data-theme="teller-dept"] .sv-section { border-color: rgba(37,99,235,0.10) !important; }
+[data-theme="teller-dept"] .sv-apply-btn { background: linear-gradient(135deg, #1E40AF, #2563EB) !important; color: #FFFFFF !important; }
+
+/* ── FX ticker bar ── */
+[data-theme="teller-dept"] #fx-ticker-bar {
+  background: #1E40AF !important;
+  border-color: rgba(37,99,235,0.30) !important;
+}
+[data-theme="teller-dept"] #fx-ticker-badge { background: rgba(255,255,255,0.15) !important; color: #FFFFFF !important; }
+[data-theme="teller-dept"] #fx-ticker-inner { color: #BFDBFE !important; }
+[data-theme="teller-dept"] #fx-ticker-refresh { color: #BFDBFE !important; }
+
+/* ── النصوص الثانوية العامة ── */
+[data-theme="teller-dept"] .text-muted,
+[data-theme="teller-dept"] small { color: #64748B !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER-DEPT — قسم الصرافة  (Blue Header + White Body)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── tool-card: رأس أزرق + جسم أبيض ── */
+[data-theme="teller-dept"] #exchangeToolCard {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.16) !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.10) !important;
+  border-top: 4px solid #1E40AF !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .card-head {
+  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;
+  margin: -24px -24px 16px !important;
+  padding: 16px 20px !important;
+  border-radius: 0 !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .card-title,
+[data-theme="teller-dept"] #exchangeToolCard .card-title * { color: #FFFFFF !important; }
+[data-theme="teller-dept"] #exchangeToolCard .ct-icon {
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard #modeLabel {
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.30) !important;
+  color: #FFFFFF !important;
+}
+
+/* ── buysell toggle ── */
+[data-theme="teller-dept"] #exchangeToolCard .buysell-toggle {
+  background: #F1F5F9 !important;
+  border-color: rgba(37,99,235,0.16) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .bs-btn {
+  background: #F8FAFF !important;
+  color: #64748B !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .bs-btn.buy-btn.active {
+  background: rgba(22,163,74,0.10) !important;
+  color: #16A34A !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .bs-btn.sell-btn.active {
+  background: rgba(220,38,38,0.10) !important;
+  color: #DC2626 !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .bs-btn:hover {
+  background: rgba(37,99,235,0.05) !important;
+}
+
+/* ── منطقة التحويل (conv-row box) ── */
+[data-theme="teller-dept"] #exchangeToolCard > div[style*="surface-2"],
+[data-theme="teller-dept"] #exchangeToolCard > div[style*="var(--surface"] {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .conv-label {
+  color: #64748B !important;
+  font-weight: 600 !important;
+}
+[data-theme="teller-dept"] .conv-amount {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.18) !important;
+  color: #1E40AF !important;
+  font-weight: 900 !important;
+}
+[data-theme="teller-dept"] .conv-amount input {
+  color: #1E40AF !important;
+  background: transparent !important;
+}
+[data-theme="teller-dept"] .conv-amount input::placeholder { color: #94A3B8 !important; }
+[data-theme="teller-dept"] #exchangeToolCard #exTo {
+  color: #16A34A !important;
+  font-weight: 900 !important;
+}
+[data-theme="teller-dept"] .swap-circle {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.30) !important;
+  border-color: #FFFFFF !important;
+}
+[data-theme="teller-dept"] .swap-circle svg { stroke: #FFFFFF !important; }
+[data-theme="teller-dept"] .rate-chip {
+  background: rgba(37,99,235,0.07) !important;
+  color: #2563EB !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+  padding: 3px 12px !important;
+}
+
+/* ── بطاقات الأزواج (pair-card) في العمود الجانبي ── */
+[data-theme="teller-dept"] #dept-exchange .pair-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-top: 3px solid transparent !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card:hover {
+  border-color: rgba(37,99,235,0.30) !important;
+  border-top-color: #2563EB !important;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.12) !important;
+  transform: translateY(-2px) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card.active-pair {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: #2563EB !important;
+  border-top-color: #1E40AF !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-name  { color: #1E3A5F !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] #dept-exchange .pair-rate  { color: #2563EB !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] #dept-exchange .pair-code  { color: #94A3B8 !important; font-size: 9px !important; }
+[data-theme="teller-dept"] #dept-exchange .pair-arrow { color: #2563EB !important; }
+[data-theme="teller-dept"] #dept-exchange .col-title  {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  font-weight: 800 !important;
+}
+
+/* ── أسعار عالمية dropdown ── */
+[data-theme="teller-dept"] #dept-exchange .world-prices-dropdown {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .world-prices-header {
+  background: #EFF6FF !important;
+  color: #1E40AF !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .world-prices-header:hover { background: #DBEAFE !important; }
+[data-theme="teller-dept"] #dept-exchange .price-section-title {
+  color: #94A3B8 !important;
+  border-color: rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .price-row:hover { background: rgba(37,99,235,0.03) !important; }
+[data-theme="teller-dept"] #dept-exchange .p-name { color: #1E3A5F !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] #dept-exchange .p-val  { color: #2563EB !important; font-weight: 800 !important; }
+
+/* ── أزواج إضافية dropdown ── */
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-dropdown {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-header {
+  background: #EFF6FF !important;
+  color: #1E40AF !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-header:hover { background: #DBEAFE !important; }
+[data-theme="teller-dept"] #dept-exchange .extra-pair-item {
+  border-color: rgba(37,99,235,0.10) !important;
+  color: #1E3A5F !important;
+}
+[data-theme="teller-dept"] #dept-exchange .extra-pair-item:hover { background: rgba(37,99,235,0.04) !important; }
+[data-theme="teller-dept"] #dept-exchange .btn-add-pair {
+  background: rgba(37,99,235,0.07) !important;
+  border-color: rgba(37,99,235,0.20) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] #dept-exchange .btn-add-pair:hover {
+  background: rgba(37,99,235,0.14) !important;
+  border-color: #2563EB !important;
+}
+[data-theme="teller-dept"] #dept-exchange .btn-add-pair.added {
+  background: rgba(22,163,74,0.08) !important;
+  border-color: rgba(22,163,74,0.25) !important;
+  color: #16A34A !important;
+}
+
+/* ── السعر المميز ── */
+[data-theme="teller-dept"] #specialPriceBox {
+  background: rgba(217,119,6,0.04) !important;
+  border-color: rgba(217,119,6,0.18) !important;
+}
+[data-theme="teller-dept"] .special-price-section {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.14) !important;
+}
+[data-theme="teller-dept"] .sp-section-title { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .sp-lock-msg    { color: #94A3B8 !important; }
+[data-theme="teller-dept"] .sp-status {
+  background: rgba(245,158,11,0.05) !important;
+  border-color: rgba(245,158,11,0.18) !important;
+}
+[data-theme="teller-dept"] .sp-status-text { color: #1E3A5F !important; }
+
+/* ── زر باص تلر — تحويله لأزرق ── */
+[data-theme="teller-dept"] .btn-pass-teller {
+  background: rgba(37,99,235,0.07) !important;
+  border-color: rgba(37,99,235,0.25) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .btn-pass-teller:hover {
+  background: rgba(37,99,235,0.14) !important;
+  border-color: #2563EB !important;
+  color: #1E40AF !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.20) !important;
+}
+[data-theme="teller-dept"] .btn-pass-teller::before {
+  background: linear-gradient(135deg, rgba(37,99,235,0.10), transparent) !important;
+}
+
+/* ── زر الالتقاط ── */
+[data-theme="teller-dept"] #exchangeToolCard button[onclick*="captureSection"] {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.22) !important;
+  color: #2563EB !important;
+}
+
+/* ── double delivery في الصرافة ── */
+[data-theme="teller-dept"] #dept-exchange .double-delivery-toggle {
+  background: #F8FAFF !important;
+  border-color: rgba(37,99,235,0.16) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .double-delivery-toggle.dd-active {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: #2563EB !important;
+}
+
+/* ── حقول الإدخال داخل قسم الصرافة ── */
+[data-theme="teller-dept"] #dept-exchange .field-input {
+  background: #FFFFFF !important;
+  border-color: rgba(37,99,235,0.18) !important;
+  color: #1E3A5F !important;
+}
+[data-theme="teller-dept"] #dept-exchange .field-input:focus {
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .field-group label {
+  color: #64748B !important;
+  font-weight: 600 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER-DEPT — قسم الصرافة — تصميم جديد كامل
+   White Section Card + Pill Pairs + Bordered Teller Box
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. خلفية القسم: بطاقة بيضاء كبيرة ── */
+[data-theme="teller-dept"] #dept-exchange {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.12) !important;
+  border-top: 4px solid #2563EB !important;
+  border-radius: 18px !important;
+  padding: 24px !important;
+  box-shadow: 0 4px 24px rgba(37,99,235,0.08) !important;
+  margin-bottom: 16px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .tri-layout {
+  background: transparent !important;
+}
+
+/* ── 2. أزواج العملات — Pill Style ── */
+[data-theme="teller-dept"] #dept-exchange .right-column {
+  gap: 8px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .col-title {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.22) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card {
+  background: #FFFFFF !important;
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 12px 10px !important;
+  box-shadow: 0 2px 10px rgba(37,99,235,0.08), 0 0 0 1px rgba(37,99,235,0.08) !important;
+  transition: all 0.25s ease !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card::before {
+  display: none !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card:hover {
+  box-shadow: 0 6px 20px rgba(37,99,235,0.16), 0 0 0 1.5px rgba(37,99,235,0.30) !important;
+  transform: translateY(-2px) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-card.active-pair {
+  background: linear-gradient(135deg, rgba(37,99,235,0.07), rgba(37,99,235,0.03)) !important;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.18), 0 0 0 2px #2563EB !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-flags {
+  font-size: 20px !important;
+  margin-bottom: 5px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-arrow {
+  color: #2563EB !important;
+  font-size: 13px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-name {
+  color: #1E3A5F !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-rate {
+  color: #2563EB !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  background: rgba(37,99,235,0.07) !important;
+  border-radius: 20px !important;
+  padding: 1px 8px !important;
+  display: inline-block !important;
+  margin-top: 3px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .pair-code {
+  color: #94A3B8 !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  margin-top: 3px !important;
+}
+
+/* ── أسعار عالمية وأزواج إضافية ── */
+[data-theme="teller-dept"] #dept-exchange .world-prices-dropdown,
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-dropdown {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(37,99,235,0.12) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.06) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .world-prices-header,
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-header {
+  background: #EFF6FF !important;
+  color: #1E40AF !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  padding: 10px 14px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .world-prices-header:hover,
+[data-theme="teller-dept"] #dept-exchange .extra-pairs-header:hover {
+  background: #DBEAFE !important;
+}
+[data-theme="teller-dept"] #dept-exchange .price-section-title {
+  background: #F8FAFF !important;
+  color: #64748B !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.8px !important;
+  border-color: rgba(37,99,235,0.08) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .price-row {
+  border-bottom: 1px solid rgba(37,99,235,0.05) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .price-row:hover {
+  background: rgba(37,99,235,0.03) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .p-name {
+  color: #1E3A5F !important;
+  font-weight: 600 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .p-val {
+  color: #2563EB !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .extra-pair-item {
+  border-color: rgba(37,99,235,0.08) !important;
+  color: #1E3A5F !important;
+  font-weight: 600 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .extra-pair-item:hover {
+  background: rgba(37,99,235,0.04) !important;
+}
+
+/* ── 3. صندوق التلر — Bordered Cards ── */
+[data-theme="teller-dept"] #dept-exchange .teller-box {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.14) !important;
+  border-top: 4px solid #1E40AF !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-box::before {
+  display: none !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-box-title {
+  color: #1E40AF !important;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(37,99,235,0.10) !important;
+  margin-bottom: 14px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-box-title .tb-icon {
+  background: rgba(37,99,235,0.08) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+/* الرصيد الإجمالي */
+[data-theme="teller-dept"] #dept-exchange .teller-balance {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(37,99,235,0.28) !important;
+  margin-bottom: 12px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-balance-label {
+  color: rgba(255,255,255,0.75) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-balance-val {
+  color: #FFFFFF !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+/* كاردات العملات الصغيرة */
+[data-theme="teller-dept"] #dept-exchange .teller-currency-row {
+  background: #F8FAFF !important;
+  border: 1.5px solid rgba(37,99,235,0.10) !important;
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+[data-theme="teller-dept"] #dept-exchange .teller-currency-row:hover {
+  border-color: rgba(37,99,235,0.28) !important;
+  background: #EFF6FF !important;
+  transform: translateX(-2px) !important;
+  box-shadow: 0 3px 10px rgba(37,99,235,0.10) !important;
+}
+[data-theme="teller-dept"] #dept-exchange .tcr-name {
+  color: #1E3A5F !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .tcr-flag { font-size: 18px !important; }
+[data-theme="teller-dept"] #dept-exchange .tcr-val {
+  color: #1E40AF !important;
+  font-weight: 900 !important;
+  font-size: 15px !important;
+  background: rgba(37,99,235,0.07) !important;
+  padding: 2px 10px !important;
+  border-radius: 20px !important;
+}
+/* ملخص الصندوق */
+[data-theme="teller-dept"] #dept-exchange .teller-summary {
+  background: rgba(37,99,235,0.05) !important;
+  border: 1px solid rgba(37,99,235,0.10) !important;
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+}
+[data-theme="teller-dept"] #dept-exchange .ts-label { color: #64748B !important; }
+[data-theme="teller-dept"] #dept-exchange .ts-val   { color: #1E3A5F !important; font-weight: 800 !important; }
+
+/* ── 4. السجل — إبراز النصوص والأيقونات ── */
+[data-theme="teller-dept"] .card table th {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 12px 14px !important;
+  letter-spacing: 0.3px !important;
+  border: none !important;
+}
+[data-theme="teller-dept"] .card table td {
+  color: #1E3A5F !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 11px 14px !important;
+  border-color: rgba(37,99,235,0.07) !important;
+  vertical-align: middle !important;
+}
+[data-theme="teller-dept"] .card table tbody tr:hover td {
+  background: rgba(37,99,235,0.04) !important;
+}
+[data-theme="teller-dept"] .card table tbody tr:nth-child(even) td {
+  background: rgba(37,99,235,0.02) !important;
+}
+[data-theme="teller-dept"] .card table tbody tr:nth-child(even):hover td {
+  background: rgba(37,99,235,0.06) !important;
+}
+/* تلوين الأيقونات/الـ tags في السجل */
+[data-theme="teller-dept"] .tag-send {
+  background: rgba(220,38,38,0.08) !important;
+  color: #DC2626 !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-receive {
+  background: rgba(22,163,74,0.08) !important;
+  color: #16A34A !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-convert {
+  background: rgba(37,99,235,0.08) !important;
+  color: #2563EB !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-buy {
+  background: rgba(22,163,74,0.08) !important;
+  color: #16A34A !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-sell {
+  background: rgba(220,38,38,0.08) !important;
+  color: #DC2626 !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-completed {
+  background: rgba(22,163,74,0.08) !important;
+  color: #16A34A !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .tag-pending {
+  background: rgba(217,119,6,0.08) !important;
+  color: #D97706 !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+}
+[data-theme="teller-dept"] .amount-cell {
+  color: #1E3A5F !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+}
+[data-theme="teller-dept"] .amount-cell.pos { color: #16A34A !important; }
+[data-theme="teller-dept"] .amount-cell.neg { color: #DC2626 !important; }
+
+/* badge-count في السجل */
+[data-theme="teller-dept"] .card .badge-count {
+  background: rgba(37,99,235,0.08) !important;
+  color: #2563EB !important;
+  border-color: rgba(37,99,235,0.20) !important;
+  font-weight: 700 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TELLER-DEPT — إبراز النصوص + إعادة تصميم الأزرار
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. النصوص الشفافة → بارزة وداكنة ── */
+
+/* النصوص الرئيسية في كل عناصر الصفحة */
+[data-theme="teller-dept"] .main-area,
+[data-theme="teller-dept"] .dept-section,
+[data-theme="teller-dept"] .card,
+[data-theme="teller-dept"] .tool-card,
+[data-theme="teller-dept"] .teller-box,
+[data-theme="teller-dept"] .opening-box,
+[data-theme="teller-dept"] .current-balance-box {
+  color: #1E3A5F !important;
+}
+
+/* النصوص الثانوية والـ muted → slate واضح بدلاً من شفاف */
+[data-theme="teller-dept"] .text-muted,
+[data-theme="teller-dept"] [class*="muted"],
+[data-theme="teller-dept"] [class*="sub"],
+[data-theme="teller-dept"] [class*="label"],
+[data-theme="teller-dept"] [class*="desc"],
+[data-theme="teller-dept"] [class*="hint"],
+[data-theme="teller-dept"] small { color: #475569 !important; }
+
+/* الـ var(--text-muted) inline في HTML */
+[data-theme="teller-dept"] .extra-pair-info span[style*="text-muted"],
+[data-theme="teller-dept"] .extra-pair-info span[style*="var(--text"] {
+  color: #64748B !important;
+}
+
+/* conv-label — تسميات "يدفع/يستلم" */
+[data-theme="teller-dept"] .conv-label {
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* sec-title */
+[data-theme="teller-dept"] .sec-title {
+  color: #1E40AF !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  border-color: rgba(37,99,235,0.15) !important;
+}
+
+/* field-group labels */
+[data-theme="teller-dept"] .field-group label,
+[data-theme="teller-dept"] label {
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+/* ts-label, teller-meta */
+[data-theme="teller-dept"] .ts-label        { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .ts-val          { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .dd-label        { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .dd-desc         { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .ob-label        { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .ob-timestamp    { color: #64748B !important; font-size: 11px !important; }
+[data-theme="teller-dept"] .cb-sub-label    { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .cb-stat-lbl     { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .teller-balance-label { color: rgba(255,255,255,0.80) !important; }
+[data-theme="teller-dept"] .rate-chip       { color: #1E40AF !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .sp-lock-msg     { color: #64748B !important; }
+[data-theme="teller-dept"] .sp-section-title { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .sv-sec-title    { color: #1E3A5F !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .sv-rate-name    { color: #475569 !important; font-weight: 600 !important; }
+[data-theme="teller-dept"] .pair-code       { color: #64748B !important; }
+[data-theme="teller-dept"] .cont-sub,
+[data-theme="teller-dept"] .plat-sub        { color: #64748B !important; }
+
+/* تسميات حقول العملات في أداة التحويل */
+[data-theme="teller-dept"] .sv-cur-code     { color: #64748B !important; }
+[data-theme="teller-dept"] .sv-cur-name     { color: #1E3A5F !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .sv-total-label  { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .sv-field-label  { color: #475569 !important; font-weight: 700 !important; }
+
+/* ── 2. الأزرار الرئيسية — Solid Blue Compact ── */
+
+[data-theme="teller-dept"] .btn-primary,
+[data-theme="teller-dept"] .el-btn-primary {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(37,99,235,0.25) !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  letter-spacing: 0.2px !important;
+}
+[data-theme="teller-dept"] .btn-primary:hover,
+[data-theme="teller-dept"] .el-btn-primary:hover {
+  box-shadow: 0 5px 16px rgba(37,99,235,0.38) !important;
+  transform: translateY(-1px) !important;
+  filter: brightness(1.06) !important;
+}
+
+/* أزرار التنفيذ الملونة (inline style overrides) */
+[data-theme="teller-dept"] #exSubmitBtn,
+[data-theme="teller-dept"] #cd2SubmitBtn {
+  background: linear-gradient(135deg, #15803D, #16A34A) !important;
+  color: #FFFFFF !important;
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(22,163,74,0.25) !important;
+}
+
+/* ── 3. الأزرار الثانوية — Flat Compact ── */
+
+[data-theme="teller-dept"] .btn-secondary,
+[data-theme="teller-dept"] .el-btn-clear {
+  background: rgba(30,58,95,0.05) !important;
+  color: #475569 !important;
+  border: none !important;
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  transition: background 0.18s ease !important;
+}
+[data-theme="teller-dept"] .btn-secondary:hover,
+[data-theme="teller-dept"] .el-btn-clear:hover {
+  background: rgba(30,58,95,0.09) !important;
+  color: #1E3A5F !important;
+  transform: none !important;
+}
+
+/* زر الطباعة — Flat Compact */
+[data-theme="teller-dept"] .btn-print {
+  background: rgba(37,99,235,0.06) !important;
+  color: #2563EB !important;
+  border: none !important;
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+[data-theme="teller-dept"] .btn-print:hover {
+  background: rgba(37,99,235,0.12) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── 4. أزرار خاصة — Compact متناسق ── */
+
+/* سعر مميز */
+[data-theme="teller-dept"] .btn-special {
+  background: rgba(217,119,6,0.07) !important;
+  color: #B45309 !important;
+  border: 1px solid rgba(217,119,6,0.22) !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+}
+[data-theme="teller-dept"] .btn-special:hover {
+  background: rgba(217,119,6,0.13) !important;
+  border-color: rgba(217,119,6,0.40) !important;
+}
+
+/* باص تلر */
+[data-theme="teller-dept"] .btn-pass-teller {
+  background: rgba(37,99,235,0.07) !important;
+  color: #2563EB !important;
+  border: 1px solid rgba(37,99,235,0.22) !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+[data-theme="teller-dept"] .btn-pass-teller:hover {
+  background: rgba(37,99,235,0.13) !important;
+  border-color: rgba(37,99,235,0.40) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* إرسال طلب المشرف */
+[data-theme="teller-dept"] .btn-sp-request {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 9px !important;
+  box-shadow: 0 3px 10px rgba(37,99,235,0.22) !important;
+}
+
+/* الحوالات (btn-purple) → أزرق */
+[data-theme="teller-dept"] .btn-purple {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(37,99,235,0.22) !important;
+}
+[data-theme="teller-dept"] .btn-purple:hover {
+  box-shadow: 0 5px 16px rgba(37,99,235,0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* الحاسبة في الهيدر */
+[data-theme="teller-dept"] .calc-trigger-btn {
+  background: rgba(37,99,235,0.07) !important;
+  border: 1px solid rgba(37,99,235,0.20) !important;
+  color: #2563EB !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+}
+
+/* زر إضافة زوج عملة */
+[data-theme="teller-dept"] .btn-add-pair {
+  padding: 4px 10px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+  background: rgba(37,99,235,0.08) !important;
+  border: 1px solid rgba(37,99,235,0.20) !important;
+  color: #2563EB !important;
+}
+[data-theme="teller-dept"] .btn-add-pair.added {
+  background: rgba(22,163,74,0.08) !important;
+  border-color: rgba(22,163,74,0.25) !important;
+  color: #16A34A !important;
+}
+
+/* زر التقاط */
+[data-theme="teller-dept"] button[onclick*="captureSection"] {
+  background: rgba(37,99,235,0.07) !important;
+  border: 1px solid rgba(37,99,235,0.20) !important;
+  color: #2563EB !important;
+  padding: 5px 10px !important;
+  font-size: 11px !important;
+  border-radius: 8px !important;
+}
+
+/* زر واتساب — يبقى أخضر لكن Compact */
+[data-theme="teller-dept"] .btn-whatsapp,
+[data-theme="teller-dept"] .el-btn-whatsapp {
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(37,211,102,0.22) !important;
+}
+
+/* ── 5. modal buttons ── */
+[data-theme="teller-dept"] .modal-btns .btn-primary {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  color: #FFFFFF !important;
+  padding: 9px 20px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+}
+[data-theme="teller-dept"] .modal-btns .btn-secondary {
+  background: rgba(30,58,95,0.05) !important;
+  color: #475569 !important;
+  border: none !important;
+  padding: 9px 16px !important;
+  font-size: 12px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TELLER-DEPT — زر الطباعة / مسح / تسليم مزدوج / بيانات العميل
+   + إبراز كل النصوص الشفافة
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── زر الطباعة → أسود داكن مع أيقونة بيضاء ── */
+[data-theme="teller-dept"] .btn-print {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(15,23,42,0.28) !important;
+}
+[data-theme="teller-dept"] .btn-print:hover {
+  background: linear-gradient(135deg, #0F172A, #1E293B) !important;
+  box-shadow: 0 5px 16px rgba(15,23,42,0.40) !important;
+}
+
+/* ── زر مسح (btn-secondary + el-btn-clear) → رمادي داكن ── */
+[data-theme="teller-dept"] .btn-secondary,
+[data-theme="teller-dept"] .el-btn-clear {
+  background: linear-gradient(135deg, #334155, #475569) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(51,65,85,0.25) !important;
+}
+[data-theme="teller-dept"] .btn-secondary:hover,
+[data-theme="teller-dept"] .el-btn-clear:hover {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  box-shadow: 0 4px 14px rgba(30,41,59,0.35) !important;
+}
+
+/* ── تسليم مزدوج (double-delivery-toggle) → بدون خلفية ملونة ── */
+[data-theme="teller-dept"] .double-delivery-toggle,
+[data-theme="teller-dept"] .el-dd-toggle {
+  background: #FFFFFF !important;
+  border: 1.5px solid rgba(37,99,235,0.18) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle:hover,
+[data-theme="teller-dept"] .el-dd-toggle:hover {
+  border-color: #2563EB !important;
+  background: rgba(37,99,235,0.04) !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle.dd-active,
+[data-theme="teller-dept"] .el-dd-toggle.dd-active {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: #2563EB !important;
+}
+[data-theme="teller-dept"] .dd-label {
+  color: #1E293B !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] .dd-desc {
+  color: #475569 !important;
+  font-size: 10.5px !important;
+}
+
+/* ── بيانات العميل (client-toggle) → أسود أنيق ── */
+[data-theme="teller-dept"] .client-toggle {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 3px 10px rgba(15,23,42,0.22) !important;
+}
+[data-theme="teller-dept"] .client-toggle-text {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] .client-toggle-arrow {
+  color: rgba(255,255,255,0.7) !important;
+}
+[data-theme="teller-dept"] .client-toggle:hover {
+  background: linear-gradient(135deg, #0F172A, #1E293B) !important;
+  box-shadow: 0 5px 16px rgba(15,23,42,0.35) !important;
+}
+[data-theme="teller-dept"] .client-toggle.open {
+  background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+  border: none !important;
+}
+
+/* ══ إبراز كل النصوص الشفافة ══ */
+
+/* النصوص الثانوية العامة */
+[data-theme="teller-dept"] .h-sub,
+[data-theme="teller-dept"] .h-user-role,
+[data-theme="teller-dept"] .sub-date {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+
+/* التبويبات */
+[data-theme="teller-dept"] .nav-tab {
+  color: #334155 !important;
+}
+
+/* الجداول */
+[data-theme="teller-dept"] td {
+  color: #1E293B !important;
+}
+[data-theme="teller-dept"] th {
+  color: #FFFFFF !important;
+}
+
+/* تسمية الحقول */
+[data-theme="teller-dept"] .field-group label,
+[data-theme="teller-dept"] label {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+/* conv-label */
+[data-theme="teller-dept"] .conv-label {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+/* stat-lbl */
+[data-theme="teller-dept"] .stat-lbl {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+/* ts-label (ملخص التلر) */
+[data-theme="teller-dept"] .ts-label {
+  color: #475569 !important;
+}
+
+/* ob-label / cl-label */
+[data-theme="teller-dept"] .ob-label,
+[data-theme="teller-dept"] .cl-label {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+/* ob-cur-name / cl-cur-name */
+[data-theme="teller-dept"] .ob-cur-name,
+[data-theme="teller-dept"] .cl-cur-name {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+/* sp-section-title */
+[data-theme="teller-dept"] .sp-section-title {
+  color: #334155 !important;
+}
+
+/* dd-rate-label */
+[data-theme="teller-dept"] .dd-rate-label {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+/* client-toggle-arrow فقط عند الإغلاق */
+[data-theme="teller-dept"] .client-toggle-arrow {
+  color: #94A3B8 !important;
+}
+
+/* placeholder inputs */
+[data-theme="teller-dept"] .field-input::placeholder {
+  color: #94A3B8 !important;
+  opacity: 1 !important;
+}
+
+/* nav-tab-badge */
+[data-theme="teller-dept"] .nav-tab-badge {
+  color: #2563EB !important;
+  background: rgba(37,99,235,0.12) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TELLER-DEPT — سجل العمليات (الجدول + التبويبات + النصوص)
+   ══════════════════════════════════════════════════════════════ */
+
+/* تبويبات السجل — غير نشط */
+[data-theme="teller-dept"] .main-log-tab {
+  color: #334155 !important;
+  background: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] .main-log-tab:hover {
+  background: rgba(37,99,235,0.05) !important;
+  color: #1E40AF !important;
+}
+
+/* تبويبات السجل — نشط حسب النوع */
+[data-theme="teller-dept"] .main-log-tab:nth-child(1).mlt-active {
+  background: rgba(37,99,235,0.10) !important;
+  color: #1E40AF !important;
+}
+[data-theme="teller-dept"] .main-log-tab:nth-child(2).mlt-active {
+  background: rgba(217,119,6,0.10) !important;
+  color: #B45309 !important;
+}
+[data-theme="teller-dept"] .main-log-tab:nth-child(3).mlt-active {
+  background: rgba(124,58,237,0.10) !important;
+  color: #6D28D9 !important;
+}
+[data-theme="teller-dept"] .main-log-tab:nth-child(4).mlt-active {
+  background: rgba(37,99,235,0.08) !important;
+  color: #1E40AF !important;
+}
+
+/* رأس الجدول */
+[data-theme="teller-dept"] #dept-main table th,
+[data-theme="teller-dept"] .card table th {
+  background: linear-gradient(135deg, #1E293B, #334155) !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 11px 14px !important;
+}
+
+/* كل خلايا السجل — أسود تماماً */
+[data-theme="teller-dept"] #mainLogBody td,
+[data-theme="teller-dept"] #mainLogBody tr td {
+  color: #0F172A !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid rgba(37,99,235,0.08) !important;
+}
+[data-theme="teller-dept"] #mainLogBody tr:hover td {
+  background: rgba(37,99,235,0.04) !important;
+}
+
+/* المبالغ — احتفظ بالأخضر والأحمر */
+[data-theme="teller-dept"] .amount-cell.pos { color: #16A34A !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .amount-cell.neg { color: #DC2626 !important; font-weight: 800 !important; }
+
+/* عدد العمليات */
+[data-theme="teller-dept"] #mainLogCount {
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* حالة فارغ */
+[data-theme="teller-dept"] #mainLogEmpty,
+[data-theme="teller-dept"] #mainLogEmpty div {
+  color: #0F172A !important;
+}
+
+/* إطار التبويبات */
+[data-theme="teller-dept"] .main-log-tabs {
+  border-color: rgba(37,99,235,0.15) !important;
+  background: #FFFFFF !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   هيدر عملية الصرافة — بترولي / تيل  (يطغى على الأزرق السابق)
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="teller-dept"] #exchangeToolCard .card-head {
+  background: linear-gradient(135deg, #134E4A 0%, #0D9488 100%) !important;
+  margin: -20px -20px 16px !important;
+  padding: 16px 20px !important;
+  border-radius: 16px 16px 0 0 !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .card-title,
+[data-theme="teller-dept"] #exchangeToolCard .card-title *,
+[data-theme="teller-dept"] #exchangeToolCard .ct-icon {
+  color: #FFFFFF !important;
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+[data-theme="teller-dept"] #exchangeToolCard .badge-live {
+  background: rgba(255,255,255,0.18) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+/* الإطار العلوي للبطاقة يصبح تيل */
+[data-theme="teller-dept"] #dept-exchange {
+  border-top: 4px solid #0D9488 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   التسليم المزدوج — ذهبي / عنبري  (يطغى على كل القواعد السابقة)
+   ══════════════════════════════════════════════════════════════ */
+
+/* زر التفعيل */
+[data-theme="teller-dept"] .double-delivery-toggle,
+[data-theme="teller-dept"] .el-dd-toggle {
+  background: #FFFBEB !important;
+  border: 1.5px solid rgba(217,119,6,0.25) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle:hover,
+[data-theme="teller-dept"] .el-dd-toggle:hover {
+  background: #FEF3C7 !important;
+  border-color: #D97706 !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle.dd-active,
+[data-theme="teller-dept"] .el-dd-toggle.dd-active {
+  background: #FEF3C7 !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 2px 12px rgba(217,119,6,0.18) !important;
+}
+
+/* النصوص داخل زر التسليم */
+[data-theme="teller-dept"] .dd-label {
+  color: #92400E !important;
+  font-weight: 800 !important;
+}
+[data-theme="teller-dept"] .dd-desc {
+  color: #B45309 !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+}
+
+/* مفتاح التبديل (switch) */
+[data-theme="teller-dept"] .dd-switch {
+  background: rgba(217,119,6,0.2) !important;
+}
+[data-theme="teller-dept"] .double-delivery-toggle.dd-active .dd-switch,
+[data-theme="teller-dept"] .el-dd-toggle.dd-active .dd-switch {
+  background: #D97706 !important;
+}
+[data-theme="teller-dept"] .dd-switch::after {
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(217,119,6,0.4) !important;
+}
+
+/* حقول التسليم المزدوج المنبثقة */
+[data-theme="teller-dept"] .dd-fields {
+  background: #FFFBEB !important;
+  border: 1.5px solid rgba(217,119,6,0.18) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  margin-top: 4px !important;
+}
+
+/* بطاقة الكاش */
+[data-theme="teller-dept"] .dd-split-card.dd-cash-card {
+  background: #ECFDF5 !important;
+  border: 1.5px solid rgba(5,150,105,0.2) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller-dept"] .dd-cash-header {
+  color: #065F46 !important;
+}
+
+/* بطاقة البنكي */
+[data-theme="teller-dept"] .dd-split-card.dd-bank-card {
+  background: #EFF6FF !important;
+  border: 1.5px solid rgba(37,99,235,0.18) !important;
+  border-radius: 12px !important;
+}
+[data-theme="teller-dept"] .dd-bank-header {
+  color: #1E40AF !important;
+}
+
+/* سعر الكاش */
+[data-theme="teller-dept"] .dd-rate-display {
+  background: rgba(217,119,6,0.06) !important;
+  border-color: rgba(217,119,6,0.2) !important;
+}
+[data-theme="teller-dept"] .dd-rate-label {
+  color: #92400E !important;
+  font-weight: 700 !important;
+}
+[data-theme="teller-dept"] .dd-rate-val {
+  color: #B45309 !important;
+  font-weight: 900 !important;
+}
+
+/* سعر البنكي */
+[data-theme="teller-dept"] .dd-rate-display.dd-rate-bank {
+  background: rgba(37,99,235,0.06) !important;
+  border-color: rgba(37,99,235,0.18) !important;
+}
+[data-theme="teller-dept"] .dd-rate-display.dd-rate-bank .dd-rate-label {
+  color: #1E40AF !important;
+}
+[data-theme="teller-dept"] .dd-rate-display.dd-rate-bank .dd-rate-val {
+  color: #1E40AF !important;
+}
+
+/* معلومات المصدر */
+[data-theme="teller-dept"] .dd-source-info {
+  background: rgba(217,119,6,0.07) !important;
+  border: 1px solid rgba(217,119,6,0.2) !important;
+  border-radius: 10px !important;
+  color: #92400E !important;
+}
+[data-theme="teller-dept"] .dd-source-val {
+  color: #B45309 !important;
+  font-weight: 900 !important;
+}
+
+/* صف النتيجة */
+[data-theme="teller-dept"] .dd-result-row {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+  border-radius: 8px !important;
+}
+[data-theme="teller-dept"] .dd-result-val {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+
+/* صف الإجمالي */
+[data-theme="teller-dept"] .dd-sum-row {
+  color: #92400E !important;
+  border-color: rgba(217,119,6,0.15) !important;
+}
+[data-theme="teller-dept"] .dd-sum-total .dd-sum-val {
+  color: #D97706 !important;
+  font-weight: 900 !important;
+}
+[data-theme="teller-dept"] .dd-total-val {
+  color: #D97706 !important;
+  font-weight: 900 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TELLER-DEPT — إعادة تعريف متغيرات CSS شاملة
+   يجعل كل نص يعتمد على var(--text-*) واضحاً وداكناً
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="teller-dept"] {
+  --text-muted:     #475569 !important;
+  --text-secondary: #334155 !important;
+  --text-primary:   #1E293B !important;
+  --text-heading:   #0F172A !important;
+  --text-body:      #1E293B !important;
+}
+
+/* ── نصوص ثانوية متفرقة تستخدم var مباشرة ── */
+[data-theme="teller-dept"] .h-sub,
+[data-theme="teller-dept"] .h-user-role,
+[data-theme="teller-dept"] .sub-date                    { color: #475569 !important; opacity: 1 !important; }
+
+[data-theme="teller-dept"] .stat-lbl                    { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .stat-val                    { color: #0F172A !important; }
+
+[data-theme="teller-dept"] th                           { color: #FFFFFF !important; }
+[data-theme="teller-dept"] td                           { color: #1E293B !important; }
+
+[data-theme="teller-dept"] .pair-code                   { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .pair-name                   { color: #1E293B !important; }
+[data-theme="teller-dept"] .cont-sub,
+[data-theme="teller-dept"] .plat-sub                    { color: #475569 !important; }
+
+[data-theme="teller-dept"] .price-section-title         { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .price-row .p-name           { color: #334155 !important; }
+
+[data-theme="teller-dept"] .bs-btn                      { color: #334155 !important; }
+[data-theme="teller-dept"] .bs-btn.active               { color: #FFFFFF !important; }
+
+[data-theme="teller-dept"] .conv-label                  { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .rate-chip                   { color: #1E40AF !important; font-weight: 700 !important; }
+
+[data-theme="teller-dept"] .teller-balance-label        { color: rgba(255,255,255,0.85) !important; }
+
+[data-theme="teller-dept"] .ts-label                    { color: #475569 !important; }
+[data-theme="teller-dept"] .ts-val                      { color: #1E293B !important; font-weight: 800 !important; }
+
+[data-theme="teller-dept"] .sv-current                  { color: #475569 !important; }
+[data-theme="teller-dept"] .sv-card-title               { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .sv-sec-title                { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .sv-rate-name                { color: #475569 !important; }
+
+[data-theme="teller-dept"] .filter-chip                 { color: #334155 !important; }
+[data-theme="teller-dept"] .fee-label                   { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .quick-desc                  { color: #475569 !important; }
+[data-theme="teller-dept"] .r-time                      { color: #64748B !important; }
+
+[data-theme="teller-dept"] .confirm-row .c-l            { color: #475569 !important; }
+[data-theme="teller-dept"] .confirm-row .c-v            { color: #1E293B !important; font-weight: 700 !important; }
+
+[data-theme="teller-dept"] .modal-desc                  { color: #475569 !important; }
+[data-theme="teller-dept"] .pt-modal-title              { color: #1E293B !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .pt-modal-sub                { color: #475569 !important; }
+[data-theme="teller-dept"] .pt-tx-label                 { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .pt-client-id                { color: #64748B !important; }
+
+[data-theme="teller-dept"] .sp-section-title            { color: #334155 !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .sp-status-text              { color: #475569 !important; }
+[data-theme="teller-dept"] .sp-lock-msg                 { color: #475569 !important; }
+
+[data-theme="teller-dept"] .dest-hint                   { color: #64748B !important; }
+[data-theme="teller-dept"] .qr-address-label            { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .qr-net-tab                  { color: #334155 !important; }
+[data-theme="teller-dept"] .qr-stat-lbl                 { color: #475569 !important; }
+[data-theme="teller-dept"] .qr-tx-title                 { color: #1E293B !important; font-weight: 700 !important; }
+
+[data-theme="teller-dept"] .intl-mode-btn               { color: #334155 !important; }
+[data-theme="teller-dept"] .intl-mode-btn.active        { color: #FFFFFF !important; }
+
+[data-theme="teller-dept"] .ttype-btn                   { color: #334155 !important; }
+[data-theme="teller-dept"] .ttype-btn.active            { color: #FFFFFF !important; }
+
+[data-theme="teller-dept"] .cd2-hsub                    { color: #475569 !important; }
+[data-theme="teller-dept"] .cd2-mode-btn                { color: #334155 !important; }
+[data-theme="teller-dept"] .cd2-tc-sub                  { color: #475569 !important; }
+[data-theme="teller-dept"] .cd2-tc-rlabel               { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cd2-cc-name                 { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cd2-calc-label              { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cd2-calc-equiv-label        { color: #475569 !important; }
+[data-theme="teller-dept"] .cd2-calc-type               { color: #64748B !important; }
+[data-theme="teller-dept"] .cd2-calc-title              { color: #1E293B !important; font-weight: 700 !important; }
+
+[data-theme="teller-dept"] .vb-hint                     { color: #475569 !important; }
+[data-theme="teller-dept"] .vb-rf-label                 { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .vb-toggle-btn               { color: #334155 !important; }
+
+[data-theme="teller-dept"] .it-pc-range                 { color: #64748B !important; }
+[data-theme="teller-dept"] .it-pc-stat-lbl              { color: #475569 !important; }
+[data-theme="teller-dept"] .it-pc-footer                { color: #64748B !important; }
+[data-theme="teller-dept"] .it-page-empty               { color: #475569 !important; }
+[data-theme="teller-dept"] .it-pm-sub                   { color: #475569 !important; }
+
+[data-theme="teller-dept"] .main-log-tab                { color: #334155 !important; }
+[data-theme="teller-dept"] .main-log-tab.mlt-active     { color: #1E40AF !important; }
+
+[data-theme="teller-dept"] .ob-timestamp                { color: #64748B !important; }
+[data-theme="teller-dept"] .cb-sub-label                { color: #475569 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cb-cur-name                 { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cb-stat-lbl                 { color: #475569 !important; }
+
+[data-theme="teller-dept"] .field-input::placeholder    { color: #94A3B8 !important; opacity: 1 !important; }
+[data-theme="teller-dept"] .field-group label,
+[data-theme="teller-dept"] label                        { color: #334155 !important; font-weight: 700 !important; }
+
+[data-theme="teller-dept"] .nav-tab                     { color: #334155 !important; }
+[data-theme="teller-dept"] .nav-tab.active              { color: #1E40AF !important; }
+
+/* ══ 1. tag في السجل — إزالة الخلفية + نص أسود ══ */
+[data-theme="teller-dept"] #mainLogBody .tag {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* ══ 2. أزواج العملات — نصوص داكنة ══ */
+[data-theme="teller-dept"] .pair-name,
+[data-theme="teller-dept"] .cont-name,
+[data-theme="teller-dept"] .plat-name  { color: #0F172A !important; font-weight: 800 !important; }
+[data-theme="teller-dept"] .pair-rate  { color: #1E40AF !important; font-weight: 700 !important; font-size: 12px !important; }
+[data-theme="teller-dept"] .pair-code  { color: #334155 !important; font-weight: 700 !important; }
+[data-theme="teller-dept"] .cont-sub,
+[data-theme="teller-dept"] .plat-sub   { color: #475569 !important; font-weight: 600 !important; }
+
+/* ══ 3. rate-chip (سعر الصراف أسفل زر التبديل) ══ */
+[data-theme="teller-dept"] .rate-chip {
+  color: #0F172A !important;
+  background: rgba(37,99,235,0.07) !important;
+  border: 1px solid rgba(37,99,235,0.15) !important;
+  font-weight: 700 !important;
+}
+
+/* conv-amount */
+[data-theme="teller-dept"] .conv-amount,
+[data-theme="teller-dept"] .conv-amount input { color: #0F172A !important; font-weight: 900 !important; }
+
+/* bs-btn غير نشط */
+[data-theme="teller-dept"] .bs-btn { color: #334155 !important; background: #F8FAFC !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   صفحة الحوالات — تصغير الهيدر وإزالة CSS القديم
+   ══════════════════════════════════════════════════════════════ */
+.custom-header {
+  min-height: 60px !important;
+  padding: 10px 24px !important;
+  background: #FFFFFF !important;
+  border-bottom: 3px solid #2563EB !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.10) !important;
+}
+/* إخفاء CSS القديم للـ center-group والـ stats القديمة */
+.header-center-group::before,
+.header-center-group::after { display: none !important; }
+.status-dot { background: #16A34A !important; }
+
+/* mode-badge — border دائري */
+.mode-badge {
+  border-radius: 999px !important;
+  padding: 6px 20px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  border: 1.5px solid !important;
+  transition: all 0.25s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.mode-badge.mode-manual {
+  background: rgba(217,119,6,0.09) !important;
+  border-color: rgba(217,119,6,0.30) !important;
+  color: #B45309 !important;
+  box-shadow: 0 2px 10px rgba(217,119,6,0.12) !important;
+}
+.mode-badge.mode-manual:hover {
+  background: rgba(217,119,6,0.16) !important;
+  box-shadow: 0 4px 16px rgba(217,119,6,0.22) !important;
+}
+.mode-badge.mode-auto {
+  background: rgba(37,99,235,0.09) !important;
+  border-color: rgba(37,99,235,0.30) !important;
+  color: #1E40AF !important;
+  box-shadow: 0 2px 10px rgba(37,99,235,0.12) !important;
+}
+.mode-badge.mode-auto:hover {
+  background: rgba(37,99,235,0.16) !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.22) !important;
+}

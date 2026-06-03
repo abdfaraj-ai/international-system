@@ -1,0 +1,679 @@
+<!-- accounts_panel.html — Drawer إدارة الحسابات
+     الاستخدام: include layout/accounts_panel.html
+     ملاحظة: أضف accounts_panel.css في extra_css و accounts_panel.js قبل endblock content -->
+
+<!-- زر الفتح العائم -->
+<button class="ap-fab" onclick="apOpen()">
+  <div class="ap-fab-dot"></div>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+  إدارة الحسابات
+</button>
+
+<!-- Overlay -->
+<div class="ap-overlay" id="ap-overlay" onclick="apClose()"></div>
+
+<!-- Drawer -->
+<div class="ap-drawer" id="ap-drawer">
+
+  <!-- رأس -->
+  <div class="ap-header">
+    <div class="ap-header-icon">🏦</div>
+    <div>
+      <div class="ap-header-title">إدارة الحسابات والصناديق</div>
+      <div class="ap-header-sub">القيود · الحوالات · التسوية · كشف الحساب</div>
+    </div>
+    <button class="ap-close-btn" onclick="apClose()">✕</button>
+  </div>
+
+  <!-- شريط الأدوات -->
+  <div class="ap-toolbar" id="ap-toolbar">
+
+    <button class="ap-btn" id="ap-btn-new-move" onclick="apSwitch('new-move')"
+      style="--btn-bg-h:rgba(245,158,11,.1);--btn-bd-h:rgba(245,158,11,.3);--btn-bg-a:rgba(245,158,11,.13);--btn-bd-a:rgba(245,158,11,.4);--btn-clr:#fbbf24;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg>
+      </div>حركة جديدة
+    </button>
+
+    <button class="ap-btn" id="ap-btn-exchange" onclick="apSwitch('exchange')"
+      style="--btn-bg-h:rgba(16,185,129,.1);--btn-bd-h:rgba(16,185,129,.3);--btn-bg-a:rgba(16,185,129,.13);--btn-bd-a:rgba(16,185,129,.4);--btn-clr:#34d399;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#10b981,#059669);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      </div>تبديل عملات
+    </button>
+
+    <button class="ap-btn" id="ap-btn-cut" onclick="apSwitch('cut')"
+      style="--btn-bg-h:rgba(6,182,212,.1);--btn-bd-h:rgba(6,182,212,.3);--btn-bg-a:rgba(6,182,212,.13);--btn-bd-a:rgba(6,182,212,.4);--btn-clr:#22d3ee;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+      </div>قص وإغلاق
+    </button>
+
+    <button class="ap-btn" id="ap-btn-settle" onclick="apSwitch('settle')"
+      style="--btn-bg-h:rgba(139,92,246,.1);--btn-bd-h:rgba(139,92,246,.3);--btn-bg-a:rgba(139,92,246,.13);--btn-bd-a:rgba(139,92,246,.4);--btn-clr:#a78bfa;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>قيد تسوية
+    </button>
+
+    <button class="ap-btn" id="ap-btn-adv-entry" onclick="apSwitch('adv-entry')"
+      style="--btn-bg-h:rgba(236,72,153,.1);--btn-bd-h:rgba(236,72,153,.3);--btn-bg-a:rgba(236,72,153,.13);--btn-bd-a:rgba(236,72,153,.4);--btn-clr:#f472b6;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#ec4899,#db2777);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>قيد متقدم
+    </button>
+
+    <button class="ap-btn" id="ap-btn-entry" onclick="apSwitch('entry')"
+      style="--btn-bg-h:rgba(239,68,68,.1);--btn-bd-h:rgba(239,68,68,.3);--btn-bg-a:rgba(239,68,68,.13);--btn-bd-a:rgba(239,68,68,.4);--btn-clr:#f87171;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#ef4444,#dc2626);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>قيد جديد
+    </button>
+
+    <button class="ap-btn" id="ap-btn-delivery-pending" onclick="apSwitch('delivery-pending')"
+      style="--btn-bg-h:rgba(251,146,60,.1);--btn-bd-h:rgba(251,146,60,.3);--btn-bg-a:rgba(251,146,60,.13);--btn-bd-a:rgba(251,146,60,.4);--btn-clr:#fb923c;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#f97316,#ea580c);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>قيد التسليم
+    </button>
+
+    <button class="ap-btn" id="ap-btn-delivery-done" onclick="apSwitch('delivery-done')"
+      style="--btn-bg-h:rgba(52,211,153,.1);--btn-bd-h:rgba(52,211,153,.3);--btn-bg-a:rgba(52,211,153,.13);--btn-bd-a:rgba(52,211,153,.4);--btn-clr:#34d399;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#10b981,#065f46);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      </div>تم التسليم
+    </button>
+
+    <button class="ap-btn" id="ap-btn-cut-voucher" onclick="apSwitch('cut-voucher')"
+      style="--btn-bg-h:rgba(232,121,249,.1);--btn-bd-h:rgba(232,121,249,.3);--btn-bg-a:rgba(232,121,249,.13);--btn-bd-a:rgba(232,121,249,.4);--btn-clr:#e879f9;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#d946ef,#a21caf);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="12" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>سند قص
+    </button>
+
+    <div class="ap-tb-sep"></div>
+
+    <button class="ap-btn" id="ap-btn-unreceived" onclick="apSwitch('unreceived')"
+      style="--btn-bg-h:rgba(248,113,113,.1);--btn-bd-h:rgba(248,113,113,.3);--btn-bg-a:rgba(248,113,113,.13);--btn-bd-a:rgba(248,113,113,.4);--btn-clr:#fca5a5;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#f87171,#ef4444);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>غير مستلمة
+    </button>
+
+    <button class="ap-btn" id="ap-btn-received" onclick="apSwitch('received')"
+      style="--btn-bg-h:rgba(74,222,128,.1);--btn-bd-h:rgba(74,222,128,.3);--btn-bg-a:rgba(74,222,128,.13);--btn-bd-a:rgba(74,222,128,.4);--btn-clr:#4ade80;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#4ade80,#16a34a);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>مستلمة
+    </button>
+
+    <button class="ap-btn" id="ap-btn-all" onclick="apSwitch('all')"
+      style="--btn-bg-h:rgba(96,165,250,.1);--btn-bd-h:rgba(96,165,250,.3);--btn-bg-a:rgba(96,165,250,.13);--btn-bd-a:rgba(96,165,250,.4);--btn-clr:#93c5fd;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#60a5fa,#2563eb);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>جميع الحوالات
+    </button>
+
+    <button class="ap-btn" id="ap-btn-statement" onclick="apSwitch('statement')"
+      style="--btn-bg-h:rgba(29,78,216,.12);--btn-bd-h:rgba(29,78,216,.35);--btn-bg-a:rgba(29,78,216,.16);--btn-bd-a:rgba(29,78,216,.5);--btn-clr:#93c5fd;">
+      <div class="ap-btn-ico" style="background:linear-gradient(135deg,#1d4ed8,#1e3a8a);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>كشف حساب
+    </button>
+
+  </div><!-- /ap-toolbar -->
+
+  <!-- منطقة المحتوى -->
+  <!-- ══ الجسم الرئيسي: آلة حاسبة + أداة + سجل ══ -->
+  <div class="ap-body">
+
+  <!-- ── الآلة الحاسبة (يسار) ── -->
+  <div class="ap-calc-col">
+    <div class="ap-calc-title">
+      <span>CALCULATOR</span>
+      <button onclick="apCalcClear()">CLR</button>
+    </div>
+
+    <div class="ap-calc-screen">
+      <div class="ap-calc-history" id="ap-calc-expr"></div>
+      <div class="ap-calc-display zero" id="ap-calc-display">0</div>
+    </div>
+
+    <button class="ap-calc-transfer" onclick="apCalcTransfer()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      نقل الناتج إلى الأداة
+    </button>
+
+    <div class="ap-calc-grid">
+      <!-- صف 1 -->
+      <button class="ap-calc-btn clr ac" onclick="apCalcInput('AC')"><span>AC</span></button>
+      <button class="ap-calc-btn clr"    onclick="apCalcInput('←')"><span>⌫</span></button>
+      <button class="ap-calc-btn pct"    onclick="apCalcInput('%')"><span>%</span></button>
+      <button class="ap-calc-btn op"     onclick="apCalcInput('÷')"><span>÷</span></button>
+      <!-- صف 2 -->
+      <button class="ap-calc-btn num" onclick="apCalcInput('7')"><span>7</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('8')"><span>8</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('9')"><span>9</span></button>
+      <button class="ap-calc-btn op"  onclick="apCalcInput('×')"><span>×</span></button>
+      <!-- صف 3 -->
+      <button class="ap-calc-btn num" onclick="apCalcInput('4')"><span>4</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('5')"><span>5</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('6')"><span>6</span></button>
+      <button class="ap-calc-btn op"  onclick="apCalcInput('−')"><span>−</span></button>
+      <!-- صف 4 -->
+      <button class="ap-calc-btn num" onclick="apCalcInput('1')"><span>1</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('2')"><span>2</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('3')"><span>3</span></button>
+      <button class="ap-calc-btn op"  onclick="apCalcInput('+')"><span>+</span></button>
+      <!-- صف 5 -->
+      <button class="ap-calc-btn num zero" onclick="apCalcInput('0')"><span>0</span></button>
+      <button class="ap-calc-btn num" onclick="apCalcInput('.')"><span>.</span></button>
+      <button class="ap-calc-btn eq"  onclick="apCalcInput('=')"><span>=</span></button>
+    </div>
+  </div>
+
+  <!-- ── الأداة النشطة (يمين) ── -->
+  <div class="ap-tool-col" id="ap-content">
+
+    <!-- placeholder -->
+    <div id="ap-pane-none" class="ap-placeholder">
+      <div class="ap-placeholder-icon">🏦</div>
+      <div class="ap-placeholder-text">اختر أداة من الشريط أعلاه</div>
+      <div class="ap-placeholder-sub">اضغط على أي أيقونة للبدء</div>
+    </div>
+
+    <!-- ══ حركة جديدة ══ -->
+    <div id="ap-pane-new-move" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">حوالة جديدة</span>
+      </div>
+      <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:grid;grid-template-columns:110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">المصدر</span>
+          <select id="ap-nm-source" class="nm-input" style="cursor:pointer;"><option value="">اختر المركز</option></select>
+        </div>
+        <div style="display:grid;grid-template-columns:110px 1fr 120px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">اسم المستفيد</span>
+          <input id="ap-nm-benef-name" type="text" placeholder="الاسم الكامل" class="nm-input">
+          <span class="nm-lbl" style="text-align:center;">هاتف</span>
+          <input id="ap-nm-benef-phone" type="tel" placeholder="رقم الهاتف" class="nm-input" style="direction:ltr;">
+        </div>
+        <div style="display:grid;grid-template-columns:110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">الوجهة</span>
+          <select id="ap-nm-dest" class="nm-input" style="cursor:pointer;"><option value="">اختر المركز</option></select>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,.06);"></div>
+        <div style="display:grid;grid-template-columns:110px 120px 110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">عملة الإرسال</span>
+          <select id="ap-nm-send-cur" class="nm-input" onchange="ap_nm_calc()" style="cursor:pointer;">
+            <option value="">اختر</option><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+            <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option>
+          </select>
+          <span class="nm-lbl" style="text-align:center;">مبلغ الإرسال</span>
+          <input id="ap-nm-send-amt" type="number" placeholder="0" class="nm-input" oninput="ap_nm_calc()" style="color:#4ade80;font-weight:800;">
+        </div>
+        <div style="display:grid;grid-template-columns:110px 120px 110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">عملة التسليم</span>
+          <select id="ap-nm-recv-cur" class="nm-input" onchange="ap_nm_calc()" style="cursor:pointer;">
+            <option value="">اختر</option><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
+            <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option>
+          </select>
+          <span class="nm-lbl" style="text-align:center;">مبلغ التسليم</span>
+          <input id="ap-nm-recv-amt" type="number" placeholder="0" class="nm-input" oninput="ap_nm_calc()" style="color:#f87171;font-weight:800;">
+        </div>
+        <div style="display:grid;grid-template-columns:110px 1fr 110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">أجور تصدير</span>
+          <input id="ap-nm-fee-export" type="number" placeholder="0" class="nm-input" value="0" oninput="ap_nm_calc()">
+          <span class="nm-lbl" style="text-align:center;">أجور تسليم</span>
+          <input id="ap-nm-fee-delivery" type="number" placeholder="0" class="nm-input" value="0" oninput="ap_nm_calc()">
+        </div>
+        <div style="display:grid;grid-template-columns:110px 1fr 110px 1fr;align-items:center;gap:10px;">
+          <span class="nm-lbl">الصرف</span>
+          <input id="ap-nm-rate" type="number" step="0.0001" placeholder="1" class="nm-input" value="1" oninput="ap_nm_calc()" style="color:#fbbf24;font-weight:800;">
+          <span class="nm-lbl" style="text-align:center;">المجموع</span>
+          <div id="ap-nm-total" style="padding:8px 12px;border-radius:9px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);color:#a5b4fc;font-size:14px;font-weight:800;text-align:center;">0</div>
+        </div>
+        <div style="display:grid;grid-template-columns:110px 1fr;align-items:start;gap:10px;">
+          <span class="nm-lbl" style="padding-top:9px;">ملاحظات</span>
+          <textarea id="ap-nm-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea>
+        </div>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-submit" onclick="ap_nm_send()" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" style="display:inline;vertical-align:middle;margin-left:5px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          إرسال
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ تبديل عملات ══ -->
+    <div id="ap-pane-exchange" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">تبديل عملة</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;">
+        <div style="padding:20px;background:rgba(34,197,94,.04);border-left:1px solid rgba(34,197,94,.12);display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:800;color:#4ade80;padding-bottom:10px;border-bottom:1px solid rgba(34,197,94,.1);">المركز الأول</div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المركز</span><select id="ap-ex-center1" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">العملة</span><select id="ap-ex-cur1" class="nm-input" onchange="ap_ex_calc()" style="cursor:pointer;"><option value="USD">دولار</option><option value="JOD">دينار</option><option value="ILS">شيكل</option><option value="EUR">يورو</option><option value="TRY">ليرة</option><option value="SYP">سوري</option></select></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المبلغ</span><input id="ap-ex-amt1" type="number" placeholder="0" class="nm-input" oninput="ap_ex_calc()" style="color:#4ade80;font-weight:800;"></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:start;gap:8px;"><span class="nm-lbl" style="padding-top:9px;">ملاحظات</span><textarea id="ap-ex-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea></div>
+        </div>
+        <div style="padding:20px;background:rgba(239,68,68,.04);display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:800;color:#f87171;padding-bottom:10px;border-bottom:1px solid rgba(239,68,68,.1);">المركز الثاني</div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المركز</span><select id="ap-ex-center2" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">العملة</span><select id="ap-ex-cur2" class="nm-input" onchange="ap_ex_calc()" style="cursor:pointer;"><option value="EUR">يورو</option><option value="USD">دولار</option><option value="JOD">دينار</option><option value="ILS">شيكل</option><option value="TRY">ليرة</option><option value="SYP">سوري</option></select></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المبلغ</span><input id="ap-ex-amt2" type="number" placeholder="0" class="nm-input" readonly style="color:#f87171;font-weight:800;opacity:.8;cursor:not-allowed;"></div>
+          <div style="display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">سعر الصرف</span><input id="ap-ex-rate" type="number" step="0.0001" placeholder="1" value="1" class="nm-input" oninput="ap_ex_calc()" style="color:#fbbf24;font-weight:800;"></div>
+        </div>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-submit" onclick="ap_ex_submit()" style="background:linear-gradient(135deg,#10b981,#059669);">✅ موافق</button>
+      </div>
+    </div>
+
+    <!-- ══ قص وإغلاق ══ -->
+    <div id="ap-pane-cut" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">سند قص مع إغلاق</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;">
+        <div style="padding:20px;background:rgba(34,197,94,.04);border-left:1px solid rgba(34,197,94,.12);display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:800;color:#4ade80;padding-bottom:10px;border-bottom:1px solid rgba(34,197,94,.1);">شراء من</div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المركز</span><select id="ap-cut-buy-center" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">العملة</span><select id="ap-cut-buy-cur" class="nm-input" onchange="ap_cut_calc()" style="cursor:pointer;"><option value="AED">درهم</option><option value="USD">دولار</option><option value="JOD">دينار</option><option value="ILS">شيكل</option><option value="EUR">يورو</option><option value="TRY">ليرة</option><option value="SYP">سوري</option></select></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المبلغ — لنا</span><input id="ap-cut-buy-amt" type="number" placeholder="0" class="nm-input" oninput="ap_cut_calc()" style="color:#4ade80;font-weight:800;"></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">القص</span><div style="display:grid;grid-template-columns:1fr 90px;gap:6px;"><input id="ap-cut-buy-rate" type="number" step="0.0001" placeholder="0" class="nm-input" oninput="ap_cut_calc()" style="color:#fbbf24;font-weight:800;"><select id="ap-cut-buy-dir" class="nm-input" onchange="ap_cut_calc()" style="cursor:pointer;"><option value="div">÷</option><option value="mul">×</option></select></div></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">بالدولار</span><div id="ap-cut-buy-usd" style="padding:8px 12px;border-radius:9px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80;font-weight:800;text-align:center;">—</div></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:start;gap:8px;"><span class="nm-lbl" style="padding-top:9px;">ملاحظات</span><textarea id="ap-cut-buy-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea></div>
+        </div>
+        <div style="padding:20px;background:rgba(239,68,68,.04);display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:800;color:#f87171;padding-bottom:10px;border-bottom:1px solid rgba(239,68,68,.1);">بيع إلى</div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المركز</span><select id="ap-cut-sell-center" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">العملة</span><select id="ap-cut-sell-cur" class="nm-input" onchange="ap_cut_calc()" style="cursor:pointer;"><option value="AED">درهم</option><option value="USD">دولار</option><option value="JOD">دينار</option><option value="ILS">شيكل</option><option value="EUR">يورو</option><option value="TRY">ليرة</option><option value="SYP">سوري</option></select></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">المبلغ — علينا</span><input id="ap-cut-sell-amt" type="number" placeholder="0" class="nm-input" oninput="ap_cut_calc()" style="color:#f87171;font-weight:800;"></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">القص</span><div style="display:grid;grid-template-columns:1fr 90px;gap:6px;"><input id="ap-cut-sell-rate" type="number" step="0.0001" placeholder="0" class="nm-input" oninput="ap_cut_calc()" style="color:#fbbf24;font-weight:800;"><select id="ap-cut-sell-dir" class="nm-input" onchange="ap_cut_calc()" style="cursor:pointer;"><option value="div">÷</option><option value="mul">×</option></select></div></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;"><span class="nm-lbl">بالدولار</span><div id="ap-cut-sell-usd" style="padding:8px 12px;border-radius:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;font-weight:800;text-align:center;">—</div></div>
+          <div style="display:grid;grid-template-columns:100px 1fr;align-items:start;gap:8px;"><span class="nm-lbl" style="padding-top:9px;">ملاحظات</span><textarea id="ap-cut-sell-notes" placeholder="ملاحظات..." class="nm-input" rows="2" style="resize:none;"></textarea></div>
+        </div>
+      </div>
+      <div style="padding:10px 20px;background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:#4a6280;font-weight:700;">فارق القص:</span>
+        <span id="ap-cut-profit" style="font-size:16px;font-weight:800;color:#4ade80;">—</span>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-submit" onclick="ap_cut_submit()" style="background:linear-gradient(135deg,#06b6d4,#0891b2);">✅ موافق وإغلاق</button>
+      </div>
+    </div>
+
+    <!-- ══ قيد جديد ══ -->
+    <div id="ap-pane-entry" style="display:none;">
+      <div style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:700;color:#5a7090;">قوالب:</span>
+        <div id="ap-entr-templates" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+      </div>
+      <div class="ap-dual">
+        <div class="ap-dual-panel green">
+          <div class="ap-dual-head" style="color:#4ade80;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> من — لنا</div>
+          <div class="ap-field"><label>الحساب (مصدر)</label><select id="ap-entr-from-account"><option value="">اختر حساباً</option></select></div>
+          <div class="ap-field"><label>المبلغ</label><input id="ap-entr-from-amount" type="number" placeholder="0.00" oninput="ap_entr_calc()" style="color:#4ade80;font-weight:800;border-color:rgba(34,197,94,.3);"></div>
+          <div class="ap-field"><label>العملة</label><select id="ap-entr-from-cur" onchange="ap_entr_calc()"><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option></select></div>
+        </div>
+        <div class="ap-dual-panel red">
+          <div class="ap-dual-head" style="color:#f87171;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg> إلى — علينا</div>
+          <div class="ap-field"><label>الحساب (وجهة)</label><select id="ap-entr-to-account"><option value="">اختر حساباً</option></select></div>
+          <div class="ap-field"><label>المبلغ المُحوَّل</label><input id="ap-entr-to-amount" type="number" placeholder="0.00" readonly style="color:#f87171;font-weight:800;border-color:rgba(239,68,68,.3);opacity:.7;cursor:not-allowed;"></div>
+          <div class="ap-field"><label>العملة</label><select id="ap-entr-to-cur" onchange="ap_entr_calc()"><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option></select></div>
+        </div>
+      </div>
+      <div style="padding:12px 18px;border-top:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;align-items:end;">
+        <div class="ap-field"><label>سعر القص</label><input id="ap-entr-cut-rate" type="number" step="0.0001" placeholder="1.0000" oninput="ap_entr_calc()" style="color:#fbbf24;font-weight:700;"></div>
+        <div class="ap-field"><label>الاتجاه</label><select id="ap-entr-cut-dir" onchange="ap_entr_calc()"><option value="mul">× ضرب</option><option value="div">÷ قسمة</option></select></div>
+        <div class="ap-field"><label>الربح</label><div id="ap-entr-profit" style="padding:8px 12px;border-radius:9px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80;font-weight:800;text-align:center;">—</div></div>
+        <div class="ap-field"><label>ملاحظات</label><input id="ap-entr-notes" type="text" placeholder="اختياري..."></div>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-cancel" onclick="ap_entr_saveTemplate()" style="color:#818cf8;">💾 قالب</button>
+        <button class="ap-btn-submit" onclick="ap_entr_save()" style="background:linear-gradient(135deg,#ef4444,#dc2626);">✅ تنفيذ</button>
+      </div>
+    </div>
+
+    <!-- ══ قيد متقدم ══ -->
+    <div id="ap-pane-adv-entry" style="display:none;">
+      <div class="ap-profit-bar">
+        <div class="ap-profit-kpi"><div class="ap-profit-kpi-val" id="ap-adv-profit-bar" style="color:#4ade80;">—</div><div class="ap-profit-kpi-lbl">الربح الصافي</div></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;"><span style="color:#4a6280;">إرسال:</span><span id="ap-adv-from-display" style="color:#4ade80;font-weight:700;">—</span><span style="color:#4a6280;">←</span><span style="color:#4a6280;">استلام:</span><span id="ap-adv-to-display" style="color:#f87171;font-weight:700;">—</span></div>
+      </div>
+      <div class="ap-dual">
+        <div class="ap-dual-panel green">
+          <div class="ap-dual-head" style="color:#4ade80;">من — لنا</div>
+          <div class="ap-field"><label>المركز المُرسل</label><select id="ap-adv-from-center" onchange="ap_adv_calc()" style="cursor:pointer;"><option value="">— اختر —</option></select></div>
+          <div class="ap-field"><label>المُرسِل</label><input id="ap-adv-from-name" type="text" placeholder="الاسم الكامل..."></div>
+          <div class="ap-field"><label>العملة</label><select id="ap-adv-from-cur" onchange="ap_adv_calc()"><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option></select></div>
+          <div class="ap-field"><label>القص</label><div style="display:grid;grid-template-columns:1fr 80px;gap:6px;"><input id="ap-adv-cut-rate" type="number" step="0.0001" placeholder="1.0000" oninput="ap_adv_calc()" style="color:#fbbf24;font-weight:700;"><select id="ap-adv-cut-dir" onchange="ap_adv_calc()" style="width:80px;cursor:pointer;"><option value="mul">× ضرب</option><option value="div">÷ قسمة</option></select></div></div>
+          <div class="ap-field"><label>المبلغ المُرسَل</label><input id="ap-adv-from-amount" type="number" placeholder="0.00" oninput="ap_adv_calc()" style="color:#4ade80;font-size:16px;font-weight:800;border-color:rgba(34,197,94,.35);"></div>
+          <div class="ap-field"><label>أجور تصدير</label><div style="display:grid;grid-template-columns:1fr 70px;gap:6px;"><input id="ap-adv-from-fee" type="number" placeholder="0.00" oninput="ap_adv_calc()"><select id="ap-adv-from-fee-cur" style="width:70px;cursor:pointer;"><option value="USD">USD</option><option value="JOD">JOD</option><option value="ILS">ILS</option></select></div></div>
+          <div class="ap-field"><label>ملاحظات</label><textarea id="ap-adv-from-notes" placeholder="ملاحظات..." rows="2" style="resize:none;"></textarea></div>
+        </div>
+        <div class="ap-dual-panel red">
+          <div class="ap-dual-head" style="color:#f87171;">إلى — علينا</div>
+          <div class="ap-field"><label>المركز المستلم</label><select id="ap-adv-to-center" onchange="ap_adv_calc()" style="cursor:pointer;"><option value="">— اختر —</option></select></div>
+          <div class="ap-field"><label>المستفيد</label><input id="ap-adv-to-beneficiary" type="text" placeholder="اسم المستفيد..."></div>
+          <div class="ap-field"><label>العملة</label><select id="ap-adv-to-cur" onchange="ap_adv_calc()"><option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option></select></div>
+          <div class="ap-field"><label>القص (محسوب)</label><div id="ap-adv-cut-display" style="padding:8px 12px;border-radius:9px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);color:#fbbf24;font-weight:700;text-align:center;">—</div></div>
+          <div class="ap-field"><label>المبلغ المستلَم</label><input id="ap-adv-to-amount" type="number" placeholder="0.00" readonly style="color:#f87171;font-size:16px;font-weight:800;border-color:rgba(239,68,68,.35);opacity:.7;cursor:not-allowed;"></div>
+          <div class="ap-field"><label>أجور تسليم</label><div style="display:grid;grid-template-columns:1fr 70px;gap:6px;"><input id="ap-adv-to-fee" type="number" placeholder="0.00" oninput="ap_adv_calc()"><select id="ap-adv-to-fee-cur" style="width:70px;cursor:pointer;"><option value="USD">USD</option><option value="JOD">JOD</option><option value="ILS">ILS</option></select></div></div>
+          <div class="ap-field"><label>ملاحظات</label><textarea id="ap-adv-to-notes" placeholder="ملاحظات..." rows="2" style="resize:none;"></textarea></div>
+        </div>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-cancel" onclick="ap_adv_reset()" style="color:#6366f1;">🔄 إعادة</button>
+        <button class="ap-btn-submit" onclick="ap_adv_save()" style="background:linear-gradient(135deg,#ec4899,#db2777);">✅ تنفيذ المتقدم</button>
+      </div>
+    </div>
+
+    <!-- ══ الحوالات ══ -->
+    <div id="ap-pane-transfers" style="display:none;">
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="ap-tr-search" type="text" placeholder="🔍 بحث..." oninput="ap_trFilter()" style="flex:1;min-width:150px;padding:7px 11px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+        <input id="ap-tr-date-from" type="date" onchange="ap_trFilter()" style="padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+        <input id="ap-tr-date-to" type="date" onchange="ap_trFilter()" style="padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+        <select id="ap-tr-status-filter" onchange="ap_trFilter()" style="display:none;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;cursor:pointer;">
+          <option value="">كل الحالات</option><option value="received">مستلمة</option><option value="unreceived">غير مستلمة</option>
+        </select>
+      </div>
+      <div class="ap-stat-row">
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-tr-count">—</div><div class="ap-stat-lbl">العدد</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-tr-total" style="color:#60a5fa;">—</div><div class="ap-stat-lbl">المجموع</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-tr-profit" style="color:#4ade80;">—</div><div class="ap-stat-lbl">الأرباح</div></div>
+      </div>
+      <div class="ap-table-wrap" style="padding:0 4px;">
+        <table class="ap-table">
+          <thead><tr><th>#</th><th>التاريخ</th><th>المُرسِل</th><th>المستفيد</th><th>الوجهة</th><th style="text-align:center;">المبلغ</th><th style="text-align:center;">عملة</th><th style="text-align:center;">الحالة</th><th style="text-align:center;">إجراء</th></tr></thead>
+          <tbody id="ap-tr-tbody"><tr><td colspan="9" style="padding:40px;text-align:center;color:#2d4060;">لا توجد بيانات</td></tr></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:center;gap:6px;padding:12px;" id="ap-tr-pagination"></div>
+    </div>
+
+    <!-- ══ قيد تسوية ══ -->
+    <div id="ap-pane-settle" style="display:none;">
+      <div style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span style="font-size:13px;font-weight:800;color:#e9edef;">قيد تسوية</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-right:auto;">
+          <span class="nm-lbl">المركز:</span>
+          <select id="ap-stl-center" class="nm-input" style="min-width:180px;cursor:pointer;"><option value="">اختر المركز</option></select>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:700px;">
+          <thead><tr style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);">
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">العملة</th>
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">المبلغ</th>
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">أجور</th>
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">المستفيد</th>
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">الوجهة</th>
+            <th style="padding:9px 10px;color:#fff;font-weight:700;text-align:right;">أجور تسليم</th>
+            <th style="padding:9px 6px;color:#fff;font-weight:700;width:36px;"></th>
+          </tr></thead>
+          <tbody id="ap-stl-tbody"></tbody>
+        </table>
+      </div>
+      <div style="padding:8px 14px;border-top:1px solid rgba(255,255,255,.05);">
+        <button onclick="ap_stl_addRow()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:9px;background:rgba(139,92,246,.08);border:1px dashed rgba(139,92,246,.3);color:#a78bfa;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>إضافة صف
+        </button>
+      </div>
+      <div style="padding:10px 18px;background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:0;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 16px;border-left:1px solid rgba(255,255,255,.07);"><span style="font-size:10px;color:#4a6280;font-weight:700;">لنا:</span><span id="ap-stl-sum-us" style="font-size:14px;font-weight:800;color:#4ade80;">0.00</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 16px;border-left:1px solid rgba(255,255,255,.07);"><span style="font-size:10px;color:#4a6280;font-weight:700;">علينا:</span><span id="ap-stl-sum-them" style="font-size:14px;font-weight:800;color:#f87171;">0.00</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 16px;"><span style="font-size:10px;color:#4a6280;font-weight:700;">الربح:</span><span id="ap-stl-profit" style="font-size:14px;font-weight:800;color:#fbbf24;">0.00</span></div>
+        <div style="margin-right:auto;"><button onclick="ap_stl_submit()" style="padding:9px 28px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:none;color:#fff;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;">✅ موافق</button></div>
+      </div>
+    </div>
+
+    <!-- ══ كشف الحساب ══ -->
+    <div id="ap-pane-statement" style="display:none;">
+      <div style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;">
+        <div style="flex:2;min-width:180px;position:relative;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:4px;font-weight:600;">المركز / الوكيل</div>
+          <input id="ap-stm-search" type="text" placeholder="ابحث عن مركز..." oninput="ap_stmSearch(this.value)" style="width:100%;box-sizing:border-box;padding:7px 11px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+          <div id="ap-stm-dd" style="display:none;position:absolute;top:calc(100% + 4px);right:0;left:0;background:#0d1f35;border:1px solid rgba(255,255,255,.12);border-radius:10px;z-index:2000;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.5);"></div>
+        </div>
+        <div style="min-width:110px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:4px;font-weight:600;">الفترة</div>
+          <select id="ap-stm-period" onchange="ap_stmSetPeriod(this.value)" style="width:100%;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;cursor:pointer;">
+            <option value="">— اختر —</option><option value="today">اليوم</option><option value="week">أسبوع</option><option value="month">شهر</option><option value="3months">3 أشهر</option><option value="year">السنة</option>
+          </select>
+        </div>
+        <div style="min-width:110px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:4px;font-weight:600;">من تاريخ</div>
+          <input type="date" id="ap-stm-date-from" style="width:100%;box-sizing:border-box;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+        </div>
+        <div style="min-width:110px;">
+          <div style="font-size:10px;color:#5a7090;margin-bottom:4px;font-weight:600;">إلى تاريخ</div>
+          <input type="date" id="ap-stm-date-to" style="width:100%;box-sizing:border-box;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e9edef;font-size:11px;outline:none;font-family:inherit;">
+        </div>
+        <button onclick="ap_stmGenerate()" style="padding:8px 18px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#1e3a8a);color:#fff;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">📋 كشف</button>
+      </div>
+      <div id="ap-stm-summary" style="display:none;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:100px;padding:10px 14px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:11px;text-align:center;"><div id="ap-stm-total-in" style="font-size:16px;font-weight:800;color:#4ade80;">—</div><div style="font-size:9px;color:#5a7090;margin-top:2px;">وارد</div></div>
+        <div style="flex:1;min-width:100px;padding:10px 14px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:11px;text-align:center;"><div id="ap-stm-total-out" style="font-size:16px;font-weight:800;color:#f87171;">—</div><div style="font-size:9px;color:#5a7090;margin-top:2px;">صادر</div></div>
+        <div style="flex:1;min-width:100px;padding:10px 14px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);border-radius:11px;text-align:center;"><div id="ap-stm-net-balance" style="font-size:16px;font-weight:800;color:#60a5fa;">—</div><div style="font-size:9px;color:#5a7090;margin-top:2px;">رصيد</div></div>
+        <div style="flex:1;min-width:80px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:11px;text-align:center;"><div id="ap-stm-count" style="font-size:16px;font-weight:800;color:#e9edef;">—</div><div style="font-size:9px;color:#5a7090;margin-top:2px;">حركة</div></div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr style="background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.07);">
+            <th style="padding:9px 12px;text-align:right;color:#5a7090;font-weight:600;">#</th>
+            <th style="padding:9px 12px;text-align:right;color:#5a7090;font-weight:600;">التاريخ</th>
+            <th style="padding:9px 12px;text-align:right;color:#5a7090;font-weight:600;">النوع</th>
+            <th style="padding:9px 12px;text-align:right;color:#5a7090;font-weight:600;">الجهة</th>
+            <th style="padding:9px 12px;text-align:center;color:#4ade80;font-weight:600;">وارد ↑</th>
+            <th style="padding:9px 12px;text-align:center;color:#f87171;font-weight:600;">صادر ↓</th>
+            <th style="padding:9px 12px;text-align:center;color:#5a7090;font-weight:600;">عملة</th>
+            <th style="padding:9px 12px;text-align:center;color:#5a7090;font-weight:600;">الحالة</th>
+          </tr></thead>
+          <tbody id="ap-stm-tbody"><tr><td colspan="8" style="padding:50px;text-align:center;color:#2d4060;">اختر مركزاً واضغط كشف</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ قيد التسليم ══ -->
+    <div id="ap-pane-delivery-pending" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">قيد التسليم</span>
+        <span style="font-size:10px;color:#4a6280;margin-right:auto;">الحوالات التي في انتظار التسليم</span>
+      </div>
+      <div class="ap-stat-row">
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dp-count">—</div><div class="ap-stat-lbl">إجمالي</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dp-total" style="color:#fb923c;">—</div><div class="ap-stat-lbl">المجموع</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dp-today" style="color:#fbbf24;">—</div><div class="ap-stat-lbl">اليوم</div></div>
+      </div>
+      <div style="padding:0 12px 8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="ap-dp-search" type="text" placeholder="🔍 بحث بالاسم أو الرقم..." oninput="ap_dp_filter()" class="nm-input" style="flex:1;min-width:160px;">
+        <input id="ap-dp-date" type="date" onchange="ap_dp_filter()" class="nm-input" style="max-width:140px;">
+      </div>
+      <div class="ap-table-wrap" style="padding:0 4px;">
+        <table class="ap-table">
+          <thead><tr>
+            <th>#</th><th>التاريخ</th><th>المستفيد</th><th>الهاتف</th>
+            <th style="text-align:center;">المبلغ</th><th style="text-align:center;">العملة</th>
+            <th style="text-align:center;">المصدر</th><th style="text-align:center;">إجراء</th>
+          </tr></thead>
+          <tbody id="ap-dp-tbody"><tr><td colspan="8" style="padding:40px;text-align:center;color:#2d4060;">لا توجد بيانات</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ تم التسليم ══ -->
+    <div id="ap-pane-delivery-done" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">تم التسليم</span>
+        <span style="font-size:10px;color:#4a6280;margin-right:auto;">الحوالات المسلَّمة بنجاح</span>
+      </div>
+      <div class="ap-stat-row">
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dd-count">—</div><div class="ap-stat-lbl">إجمالي</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dd-total" style="color:#34d399;">—</div><div class="ap-stat-lbl">المجموع</div></div>
+        <div class="ap-stat-card"><div class="ap-stat-val" id="ap-dd-today" style="color:#4ade80;">—</div><div class="ap-stat-lbl">اليوم</div></div>
+      </div>
+      <div style="padding:0 12px 8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="ap-dd-search" type="text" placeholder="🔍 بحث بالاسم أو الرقم..." oninput="ap_dd_filter()" class="nm-input" style="flex:1;min-width:160px;">
+        <input id="ap-dd-date" type="date" onchange="ap_dd_filter()" class="nm-input" style="max-width:140px;">
+      </div>
+      <div class="ap-table-wrap" style="padding:0 4px;">
+        <table class="ap-table">
+          <thead><tr>
+            <th>#</th><th>التاريخ</th><th>المستفيد</th><th>الهاتف</th>
+            <th style="text-align:center;">المبلغ</th><th style="text-align:center;">العملة</th>
+            <th style="text-align:center;">وقت التسليم</th><th style="text-align:center;">بواسطة</th>
+          </tr></thead>
+          <tbody id="ap-dd-tbody"><tr><td colspan="8" style="padding:40px;text-align:center;color:#2d4060;">لا توجد بيانات</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ سند قص ══ -->
+    <div id="ap-pane-cut-voucher" style="display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="12" y1="17" x2="8" y2="17"/></svg>
+        <span style="font-size:13px;font-weight:800;color:#e9edef;">سند قص</span>
+        <span style="font-size:10px;color:#4a6280;margin-right:auto;">إنشاء سند قص جديد</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;">
+        <!-- جهة الشراء -->
+        <div style="padding:18px 18px;background:rgba(34,197,94,.03);border-left:1px solid rgba(34,197,94,.1);display:flex;flex-direction:column;gap:11px;">
+          <div style="font-size:12px;font-weight:800;color:#4ade80;padding-bottom:8px;border-bottom:1px solid rgba(34,197,94,.1);">اشترينا من</div>
+          <div class="ap-field"><label>المركز / الوكيل</label><select id="ap-cv-buy-center" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div class="ap-field"><label>العملة</label>
+            <select id="ap-cv-buy-cur" class="nm-input" onchange="ap_cv_calc()" style="cursor:pointer;">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option>
+              <option value="AED">🇦🇪 AED</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option>
+            </select>
+          </div>
+          <div class="ap-field"><label>المبلغ</label><input id="ap-cv-buy-amt" type="number" placeholder="0" class="nm-input" oninput="ap_cv_calc()" style="color:#4ade80;font-weight:800;"></div>
+          <div class="ap-field"><label>سعر القص</label>
+            <div style="display:grid;grid-template-columns:1fr 80px;gap:6px;">
+              <input id="ap-cv-buy-rate" type="number" step="0.0001" placeholder="1.0000" class="nm-input" oninput="ap_cv_calc()" style="color:#fbbf24;font-weight:800;">
+              <select id="ap-cv-buy-dir" class="nm-input" onchange="ap_cv_calc()" style="cursor:pointer;"><option value="div">÷</option><option value="mul">×</option></select>
+            </div>
+          </div>
+          <div class="ap-field"><label>بالدولار</label><div id="ap-cv-buy-usd" style="padding:8px 12px;border-radius:9px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.15);color:#4ade80;font-weight:800;text-align:center;">—</div></div>
+          <div class="ap-field"><label>ملاحظات</label><textarea id="ap-cv-buy-notes" class="nm-input" rows="2" placeholder="اختياري..." style="resize:none;"></textarea></div>
+        </div>
+        <!-- جهة البيع -->
+        <div style="padding:18px 18px;background:rgba(239,68,68,.03);display:flex;flex-direction:column;gap:11px;">
+          <div style="font-size:12px;font-weight:800;color:#f87171;padding-bottom:8px;border-bottom:1px solid rgba(239,68,68,.1);">بعنا لـ</div>
+          <div class="ap-field"><label>المركز / الوكيل</label><select id="ap-cv-sell-center" class="nm-input" style="cursor:pointer;"><option value="">اختر</option></select></div>
+          <div class="ap-field"><label>العملة</label>
+            <select id="ap-cv-sell-cur" class="nm-input" onchange="ap_cv_calc()" style="cursor:pointer;">
+              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option><option value="ILS">🇵🇸 ILS</option>
+              <option value="AED">🇦🇪 AED</option><option value="TRY">🇹🇷 TRY</option><option value="SYP">🇸🇾 SYP</option>
+            </select>
+          </div>
+          <div class="ap-field"><label>المبلغ</label><input id="ap-cv-sell-amt" type="number" placeholder="0" class="nm-input" oninput="ap_cv_calc()" style="color:#f87171;font-weight:800;"></div>
+          <div class="ap-field"><label>سعر القص</label>
+            <div style="display:grid;grid-template-columns:1fr 80px;gap:6px;">
+              <input id="ap-cv-sell-rate" type="number" step="0.0001" placeholder="1.0000" class="nm-input" oninput="ap_cv_calc()" style="color:#fbbf24;font-weight:800;">
+              <select id="ap-cv-sell-dir" class="nm-input" onchange="ap_cv_calc()" style="cursor:pointer;"><option value="div">÷</option><option value="mul">×</option></select>
+            </div>
+          </div>
+          <div class="ap-field"><label>بالدولار</label><div id="ap-cv-sell-usd" style="padding:8px 12px;border-radius:9px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15);color:#f87171;font-weight:800;text-align:center;">—</div></div>
+          <div class="ap-field"><label>ملاحظات</label><textarea id="ap-cv-sell-notes" class="nm-input" rows="2" placeholder="اختياري..." style="resize:none;"></textarea></div>
+        </div>
+      </div>
+      <!-- شريط الربح -->
+      <div style="padding:10px 20px;background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:#4a6280;font-weight:700;">فارق القص (الربح):</span>
+        <span id="ap-cv-profit" style="font-size:18px;font-weight:800;color:#4ade80;">—</span>
+        <span style="font-size:10px;color:#2d4060;">USD</span>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn-cancel" onclick="apSwitch(null)">إلغاء</button>
+        <button class="ap-btn-cancel" onclick="ap_cv_print()" style="color:#e879f9;">🖨 طباعة</button>
+        <button class="ap-btn-submit" onclick="ap_cv_save()" style="background:linear-gradient(135deg,#d946ef,#a21caf);">✅ حفظ السند</button>
+      </div>
+    </div>
+
+  </div><!-- /ap-tool-col / ap-content -->
+
+  <!-- ── لوحة واتساب (يمين — تظهر فقط في صفحة الحوالات) ── -->
+  <div class="ap-wa-col" id="ap-wa-col">
+
+    <!-- رأس -->
+    <div class="ap-wa-head">
+      <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.549 4.099 1.512 5.826L0 24l6.335-1.486A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 01-5.012-1.375l-.36-.213-3.762.883.925-3.67-.234-.376A9.82 9.82 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+      </div>
+      <span class="ap-wa-head-title">واتساب</span>
+      <span class="ap-wa-status off" id="ap-wa-status-badge">● غير متصل</span>
+      <button onclick="apWaRefresh()" title="تحديث" style="background:none;border:none;color:#1a3a2a;cursor:pointer;padding:3px;transition:color .12s;" onmouseover="this.style.color='#25d366'" onmouseout="this.style.color='#1a3a2a'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      </button>
+    </div>
+
+    <!-- فلتر المجموعات -->
+    <div class="ap-wa-groups" id="ap-wa-groups">
+      <button class="ap-wa-grp-btn active" data-jid="all" onclick="apWaFilterGroup('all',this)">الكل</button>
+    </div>
+
+    <!-- بحث -->
+    <div class="ap-wa-search">
+      <input type="text" id="ap-wa-search-inp" placeholder="🔍 بحث في الرسائل..." oninput="apWaSearch(this.value)">
+    </div>
+
+    <!-- قائمة الرسائل -->
+    <div class="ap-wa-list" id="ap-wa-list">
+      <div class="ap-wa-empty">
+        <div class="ap-wa-empty-icon">💬</div>
+        في انتظار رسائل واتساب...<br>
+        <span style="font-size:10px;color:#112030;">ستظهر الحوالات الواردة هنا تلقائياً</span>
+      </div>
+    </div>
+
+  </div><!-- /ap-wa-col -->
+
+  <!-- ── سجل العمليات (أسفل) ── -->
+  <div class="ap-log-row">
+    <div class="ap-log-head">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      سجل العمليات
+      <span id="ap-log-count" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;padding:1px 8px;border-radius:20px;font-size:10px;">0</span>
+      <button onclick="apLogClear()" style="margin-right:auto;background:none;border:none;color:#2d4060;cursor:pointer;font-size:10px;font-weight:700;">مسح</button>
+    </div>
+    <div class="ap-log-body">
+      <table class="ap-log-table">
+        <thead>
+          <tr>
+            <th>الوقت</th>
+            <th>النوع</th>
+            <th>المبلغ</th>
+            <th>العملة</th>
+            <th>المرجع</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="ap-log-tbody">
+          <tr><td colspan="6" class="ap-log-empty">لا توجد عمليات بعد — ستظهر هنا بعد تنفيذ أي عملية</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  </div><!-- /ap-body -->
+
+</div><!-- /ap-drawer -->
+

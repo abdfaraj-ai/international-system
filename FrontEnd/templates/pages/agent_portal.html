@@ -1,0 +1,624 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الوكيل — انترناشونال</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080f1a;color:#e2e8f0;font-family:'Segoe UI',Tahoma,sans-serif;min-height:100vh}
+
+/* Header */
+.hdr{background:linear-gradient(135deg,#0f1f35,#0c1a28);border-bottom:1px solid rgba(50,184,198,.15);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-brand{display:flex;align-items:center;gap:12px}
+.hdr-brand img{width:44px;height:44px;object-fit:contain;border-radius:8px}
+.hdr-title{font-size:1rem;font-weight:700;color:#e2e8f0}
+.hdr-sub{font-size:.75rem;color:#64748b}
+.hdr-agent{display:flex;align-items:center;gap:10px}
+.agent-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#32b8c6,#1a9db0);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#fff;flex-shrink:0}
+.agent-name{font-size:.9rem;font-weight:600;color:#e2e8f0}
+.agent-country{font-size:.75rem;color:#64748b}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-left:4px}
+.logout-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:inherit}
+.logout-btn:hover{background:rgba(239,68,68,.2)}
+
+/* Nav tabs */
+.nav{display:flex;gap:4px;padding:16px 20px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-tab{padding:10px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:.88rem;color:#64748b;border:1px solid transparent;border-bottom:none;transition:.2s;display:flex;align-items:center;gap:7px}
+.nav-tab.active{background:linear-content(145deg,#0f1f35,#0c1a28);border-color:rgba(50,184,198,.2);color:#32b8c6;background:#0c1a28}
+.nav-badge{background:rgba(239,68,68,.15);color:#f87171;border-radius:10px;padding:1px 7px;font-size:.72rem}
+
+/* Main */
+.main{padding:20px;max-width:900px;margin:0 auto}
+.section{display:none}
+.section.active{display:block}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.15);border-radius:14px;padding:18px;text-align:center}
+.stat-card.green{border-color:rgba(34,197,94,.2)}
+.stat-card.yellow{border-color:rgba(234,179,8,.2)}
+.stat-card.red{border-color:rgba(239,68,68,.2)}
+.stat-val{font-size:1.8rem;font-weight:700;color:#32b8c6;margin-bottom:4px}
+.stat-card.green .stat-val{color:#22c55e}
+.stat-card.yellow .stat-val{color:#f59e0b}
+.stat-card.red .stat-val{color:#ef4444}
+.stat-lbl{font-size:.78rem;color:#64748b}
+
+/* Transfer cards */
+.tf-list{display:flex;flex-direction:column;gap:12px}
+.tf-card{background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.12);border-radius:14px;padding:18px;transition:.2s}
+.tf-card.urgent{border-color:rgba(239,68,68,.35);box-shadow:0 0 0 1px rgba(239,68,68,.15)}
+.tf-card:hover{border-color:rgba(50,184,198,.3)}
+.tf-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.tf-ref{font-size:.82rem;color:#64748b;font-family:monospace}
+.tf-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.b-pending{background:rgba(234,179,8,.1);color:#f59e0b;border:1px solid rgba(234,179,8,.25)}
+.b-processing{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.b-completed{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
+.b-cancelled{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.b-urgent{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.tf-names{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:12px}
+.tf-person{font-size:.9rem;font-weight:600;color:#e2e8f0}
+.tf-phone{font-size:.75rem;color:#64748b;margin-top:2px}
+.tf-arrow{color:#32b8c6;font-size:.9rem}
+.tf-dest{text-align:center;font-size:.75rem;color:#64748b}
+.tf-amount{background:rgba(50,184,198,.06);border:1px solid rgba(50,184,198,.12);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tf-amount-val{font-size:1.1rem;font-weight:700;color:#32b8c6}
+.tf-amount-currency{font-size:.78rem;color:#64748b}
+.tf-actions{display:flex;gap:8px;flex-wrap:wrap}
+.tf-btn{flex:1;min-width:100px;padding:9px 14px;border-radius:8px;border:none;cursor:pointer;font-size:.83rem;font-weight:600;font-family:inherit;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tf-btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-accept{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+.btn-accept:hover:not(:disabled){background:rgba(34,197,94,.25)}
+.btn-reject{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.btn-reject:hover:not(:disabled){background:rgba(239,68,68,.2)}
+.btn-receipt{background:rgba(50,184,198,.1);color:#32b8c6;border:1px solid rgba(50,184,198,.25)}
+.btn-receipt:hover:not(:disabled){background:rgba(50,184,198,.2)}
+.btn-done{background:rgba(34,197,94,.08);color:#4ade80;border:1px solid rgba(34,197,94,.2);cursor:default}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.f-btn{padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;cursor:pointer;font-size:.82rem;font-family:inherit;transition:.2s}
+.f-btn.active{background:rgba(50,184,198,.1);border-color:rgba(50,184,198,.3);color:#32b8c6}
+
+/* Balance */
+.bal-header{background:linear-gradient(135deg,rgba(50,184,198,.1),rgba(26,157,176,.05));border:1px solid rgba(50,184,198,.2);border-radius:14px;padding:20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.bal-amount{font-size:2rem;font-weight:700;color:#32b8c6}
+.bal-label{font-size:.82rem;color:#64748b;margin-top:4px}
+.bal-table{width:100%;border-collapse:collapse}
+.bal-table th{padding:10px 14px;text-align:right;font-size:.78rem;color:#64748b;border-bottom:1px solid rgba(255,255,255,.06);font-weight:500}
+.bal-table td{padding:11px 14px;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.bal-table tr:last-child td{border-bottom:none}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.2);border-radius:18px;padding:28px;width:100%;max-width:460px}
+.modal h3{font-size:1rem;color:#e2e8f0;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.modal label{display:block;color:#94a3b8;font-size:.82rem;margin-bottom:6px;margin-top:16px}
+.modal input,.modal textarea{width:100%;background:#080f1a;border:1px solid rgba(50,184,198,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit;resize:vertical}
+.modal input:focus,.modal textarea:focus{border-color:rgba(50,184,198,.5)}
+.upload-zone{border:2px dashed rgba(50,184,198,.25);border-radius:10px;padding:24px;text-align:center;cursor:pointer;color:#64748b;font-size:.85rem;transition:.2s;margin-top:8px}
+.upload-zone:hover,.upload-zone.has-file{border-color:rgba(50,184,198,.5);color:#32b8c6}
+.modal-btns{display:flex;gap:10px;margin-top:22px}
+.modal-btn{flex:1;padding:11px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:600;font-family:inherit;transition:.2s}
+.modal-btn-confirm{background:linear-gradient(135deg,#32b8c6,#1a9db0);color:#fff}
+.modal-btn-confirm:hover{opacity:.88}
+.modal-btn-cancel{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.1)}
+.modal-btn-cancel:hover{background:rgba(255,255,255,.1)}
+
+/* Empty */
+.empty{text-align:center;padding:40px 20px;color:#334155}
+.empty i{font-size:2.5rem;margin-bottom:12px;display:block}
+
+/* Pagination */
+.pager{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.pager-btn{padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;cursor:pointer;font-family:inherit;font-size:.82rem}
+.pager-btn:hover:not(:disabled){background:rgba(50,184,198,.1);color:#32b8c6;border-color:rgba(50,184,198,.3)}
+.pager-btn:disabled{opacity:.4;cursor:not-allowed}
+.pager-info{padding:7px 14px;color:#64748b;font-size:.82rem}
+
+/* Toast */
+#toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#1e293b;border:1px solid rgba(50,184,198,.25);color:#e2e8f0;padding:10px 20px;border-radius:10px;font-size:.85rem;animation:toastIn .3s ease;pointer-events:none}
+.toast.err{border-color:rgba(239,68,68,.35);background:#1a0a0a}
+.toast.ok{border-color:rgba(34,197,94,.35)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:600px){
+  .tf-names{grid-template-columns:1fr;gap:4px}.tf-arrow{display:none}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <img src="{% static 'images/الشعار-01.png' %}" alt="logo" onerror="this.style.display='none'">
+    <div>
+      <div class="hdr-title">انترناشونال للصرافة</div>
+      <div class="hdr-sub">بوابة وكلاء التنفيذ</div>
+    </div>
+  </div>
+  <div class="hdr-agent">
+    <div>
+      <div class="agent-name" id="hdr-name">—</div>
+      <div class="agent-country"><span class="status-dot"></span><span id="hdr-country">—</span></div>
+    </div>
+    <div class="agent-avatar" id="hdr-avatar">و</div>
+    <button class="logout-btn" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
+</header>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-tab active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-gauge-high"></i>الرئيسية</div>
+  <div class="nav-tab" onclick="switchTab('transfers',this)"><i class="fa-solid fa-right-left"></i>الحوالات<span class="nav-badge" id="pending-badge" style="display:none">0</span></div>
+  <div class="nav-tab" onclick="switchTab('balance',this)"><i class="fa-solid fa-wallet"></i>رصيدي</div>
+  <div class="nav-tab" onclick="switchTab('settings',this)"><i class="fa-solid fa-gear"></i>الإعدادات</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Dashboard -->
+  <div class="section active" id="sec-dashboard">
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><div class="stat-val" id="s-balance">—</div><div class="stat-lbl">الرصيد (USDT)</div></div>
+      <div class="stat-card yellow"><div class="stat-val" id="s-pending">—</div><div class="stat-lbl">معلّق</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-processing">—</div><div class="stat-lbl">قيد التنفيذ</div></div>
+      <div class="stat-card green"><div class="stat-val" id="s-completed">—</div><div class="stat-lbl">منجز</div></div>
+    </div>
+
+    <h3 style="color:#94a3b8;font-size:.85rem;margin-bottom:14px;font-weight:500">⚡ آخر الحوالات</h3>
+    <div class="tf-list" id="recent-list">
+      <div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات حديثة</div>
+    </div>
+  </div>
+
+  <!-- Transfers -->
+  <div class="section" id="sec-transfers">
+    <div class="filter-bar">
+      <button class="f-btn active" onclick="filterTransfers('',this)">الكل</button>
+      <button class="f-btn" onclick="filterTransfers('pending',this)">🔴 معلّق</button>
+      <button class="f-btn" onclick="filterTransfers('processing',this)">🟡 قيد التنفيذ</button>
+      <button class="f-btn" onclick="filterTransfers('completed',this)">🟢 منجز</button>
+    </div>
+    <div class="tf-list" id="transfers-list">
+      <div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات</div>
+    </div>
+    <div class="pager" id="tf-pager" style="display:none">
+      <button class="pager-btn" id="tf-prev" onclick="changePage(-1)">السابق</button>
+      <span class="pager-info" id="tf-page-info"></span>
+      <button class="pager-btn" id="tf-next" onclick="changePage(1)">التالي</button>
+    </div>
+  </div>
+
+  <!-- Balance -->
+  <div class="section" id="sec-balance">
+    <div class="bal-header">
+      <div>
+        <div class="bal-label">رصيدك الحالي</div>
+        <div class="bal-amount" id="bal-amount">—</div>
+        <div class="bal-label">USDT</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:2rem" id="agent-icon-big">🤝</div>
+        <div style="font-size:.78rem;color:#64748b;margin-top:4px" id="bal-agent-name">—</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.12);border-radius:14px;overflow:hidden">
+      <table class="bal-table">
+        <thead>
+          <tr>
+            <th>النوع</th><th>المبلغ</th><th>الرصيد بعد</th><th>الحوالة</th><th>التاريخ</th>
+          </tr>
+        </thead>
+        <tbody id="bal-tbody">
+          <tr><td colspan="5" style="text-align:center;padding:30px;color:#334155">لا توجد سجلات</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="bal-pager" style="display:none">
+      <button class="pager-btn" id="bal-prev" onclick="changeBalPage(-1)">السابق</button>
+      <span class="pager-info" id="bal-page-info"></span>
+      <button class="pager-btn" id="bal-next" onclick="changeBalPage(1)">التالي</button>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="section" id="sec-settings">
+    <div style="background:linear-gradient(145deg,#0f1f35,#0c1a28);border:1px solid rgba(50,184,198,.15);border-radius:14px;padding:24px;max-width:400px">
+      <h3 style="color:#e2e8f0;margin-bottom:20px;font-size:1rem"><i class="fa-solid fa-lock" style="color:#32b8c6"></i> تغيير رمز PIN</h3>
+      <label style="color:#94a3b8;font-size:.82rem;display:block;margin-bottom:6px">رمز PIN الحالي</label>
+      <input type="password" id="old-pin" placeholder="••••••" style="width:100%;background:#080f1a;border:1px solid rgba(50,184,198,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit;margin-bottom:14px">
+      <label style="color:#94a3b8;font-size:.82rem;display:block;margin-bottom:6px">رمز PIN الجديد</label>
+      <input type="password" id="new-pin" placeholder="••••••" style="width:100%;background:#080f1a;border:1px solid rgba(50,184,198,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit;margin-bottom:20px">
+      <button onclick="changePin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#32b8c6,#1a9db0);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit">
+        <i class="fa-solid fa-key"></i> تغيير PIN
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal-bg" id="receipt-modal">
+  <div class="modal">
+    <h3><i class="fa-solid fa-receipt" style="color:#32b8c6"></i> رفع إيصال التنفيذ</h3>
+    <div style="background:rgba(50,184,198,.06);border:1px solid rgba(50,184,198,.12);border-radius:10px;padding:12px 14px;margin-bottom:4px">
+      <div style="font-size:.82rem;color:#64748b">الحوالة</div>
+      <div style="font-size:.95rem;font-weight:600;color:#e2e8f0" id="receipt-ref">—</div>
+      <div style="font-size:.82rem;color:#64748b;margin-top:4px" id="receipt-info">—</div>
+    </div>
+    <label>صورة الإيصال *</label>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('receipt-file').click()">
+      <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;margin-bottom:8px;display:block"></i>
+      اضغط لرفع صورة الإيصال<br><small>PNG, JPG, PDF — حد أقصى 5 ميجا</small>
+    </div>
+    <input type="file" id="receipt-file" accept="image/*,application/pdf" style="display:none" onchange="onFileSelect(this)">
+    <label>ملاحظات (اختياري)</label>
+    <textarea id="receipt-notes" rows="2" placeholder="أي ملاحظات على التنفيذ..."></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-confirm" onclick="submitReceipt()"><i class="fa-solid fa-check"></i> رفع الإيصال</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeReceiptModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-bg" id="reject-modal">
+  <div class="modal">
+    <h3><i class="fa-solid fa-circle-xmark" style="color:#f87171"></i> رفض الحوالة</h3>
+    <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:10px;padding:12px 14px;margin-bottom:4px">
+      <div style="font-size:.82rem;color:#64748b">الحوالة</div>
+      <div style="font-size:.95rem;font-weight:600;color:#e2e8f0" id="reject-ref">—</div>
+    </div>
+    <label>سبب الرفض</label>
+    <textarea id="reject-reason" rows="3" placeholder="اذكر سبب عدم التنفيذ..."></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="submitReject()" style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)"><i class="fa-solid fa-xmark"></i> تأكيد الرفض</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeRejectModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let _agent = null;
+let _tfPage = 1, _tfStatus = '', _tfTotal = 0, _tfPages = 1;
+let _balPage = 1, _balTotal = 0, _balPages = 1;
+let _activeTransferId = null;
+
+// ── Init ───────────────────────────────────────────────────────────────────
+(async () => {
+  try {
+    const r = await fetch('/api/agent/session/');
+    if (!r.ok) { window.location.href = '/agent/login/'; return; }
+    const d = await r.json();
+    if (!d.authenticated) { window.location.href = '/agent/login/'; return; }
+    _agent = d.agent;
+    document.getElementById('hdr-name').textContent    = _agent.name;
+    document.getElementById('hdr-country').textContent = _agent.country || '—';
+    document.getElementById('hdr-avatar').textContent  = _agent.name.charAt(0);
+    loadDashboard();
+  } catch(e) {
+    window.location.href = '/agent/login/';
+  }
+})();
+
+function getCsrf() {
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : '';
+}
+
+function toast(msg, type='') {
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' '+type : '');
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-' + name).classList.add('active');
+  if (name === 'transfers') loadTransfers();
+  if (name === 'balance')   loadBalance();
+  if (name === 'dashboard') loadDashboard();
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const r = await fetch('/api/agent/dashboard/');
+    if (!r.ok) return;
+    const d = await r.json();
+
+    document.getElementById('s-balance').textContent    = '$' + d.balance.toFixed(2);
+    document.getElementById('s-pending').textContent    = d.stats.pending;
+    document.getElementById('s-processing').textContent = d.stats.processing;
+    document.getElementById('s-completed').textContent  = d.stats.completed;
+
+    const badge = document.getElementById('pending-badge');
+    if (d.stats.pending > 0) {
+      badge.textContent = d.stats.pending;
+      badge.style.display = 'inline';
+    }
+
+    const list = document.getElementById('recent-list');
+    if (!d.recentTransfers.length) {
+      list.innerHTML = '<div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات حديثة</div>';
+      return;
+    }
+    list.innerHTML = d.recentTransfers.map(t => buildTransferCard(t, true)).join('');
+  } catch(e) {}
+}
+
+// ── Transfers ──────────────────────────────────────────────────────────────
+function filterTransfers(status, el) {
+  document.querySelectorAll('.filter-bar .f-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  _tfStatus = status;
+  _tfPage   = 1;
+  loadTransfers();
+}
+
+async function loadTransfers() {
+  try {
+    const r = await fetch(`/api/agent/transfers/?status=${_tfStatus}&page=${_tfPage}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    _tfTotal = d.total; _tfPages = d.pages;
+
+    const list = document.getElementById('transfers-list');
+    if (!d.transfers.length) {
+      list.innerHTML = '<div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات</div>';
+      document.getElementById('tf-pager').style.display = 'none';
+      return;
+    }
+    list.innerHTML = d.transfers.map(t => buildTransferCard(t, false)).join('');
+
+    if (_tfPages > 1) {
+      document.getElementById('tf-pager').style.display = 'flex';
+      document.getElementById('tf-page-info').textContent = `صفحة ${_tfPage} من ${_tfPages}`;
+      document.getElementById('tf-prev').disabled = _tfPage <= 1;
+      document.getElementById('tf-next').disabled = _tfPage >= _tfPages;
+    } else {
+      document.getElementById('tf-pager').style.display = 'none';
+    }
+  } catch(e) {}
+}
+
+function changePage(dir) { _tfPage += dir; loadTransfers(); }
+
+function buildTransferCard(t, mini) {
+  const statusMap = {
+    pending:    ['b-pending',    'معلّق'],
+    processing: ['b-processing', 'قيد التنفيذ'],
+    completed:  ['b-completed',  'منجز'],
+    cancelled:  ['b-cancelled',  'ملغي'],
+  };
+  const [sc, sl] = statusMap[t.status] || ['b-pending', t.status];
+
+  let actions = '';
+  if (!mini) {
+    if (t.status === 'pending') {
+      actions = `
+        <button class="tf-btn btn-accept" onclick="acceptTransfer(${t.id})"><i class="fa-solid fa-check"></i> قبول</button>
+        <button class="tf-btn btn-reject" onclick="openRejectModal(${t.id},'${escHtml(t.ref)}')"><i class="fa-solid fa-xmark"></i> رفض</button>`;
+    } else if (t.status === 'processing' && !t.hasReceipt) {
+      actions = `<button class="tf-btn btn-receipt" onclick="openReceiptModal(${t.id},'${escHtml(t.ref)}','${escHtml(t.receiver)} — ${escHtml(t.destination)} — $${t.amount} ${t.currency}')"><i class="fa-solid fa-receipt"></i> رفع إيصال</button>`;
+    } else if (t.status === 'processing' && t.hasReceipt && !t.receiptVerified) {
+      actions = `<button class="tf-btn btn-done" disabled><i class="fa-solid fa-clock"></i> بانتظار تحقق المشرف</button>`;
+    } else if (t.status === 'completed') {
+      actions = `<button class="tf-btn btn-done" disabled><i class="fa-solid fa-circle-check"></i> منجز</button>`;
+    }
+  }
+
+  return `
+  <div class="tf-card${t.isUrgent ? ' urgent' : ''}">
+    <div class="tf-top">
+      <span class="tf-ref">${escHtml(t.ref)}</span>
+      <div class="tf-badges">
+        ${t.isUrgent ? '<span class="badge b-urgent"><i class="fa-solid fa-bolt"></i> مستعجل</span>' : ''}
+        <span class="badge ${sc}">${sl}</span>
+      </div>
+    </div>
+    <div class="tf-names">
+      <div>
+        <div class="tf-person">${escHtml(t.sender)}</div>
+        ${t.senderPhone ? `<div class="tf-phone">${escHtml(t.senderPhone)}</div>` : ''}
+        <div class="tf-phone">المرسل</div>
+      </div>
+      <div style="text-align:center">
+        <div class="tf-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+        <div class="tf-dest">${escHtml(t.destination || '—')}</div>
+      </div>
+      <div style="text-align:left">
+        <div class="tf-person">${escHtml(t.receiver)}</div>
+        ${t.receiverPhone ? `<div class="tf-phone">${escHtml(t.receiverPhone)}</div>` : ''}
+        <div class="tf-phone">المستفيد</div>
+      </div>
+    </div>
+    <div class="tf-amount">
+      <div>
+        <div style="font-size:.75rem;color:#64748b">المبلغ</div>
+        <div class="tf-amount-val">$${t.amount.toFixed(2)}</div>
+      </div>
+      <div style="text-align:left">
+        <div class="tf-amount-currency">${escHtml(t.currency)}</div>
+        <div style="font-size:.72rem;color:#475569">${t.createdAt}</div>
+      </div>
+    </div>
+    ${actions ? `<div class="tf-actions">${actions}</div>` : ''}
+  </div>`;
+}
+
+// ── Accept / Reject ────────────────────────────────────────────────────────
+async function acceptTransfer(id) {
+  if (!confirm('قبول الحوالة وبدء التنفيذ؟')) return;
+  try {
+    const r = await fetch(`/api/agent/transfers/${id}/accept/`, {
+      method: 'POST', headers: {'X-CSRFToken': getCsrf()}
+    });
+    const d = await r.json();
+    if (d.success) { toast('✅ تم قبول الحوالة', 'ok'); loadTransfers(); loadDashboard(); }
+    else toast(d.error || 'حدث خطأ', 'err');
+  } catch(e) { toast('حدث خطأ في الاتصال', 'err'); }
+}
+
+let _rejectId = null;
+function openRejectModal(id, ref) {
+  _rejectId = id;
+  document.getElementById('reject-ref').textContent = ref;
+  document.getElementById('reject-reason').value = '';
+  document.getElementById('reject-modal').classList.add('open');
+}
+function closeRejectModal() { document.getElementById('reject-modal').classList.remove('open'); }
+
+async function submitReject() {
+  const reason = document.getElementById('reject-reason').value.trim();
+  try {
+    const r = await fetch(`/api/agent/transfers/${_rejectId}/reject/`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-CSRFToken': getCsrf()},
+      body: JSON.stringify({reason}),
+    });
+    const d = await r.json();
+    if (d.success) { toast('تم إرجاع الحوالة للمشرف', 'ok'); closeRejectModal(); loadTransfers(); loadDashboard(); }
+    else toast(d.error || 'حدث خطأ', 'err');
+  } catch(e) { toast('حدث خطأ', 'err'); }
+}
+
+// ── Receipt ────────────────────────────────────────────────────────────────
+let _receiptFile = null;
+function openReceiptModal(id, ref, info) {
+  _activeTransferId = id;
+  _receiptFile = null;
+  document.getElementById('receipt-ref').textContent  = ref;
+  document.getElementById('receipt-info').textContent = info;
+  document.getElementById('receipt-notes').value = '';
+  document.getElementById('upload-zone').innerHTML = '<i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;margin-bottom:8px;display:block"></i>اضغط لرفع صورة الإيصال<br><small>PNG, JPG, PDF — حد أقصى 5 ميجا</small>';
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.getElementById('receipt-modal').classList.add('open');
+}
+function closeReceiptModal() { document.getElementById('receipt-modal').classList.remove('open'); }
+
+function onFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { toast('حجم الملف أكبر من 5 ميجا', 'err'); return; }
+  _receiptFile = file;
+  const zone = document.getElementById('upload-zone');
+  zone.classList.add('has-file');
+  zone.innerHTML = `<i class="fa-solid fa-file-check" style="font-size:1.5rem;margin-bottom:8px;display:block"></i>${escHtml(file.name)}<br><small>${(file.size/1024).toFixed(0)} KB</small>`;
+}
+
+async function submitReceipt() {
+  if (!_receiptFile) { toast('يرجى رفع صورة الإيصال أولاً', 'err'); return; }
+  const notes = document.getElementById('receipt-notes').value.trim();
+  const fd = new FormData();
+  fd.append('image', _receiptFile);
+  fd.append('notes', notes);
+  try {
+    const r = await fetch(`/api/agent/transfers/${_activeTransferId}/receipt/`, {
+      method: 'POST', headers: {'X-CSRFToken': getCsrf()}, body: fd,
+    });
+    const d = await r.json();
+    if (d.success) { toast('✅ ' + d.message, 'ok'); closeReceiptModal(); loadTransfers(); loadDashboard(); }
+    else toast(d.error || 'حدث خطأ', 'err');
+  } catch(e) { toast('حدث خطأ في الاتصال', 'err'); }
+}
+
+// ── Balance ────────────────────────────────────────────────────────────────
+async function loadBalance() {
+  try {
+    const r = await fetch(`/api/agent/balance/?page=${_balPage}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    _balTotal = d.total; _balPages = d.pages;
+
+    document.getElementById('bal-amount').textContent = d.balance.toFixed(2);
+    if (_agent) {
+      document.getElementById('bal-agent-name').textContent  = _agent.name;
+      document.getElementById('agent-icon-big').textContent  = _agent.icon || '🤝';
+    }
+
+    const typeColors = {
+      deposit:    '#22c55e', deduct: '#f87171',
+      commission: '#a78bfa', refund: '#60a5fa',
+    };
+    const tbody = document.getElementById('bal-tbody');
+    if (!d.logs.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#334155">لا توجد سجلات</td></tr>';
+      return;
+    }
+    tbody.innerHTML = d.logs.map(b => `
+      <tr>
+        <td><span style="color:${typeColors[b.type]||'#e2e8f0'};font-weight:600">${escHtml(b.typeLabel)}</span></td>
+        <td style="color:${b.type==='deposit'||b.type==='commission'?'#22c55e':'#f87171'};font-weight:600">${b.type==='deposit'||b.type==='commission'?'+':'−'}$${Math.abs(b.amount).toFixed(2)}</td>
+        <td style="color:#94a3b8">$${b.balanceAfter.toFixed(2)}</td>
+        <td style="color:#64748b;font-family:monospace;font-size:.78rem">${escHtml(b.hawalaRef||'—')}</td>
+        <td style="color:#475569;font-size:.78rem">${escHtml(b.createdAt)}</td>
+      </tr>`).join('');
+
+    if (_balPages > 1) {
+      document.getElementById('bal-pager').style.display = 'flex';
+      document.getElementById('bal-page-info').textContent = `صفحة ${_balPage} من ${_balPages}`;
+      document.getElementById('bal-prev').disabled = _balPage <= 1;
+      document.getElementById('bal-next').disabled = _balPage >= _balPages;
+    }
+  } catch(e) {}
+}
+function changeBalPage(dir) { _balPage += dir; loadBalance(); }
+
+// ── Change PIN ─────────────────────────────────────────────────────────────
+async function changePin() {
+  const oldPin = document.getElementById('old-pin').value.trim();
+  const newPin = document.getElementById('new-pin').value.trim();
+  if (!oldPin || !newPin) { toast('يرجى إدخال الرمز القديم والجديد', 'err'); return; }
+  try {
+    const r = await fetch('/api/agent/change-pin/', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-CSRFToken': getCsrf()},
+      body: JSON.stringify({oldPin, newPin}),
+    });
+    const d = await r.json();
+    if (d.success) {
+      toast('✅ تم تغيير رمز PIN', 'ok');
+      document.getElementById('old-pin').value = '';
+      document.getElementById('new-pin').value = '';
+    } else toast(d.error || 'حدث خطأ', 'err');
+  } catch(e) { toast('حدث خطأ', 'err'); }
+}
+
+// ── Logout ─────────────────────────────────────────────────────────────────
+async function doLogout() {
+  await fetch('/api/agent/logout/', {method:'POST', headers:{'X-CSRFToken':getCsrf()}});
+  window.location.href = '/agent/login/';
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// إغلاق Modals بالنقر خارجها
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if(e.target === bg) bg.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

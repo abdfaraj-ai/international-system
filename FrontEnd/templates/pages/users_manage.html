@@ -1,0 +1,146 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}إدارة المستخدمين - نظام انترناشونال{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260509b">
+<link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
+<style>
+  .um-page { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+  .um-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
+  }
+  .um-title-wrap { display: flex; align-items: center; gap: 14px; }
+  .um-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(50,184,198,0.2), rgba(50,184,198,0.05));
+    border: 1px solid rgba(50,184,198,0.3);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .um-title { font-size: 20px; font-weight: 800; color: #e9edef; }
+  .um-sub   { font-size: 12px; color: #4a6280; margin-top: 2px; }
+  .um-actions { display: flex; gap: 10px; align-items: center; }
+  .um-back {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 9px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    color: #8696a0; font-size: 12px; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all .2s;
+  }
+  .um-back:hover { background: rgba(255,255,255,0.08); color: #e9edef; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="notification" id="notification"></div>
+
+<!-- FX Ticker -->
+<div id="fx-ticker-bar">
+  <div id="fx-ticker-badge"><span class="fx-badge-dot"></span>FX LIVE</div>
+  <div id="fx-ticker-track"><div id="fx-ticker-inner"><span id="fx-ticker-loading">جاري تحميل أسعار العملات...</span></div></div>
+  <button id="fx-ticker-refresh" title="تحديث">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Header -->
+<div id="header">
+  <div class="logo-wrap">
+    <img class="logo-icon" src="{% static 'images/الشعار-01.png' %}" alt="شعار">
+    <div>
+      <div class="logo-title">نظام انترناشونال الموحد</div>
+      <div class="logo-sub">إدارة المستخدمين والحسابات</div>
+    </div>
+  </div>
+  <div id="header-section-name">
+    <span class="sec-icon">👥</span>
+    <span id="header-sec-text">إدارة المستخدمين</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="clock-toggle-wrap">
+      <div class="clock-box">
+        <div class="clock-time" id="clock">--:--:--</div>
+        <div class="clock-date" id="dateDisplay">جاري التحميل...</div>
+      </div>
+    </div>
+    <div class="user-dropdown" id="userDropdown" onclick="toggleUserDropdown(event)">
+      <div class="ud-avatar">👤</div>
+      <div class="ud-info">
+        <div class="ud-name" id="userDisplayName">—</div>
+        <div class="ud-role" id="userDisplayRole">—</div>
+      </div>
+      <svg class="ud-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="ud-menu">
+        <div class="ud-menu-header">
+          <div class="ud-menu-avatar">👤</div>
+          <div><div class="ud-menu-name" id="ud-menu-name">—</div><div class="ud-menu-role" id="ud-menu-role">—</div></div>
+        </div>
+        <div class="ud-menu-item danger" onclick="logout();event.stopPropagation()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-layout">
+{% include 'layout/sidebar.html' %}
+<main class="main-content">
+<div class="um-page">
+
+  <!-- ── Page Header ── -->
+  <div class="um-header">
+    <div class="um-title-wrap">
+      <div class="um-icon">👥</div>
+      <div>
+        <div class="um-title">إدارة المستخدمين</div>
+        <div class="um-sub">إضافة وتعديل وإدارة حسابات مستخدمي النظام</div>
+      </div>
+    </div>
+    <div class="um-actions">
+      <button class="btn btn-gold btn-sm" onclick="openAddUserModal()">+ إضافة مستخدم</button>
+      <button class="btn btn-blue btn-sm" onclick="renderUsersTable()">🔄 تحديث</button>
+      <a href="/dashboard/" class="um-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+        لوحة التحكم
+      </a>
+    </div>
+  </div>
+
+  <!-- ── إحصائيات ── -->
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;" id="users-stats-row"></div>
+
+  <!-- ── جدول المستخدمين ── -->
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div class="tbl-header" style="grid-template-columns:0.4fr 1.2fr 1fr 1fr 1fr 0.8fr 1.2fr;">
+      <span>#</span><span>المستخدم</span><span>الدور</span><span>آخر دخول</span><span>2FA</span><span>الحالة</span><span>إجراءات</span>
+    </div>
+    <div id="users-table-body"></div>
+  </div>
+
+</div>
+</main>
+</div>
+
+<!-- نوافذ مساعدة — مطلوبة من dashboard.js -->
+<div id="dm-add-user" class="dm-overlay" onclick="if(event.target===this)closeAddUserModal()" style="display:none;"></div>
+<div id="dm-edit-user" class="dm-overlay" onclick="if(event.target===this)document.getElementById('dm-edit-user').style.display='none'" style="display:none;"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/fx-ticker.js' %}?v=3"></script>
+<script src="{% static 'js/dashboard.js' %}?v=20260513a"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    renderUsersTable();
+    renderUsersStats();
+  });
+</script>
+{% endblock %}
