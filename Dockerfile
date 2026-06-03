@@ -30,8 +30,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # ── نسخ كود المشروع ───────────────────────────────────────────
 COPY . .
 
-# إنشاء المجلدات اللازمة
-RUN mkdir -p logs media staticfiles
+# إنشاء المجلدات اللازمة وصلاحية التنفيذ
+RUN mkdir -p logs media staticfiles && chmod +x start.sh
 
 # جمع الملفات الثابتة
 RUN DJANGO_SETTINGS_MODULE=core.settings.prod \
