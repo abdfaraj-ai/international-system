@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.utils import timezone
 
 from .models import ROLE_HOME, AuditLog, TellerProfile
@@ -28,6 +28,7 @@ def login_view(request):
     return render(request, 'pages/login.html')
 
 
+@csrf_exempt
 @require_POST
 def api_login(request):
     """API endpoint: التحقق من بيانات الاعتماد وبدء الجلسة."""
