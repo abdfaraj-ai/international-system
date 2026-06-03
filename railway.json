@@ -7,7 +7,7 @@
   "deploy": {
     "startCommand": "python manage.py migrate --noinput && gunicorn core.wsgi:application --config gunicorn.conf.py",
     "healthcheckPath": "/health/",
-    "healthcheckTimeout": 30,
+    "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
