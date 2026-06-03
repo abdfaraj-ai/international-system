@@ -61,7 +61,7 @@ CORS_ALLOW_CREDENTIALS = True
 # ── الأمان — حماية من MITM وهجمات التنصت ────────────────────────────────────
 
 # HTTPS إلزامي — يمنع تخفيض الاتصال لـ HTTP
-SECURE_SSL_REDIRECT             = True
+SECURE_SSL_REDIRECT             = False  # Railway proxy handles HTTPS
 SECURE_SSL_HOST                 = os.environ.get('ALLOWED_HOSTS', '').split(',')[0].strip() or None
 
 # HSTS — يخبر المتصفح بعدم قبول HTTP أبداً لمدة سنة

@@ -21,13 +21,13 @@ keepalive        = 5
 # ── الأداء ───────────────────────────────────────────────────
 max_requests         = 1000     # إعادة تشغيل العامل بعد N طلب (يمنع memory leaks)
 max_requests_jitter  = 100      # عشوائية لمنع إعادة التشغيل في نفس الوقت
-preload_app          = True     # تحميل التطبيق قبل fork → أسرع
+preload_app          = False
 
 # ── السجلات ───────────────────────────────────────────────────
 # على Railway نرسل السجلات لـ stdout حتى تظهر في لوحة التحكم
 accesslog        = "-"
 errorlog         = "-"
-loglevel         = "warning"
+loglevel         = "info"
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)sµs'
 
 # ── الأمان ───────────────────────────────────────────────────
