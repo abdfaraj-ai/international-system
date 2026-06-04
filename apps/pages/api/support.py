@@ -50,8 +50,22 @@ def api_support(request):
 الوقت: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
+    from_email = getattr(settings, 'EMAIL_HOST_USER', '') or getattr(settings, 'DEFAULT_FROM_EMAIL', '')
+
+    # تحقق من إعدادات الإيميل
+    if not from_email or not getattr(settings, 'EMAIL_HOST_PASSWORD', ''):
+        import logging
+        logging.getLogger(__name__).error(
+            'Support email NOT configured: EMAIL_HOST_USER=%r has_password=%s',
+            getattr(settings, 'EMAIL_HOST_USER', ''),
+            bool(getattr(settings, 'EMAIL_HOST_PASSWORD', '')),
+        )
+        return JsonResponse({
+            'success': False,
+            'message': 'إعدادات البريد غير مكتملة على الخادم — يرجى التواصل مع المشرف'
+        }, status=500)
+
     try:
-        from_email = settings.EMAIL_HOST_USER
         send_mail(
             subject=f'[Support] {subject}',
             message=body,
@@ -62,5 +76,5 @@ def api_support(request):
         return JsonResponse({'success': True, 'message': 'تم إرسال رسالتك بنجاح، سنتواصل معك قريباً'})
     except Exception as e:
         import logging
-        logging.getLogger(__name__).error('Support email error: %s', e)
+        logging.getLogger(__name__).error('Support email error: %s', e, exc_info=True)
         return JsonResponse({'success': False, 'message': f'تعذّر الإرسال: {str(e)}'})
