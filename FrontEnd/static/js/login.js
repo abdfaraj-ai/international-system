@@ -1,6 +1,6 @@
-  // ═══════════════════════════════════════
-    // الساعة والتاريخ
-    // ═══════════════════════════════════════
+﻿  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ù„Ø³Ø§Ø¹Ø© ÙˆØ§Ù„ØªØ§Ø±ÙŠØ®
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     function updateClock() {
         const now = new Date();
         document.getElementById('clock').textContent = now.toLocaleTimeString('ar-EG-u-nu-latn', { hour12: false });
@@ -11,20 +11,20 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // تحديث الأرقام عشوائياً
+    // ØªØ­Ø¯ÙŠØ« Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ø¹Ø´ÙˆØ§Ø¦ÙŠØ§Ù‹
     setInterval(() => {
         const online = 20 + Math.floor(Math.random() * 10);
         const elOnline = document.getElementById('onlineUsers');
         const elText   = document.getElementById('onlineText');
         const elTx     = document.getElementById('todayTx');
         if (elOnline) elOnline.textContent = online;
-        if (elText)   elText.textContent   = `${online} مستخدم نشط حالياً في النظام`;
+        if (elText)   elText.textContent   = `${online} Ù…Ø³ØªØ®Ø¯Ù… Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ ÙÙŠ Ø§Ù„Ù†Ø¸Ø§Ù…`;
         if (elTx)     elTx.textContent     = 180 + Math.floor(Math.random() * 20);
     }, 8000);
 
-    // ═══════════════════════════════════════
-    // الجزيئات المتحركة
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ù„Ø¬Ø²ÙŠØ¦Ø§Øª Ø§Ù„Ù…ØªØ­Ø±ÙƒØ©
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
@@ -96,64 +96,64 @@
     }
     animateParticles();
 
-    // ═══════════════════════════════════════
-    // الحالة
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ù„Ø­Ø§Ù„Ø©
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     let selectedRole = null;
     let rememberMe = false;
 
-    // ═══════════════════════════════════════
-    // اختيار الدور
-    // ═══════════════════════════════════════
-    function setRole(btn, role) {
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ø¯ÙˆØ±
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    window.setRole = function(btn, role) {
         document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         selectedRole = role;
         document.getElementById('username').focus();
-        showToast(`تم اختيار: ${role}`, 'info', '💡');
+        showToast(`ØªÙ… Ø§Ø®ØªÙŠØ§Ø±: ${role}`, 'info', 'ðŸ’¡');
     }
 
-    // ═══════════════════════════════════════
-    // إظهار/إخفاء كلمة المرور
-    // ═══════════════════════════════════════
-    function togglePassword() {
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø¥Ø¸Ù‡Ø§Ø±/Ø¥Ø®ÙØ§Ø¡ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    window.togglePassword = function() {
         const passInput = document.getElementById('password');
         const btn = document.querySelector('.toggle-pass');
         if (passInput.type === 'password') {
             passInput.type = 'text';
-            btn.textContent = '🙈';
+            btn.textContent = 'ðŸ™ˆ';
         } else {
             passInput.type = 'password';
-            btn.textContent = '👁️';
+            btn.textContent = 'ðŸ‘ï¸';
         }
     }
 
-    // ═══════════════════════════════════════
-    // تذكرني
-    // ═══════════════════════════════════════
-    function toggleRemember() {
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // ØªØ°ÙƒØ±Ù†ÙŠ
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    window.toggleRemember = function() {
         rememberMe = !rememberMe;
         const check = document.getElementById('rememberCheck');
         check.classList.toggle('checked', rememberMe);
     }
 
-    // ═══════════════════════════════════════
-    // الإرسال
-    // ═══════════════════════════════════════
-    function handleSubmit() {
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ù„Ø¥Ø±Ø³Ø§Ù„
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    window.handleSubmit = function() {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
         const btn = document.getElementById('mainBtn');
 
-        // التحقق
+        // Ø§Ù„ØªØ­Ù‚Ù‚
         if (!selectedRole) {
-            showToast('يرجى اختيار صلاحيتك أولاً', 'warning', '⚠️');
+            showToast('ÙŠØ±Ø¬Ù‰ Ø§Ø®ØªÙŠØ§Ø± ØµÙ„Ø§Ø­ÙŠØªÙƒ Ø£ÙˆÙ„Ø§Ù‹', 'warning', 'âš ï¸');
             shakeElement(document.querySelector('.roles-grid'));
             return;
         }
 
         if (!username) {
-            showToast('يرجى إدخال اسم المستخدم', 'error', '❌');
+            showToast('ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…', 'error', 'âŒ');
             shakeElement(document.getElementById('username'));
             document.getElementById('username').classList.add('error');
             setTimeout(() => document.getElementById('username').classList.remove('error'), 2000);
@@ -161,17 +161,17 @@
         }
 
         if (!password) {
-            showToast('يرجى إدخال كلمة المرور', 'error', '❌');
+            showToast('ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±', 'error', 'âŒ');
             shakeElement(document.getElementById('password'));
             document.getElementById('password').classList.add('error');
             setTimeout(() => document.getElementById('password').classList.remove('error'), 2000);
             return;
         }
 
-        // تحميل
+        // ØªØ­Ù…ÙŠÙ„
         btn.classList.add('loading');
 
-        // ── تسجيل الدخول عبر API ──
+        // â”€â”€ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¹Ø¨Ø± API â”€â”€
         const csrfToken = (document.cookie.split(';').find(c => c.trim().startsWith('csrftoken=')) || '').split('=')[1] || '';
 
         fetch('/api/login/', {
@@ -197,25 +197,25 @@
                     'M03': '/transactions/supervisor/',
                     'T01': '/teller/', 'T02': '/accounts/', 'T03': '/transactions/'
                 };
-                showToast('تم تسجيل الدخول بنجاح! جاري التحويل...', 'success', String.fromCodePoint(0x2705));
+                showToast('ØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ù†Ø¬Ø§Ø­! Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­ÙˆÙŠÙ„...', 'success', String.fromCodePoint(0x2705));
                 setTimeout(function() {
                     const targetPage = data.home || ROLE_PAGES[selectedRole];
                     if (targetPage) window.location.href = targetPage;
                 }, 800);
             } else {
-                showToast(data.error || 'خطأ في تسجيل الدخول', 'error', '❌');
+                showToast(data.error || 'Ø®Ø·Ø£ ÙÙŠ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„', 'error', 'âŒ');
                 shakeElement(document.getElementById('username'));
             }
         })
         .catch(() => {
             btn.classList.remove('loading');
-            showToast('تعذّر الاتصال بالسيرفر، يرجى المحاولة مجدداً', 'error', '❌');
+            showToast('ØªØ¹Ø°Ù‘Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±ØŒ ÙŠØ±Ø¬Ù‰ Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ù…Ø¬Ø¯Ø¯Ø§Ù‹', 'error', 'âŒ');
         });
     }
 
-    // ═══════════════════════════════════════
-    // دخول بصلاحية موظف (Impersonate) — للمدير فقط
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø¯Ø®ÙˆÙ„ Ø¨ØµÙ„Ø§Ø­ÙŠØ© Ù…ÙˆØ¸Ù (Impersonate) â€” Ù„Ù„Ù…Ø¯ÙŠØ± ÙÙ‚Ø·
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     function openImpersonateModal() {
         const m = document.getElementById('impersonateModal');
         if (m) { m.style.display = 'flex'; document.getElementById('impUser').focus(); }
@@ -224,7 +224,7 @@
     function closeImpersonateModal() {
         const m = document.getElementById('impersonateModal');
         if (m) m.style.display = 'none';
-        // إذا أغلق المدير النافذة دون اختيار موظف — اذهب للداشبورد
+        // Ø¥Ø°Ø§ Ø£ØºÙ„Ù‚ Ø§Ù„Ù…Ø¯ÙŠØ± Ø§Ù„Ù†Ø§ÙØ°Ø© Ø¯ÙˆÙ† Ø§Ø®ØªÙŠØ§Ø± Ù…ÙˆØ¸Ù â€” Ø§Ø°Ù‡Ø¨ Ù„Ù„Ø¯Ø§Ø´Ø¨ÙˆØ±Ø¯
         window.location.href = '/dashboard/';
     }
 
@@ -234,7 +234,7 @@
         const btn = document.getElementById('impBtn');
 
         if (!username || !password) {
-            showToast('يرجى إدخال بيانات الموظف', 'warning', '⚠️');
+            showToast('ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…ÙˆØ¸Ù', 'warning', 'âš ï¸');
             return;
         }
 
@@ -251,35 +251,35 @@
         .then(data => {
             btn.classList.remove('loading');
             if (data.success) {
-                showToast('جاري الدخول بصلاحية ' + (data.name || data.username) + '...', 'success', '🔑');
+                showToast('Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨ØµÙ„Ø§Ø­ÙŠØ© ' + (data.name || data.username) + '...', 'success', 'ðŸ”‘');
                 setTimeout(function() {
                     window.location.href = data.home || '/dashboard/';
                 }, 800);
             } else {
-                showToast(data.error || 'خطأ في البيانات', 'error', '❌');
+                showToast(data.error || 'Ø®Ø·Ø£ ÙÙŠ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª', 'error', 'âŒ');
             }
         })
         .catch(() => {
             btn.classList.remove('loading');
-            showToast('تعذّر الاتصال بالسيرفر', 'error', '❌');
+            showToast('ØªØ¹Ø°Ù‘Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±', 'error', 'âŒ');
         });
     }
 
-    // ═══════════════════════════════════════
-    // نافذة نسيت كلمة المرور
-    // ═══════════════════════════════════════
-    function showForgotModal() {
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ù†Ø§ÙØ°Ø© Ù†Ø³ÙŠØª ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    window.showForgotModal = function() {
         document.getElementById('forgotModal').classList.add('visible');
-    }
+    };
 
-    function closeForgotModal() {
+    window.closeForgotModal = function() {
         document.getElementById('forgotModal').classList.remove('visible');
-    }
+    };
 
-    function handleForgot() {
+    window.handleForgot = function() {
         const username = document.getElementById('forgotUsername').value.trim();
         if (!username) {
-            showToast('يرجى إدخال اسم المستخدم', 'error', '❌');
+            showToast('ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…', 'error', 'âŒ');
             return;
         }
 
@@ -291,23 +291,23 @@
         .then(r => r.json())
         .then(data => {
             if (data.success) {
-                showToast(data.message || 'تم إرسال رابط الاستعادة إلى بريدك الإلكتروني', 'success', '📧');
-                setTimeout(closeForgotModal, 2000);
+                showToast(data.message || 'ØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ø±Ø§Ø¨Ø· Ø§Ù„Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø¥Ù„Ù‰ Ø¨Ø±ÙŠØ¯Ùƒ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ', 'success', 'ðŸ“§');
+                setTimeout(window.closeForgotModal, 2000);
             } else {
-                showToast(data.error || 'حدث خطأ', 'error', '❌');
+                showToast(data.error || 'Ø­Ø¯Ø« Ø®Ø·Ø£', 'error', 'âŒ');
             }
         })
-        .catch(() => showToast('تعذر الاتصال بالسيرفر', 'error', '❌'));
-    }
+        .catch(() => showToast('ØªØ¹Ø°Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±', 'error', 'âŒ'));
+    };
 
-    // إغلاق بالنقر خارج النافذة
+    // Ø¥ØºÙ„Ø§Ù‚ Ø¨Ø§Ù„Ù†Ù‚Ø± Ø®Ø§Ø±Ø¬ Ø§Ù„Ù†Ø§ÙØ°Ø©
     document.getElementById('forgotModal').addEventListener('click', function(e) {
         if (e.target === this) closeForgotModal();
     });
 
-    // ═══════════════════════════════════════
-    // تأثير الاهتزاز
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // ØªØ£Ø«ÙŠØ± Ø§Ù„Ø§Ù‡ØªØ²Ø§Ø²
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     function shakeElement(el) {
         el.style.transition = 'none';
         el.style.animation = 'none';
@@ -315,7 +315,7 @@
         el.style.animation = 'shake 0.5s ease';
     }
 
-    // إضافة keyframe الاهتزاز
+    // Ø¥Ø¶Ø§ÙØ© keyframe Ø§Ù„Ø§Ù‡ØªØ²Ø§Ø²
     const shakeStyle = document.createElement('style');
     shakeStyle.textContent = `
         @keyframes shake {
@@ -328,12 +328,12 @@
     `;
     document.head.appendChild(shakeStyle);
 
-    // ═══════════════════════════════════════
-    // الإشعارات (Toast)
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ù„Ø¥Ø´Ø¹Ø§Ø±Ø§Øª (Toast)
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     function showToast(message, type = 'info', icon = null) {
-        const defaultIcons = { success: '✅', error: '❌', warning: '⚠️', info: '💎' };
-        const finalIcon = icon || defaultIcons[type] || 'ℹ️';
+        const defaultIcons = { success: 'âœ…', error: 'âŒ', warning: 'âš ï¸', info: 'ðŸ’Ž' };
+        const finalIcon = icon || defaultIcons[type] || 'â„¹ï¸';
 
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -343,7 +343,7 @@
                 <div class="toast-icon-wrap">${finalIcon}</div>
                 <span class="toast-text">${message}</span>
             </div>
-            <button class="toast-close" onclick="this.closest('.toast').classList.add('exit'); setTimeout(()=>this.closest('.toast').remove(),280)">✕</button>
+            <button class="toast-close" onclick="this.closest('.toast').classList.add('exit'); setTimeout(()=>this.closest('.toast').remove(),280)">âœ•</button>
         `;
         container.appendChild(toast);
         setTimeout(() => {
@@ -352,9 +352,9 @@
         }, 3800);
     }
 
-    // ═══════════════════════════════════════
-    // اختصارات لوحة المفاتيح
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Ø§Ø®ØªØµØ§Ø±Ø§Øª Ù„ÙˆØ­Ø© Ø§Ù„Ù…ÙØ§ØªÙŠØ­
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             if (document.getElementById('forgotModal').classList.contains('visible')) {
@@ -370,9 +370,9 @@
         }
     });
 
-    // ═══════════════════════════════════════
-    // تأثير التركيز على الحقول
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // ØªØ£Ø«ÙŠØ± Ø§Ù„ØªØ±ÙƒÙŠØ² Ø¹Ù„Ù‰ Ø§Ù„Ø­Ù‚ÙˆÙ„
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.querySelectorAll('.input-group input').forEach(input => {
         input.addEventListener('focus', () => {
             input.parentElement.style.transform = 'scale(1.01)';
@@ -385,15 +385,15 @@
     function toggleTheme() { /* dark mode only */ }
 
 
-    // رسالة ترحيب
+    // Ø±Ø³Ø§Ù„Ø© ØªØ±Ø­ÙŠØ¨
     setTimeout(() => {
-        showToast('مرحباً بك في شركة انترناشونال للخدمات المالية والمجوهرات', 'info', '💎');
+        showToast('Ù…Ø±Ø­Ø¨Ø§Ù‹ Ø¨Ùƒ ÙÙŠ Ø´Ø±ÙƒØ© Ø§Ù†ØªØ±Ù†Ø§Ø´ÙˆÙ†Ø§Ù„ Ù„Ù„Ø®Ø¯Ù…Ø§Øª Ø§Ù„Ù…Ø§Ù„ÙŠØ© ÙˆØ§Ù„Ù…Ø¬ÙˆÙ‡Ø±Ø§Øª', 'info', 'ðŸ’Ž');
     }, 1200);
 
 
-    // ═══════════════════════════════════════
-    // Google Authenticator — TOTP Engine
-    // ═══════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Google Authenticator â€” TOTP Engine
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
     let pending2FAUser = null;
 
@@ -409,16 +409,16 @@
         setTimeout(function() { document.getElementById('totpInput').focus(); }, 100);
     }
 
-    function confirmQRScanned() {
+    window.confirmQRScanned = function() {
         document.getElementById('qrSetupStep').style.display = 'none';
         document.getElementById('codeInputStep').style.display = 'block';
         setTimeout(function() { document.getElementById('totpInput').focus(); }, 100);
     }
 
-    async function verify2FA() {
+    window.verify2FA = async function() {
         const code = document.getElementById('totpInput').value.trim();
         if (code.length !== 6) {
-            showToast('أدخل 6 أرقام من التطبيق', 'error', '❌');
+            showToast('Ø£Ø¯Ø®Ù„ 6 Ø£Ø±Ù‚Ø§Ù… Ù…Ù† Ø§Ù„ØªØ·Ø¨ÙŠÙ‚', 'error', 'âŒ');
             return;
         }
         const btn = document.getElementById('verifyBtn');
@@ -435,22 +435,22 @@
 
             if (data.success) {
                 document.getElementById('twoFAModal').style.display = 'none';
-                showToast('تم التحقق بنجاح! جاري التحويل...', 'success', '✅');
+                showToast('ØªÙ… Ø§Ù„ØªØ­Ù‚Ù‚ Ø¨Ù†Ø¬Ø§Ø­! Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­ÙˆÙŠÙ„...', 'success', 'âœ…');
                 setTimeout(function() {
                     window.location.href = data.redirect || '/';
                 }, 800);
             } else {
-                showToast(data.message || 'الكود غير صحيح', 'error', '❌');
+                showToast(data.message || 'Ø§Ù„ÙƒÙˆØ¯ ØºÙŠØ± ØµØ­ÙŠØ­', 'error', 'âŒ');
                 document.getElementById('totpInput').value = '';
                 document.getElementById('totpInput').focus();
             }
         } catch (e) {
             btn.classList.remove('loading');
-            showToast('تعذّر الاتصال بالسيرفر', 'error', '❌');
+            showToast('ØªØ¹Ø°Ù‘Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±', 'error', 'âŒ');
         }
     }
 
-    function close2FAModal() {
+    window.close2FAModal = function() {
         document.getElementById('twoFAModal').style.display = 'none';
         document.getElementById('totpInput').value = '';
     }
