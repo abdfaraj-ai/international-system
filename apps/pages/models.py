@@ -14,6 +14,7 @@ ROLE_CHOICES = [
     ('T03',  'الحوالات الخارجية'),
     ('IM01', 'مدير المبرمجين'),
     ('P01',  'مبرمج'),
+    ('E01',  'موظف'),
 ]
 
 ROLE_HOME = {
@@ -25,6 +26,7 @@ ROLE_HOME = {
     'T03':  '/transactions/',
     'IM01': '/tasks/admin/',
     'P01':  '/tasks/my/',
+    'E01':  '/daily-report/',
 }
 
 
@@ -1360,6 +1362,41 @@ class PortalToken(models.Model):
                 expires_at = timezone.now() + timedelta(minutes=cls.EXPIRY_MINUTES),
                 ip_address = ip,
             )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  DailyReport — التقرير اليومي للموظفين (E01)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class DailyReport(models.Model):
+    STATUS_CHOICES = [
+        ('pending',  'قيد المراجعة'),
+        ('reviewed', 'تمت المراجعة'),
+        ('rejected', 'مرفوض'),
+    ]
+
+    employee    = models.ForeignKey('SystemUser', on_delete=models.CASCADE,
+                                    related_name='daily_reports', verbose_name='الموظف')
+    date        = models.DateField(default=timezone.now, verbose_name='تاريخ التقرير')
+    content     = models.TextField(verbose_name='محتوى التقرير')
+    notes       = models.TextField(blank=True, verbose_name='ملاحظات إضافية')
+    status      = models.CharField(max_length=10, choices=STATUS_CHOICES,
+                                   default='pending', verbose_name='الحالة')
+    manager_note = models.TextField(blank=True, verbose_name='ملاحظة المدير')
+    created_at  = models.DateTimeField(default=timezone.now, verbose_name='وقت الإرسال')
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name='وقت المراجعة')
+    reviewed_by = models.ForeignKey('SystemUser', on_delete=models.SET_NULL,
+                                    null=True, blank=True, related_name='reviewed_reports',
+                                    verbose_name='راجعه')
+
+    class Meta:
+        verbose_name        = 'تقرير يومي'
+        verbose_name_plural = 'التقارير اليومية'
+        ordering            = ['-created_at']
+        unique_together     = [('employee', 'date')]
+
+    def __str__(self):
+        return f'{self.employee.get_full_name() or self.employee.username} — {self.date}'
 
 
 # ══════════════════════════════════════════════════════════════════════════════

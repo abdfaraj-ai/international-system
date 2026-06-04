@@ -280,6 +280,18 @@ def dashboard_view(request):
     return render(request, 'pages/dashboard.html')
 
 
+@ensure_csrf_cookie
+@_role_required('E01')
+def daily_report_view(request):
+    return render(request, 'pages/daily_report.html')
+
+
+@ensure_csrf_cookie
+@_role_required('M01')
+def daily_reports_admin_view(request):
+    return render(request, 'pages/daily_reports_admin.html')
+
+
 @_role_required('T02', 'M01')
 def accounts_view(request):
     return render(request, 'pages/accounts.html')

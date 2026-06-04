@@ -17,6 +17,7 @@ from .api import support       as support_api
 from .api import tasks         as tasks_api
 from .api import admin_voice   as admin_voice_api
 from .api import attendance    as attendance_api
+from .api import daily_report   as daily_report_api
 from .api import agent_portal  as agent_portal_api
 from .api import whatsapp      as wa_api
 from .api import voice_cmd     as voice_cmd_api
@@ -83,6 +84,14 @@ urlpatterns = [
     path('reset-password/',            views.api_reset_password,           name='reset-password'),
     path('api/impersonate/',           views.api_impersonate,              name='api-impersonate'),
     path('api/me/',                    views.api_me,                       name='api-me'),
+
+    # ── التقرير اليومي (E01) ─────────────────────────────────────────────────
+    path('daily-report/',              views.daily_report_view,            name='daily-report'),
+    path('daily-reports/admin/',       views.daily_reports_admin_view,     name='daily-reports-admin'),
+    path('api/daily-report/submit/',          daily_report_api.api_submit_report,  name='api-dr-submit'),
+    path('api/daily-report/my/',              daily_report_api.api_my_reports,     name='api-dr-my'),
+    path('api/daily-report/all/',             daily_report_api.api_all_reports,    name='api-dr-all'),
+    path('api/daily-report/<int:report_id>/review/', daily_report_api.api_review_report, name='api-dr-review'),
 
     # ── 2FA (Google Authenticator) ───────────────────────────────────────────
     path('api/2fa/setup/',             totp_api.api_2fa_setup,             name='api-2fa-setup'),
