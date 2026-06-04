@@ -53,8 +53,10 @@ def _fmt_time(dt):
     return dt.strftime('%I:%M %p')
 
 import os
-ZK_IP   = os.environ.get('ZK_IP',   '192.168.1.201')
-ZK_PORT = int(os.environ.get('ZK_PORT', 4370))
+ZK_IP        = os.environ.get('ZK_IP',        '192.168.1.201')
+ZK_PORT      = int(os.environ.get('ZK_PORT',  4370))
+ZK_AGENT_URL = os.environ.get('ZK_AGENT_URL', '').rstrip('/')
+ZK_AGENT_TOK = os.environ.get('ZK_AGENT_TOKEN', 'zk-agent-secret-token-2025')
 
 
 def _require_m01(request):
@@ -75,6 +77,20 @@ def _get_or_create_device():
 
 # ── مزامنة البيانات من الجهاز ─────────────────────────────────────────────────
 
+def _sync_via_agent():
+    """جلب البيانات عبر الـ Agent المحلي"""
+    import requests as _req
+    try:
+        r = _req.post(
+            f'{ZK_AGENT_URL}/sync',
+            headers={'X-Agent-Token': ZK_AGENT_TOK},
+            timeout=30,
+        )
+        return r.json()
+    except Exception as e:
+        return {'success': False, 'error': f'تعذر الاتصال بالـ Agent: {e}'}
+
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def api_attendance_sync(request):
@@ -83,6 +99,49 @@ def api_attendance_sync(request):
     if err:
         return err
 
+    # ── إذا يوجد Agent — استخدمه ──
+    if ZK_AGENT_URL:
+        agent_data = _sync_via_agent()
+        if not agent_data.get('success'):
+            return JsonResponse({'success': False, 'error': agent_data.get('error', 'خطأ في الـ Agent')}, status=500)
+
+        device = _get_or_create_device()
+        records = agent_data.get('records', [])
+        att_new = 0
+        emp_count = 0
+
+        for rec in records:
+            _, created = ZKEmployee.objects.update_or_create(
+                device=device, user_id=rec['user_id'],
+                defaults={'name': rec['name'], 'uid': int(rec['user_id']) if rec['user_id'].isdigit() else 0}
+            )
+            if created:
+                emp_count += 1
+
+            from datetime import datetime
+            ts = datetime.fromisoformat(rec['timestamp'])
+            aware_ts = timezone.make_aware(ts) if timezone.is_naive(ts) else ts
+            emp_obj = ZKEmployee.objects.filter(device=device, user_id=rec['user_id']).first()
+
+            _, created = AttendanceRecord.objects.get_or_create(
+                device=device, user_id=rec['user_id'], timestamp=aware_ts,
+                defaults={'employee': emp_obj, 'punch': rec.get('punch', 0)}
+            )
+            if created:
+                att_new += 1
+
+        device.last_sync = timezone.now()
+        device.save(update_fields=['last_sync'])
+
+        return JsonResponse({
+            'success': True,
+            'new_employees': emp_count,
+            'new_records': att_new,
+            'total_records': AttendanceRecord.objects.filter(device=device).count(),
+            'last_sync': _fmt(device.last_sync),
+        })
+
+    # ── اتصال مباشر بالجهاز (للشبكة المحلية) ──
     try:
         from zk import ZK
     except ImportError:
