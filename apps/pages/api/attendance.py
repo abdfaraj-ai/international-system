@@ -10,6 +10,7 @@ import pytz
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
 from ..models import ZKDevice, ZKEmployee, AttendanceRecord, EmployeeNote, ExcusedAbsence
@@ -74,6 +75,7 @@ def _get_or_create_device():
 
 # ── مزامنة البيانات من الجهاز ─────────────────────────────────────────────────
 
+@csrf_exempt
 @require_http_methods(['POST'])
 def api_attendance_sync(request):
     """POST /api/attendance/sync/ — جلب بيانات الجهاز وحفظها"""
