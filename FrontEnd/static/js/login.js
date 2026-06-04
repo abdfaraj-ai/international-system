@@ -14,9 +14,12 @@
     // تحديث الأرقام عشوائياً
     setInterval(() => {
         const online = 20 + Math.floor(Math.random() * 10);
-        document.getElementById('onlineUsers').textContent = online;
-        document.getElementById('onlineText').textContent = `${online} مستخدم نشط حالياً في النظام`;
-        document.getElementById('todayTx').textContent = 180 + Math.floor(Math.random() * 20);
+        const elOnline = document.getElementById('onlineUsers');
+        const elText   = document.getElementById('onlineText');
+        const elTx     = document.getElementById('todayTx');
+        if (elOnline) elOnline.textContent = online;
+        if (elText)   elText.textContent   = `${online} مستخدم نشط حالياً في النظام`;
+        if (elTx)     elTx.textContent     = 180 + Math.floor(Math.random() * 20);
     }, 8000);
 
     // ═══════════════════════════════════════
