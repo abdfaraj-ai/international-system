@@ -3,9 +3,24 @@
 
 {% block title %}التقرير اليومي — نظام انترناشونال{% endblock %}
 
+{% block theme_init %}
+<script>
+  (function() {
+    document.documentElement.classList.add('theme-initializing');
+    document.documentElement.setAttribute('data-theme', 'corporate');
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.remove('theme-initializing');
+    });
+  })();
+</script>
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 <style>
+/* ══ خلفية الصفحة بيضاء والنصوص سوداء ══════════════════════════════════════════ */
+body { background: #ffffff !important; color: #1e293b; }
+
 /* ══ Page background ══════════════════════════════════════════════════════════ */
 .dr-wrap { max-width: 980px; margin: 28px auto 60px; padding: 0 20px; display: grid; gap: 24px; }
 
@@ -225,6 +240,26 @@
   .dr-hero { flex-direction: column; gap: 14px; text-align: center; justify-content: center; }
   .dr-hero-txt { text-align: center; }
 }
+
+/* ══ فرض الوضع الفاتح: خلفية بيضاء · نصوص سوداء (مثل صفحة أقسام التلر) ══════════ */
+body, .dr-wrap { background: #ffffff !important; }
+.dr-panel { background: #ffffff !important; border-color: #e2e8f0 !important; }
+.dr-textarea, .dr-input { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+.dr-textarea::placeholder, .dr-input::placeholder { color: #94a3b8; }
+.dr-tab { background: #f8fafc !important; color: #475569 !important; border-color: #e2e8f0 !important; }
+.dr-tab.active { background: rgba(37,99,235,0.06) !important; color: #2563eb !important; border-color: #2563eb !important; }
+.dr-dropzone { background: #f8fafc !important; border-color: #cbd5e1 !important; }
+.dr-dropzone .dz-main { color: #334155 !important; }
+.dr-file { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+.dr-file .f-name { color: #1e293b !important; }
+.dr-attach-title { color: #334155 !important; }
+.dr-dt-label { color: #64748b !important; }
+.dr-table-head .tt { color: #1e293b !important; }
+.dr-table thead th { color: #64748b !important; border-bottom-color: #e2e8f0 !important; }
+.dr-table tbody td { color: #334155 !important; border-bottom-color: #f1f5f9 !important; }
+.dr-emp-name { color: #1e293b !important; }
+.dr-footnote { color: #64748b !important; }
+.particles-canvas { display: none !important; }
 </style>
 {% endblock %}
 
