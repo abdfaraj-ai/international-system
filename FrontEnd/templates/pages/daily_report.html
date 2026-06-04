@@ -48,7 +48,7 @@
 .dr-field-label .req { color: #ef4444; }
 .dr-field-hint {
   display: flex; align-items: center; gap: 5px; justify-content: flex-start;
-  color: var(--text-muted, #94a3b8); font-size: 0.78rem; margin-top: 6px;
+  color: #2563eb; font-size: 0.78rem; margin-top: 6px;
 }
 .dr-textarea, .dr-input {
   width: 100%; background: var(--surface-2, #f8fafc);
@@ -157,6 +157,18 @@
 .dr-btn.primary:hover { opacity: 0.92; transform: translateY(-1px); }
 .dr-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* زر تنزيل التقرير — إطار أزرق ونص أبيض */
+.dr-btn.download {
+  background: #2563eb; color: #fff; border: 1px solid #1d4ed8;
+}
+.dr-btn.download:hover { background: #1d4ed8; }
+
+/* زر حذف المحتوى — أحمر شفاف، إطار أحمر، نص أبيض */
+.dr-btn.danger {
+  background: rgba(239,68,68,0.15); color: #fff; border: 1px solid #ef4444;
+}
+.dr-btn.danger:hover { background: rgba(239,68,68,0.28); }
+
 .dr-footnote {
   text-align: center; color: var(--text-muted, #94a3b8); font-size: 0.8rem; margin-top: 14px;
 }
@@ -238,11 +250,11 @@
 
   <!-- ══ Hero ══ -->
   <div class="dr-hero">
-    <div class="dr-hero-icon">📋</div>
     <div class="dr-hero-txt">
       <h2>التقرير اليومي</h2>
       <p>قم بتعبئة المطلوب ومن ثم قم بحفظ المطلوب ومن ثم إرسال التقرير</p>
     </div>
+    <div class="dr-hero-icon">📋</div>
   </div>
 
   <!-- ══ Form panel ══ -->
@@ -317,8 +329,8 @@
         أرسل التقرير ←
       </button>
       <div class="dr-actions-left">
-        <button class="dr-btn" onclick="clearForm()">✕ حذف المحتوى</button>
-        <button class="dr-btn" onclick="downloadReport()">💾 تنزيل التقرير</button>
+        <button class="dr-btn danger" onclick="clearForm()">✕ حذف المحتوى</button>
+        <button class="dr-btn download" onclick="downloadReport()">💾 تنزيل التقرير</button>
       </div>
     </div>
     <div class="dr-footnote">
