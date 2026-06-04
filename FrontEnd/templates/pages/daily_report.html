@@ -4,422 +4,434 @@
 {% block title %}التقرير اليومي — نظام انترناشونال{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 <style>
-/* ══ Layout ══════════════════════════════════════════════════════════════════ */
-.dr-page {
-  min-height: 100vh;
-  background: var(--bg-primary);
-  font-family: 'Cairo', sans-serif;
-  padding-bottom: 40px;
-}
+/* ══ Page background ══════════════════════════════════════════════════════════ */
+.dr-wrap { max-width: 980px; margin: 28px auto 60px; padding: 0 20px; display: grid; gap: 24px; }
 
-/* ══ Header ══════════════════════════════════════════════════════════════════ */
-.dr-header {
-  background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 60%, #0a1e36 100%);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding: 0 28px;
-  height: 64px;
+/* ══ Hero (blue header card) ══════════════════════════════════════════════════ */
+.dr-hero {
+  background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 55%, #1e40af 100%);
+  border-radius: 18px;
+  padding: 26px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 40px rgba(37,99,235,0.35);
 }
-
-.dr-header-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.dr-header-brand .logo-icon {
-  width: 38px;
-  height: 38px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-}
-
-.dr-header-brand h1 {
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.dr-header-brand p {
-  color: rgba(255,255,255,0.5);
-  font-size: 0.75rem;
-  margin: 0;
-}
-
-.dr-header-user {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.dr-header-user .user-name {
-  color: rgba(255,255,255,0.85);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.dr-header-user .user-role {
-  color: #60a5fa;
-  font-size: 0.75rem;
-}
-
-.btn-logout {
-  background: rgba(239,68,68,0.15);
-  border: 1px solid rgba(239,68,68,0.3);
-  color: #fca5a5;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-.btn-logout:hover { background: rgba(239,68,68,0.3); }
-
-/* ══ Main Content ════════════════════════════════════════════════════════════ */
-.dr-container {
-  max-width: 900px;
-  margin: 32px auto;
-  padding: 0 20px;
-  display: grid;
-  gap: 24px;
-}
-
-/* ══ Card ════════════════════════════════════════════════════════════════════ */
-.dr-card {
-  background: var(--bg-secondary, #1a2332);
-  border: 1px solid var(--border-color, rgba(255,255,255,0.08));
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.dr-card-header {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.06));
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.dr-card-header .card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
+.dr-hero-txt h2 { color: #fff; font-size: 1.45rem; font-weight: 800; margin: 0 0 6px; }
+.dr-hero-txt p  { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0; }
+.dr-hero-icon {
+  width: 58px; height: 58px; border-radius: 14px;
+  background: rgba(255,255,255,0.18); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; font-size: 1.7rem;
   flex-shrink: 0;
 }
 
-.dr-card-header h2 {
-  color: var(--text-primary, #f1f5f9);
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0;
+/* ══ Card ═════════════════════════════════════════════════════════════════════ */
+.dr-panel {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, rgba(0,0,0,0.08));
+  border-radius: 18px;
+  padding: 28px 30px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
-.dr-card-header p {
-  color: var(--text-secondary, #94a3b8);
-  font-size: 0.8rem;
-  margin: 2px 0 0;
+/* ══ Form fields ══════════════════════════════════════════════════════════════ */
+.dr-field { margin-bottom: 26px; }
+.dr-field-label {
+  display: flex; align-items: center; gap: 6px; justify-content: flex-start;
+  color: var(--primary, #1d4ed8); font-weight: 800; font-size: 0.92rem; margin-bottom: 10px;
+}
+.dr-field-label .req { color: #ef4444; }
+.dr-field-hint {
+  display: flex; align-items: center; gap: 5px; justify-content: flex-start;
+  color: var(--text-muted, #94a3b8); font-size: 0.78rem; margin-top: 6px;
+}
+.dr-textarea, .dr-input {
+  width: 100%; background: var(--surface-2, #f8fafc);
+  border: 2px solid var(--border, #e2e8f0); border-radius: 14px;
+  color: var(--text, #1e293b); font-family: 'Cairo', sans-serif; font-size: 0.92rem;
+  padding: 16px 18px; transition: all 0.2s; outline: none; resize: none; text-align: right;
+}
+.dr-textarea:focus, .dr-input:focus {
+  border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+}
+.dr-textarea { min-height: 130px; }
+.dr-count { text-align: left; color: var(--text-muted, #94a3b8); font-size: 0.78rem; margin-top: 6px; }
+
+/* ══ Upload method tabs ═══════════════════════════════════════════════════════ */
+.dr-upload-label {
+  display: flex; align-items: center; gap: 6px; color: var(--primary, #1d4ed8);
+  font-weight: 800; font-size: 0.92rem; margin-bottom: 12px;
+}
+.dr-upload-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.dr-tab {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.88rem;
+  border: 2px solid var(--border, #e2e8f0); background: var(--surface-2, #f8fafc);
+  color: var(--text, #475569); transition: all 0.2s;
+}
+.dr-tab.active { border-color: #2563eb; background: rgba(37,99,235,0.06); color: #2563eb; }
+.dr-tab .tab-ic {
+  width: 32px; height: 32px; border-radius: 9px; background: #2563eb; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
 }
 
-.dr-card-body {
-  padding: 24px;
+/* ══ Dropzone ═════════════════════════════════════════════════════════════════ */
+.dr-dropzone {
+  border: 2px dashed var(--border, #cbd5e1); border-radius: 14px;
+  padding: 36px 20px; text-align: center; cursor: pointer; transition: all 0.2s;
+  background: var(--surface-2, #f8fafc);
 }
-
-/* ══ Form ════════════════════════════════════════════════════════════════════ */
-.dr-form-group {
-  margin-bottom: 20px;
+.dr-dropzone:hover { border-color: #2563eb; background: rgba(37,99,235,0.03); }
+.dr-dropzone .dz-icon {
+  width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 14px;
+  background: rgba(37,99,235,0.1); color: #2563eb;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
 }
+.dr-dropzone .dz-main { color: var(--text, #334155); font-weight: 700; font-size: 0.92rem; }
+.dr-dropzone .dz-sub  { color: var(--text-muted, #94a3b8); font-size: 0.8rem; margin-top: 4px; }
+.dr-dropzone .dz-hint { color: var(--text-muted, #cbd5e1); font-size: 0.72rem; margin-top: 8px; }
+.dr-attach-title { color: var(--text, #334155); font-weight: 700; font-size: 0.85rem; margin: 16px 0 10px; }
 
-.dr-form-group label {
-  display: block;
-  color: var(--text-secondary, #94a3b8);
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+/* ══ Uploaded file chips ══════════════════════════════════════════════════════ */
+.dr-files { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+.dr-file {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  background: var(--surface-2, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 12px;
 }
+.dr-file .f-ic { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.dr-file .f-ic.pdf { background: rgba(239,68,68,0.12); color: #ef4444; }
+.dr-file .f-ic.xls { background: rgba(34,197,94,0.12); color: #16a34a; }
+.dr-file .f-info { flex: 1; min-width: 0; }
+.dr-file .f-name { color: var(--text, #1e293b); font-weight: 700; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dr-file .f-meta { color: var(--text-muted, #94a3b8); font-size: 0.72rem; }
+.dr-file .f-ok { color: #16a34a; font-size: 0.75rem; font-weight: 700; }
+.dr-file .f-x { color: #94a3b8; cursor: pointer; font-size: 1rem; }
 
-.dr-form-group label span.req {
-  color: #f87171;
-  margin-right: 2px;
+/* ══ Date/time section ════════════════════════════════════════════════════════ */
+.dr-datetime-head {
+  display: flex; align-items: center; gap: 6px; justify-content: center;
+  color: var(--primary, #1d4ed8); font-weight: 800; font-size: 0.92rem; margin: 6px 0 18px;
 }
-
-.dr-input, .dr-textarea {
-  width: 100%;
-  background: var(--bg-primary, #0f1c2e);
-  border: 1px solid var(--border-color, rgba(255,255,255,0.1));
-  border-radius: 10px;
-  color: var(--text-primary, #f1f5f9);
-  font-family: 'Cairo', sans-serif;
-  font-size: 0.9rem;
-  padding: 12px 16px;
-  transition: border-color 0.2s;
-  outline: none;
-  resize: none;
+.dr-datetime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 640px; margin: 0 auto; }
+.dr-dt-label { color: var(--text-muted, #94a3b8); font-size: 0.78rem; margin-bottom: 6px; }
+.dr-dt-badges { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.dr-dt-badge {
+  display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px;
+  font-size: 0.82rem; font-weight: 700;
 }
+.dr-dt-badge.info { background: rgba(37,99,235,0.08); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); }
+.dr-dt-badge.warn { background: rgba(251,191,36,0.1); color: #d97706; border: 1px solid rgba(251,191,36,0.3); }
 
-.dr-input:focus, .dr-textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+/* ══ Action bar ═══════════════════════════════════════════════════════════════ */
+.dr-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 22px; margin-top: 8px; border-top: 1px solid var(--border, #e2e8f0); flex-wrap: wrap; gap: 12px;
 }
-
-.dr-textarea { min-height: 140px; }
-
-.dr-char-count {
-  text-align: left;
-  color: var(--text-secondary, #64748b);
-  font-size: 0.75rem;
-  margin-top: 4px;
+.dr-actions-left { display: flex; gap: 10px; }
+.dr-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px;
+  border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.88rem;
+  cursor: pointer; border: 1px solid var(--border, #e2e8f0); background: var(--surface-2, #f1f5f9);
+  color: var(--text, #475569); transition: all 0.2s;
 }
-
-/* ══ Submit Button ═══════════════════════════════════════════════════════════ */
-.btn-submit {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  font-family: 'Cairo', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.dr-btn:hover { background: var(--border, #e2e8f0); }
+.dr-btn.primary {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; border: none;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.35); padding: 13px 28px;
 }
+.dr-btn.primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.dr-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-/* ══ Reports List ════════════════════════════════════════════════════════════ */
-.dr-reports-list { display: flex; flex-direction: column; gap: 12px; }
-
-.dr-report-item {
-  background: var(--bg-primary, #0f1c2e);
-  border: 1px solid var(--border-color, rgba(255,255,255,0.06));
-  border-radius: 12px;
-  padding: 16px 20px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  align-items: start;
-  transition: border-color 0.2s;
+.dr-footnote {
+  text-align: center; color: var(--text-muted, #94a3b8); font-size: 0.8rem; margin-top: 14px;
 }
+.dr-footnote a { color: #2563eb; font-weight: 700; text-decoration: none; }
 
-.dr-report-item:hover { border-color: rgba(59,130,246,0.3); }
-
-.dr-report-date {
-  color: #60a5fa;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 4px;
+/* ══ Reports table ════════════════════════════════════════════════════════════ */
+.dr-table-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
 }
-
-.dr-report-preview {
-  color: var(--text-primary, #e2e8f0);
-  font-size: 0.88rem;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.dr-table-head .tt {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text, #1e293b); font-weight: 800; font-size: 1.05rem;
 }
-
-.dr-status-badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  white-space: nowrap;
+.dr-table-head .tt .cnt {
+  background: rgba(37,99,235,0.1); color: #2563eb; padding: 3px 12px; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 700;
 }
-
-.dr-status-badge.pending  { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
-.dr-status-badge.reviewed { background: rgba(34,197,94,0.15);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
-.dr-status-badge.rejected { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-
-/* ══ Empty State ═════════════════════════════════════════════════════════════ */
-.dr-empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-secondary, #64748b);
+.dr-table { width: 100%; border-collapse: collapse; }
+.dr-table thead th {
+  text-align: right; color: var(--text-muted, #94a3b8); font-size: 0.78rem; font-weight: 700;
+  padding: 12px 14px; border-bottom: 1px solid var(--border, #e2e8f0);
 }
-.dr-empty .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-.dr-empty p { font-size: 0.9rem; }
+.dr-table tbody td { padding: 14px; border-bottom: 1px solid var(--border, #f1f5f9); font-size: 0.86rem; color: var(--text, #334155); }
+.dr-emp-cell { display: flex; align-items: center; gap: 10px; }
+.dr-emp-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;
+}
+.dr-emp-name { font-weight: 700; }
+.dr-emp-job { color: var(--text-muted, #94a3b8); font-size: 0.74rem; }
+.dr-job-chip { background: rgba(236,72,153,0.1); color: #db2777; padding: 3px 10px; border-radius: 8px; font-size: 0.74rem; font-weight: 700; }
+.dr-status-chip { padding: 4px 12px; border-radius: 20px; font-size: 0.74rem; font-weight: 700; }
+.dr-status-chip.pending  { background: rgba(251,191,36,0.15); color: #d97706; }
+.dr-status-chip.reviewed { background: rgba(34,197,94,0.15);  color: #16a34a; }
+.dr-status-chip.rejected { background: rgba(239,68,68,0.15);  color: #dc2626; }
+.dr-row-btn {
+  width: 36px; height: 36px; border-radius: 9px; border: none; cursor: pointer;
+  background: #2563eb; color: #fff; display: inline-flex; align-items: center; justify-content: center;
+}
+.dr-empty-row { text-align: center; color: var(--text-muted, #94a3b8); padding: 40px; }
 
-/* ══ Toast ═══════════════════════════════════════════════════════════════════ */
+/* ══ Toast ════════════════════════════════════════════════════════════════════ */
 .dr-toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: #1e293b;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
-  padding: 12px 24px;
-  color: #f1f5f9;
-  font-size: 0.9rem;
-  font-weight: 600;
-  z-index: 9999;
-  transition: transform 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  padding: 12px 24px; color: #f1f5f9; font-weight: 700; z-index: 9999;
+  transition: transform 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 .dr-toast.show { transform: translateX(-50%) translateY(0); }
-.dr-toast.success { border-color: rgba(34,197,94,0.4); }
-.dr-toast.error   { border-color: rgba(239,68,68,0.4); }
 
-/* ══ Today indicator ═════════════════════════════════════════════════════════ */
-.dr-today-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: rgba(59,130,246,0.08);
-  border: 1px solid rgba(59,130,246,0.2);
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 0.85rem;
-  color: #93c5fd;
-}
-
-.dr-manager-note {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 8px;
-  font-size: 0.8rem;
-  color: #94a3b8;
-  border-right: 3px solid #3b82f6;
+@media (max-width: 640px) {
+  .dr-upload-tabs, .dr-datetime-grid, .dr-files { grid-template-columns: 1fr; }
+  .dr-hero { flex-direction: column-reverse; gap: 14px; text-align: center; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dr-page">
+<canvas class="particles-canvas" id="particles"></canvas>
 
-  <!-- ── Header ── -->
-  <header class="dr-header">
-    <div class="dr-header-brand">
-      <div class="logo-icon">📋</div>
-      <div>
-        <h1>التقرير اليومي</h1>
-        <p>نظام انترناشونال الموحد</p>
-      </div>
-    </div>
-    <div class="dr-header-user">
-      <div style="text-align:right">
-        <div class="user-name" id="hdrName">—</div>
-        <div class="user-role">موظف</div>
-      </div>
-      <a href="/logout/" class="btn-logout">تسجيل الخروج</a>
-    </div>
-  </header>
-
-  <!-- ── Main ── -->
-  <div class="dr-container">
-
-    <!-- بطاقة إرسال التقرير -->
-    <div class="dr-card">
-      <div class="dr-card-header">
-        <div class="card-icon" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">✍️</div>
+<!-- ══ الهيدر الموحّد ══ -->
+<header class="header">
+    <div class="header-right">
+        <img src="{% static 'images/الشعار-01.png' %}" alt="شعار" class="header-logo">
         <div>
-          <h2>إرسال التقرير اليومي</h2>
-          <p>اكتب تقريرك عن إنجازات اليوم وأرسله للمدير</p>
+            <div class="h-title">نظام انترناشونال الموحد</div>
+            <div class="h-sub"><span class="status-dot"></span> صفحة التقرير اليومي للموظف</div>
         </div>
-      </div>
-      <div class="dr-card-body">
-        <div class="dr-today-info">
-          📅 <span id="todayDate">—</span>
-        </div>
-
-        <div class="dr-form-group">
-          <label>محتوى التقرير <span class="req">*</span></label>
-          <textarea class="dr-textarea" id="reportContent"
-            placeholder="اكتب تفاصيل عملك اليوم، الإنجازات، المهام المكتملة..."
-            maxlength="2000" oninput="updateCount(this,'contentCount')"></textarea>
-          <div class="dr-char-count"><span id="contentCount">0</span> / 2000</div>
-        </div>
-
-        <div class="dr-form-group">
-          <label>ملاحظات إضافية</label>
-          <textarea class="dr-textarea" id="reportNotes"
-            placeholder="أي ملاحظات أو مشاكل واجهتها..."
-            maxlength="1000" oninput="updateCount(this,'notesCount')"
-            style="min-height:80px"></textarea>
-          <div class="dr-char-count"><span id="notesCount">0</span> / 1000</div>
-        </div>
-
-        <button class="btn-submit" id="submitBtn" onclick="submitReport()">
-          <span>📤</span> إرسال التقرير
-        </button>
-      </div>
     </div>
-
-    <!-- بطاقة تقاريري السابقة -->
-    <div class="dr-card">
-      <div class="dr-card-header">
-        <div class="card-icon" style="background:linear-gradient(135deg,#059669,#10b981)">📁</div>
-        <div>
-          <h2>تقاريري السابقة</h2>
-          <p>آخر 30 تقرير مُرسَل</p>
-        </div>
-      </div>
-      <div class="dr-card-body" style="padding:16px 24px">
-        <div class="dr-reports-list" id="reportsList">
-          <div class="dr-empty">
-            <div class="empty-icon">📭</div>
-            <p>جاري التحميل...</p>
-          </div>
-        </div>
-      </div>
+    <div style="display:flex;align-items:center;gap:10px">
+        <span class="h-badge">🧑‍💼 موظف</span>
     </div>
+    {% include 'layout/navbar.html' %}
+</header>
 
+<div class="dr-wrap">
+
+  <!-- ══ Hero ══ -->
+  <div class="dr-hero">
+    <div class="dr-hero-txt">
+      <h2>التقرير اليومي</h2>
+      <p>قم بتعبئة المطلوب ومن ثم قم بحفظ المطلوب ومن ثم إرسال التقرير</p>
+    </div>
+    <div class="dr-hero-icon">📋</div>
   </div>
+
+  <!-- ══ Form panel ══ -->
+  <div class="dr-panel">
+
+    <!-- وصف التقرير -->
+    <div class="dr-field">
+      <div class="dr-field-label">وصف التقرير الشامل <span class="req">*</span></div>
+      <textarea class="dr-textarea" id="reportContent" maxlength="2000"
+        placeholder="أكتب التقرير اليومي بالكامل في هذه الخانة..."
+        oninput="updateCount(this,'contentCount')"></textarea>
+      <div class="dr-count"><span id="contentCount">0</span> / 2000</div>
+      <div class="dr-field-hint">ⓘ أكتب التقرير اليومي بالكامل في هذه الخانة</div>
+    </div>
+
+    <!-- الروابط المستخدمة -->
+    <div class="dr-field">
+      <div class="dr-field-label">الروابط المستخدمة</div>
+      <textarea class="dr-input" id="reportNotes" maxlength="2000" style="min-height:70px"
+        placeholder="ضع الروابط التي تم إنشاؤها في هذه الخانة..."
+        oninput="updateCount(this,'notesCount')"></textarea>
+      <div class="dr-count"><span id="notesCount">0</span> / 2000</div>
+      <div class="dr-field-hint">ⓘ ضع الروابط التي تم إنشاؤها في هذه الخانة</div>
+    </div>
+
+    <!-- طريقة رفع الملفات -->
+    <div class="dr-upload-label">⬆ أختر طريقة لرفع الملفات</div>
+    <div class="dr-upload-tabs">
+      <div class="dr-tab active" data-type="images" onclick="setUploadType(this)">
+        <span class="tab-ic">🖼️</span> صور
+      </div>
+      <div class="dr-tab" data-type="files" onclick="setUploadType(this)">
+        <span class="tab-ic">📎</span> ملفات
+      </div>
+      <div class="dr-tab" data-type="videos" onclick="setUploadType(this)">
+        <span class="tab-ic">🎥</span> فيديوهات
+      </div>
+    </div>
+
+    <div class="dr-attach-title">📎 إرفاق ملفات <span style="color:var(--text-muted);font-weight:400">(اختياري)</span></div>
+    <div class="dr-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+      <div class="dz-icon">☁️</div>
+      <div class="dz-main">اسحب وأفلت الملفات هنا</div>
+      <div class="dz-sub">أو <a href="#" style="color:#2563eb">اضغط للتصفّح</a> من جهازك</div>
+      <div class="dz-hint">يدعم: PDF, DOCX, XLSX, PNG, JPG — بحد أقصى 25MB لكل ملف</div>
+    </div>
+    <input type="file" id="fileInput" multiple style="display:none" onchange="handleFiles(this.files)">
+    <div class="dr-files" id="fileList"></div>
+
+    <!-- تاريخ / وقت التقرير -->
+    <div style="margin-top:28px">
+      <div class="dr-datetime-head">🕐 تاريخ / وقت التقرير <span class="req">*</span></div>
+      <div class="dr-datetime-grid">
+        <div>
+          <div class="dr-dt-label">بداية الوقت / والتاريخ</div>
+          <input type="datetime-local" class="dr-input" id="startTime">
+        </div>
+        <div>
+          <div class="dr-dt-label">نهاية الوقت / والتاريخ</div>
+          <input type="datetime-local" class="dr-input" id="endTime">
+        </div>
+      </div>
+      <div class="dr-dt-badges">
+        <div class="dr-dt-badge info">⏳ <span id="durationTxt">المدة: —</span></div>
+        <div class="dr-dt-badge warn">⚠ <span id="deadlineTxt">الموعد النهائي: —</span></div>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="dr-actions">
+      <div class="dr-actions-left">
+        <button class="dr-btn" onclick="clearForm()">✕ حذف المحتوى</button>
+        <button class="dr-btn" onclick="downloadReport()">💾 تنزيل التقرير</button>
+      </div>
+      <button class="dr-btn primary" id="submitBtn" onclick="submitReport()">
+        أرسل التقرير ←
+      </button>
+    </div>
+    <div class="dr-footnote">
+      ⓘ عندما تنتهي من التقرير ومن ثم رفعه يمكنك مشاهدة التقرير على سجل التقارير في الأسفل
+    </div>
+  </div>
+
+  <!-- ══ سجل التقارير ══ -->
+  <div class="dr-panel">
+    <div class="dr-table-head">
+      <div class="tt">📁 سجل التقارير <span class="cnt" id="reportsCount">0 تقارير</span></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="dr-table">
+        <thead>
+          <tr>
+            <th>الموظف</th>
+            <th>تاريخ التقرير</th>
+            <th>الحالة</th>
+            <th>ملاحظة المدير</th>
+          </tr>
+        </thead>
+        <tbody id="reportsBody">
+          <tr><td colspan="4" class="dr-empty-row">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
-<!-- Toast -->
 <div class="dr-toast" id="drToast"></div>
 
 <script>
-const today = new Date();
-document.getElementById('todayDate').textContent = today.toLocaleDateString('ar-EG', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-});
+let uploadedFiles = [];
 
-// تحميل بيانات المستخدم
-fetch('/api/me/').then(r => r.json()).then(d => {
-  if (d.name) document.getElementById('hdrName').textContent = d.name;
-});
+// ── تهيئة الوقت ──
+(function initDates() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  document.getElementById('startTime').value = fmt(now);
+  document.getElementById('endTime').value   = fmt(now);
+  updateDuration();
+})();
 
-function updateCount(el, spanId) {
-  document.getElementById(spanId).textContent = el.value.length;
+document.getElementById('startTime').addEventListener('change', updateDuration);
+document.getElementById('endTime').addEventListener('change', updateDuration);
+
+function updateDuration() {
+  const s = new Date(document.getElementById('startTime').value);
+  const e = new Date(document.getElementById('endTime').value);
+  if (isNaN(s) || isNaN(e)) return;
+  const ms = e - s;
+  if (ms < 0) { document.getElementById('durationTxt').textContent = 'المدة: غير صحيحة'; return; }
+  const hours = Math.floor(ms / 3600000);
+  const days  = Math.floor(hours / 24);
+  const remH  = hours % 24;
+  document.getElementById('durationTxt').textContent =
+    `المدة: ${days} يوم، ${remH} ساعة`;
+  document.getElementById('deadlineTxt').textContent =
+    'الموعد النهائي: ' + e.toLocaleDateString('ar-EG', { year:'numeric', month:'short', day:'numeric' });
 }
 
-function showToast(msg, type = 'success') {
+function updateCount(el, id) { document.getElementById(id).textContent = el.value.length; }
+
+function setUploadType(tab) {
+  document.querySelectorAll('.dr-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function handleFiles(files) {
+  for (const f of files) {
+    if (f.size > 25 * 1024 * 1024) { showToast('❌ الملف ' + f.name + ' أكبر من 25MB'); continue; }
+    uploadedFiles.push(f);
+  }
+  renderFiles();
+}
+
+function renderFiles() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = uploadedFiles.map((f, i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const isXls = ['xls','xlsx','csv'].includes(ext);
+    const icCls = isXls ? 'xls' : 'pdf';
+    const ic    = isXls ? '📊' : '📄';
+    const size  = (f.size / 1048576).toFixed(1) + ' MB';
+    return `
+      <div class="dr-file">
+        <div class="f-ic ${icCls}">${ic}</div>
+        <div class="f-info">
+          <div class="f-name">${f.name}</div>
+          <div class="f-meta">${size}</div>
+        </div>
+        <div class="f-ok">✓ جاهز</div>
+        <div class="f-x" onclick="removeFile(${i})">✕</div>
+      </div>`;
+  }).join('');
+}
+
+function removeFile(i) { uploadedFiles.splice(i, 1); renderFiles(); }
+
+function clearForm() {
+  document.getElementById('reportContent').value = '';
+  document.getElementById('reportNotes').value   = '';
+  document.getElementById('contentCount').textContent = '0';
+  document.getElementById('notesCount').textContent   = '0';
+  uploadedFiles = []; renderFiles();
+  showToast('🗑️ تم حذف المحتوى');
+}
+
+function downloadReport() {
+  const content = document.getElementById('reportContent').value.trim();
+  if (!content) { showToast('❌ لا يوجد محتوى للتنزيل'); return; }
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'تقرير-' + new Date().toISOString().split('T')[0] + '.txt';
+  a.click();
+}
+
+function showToast(msg) {
   const t = document.getElementById('drToast');
-  t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
-  t.className = `dr-toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3500);
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
 }
 
 async function submitReport() {
@@ -427,78 +439,102 @@ async function submitReport() {
   const notes   = document.getElementById('reportNotes').value.trim();
   const btn     = document.getElementById('submitBtn');
 
-  if (!content) {
-    showToast('يرجى كتابة محتوى التقرير', 'error');
-    return;
-  }
+  if (!content) { showToast('❌ يرجى كتابة وصف التقرير'); return; }
 
   btn.disabled = true;
-  btn.innerHTML = '<span>⏳</span> جاري الإرسال...';
+  btn.textContent = '⏳ جاري الإرسال...';
 
   try {
-    const res  = await fetch('/api/daily-report/submit/', {
+    const res = await fetch('/api/daily-report/submit/', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
-        content,
-        notes,
-        date: today.toISOString().split('T')[0],
+        content, notes,
+        date: new Date().toISOString().split('T')[0],
       }),
     });
     const data = await res.json();
-
     if (data.success) {
-      showToast('تم إرسال التقرير بنجاح ✨');
-      document.getElementById('reportContent').value = '';
-      document.getElementById('reportNotes').value   = '';
-      document.getElementById('contentCount').textContent = '0';
-      document.getElementById('notesCount').textContent   = '0';
-      loadMyReports();
+      showToast('✅ تم إرسال التقرير بنجاح');
+      clearForm();
+      loadReports();
     } else {
-      showToast(data.error || 'حدث خطأ', 'error');
+      showToast('❌ ' + (data.error || 'حدث خطأ'));
     }
   } catch {
-    showToast('تعذر الاتصال بالسيرفر', 'error');
+    showToast('❌ تعذر الاتصال بالسيرفر');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<span>📤</span> إرسال التقرير';
+    btn.textContent = 'أرسل التقرير ←';
   }
 }
 
-async function loadMyReports() {
+async function loadReports() {
   try {
     const res  = await fetch('/api/daily-report/my/');
     const data = await res.json();
-    const list = document.getElementById('reportsList');
+    const body = document.getElementById('reportsBody');
+    const reports = data.reports || [];
 
-    if (!data.reports || data.reports.length === 0) {
-      list.innerHTML = `
-        <div class="dr-empty">
-          <div class="empty-icon">📭</div>
-          <p>لم ترسل أي تقارير بعد</p>
-        </div>`;
+    document.getElementById('reportsCount').textContent = reports.length + ' تقارير';
+
+    if (reports.length === 0) {
+      body.innerHTML = `<tr><td colspan="4" class="dr-empty-row">📭 لم ترسل أي تقارير بعد</td></tr>`;
       return;
     }
 
-    list.innerHTML = data.reports.map(r => `
-      <div class="dr-report-item">
-        <div>
-          <div class="dr-report-date">📅 ${r.date}</div>
-          <div class="dr-report-preview">${r.content}</div>
-          ${r.managerNote ? `<div class="dr-manager-note">💬 ${r.managerNote}</div>` : ''}
-        </div>
-        <div>
-          <span class="dr-status-badge ${r.status}">${r.statusLabel}</span>
-          <div style="color:#64748b;font-size:0.72rem;text-align:center;margin-top:4px">${r.createdAt}</div>
-        </div>
-      </div>
-    `).join('');
+    body.innerHTML = reports.map(r => {
+      const initial = (r.employee || '?').charAt(0);
+      return `
+        <tr>
+          <td>
+            <div class="dr-emp-cell">
+              <div class="dr-emp-avatar">${initial}</div>
+              <div>
+                <div class="dr-emp-name">${r.employee}</div>
+                <div class="dr-emp-job">موظف</div>
+              </div>
+            </div>
+          </td>
+          <td>${r.date}<div class="dr-emp-job">${r.createdAt}</div></td>
+          <td><span class="dr-status-chip ${r.status}">${r.statusLabel}</span></td>
+          <td>${r.managerNote || '—'}</td>
+        </tr>`;
+    }).join('');
   } catch {
-    document.getElementById('reportsList').innerHTML = `
-      <div class="dr-empty"><p>تعذر تحميل التقارير</p></div>`;
+    document.getElementById('reportsBody').innerHTML =
+      `<tr><td colspan="4" class="dr-empty-row">تعذر تحميل التقارير</td></tr>`;
   }
 }
 
-loadMyReports();
+loadReports();
+
+// ══ Navbar essentials (clock · dropdown · user · logout) ══
+function logout() { window.location.href = '/logout/'; }
+function toggleUserDropdown(e) { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('open'); }
+document.addEventListener('click', function(){ const d = document.getElementById('userDropdown'); if (d) d.classList.remove('open'); });
+function goToTasks() { window.location.href = '/tasks/my/'; }
+function open2FASettings() { showToast('المصادقة الثنائية — قريباً'); }
+function openVisualEditor() {}
+
+// الساعة والتاريخ
+(function clock() {
+  function tick() {
+    const now = new Date();
+    const c = document.getElementById('clock');
+    const d = document.getElementById('dateDisplay');
+    if (c) c.textContent = now.toLocaleTimeString('ar-EG-u-nu-latn', { hour12: false });
+    if (d) d.textContent = now.toLocaleDateString('ar-EG-u-nu-latn', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  setInterval(tick, 1000); tick();
+})();
+
+// بيانات المستخدم في الهيدر
+fetch('/api/me/').then(r => r.json()).then(u => {
+  const name = u.name || u.username || '—';
+  const role = u.roleName || 'موظف';
+  ['userDisplayName','ud-menu-name'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = name; });
+  ['userDisplayRole','ud-menu-role'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = role; });
+}).catch(()=>{});
 </script>
 {% endblock %}
