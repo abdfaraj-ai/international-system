@@ -137,27 +137,30 @@ def api_forgot_password(request):
     if not user.email:
         return JsonResponse({'success': False, 'error': 'لا يوجد بريد إلكتروني مرتبط بهذا الحساب'})
 
-    from django.core.mail import send_mail
-    from django.conf import settings
     import os
+    from .email_utils import send_email
 
     token_obj   = PasswordResetToken.create_for(user)
     site_url    = os.environ.get('SITE_URL', 'https://international-system-production.up.railway.app')
     reset_link  = f'{site_url}/reset-password/?token={token_obj.token}'
 
-    try:
-        send_mail(
-            subject='إعادة تعيين كلمة المرور — نظام انترناشونال',
-            message=f'مرحباً {user.get_full_name() or user.username}،\n\nاضغط على الرابط التالي لإعادة تعيين كلمة المرور:\n{reset_link}\n\nالرابط صالح لمدة 30 دقيقة فقط.\n\nإذا لم تطلب هذا، تجاهل هذه الرسالة.',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=False,
-        )
+    text = (
+        f'مرحباً {user.get_full_name() or user.username}،\n\n'
+        f'اضغط على الرابط التالي لإعادة تعيين كلمة المرور:\n{reset_link}\n\n'
+        f'الرابط صالح لمدة 30 دقيقة فقط.\n\n'
+        f'إذا لم تطلب هذا، تجاهل هذه الرسالة.'
+    )
+    ok, err = send_email(
+        to=user.email,
+        subject='إعادة تعيين كلمة المرور — نظام انترناشونال',
+        text=text,
+    )
+    if ok:
         security_log.info('PASSWORD_RESET_SENT username=%s email=%s', username, user.email)
         return JsonResponse({'success': True, 'message': 'تم إرسال رابط الاستعادة إلى بريدك الإلكتروني'})
-    except Exception as e:
-        security_log.error('PASSWORD_RESET_FAILED username=%s error=%s', username, e)
-        return JsonResponse({'success': False, 'error': 'تعذر إرسال الإيميل، يرجى التواصل مع المشرف'}, status=500)
+
+    security_log.error('PASSWORD_RESET_FAILED username=%s error=%s', username, err)
+    return JsonResponse({'success': False, 'error': 'تعذر إرسال الإيميل، يرجى التواصل مع المشرف'}, status=500)
 
 
 @csrf_exempt
