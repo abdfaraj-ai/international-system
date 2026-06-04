@@ -1399,6 +1399,32 @@ class DailyReport(models.Model):
         return f'{self.employee.get_full_name() or self.employee.username} — {self.date}'
 
 
+def _report_upload_path(instance, filename):
+    return f'daily_reports/{instance.report.employee_id}/{instance.report.date}/{filename}'
+
+
+class DailyReportAttachment(models.Model):
+    KIND_CHOICES = [
+        ('images', 'صورة'),
+        ('videos', 'فيديو'),
+        ('files',  'ملف'),
+    ]
+    report     = models.ForeignKey('DailyReport', on_delete=models.CASCADE,
+                                   related_name='attachments', verbose_name='التقرير')
+    file       = models.FileField(upload_to=_report_upload_path, verbose_name='الملف')
+    kind       = models.CharField(max_length=10, choices=KIND_CHOICES, default='files', verbose_name='النوع')
+    name       = models.CharField(max_length=255, blank=True, verbose_name='اسم الملف')
+    size       = models.PositiveIntegerField(default=0, verbose_name='الحجم')
+    uploaded_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name        = 'مرفق تقرير'
+        verbose_name_plural = 'مرفقات التقارير'
+
+    def __str__(self):
+        return self.name or self.file.name
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  PasswordResetToken — رموز إعادة تعيين كلمة المرور
 # ══════════════════════════════════════════════════════════════════════════════

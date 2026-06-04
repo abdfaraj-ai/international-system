@@ -269,14 +269,14 @@
       </div>
     </div>
 
-    <div class="dr-attach-title">📎 إرفاق ملفات <span style="color:var(--text-muted);font-weight:400">(اختياري)</span></div>
-    <div class="dr-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-      <div class="dz-icon">☁️</div>
-      <div class="dz-main">اسحب وأفلت الملفات هنا</div>
+    <div class="dr-attach-title">📎 إرفاق <span id="attachTypeLabel">صور</span> <span style="color:var(--text-muted);font-weight:400">(اختياري)</span></div>
+    <div class="dr-dropzone" id="dropzone" onclick="openPicker()">
+      <div class="dz-icon" id="dzIcon">🖼️</div>
+      <div class="dz-main" id="dzMain">اسحب وأفلت الصور هنا</div>
       <div class="dz-sub">أو <a href="#" style="color:#2563eb">اضغط للتصفّح</a> من جهازك</div>
-      <div class="dz-hint">يدعم: PDF, DOCX, XLSX, PNG, JPG — بحد أقصى 25MB لكل ملف</div>
+      <div class="dz-hint" id="dzHint">يدعم: PNG, JPG, GIF, WEBP — بحد أقصى 25MB لكل ملف</div>
     </div>
-    <input type="file" id="fileInput" multiple style="display:none" onchange="handleFiles(this.files)">
+    <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
     <div class="dr-files" id="fileList"></div>
 
     <!-- تاريخ / وقت التقرير -->
@@ -324,12 +324,13 @@
           <tr>
             <th>الموظف</th>
             <th>تاريخ التقرير</th>
+            <th>المرفقات</th>
             <th>الحالة</th>
             <th>ملاحظة المدير</th>
           </tr>
         </thead>
         <tbody id="reportsBody">
-          <tr><td colspan="4" class="dr-empty-row">جاري التحميل...</td></tr>
+          <tr><td colspan="5" class="dr-empty-row">جاري التحميل...</td></tr>
         </tbody>
       </table>
     </div>
@@ -372,27 +373,94 @@ function updateDuration() {
 
 function updateCount(el, id) { document.getElementById(id).textContent = el.value.length; }
 
+// ── إعدادات كل نوع رفع ──
+const UPLOAD_TYPES = {
+  images: {
+    accept: 'image/*',
+    label:  'صور',
+    icon:   '🖼️',
+    main:   'اسحب وأفلت الصور هنا',
+    hint:   'يدعم: PNG, JPG, GIF, WEBP — بحد أقصى 25MB لكل ملف',
+    test:   f => f.type.startsWith('image/'),
+    errMsg: 'الملف ليس صورة',
+  },
+  videos: {
+    accept: 'video/*',
+    label:  'فيديوهات',
+    icon:   '🎥',
+    main:   'اسحب وأفلت الفيديوهات هنا',
+    hint:   'يدعم: MP4, MOV, AVI, WEBM — بحد أقصى 25MB لكل ملف',
+    test:   f => f.type.startsWith('video/'),
+    errMsg: 'الملف ليس فيديو',
+  },
+  files: {
+    accept: '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.ppt,.pptx',
+    label:  'ملفات',
+    icon:   '📎',
+    main:   'اسحب وأفلت الملفات هنا',
+    hint:   'يدعم: PDF, DOCX, XLSX, CSV, TXT — بحد أقصى 25MB لكل ملف',
+    test:   f => {
+      const ext = (f.name.split('.').pop() || '').toLowerCase();
+      return ['pdf','doc','docx','xls','xlsx','csv','txt','ppt','pptx'].includes(ext);
+    },
+    errMsg: 'نوع الملف غير مدعوم',
+  },
+};
+
+let currentUploadType = 'images';
+
 function setUploadType(tab) {
   document.querySelectorAll('.dr-tab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active');
+
+  currentUploadType = tab.dataset.type;
+  const cfg = UPLOAD_TYPES[currentUploadType];
+
+  // حدّث فلتر نافذة الاختيار
+  document.getElementById('fileInput').setAttribute('accept', cfg.accept);
+
+  // حدّث النصوص والأيقونات
+  document.getElementById('attachTypeLabel').textContent = cfg.label;
+  document.getElementById('dzIcon').textContent = cfg.icon;
+  document.getElementById('dzMain').textContent = cfg.main;
+  document.getElementById('dzHint').textContent = cfg.hint;
+}
+
+function openPicker() {
+  // تأكد أن الفلتر مطبّق قبل فتح النافذة
+  const cfg = UPLOAD_TYPES[currentUploadType];
+  const input = document.getElementById('fileInput');
+  input.setAttribute('accept', cfg.accept);
+  input.click();
 }
 
 function handleFiles(files) {
+  const cfg = UPLOAD_TYPES[currentUploadType];
   for (const f of files) {
-    if (f.size > 25 * 1024 * 1024) { showToast('❌ الملف ' + f.name + ' أكبر من 25MB'); continue; }
-    uploadedFiles.push(f);
+    if (f.size > 25 * 1024 * 1024) {
+      showToast('❌ الملف ' + f.name + ' أكبر من 25MB');
+      continue;
+    }
+    if (!cfg.test(f)) {
+      showToast('❌ ' + f.name + ' — ' + cfg.errMsg);
+      continue;
+    }
+    uploadedFiles.push({ file: f, kind: currentUploadType });
   }
   renderFiles();
+  document.getElementById('fileInput').value = '';  // اسمح بإعادة اختيار نفس الملف
 }
 
 function renderFiles() {
   const list = document.getElementById('fileList');
-  list.innerHTML = uploadedFiles.map((f, i) => {
-    const ext = f.name.split('.').pop().toLowerCase();
-    const isXls = ['xls','xlsx','csv'].includes(ext);
-    const icCls = isXls ? 'xls' : 'pdf';
-    const ic    = isXls ? '📊' : '📄';
-    const size  = (f.size / 1048576).toFixed(1) + ' MB';
+  list.innerHTML = uploadedFiles.map((item, i) => {
+    const f    = item.file;
+    const ext  = (f.name.split('.').pop() || '').toLowerCase();
+    let icCls = 'pdf', ic = '📄';
+    if (item.kind === 'images')      { icCls = 'xls'; ic = '🖼️'; }
+    else if (item.kind === 'videos') { icCls = 'pdf'; ic = '🎥'; }
+    else if (['xls','xlsx','csv'].includes(ext)) { icCls = 'xls'; ic = '📊'; }
+    const size = (f.size / 1048576).toFixed(1) + ' MB';
     return `
       <div class="dr-file">
         <div class="f-ic ${icCls}">${ic}</div>
@@ -445,13 +513,18 @@ async function submitReport() {
   btn.textContent = '⏳ جاري الإرسال...';
 
   try {
+    // FormData لإرسال النص + الملفات معاً
+    const fd = new FormData();
+    fd.append('content', content);
+    fd.append('notes', notes);
+    fd.append('date', new Date().toISOString().split('T')[0]);
+    fd.append('start_time', document.getElementById('startTime').value);
+    fd.append('end_time',   document.getElementById('endTime').value);
+    uploadedFiles.forEach(item => fd.append('attachments', item.file));
+
     const res = await fetch('/api/daily-report/submit/', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({
-        content, notes,
-        date: new Date().toISOString().split('T')[0],
-      }),
+      method: 'POST',
+      body:   fd,   // بدون Content-Type — المتصفح يضبطه تلقائياً مع boundary
     });
     const data = await res.json();
     if (data.success) {
@@ -479,12 +552,25 @@ async function loadReports() {
     document.getElementById('reportsCount').textContent = reports.length + ' تقارير';
 
     if (reports.length === 0) {
-      body.innerHTML = `<tr><td colspan="4" class="dr-empty-row">📭 لم ترسل أي تقارير بعد</td></tr>`;
+      body.innerHTML = `<tr><td colspan="5" class="dr-empty-row">📭 لم ترسل أي تقارير بعد</td></tr>`;
       return;
     }
 
+    const kindIcon = { images: '🖼️', videos: '🎥', files: '📄' };
+
     body.innerHTML = reports.map(r => {
       const initial = (r.employee || '?').charAt(0);
+      const atts = (r.attachments || []);
+      const attHtml = atts.length === 0
+        ? '<span style="color:var(--text-muted)">—</span>'
+        : atts.map(a =>
+            `<a href="${a.url}" target="_blank" title="${a.name}"
+                style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;margin:2px;
+                       background:rgba(37,99,235,0.08);border-radius:6px;text-decoration:none;
+                       color:#2563eb;font-size:0.74rem;font-weight:700">
+               ${kindIcon[a.kind] || '📎'} ${a.name.length > 14 ? a.name.slice(0,12)+'…' : a.name}
+             </a>`
+          ).join('');
       return `
         <tr>
           <td>
@@ -497,13 +583,14 @@ async function loadReports() {
             </div>
           </td>
           <td>${r.date}<div class="dr-emp-job">${r.createdAt}</div></td>
+          <td>${attHtml}</td>
           <td><span class="dr-status-chip ${r.status}">${r.statusLabel}</span></td>
           <td>${r.managerNote || '—'}</td>
         </tr>`;
     }).join('');
   } catch {
     document.getElementById('reportsBody').innerHTML =
-      `<tr><td colspan="4" class="dr-empty-row">تعذر تحميل التقارير</td></tr>`;
+      `<tr><td colspan="5" class="dr-empty-row">تعذر تحميل التقارير</td></tr>`;
   }
 }
 

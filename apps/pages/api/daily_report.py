@@ -6,8 +6,25 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.db import transaction
 
-from ..models import DailyReport
+from ..models import DailyReport, DailyReportAttachment
+
+# الحد الأقصى لحجم المرفق الواحد (25MB) والأنواع المسموحة
+MAX_FILE_SIZE = 25 * 1024 * 1024
+ALLOWED_EXT = {
+    'images': {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'},
+    'videos': {'mp4', 'mov', 'avi', 'webm', 'mkv', 'm4v'},
+    'files':  {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt', 'ppt', 'pptx'},
+}
+
+
+def _detect_kind(filename):
+    ext = (filename.rsplit('.', 1)[-1] if '.' in filename else '').lower()
+    for kind, exts in ALLOWED_EXT.items():
+        if ext in exts:
+            return kind, ext
+    return None, ext
 
 
 def _require_e01(request):
@@ -27,6 +44,16 @@ def _require_m01(request):
 
 
 def _report_to_dict(r):
+    attachments = [
+        {
+            'id':   a.id,
+            'name': a.name or a.file.name.rsplit('/', 1)[-1],
+            'url':  a.file.url if a.file else '',
+            'kind': a.kind,
+            'size': a.size,
+        }
+        for a in r.attachments.all()
+    ]
     return {
         'id':           r.id,
         'employee':     r.employee.get_full_name() or r.employee.username,
@@ -40,6 +67,7 @@ def _report_to_dict(r):
         'createdAt':    r.created_at.strftime('%Y-%m-%d %H:%M'),
         'reviewedAt':   r.reviewed_at.strftime('%Y-%m-%d %H:%M') if r.reviewed_at else None,
         'reviewedBy':   r.reviewed_by.get_full_name() if r.reviewed_by else None,
+        'attachments':  attachments,
     }
 
 
@@ -48,19 +76,26 @@ def _report_to_dict(r):
 @csrf_exempt
 @require_http_methods(['POST'])
 def api_submit_report(request):
-    """POST /api/daily-report/submit/ — إرسال تقرير يومي"""
+    """POST /api/daily-report/submit/ — إرسال تقرير يومي مع مرفقات (multipart)"""
     err = _require_e01(request)
     if err:
         return err
 
-    try:
-        data = json.loads(request.body)
-    except (json.JSONDecodeError, ValueError):
-        return JsonResponse({'success': False, 'error': 'بيانات غير صالحة'}, status=400)
-
-    content = data.get('content', '').strip()
-    notes   = data.get('notes', '').strip()
-    date_str = data.get('date', '')
+    # يقبل multipart/form-data (مع ملفات) أو JSON عادي
+    if request.content_type and request.content_type.startswith('multipart'):
+        content  = request.POST.get('content', '').strip()
+        notes    = request.POST.get('notes', '').strip()
+        date_str = request.POST.get('date', '')
+        files    = request.FILES.getlist('attachments')
+    else:
+        try:
+            data = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({'success': False, 'error': 'بيانات غير صالحة'}, status=400)
+        content  = data.get('content', '').strip()
+        notes    = data.get('notes', '').strip()
+        date_str = data.get('date', '')
+        files    = []
 
     if not content:
         return JsonResponse({'success': False, 'error': 'يرجى كتابة محتوى التقرير'})
@@ -75,12 +110,30 @@ def api_submit_report(request):
     if DailyReport.objects.filter(employee=request.user, date=report_date).exists():
         return JsonResponse({'success': False, 'error': f'لقد أرسلت تقريراً بالفعل لتاريخ {report_date}'})
 
-    report = DailyReport.objects.create(
-        employee=request.user,
-        date=report_date,
-        content=content,
-        notes=notes,
-    )
+    # ── تحقق من المرفقات قبل الحفظ ──
+    validated = []
+    for f in files:
+        if f.size > MAX_FILE_SIZE:
+            return JsonResponse({'success': False, 'error': f'الملف {f.name} أكبر من 25MB'}, status=400)
+        kind, ext = _detect_kind(f.name)
+        if kind is None:
+            return JsonResponse({'success': False, 'error': f'نوع الملف غير مدعوم: {f.name}'}, status=400)
+        validated.append((f, kind))
+
+    # ── حفظ ذرّي: التقرير + كل المرفقات معاً ──
+    # نستخدم create() في حلقة (وليس bulk_create) لأن FileField
+    # يحتاج save() لكتابة الملف فعلياً في التخزين
+    with transaction.atomic():
+        report = DailyReport.objects.create(
+            employee=request.user,
+            date=report_date,
+            content=content,
+            notes=notes,
+        )
+        for f, kind in validated:
+            DailyReportAttachment.objects.create(
+                report=report, file=f, kind=kind, name=f.name, size=f.size,
+            )
 
     # إشعار المدير عبر WebSocket
     try:
