@@ -16,9 +16,11 @@
   padding: 26px 30px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 16px;
   box-shadow: 0 10px 40px rgba(37,99,235,0.35);
 }
+.dr-hero-txt { text-align: right; }
 .dr-hero-txt h2 { color: #fff; font-size: 1.45rem; font-weight: 800; margin: 0 0 6px; }
 .dr-hero-txt p  { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0; }
 .dr-hero-icon {
@@ -59,6 +61,16 @@
 }
 .dr-textarea { min-height: 130px; }
 .dr-count { text-align: left; color: var(--text-muted, #94a3b8); font-size: 0.78rem; margin-top: 6px; }
+
+/* أيقونة منتقي التاريخ/الوقت — باللون الأبيض */
+.dr-datetime-grid input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  cursor: pointer;
+  opacity: 0.9;
+}
+.dr-datetime-grid input[type="datetime-local"] {
+  color-scheme: dark;
+}
 
 /* ══ Upload method tabs ═══════════════════════════════════════════════════════ */
 .dr-upload-label {
@@ -198,7 +210,8 @@
 
 @media (max-width: 640px) {
   .dr-upload-tabs, .dr-datetime-grid, .dr-files { grid-template-columns: 1fr; }
-  .dr-hero { flex-direction: column-reverse; gap: 14px; text-align: center; }
+  .dr-hero { flex-direction: column; gap: 14px; text-align: center; justify-content: center; }
+  .dr-hero-txt { text-align: center; }
 }
 </style>
 {% endblock %}
@@ -225,11 +238,11 @@
 
   <!-- ══ Hero ══ -->
   <div class="dr-hero">
+    <div class="dr-hero-icon">📋</div>
     <div class="dr-hero-txt">
       <h2>التقرير اليومي</h2>
       <p>قم بتعبئة المطلوب ومن ثم قم بحفظ المطلوب ومن ثم إرسال التقرير</p>
     </div>
-    <div class="dr-hero-icon">📋</div>
   </div>
 
   <!-- ══ Form panel ══ -->
