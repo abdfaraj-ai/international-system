@@ -1362,6 +1362,40 @@ class PortalToken(models.Model):
             )
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  PasswordResetToken — رموز إعادة تعيين كلمة المرور
+# ══════════════════════════════════════════════════════════════════════════════
+
+class PasswordResetToken(models.Model):
+    user       = models.ForeignKey('SystemUser', on_delete=models.CASCADE, related_name='reset_tokens')
+    token      = models.CharField(max_length=64, unique=True, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    expires_at = models.DateTimeField()
+    used       = models.BooleanField(default=False)
+
+    EXPIRY_MINUTES = 30
+
+    class Meta:
+        verbose_name        = 'رمز إعادة تعيين كلمة المرور'
+        verbose_name_plural = 'رموز إعادة تعيين كلمة المرور'
+        ordering            = ['-created_at']
+
+    @property
+    def is_valid(self):
+        return not self.used and timezone.now() < self.expires_at
+
+    @classmethod
+    def create_for(cls, user):
+        from django.db import transaction as _tx
+        with _tx.atomic():
+            cls.objects.select_for_update().filter(user=user, used=False).update(used=True)
+            return cls.objects.create(
+                user       = user,
+                token      = secrets.token_urlsafe(32),
+                expires_at = timezone.now() + timedelta(minutes=cls.EXPIRY_MINUTES),
+            )
+
+
 # ── طلبات الحوالة من بوابة العملاء ───────────────────────────────────────────
 
 class PortalTransferRequest(models.Model):

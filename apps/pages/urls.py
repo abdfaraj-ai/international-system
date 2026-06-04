@@ -78,6 +78,9 @@ urlpatterns = [
     path('login/',                     views.login_view,                   name='login-alt'),
     path('logout/',                    views.logout_view,                  name='logout'),
     path('api/login/',                 views.api_login,                    name='api-login'),
+    path('api/forgot-password/',       views.api_forgot_password,          name='api-forgot-password'),
+    path('api/reset-password/',        views.api_reset_password,           name='api-reset-password'),
+    path('reset-password/',            views.api_reset_password,           name='reset-password'),
     path('api/impersonate/',           views.api_impersonate,              name='api-impersonate'),
     path('api/me/',                    views.api_me,                       name='api-me'),
 

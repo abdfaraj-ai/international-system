@@ -279,8 +279,22 @@
             showToast('يرجى إدخال اسم المستخدم', 'error', '❌');
             return;
         }
-        showToast('تم إرسال رابط الاستعادة إلى بريدك الإلكتروني', 'success', '📧');
-        setTimeout(closeForgotModal, 1000);
+
+        fetch('/api/forgot-password/', {
+            method:  'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:    JSON.stringify({ username }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message || 'تم إرسال رابط الاستعادة إلى بريدك الإلكتروني', 'success', '📧');
+                setTimeout(closeForgotModal, 2000);
+            } else {
+                showToast(data.error || 'حدث خطأ', 'error', '❌');
+            }
+        })
+        .catch(() => showToast('تعذر الاتصال بالسيرفر', 'error', '❌'));
     }
 
     // إغلاق بالنقر خارج النافذة

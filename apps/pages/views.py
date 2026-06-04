@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.utils import timezone
 
-from .models import ROLE_HOME, AuditLog, TellerProfile
+from .models import ROLE_HOME, AuditLog, TellerProfile, PasswordResetToken
 from core.permissions import (
     role_required as _role_required,
     check_rate_limit, get_client_ip,
@@ -112,6 +112,91 @@ def api_login(request):
     })
     resp['X-Session-Saved'] = 'ok'
     return resp
+
+
+@csrf_exempt
+@require_POST
+def api_forgot_password(request):
+    """POST /api/forgot-password/ — إرسال رابط إعادة تعيين كلمة المرور"""
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'success': False, 'error': 'بيانات غير صالحة'}, status=400)
+
+    username = data.get('username', '').strip()
+    if not username:
+        return JsonResponse({'success': False, 'error': 'يرجى إدخال اسم المستخدم'})
+
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({'success': True, 'message': 'إذا كان الحساب موجوداً سيصلك الرابط'})
+
+    if not user.email:
+        return JsonResponse({'success': False, 'error': 'لا يوجد بريد إلكتروني مرتبط بهذا الحساب'})
+
+    from django.core.mail import send_mail
+    from django.conf import settings
+    import os
+
+    token_obj   = PasswordResetToken.create_for(user)
+    site_url    = os.environ.get('SITE_URL', 'https://international-system-production.up.railway.app')
+    reset_link  = f'{site_url}/reset-password/?token={token_obj.token}'
+
+    try:
+        send_mail(
+            subject='إعادة تعيين كلمة المرور — نظام انترناشونال',
+            message=f'مرحباً {user.get_full_name() or user.username}،\n\nاضغط على الرابط التالي لإعادة تعيين كلمة المرور:\n{reset_link}\n\nالرابط صالح لمدة 30 دقيقة فقط.\n\nإذا لم تطلب هذا، تجاهل هذه الرسالة.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        security_log.info('PASSWORD_RESET_SENT username=%s email=%s', username, user.email)
+        return JsonResponse({'success': True, 'message': 'تم إرسال رابط الاستعادة إلى بريدك الإلكتروني'})
+    except Exception as e:
+        security_log.error('PASSWORD_RESET_FAILED username=%s error=%s', username, e)
+        return JsonResponse({'success': False, 'error': 'تعذر إرسال الإيميل، يرجى التواصل مع المشرف'}, status=500)
+
+
+@csrf_exempt
+def api_reset_password(request):
+    """GET /reset-password/ — صفحة إعادة تعيين كلمة المرور
+       POST /api/reset-password/ — حفظ كلمة المرور الجديدة"""
+    if request.method == 'GET':
+        return render(request, 'pages/reset_password.html')
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({'success': False, 'error': 'بيانات غير صالحة'}, status=400)
+
+        token_str    = data.get('token', '').strip()
+        new_password = data.get('password', '').strip()
+
+        if not token_str or not new_password:
+            return JsonResponse({'success': False, 'error': 'بيانات ناقصة'})
+
+        if len(new_password) < 6:
+            return JsonResponse({'success': False, 'error': 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'})
+
+        try:
+            token_obj = PasswordResetToken.objects.get(token=token_str)
+        except PasswordResetToken.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'الرابط غير صالح'})
+
+        if not token_obj.is_valid:
+            return JsonResponse({'success': False, 'error': 'انتهت صلاحية الرابط، يرجى طلب رابط جديد'})
+
+        token_obj.user.set_password(new_password)
+        token_obj.user.save()
+        token_obj.used = True
+        token_obj.save()
+
+        security_log.info('PASSWORD_RESET_SUCCESS username=%s', token_obj.user.username)
+        return JsonResponse({'success': True, 'message': 'تم تغيير كلمة المرور بنجاح'})
 
 
 @require_POST
