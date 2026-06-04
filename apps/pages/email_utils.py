@@ -48,7 +48,12 @@ def send_email(to, subject, text, html=None):
             return True, None
         else:
             log.error('EMAIL_FAILED status=%s body=%s', resp.status_code, resp.text[:300])
-            return False, f'فشل الإرسال (رمز {resp.status_code})'
+            # استخرج رسالة Resend التفصيلية
+            try:
+                detail = resp.json().get('message', resp.text[:200])
+            except Exception:
+                detail = resp.text[:200]
+            return False, f'(رمز {resp.status_code}) {detail}'
     except Exception as e:
         log.error('EMAIL_EXCEPTION: %s', e, exc_info=True)
         return False, str(e)
