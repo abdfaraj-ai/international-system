@@ -284,6 +284,13 @@ def api_am_journal(request):
             errors.append('حساب الدائن غير موجود أو غير نشط')
             to_acc = None
 
+        # تحقق من تطابق عملة كل حساب مع عملة طرفه في القيد
+        # (لا يجوز خصم مبلغ بعملة من حساب رصيده بعملة أخرى)
+        if from_acc and from_acc.currency != from_cur:
+            errors.append(f'عملة حساب المدين ({from_acc.currency}) لا تطابق عملة القيد ({from_cur})')
+        if to_acc and to_acc.currency != to_cur:
+            errors.append(f'عملة حساب الدائن ({to_acc.currency}) لا تطابق عملة القيد ({to_cur})')
+
         if errors:
             return JsonResponse({'success': False, 'message': ' | '.join(errors)}, status=400)
 

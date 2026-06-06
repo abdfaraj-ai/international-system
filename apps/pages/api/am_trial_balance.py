@@ -114,6 +114,24 @@ def api_am_trial_balance(request):
     except Exception:
         pass
 
+    # ── 7. القيود المحاسبية (JournalEntry) ───────────────────────────────────
+    # كل قيد: المدين (from) يُسجَّل دائناً بعملته، الدائن (to) يُسجَّل مديناً بعملته
+    # والفرق (الربح) يُسجَّل كعنصر ربح بعملة المدين
+    jr_qs = _apply_dates(JournalEntry.objects.all(), 'created_at__date', df, dt)
+    for j in jr_qs:
+        fc = j.from_currency or 'USD'
+        tc = j.to_currency or 'USD'
+        # المبلغ خرج من حساب المدين → credit بعملة المدين
+        tb[fc]['credit'] += j.amount
+        # المبلغ المحوّل دخل لحساب الدائن → debit بعملة الدائن
+        tb[tc]['debit'] += j.to_amount
+        if j.profit:
+            profit_items.append({
+                'label': f'ربح قيد {j.ref_number}',
+                'currency': fc,
+                'amount': float(j.profit),
+            })
+
     # ── بناء النتيجة ──────────────────────────────────────────────────────────
     def to_rows(d):
         rows = []
@@ -134,8 +152,10 @@ def api_am_trial_balance(request):
     cut_rows  = [{'currency': c} for c in sorted(cut.keys())]
     unrcv_rows= [{'currency': c, 'total': round(float(v['debit']),4)} for c,v in sorted(unrcv.items())]
 
-    # الميزان الكلي (USD فقط — أو مجموع)
-    total_balance = sum(r['balance'] for r in tb_rows)
+    # الرصيد الصافي لكل عملة على حدة — لا يجوز جمع عملات مختلفة في رقم واحد.
+    # في نظام صرف العملات، الرصيد الصافي لكل عملة = (مدين - دائن) لتلك العملة،
+    # وهو يمثّل صافي المركز المفتوح بتلك العملة (طبيعي ألا يكون صفراً).
+    balance_by_currency = {r['currency']: r['balance'] for r in tb_rows}
 
     # الأرباح الإجمالية
     total_profit = sum(p['amount'] for p in profit_items)
@@ -148,7 +168,10 @@ def api_am_trial_balance(request):
         'dateFrom':     date_from_s or None,
         'dateTo':       date_to_s   or None,
         'trialBalance': tb_rows,
-        'balance':      round(total_balance, 4),
+        # صافي المركز لكل عملة منفصلاً (بدلاً من جمع عملات مختلفة في رقم بلا معنى)
+        'balanceByCurrency': balance_by_currency,
+        # توافق رجعي: صافي مركز USD فقط (وليس جمع كل العملات)
+        'balance':      round(balance_by_currency.get('USD', 0), 4),
         'clientBalances': zbn_rows,
         'cutCenters':   cut_rows,
         'unreceived':   unrcv_rows,

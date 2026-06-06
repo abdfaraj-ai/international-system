@@ -4124,12 +4124,15 @@ async function tbLoad() {
           <td style="padding:8px 14px;font-size:12px;color:#4ADE80;font-weight:600">${fmt(r.debit)}</td>
         </tr>`).join('') : empty;
 
-    // الميزان
-    const bal = parseFloat(d.balance||0);
+    // صافي المركز لكل عملة منفصلة (لا يُجمع عملات مختلفة في رقم واحد)
     const badgeEl = document.getElementById('tb-balance-badge');
     if (badgeEl) {
-      badgeEl.textContent = `الميزان: ${fmtB(bal)}`;
-      badgeEl.style.color = bal >= 0 ? '#4ADE80' : '#FCA5A5';
+      const balByCur = d.balanceByCurrency || {};
+      const parts = Object.keys(balByCur)
+        .filter(c => Math.abs(balByCur[c]) > 0.0001)
+        .map(c => `${c}: ${fmtB(balByCur[c])}`);
+      badgeEl.textContent = parts.length ? ('صافي المركز — ' + parts.join(' · ')) : 'لا يوجد رصيد';
+      badgeEl.style.color = '#93C5FD';
     }
 
     // أرصدة الزبائن
