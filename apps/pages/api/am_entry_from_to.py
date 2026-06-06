@@ -20,6 +20,16 @@ VALID_CURRENCIES = ('USD', 'ILS', 'JOD', 'EUR', 'GBP', 'SAR', 'AED', 'TRY', 'SYP
 VALID_DIRS       = ('mul', 'div')
 
 
+def _norm_dir(v):
+    """تطبيع اتجاه القص — يقبل multiply/divide و mul/div و ضرب/قسمة."""
+    s = (v or 'mul').strip().lower()
+    if s in ('mul', 'multiply', 'x', '*', 'ضرب'):
+        return 'mul'
+    if s in ('div', 'divide', '/', 'قسمة'):
+        return 'div'
+    return s  # يبقى كما هو ليُرفض إن كان غير معروف
+
+
 def _dec(v, d='0') -> Decimal:
     try:
         return Decimal(str(v if v is not None else d))
@@ -140,7 +150,7 @@ def api_am_entry_from_to(request):
         from_notes   = (data.get('fromNotes')       or '').strip()
 
         cut_rate     = _dec(data.get('cutRate', 1))
-        cut_dir      = (data.get('cutDir') or 'mul').strip()
+        cut_dir      = _norm_dir(data.get('cutDir'))
 
         to_center    = (data.get('toCenter')   or '').strip()
         to_cur       = (data.get('toCurrency') or 'USD').upper().strip()

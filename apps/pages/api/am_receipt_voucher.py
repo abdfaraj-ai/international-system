@@ -17,6 +17,16 @@ from django.utils import timezone
 from ..models import ReceiptVoucher
 from core.permissions import require_roles as _require_roles, caller_name as _caller
 
+
+def _norm_dir(v):
+    s = (v or 'mul').strip().lower()
+    if s in ('mul', 'multiply', 'x', '*'):
+        return 'mul'
+    if s in ('div', 'divide', '/'):
+        return 'div'
+    return s
+
+
 VALID_CURRENCIES = ('USD', 'ILS', 'JOD', 'EUR', 'GBP', 'SAR', 'AED', 'TRY', 'SYP', 'EGP')
 VALID_CUT_DIR    = ('mul', 'div')
 
@@ -119,7 +129,7 @@ def api_am_receipt_voucher(request):
         from_notes    = (data.get('fromNotes')    or '').strip()
 
         cut_rate = _dec(data.get('cutRate', 1))
-        cut_dir  = (data.get('cutDir') or 'mul').strip()
+        cut_dir  = _norm_dir(data.get('cutDir'))
 
         to_center   = (data.get('toCenter')   or '').strip()
         to_currency = (data.get('toCurrency') or 'USD').upper().strip()

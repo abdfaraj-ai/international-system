@@ -24,6 +24,16 @@ VALID_DIRS       = ('mul', 'div')
 VALID_TYPES      = ('client', 'agent', 'branch', 'treasury', 'other')
 
 
+def _norm_dir(v):
+    """تطبيع اتجاه القص — يقبل multiply/divide و mul/div و ضرب/قسمة."""
+    s = (v or 'mul').strip().lower()
+    if s in ('mul', 'multiply', 'x', '*', 'ضرب'):
+        return 'mul'
+    if s in ('div', 'divide', '/', 'قسمة'):
+        return 'div'
+    return s
+
+
 def _dec(v, d='0') -> Decimal:
     try:
         return Decimal(str(v if v is not None else d))
@@ -259,7 +269,7 @@ def api_am_journal(request):
         from_cur  = (data.get('fromCurrency') or 'USD').upper().strip()
         to_cur    = (data.get('toCurrency')   or 'USD').upper().strip()
         cut_rate  = _dec(data.get('cutRate', 1))
-        cut_dir   = (data.get('cutDir') or 'mul').strip()
+        cut_dir   = _norm_dir(data.get('cutDir'))
         notes     = (data.get('notes') or '').strip()
 
         errors = []
