@@ -1218,7 +1218,7 @@
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0;display:flex;align-items:center;gap:3px;justify-content:flex-end">المبلغ <span style="color:#DC2626;font-size:13px">⇌</span></label>
                 <div style="flex:1;min-width:0">
-                  <input type="number" id="ef-from-amount" step="0.01" placeholder="0.00" style="width:100%;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <input type="number" id="ef-from-amount" step="0.01" placeholder="0.00" oninput="efCalc()" style="width:100%;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <div style="background:#FFE600;height:3px;border-radius:2px;margin-top:3px"></div>
                 </div>
               </div>
@@ -1241,8 +1241,8 @@
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0">القص</label>
                 <div style="display:flex;gap:5px;flex:1;min-width:0">
-                  <input type="number" id="ef-from-cut-val" value="1" style="width:56px;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff;flex-shrink:0">
-                  <select id="ef-from-cut-type" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <input type="number" id="ef-from-cut-val" value="1" oninput="efCalc()" style="width:56px;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff;flex-shrink:0">
+                  <select id="ef-from-cut-type" onchange="efCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="multiply">ضرب</option>
                     <option value="divide">قسمة</option>
                   </select>
@@ -1280,7 +1280,7 @@
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0;display:flex;align-items:center;gap:3px;justify-content:flex-end">المبلغ <span style="color:#DC2626;font-size:13px">⇌</span></label>
                 <div style="flex:1;min-width:0">
-                  <input type="number" id="ef-to-amount" step="0.01" placeholder="0.00" style="width:100%;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <input type="number" id="ef-to-amount" step="0.01" placeholder="محسوب تلقائياً" oninput="this.dataset.manual = this.value ? '1' : ''; if(!this.value) efCalc();" style="width:100%;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <div style="background:#FFE600;height:3px;border-radius:2px;margin-top:3px"></div>
                 </div>
               </div>
@@ -5990,5 +5990,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
-<script src="{% static 'js/accounting_launcher.js' %}?v=8"></script>
+<script src="{% static 'js/accounting_launcher.js' %}?v=9"></script>
 {% endblock %}

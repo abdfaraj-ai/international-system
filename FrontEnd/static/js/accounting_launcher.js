@@ -986,6 +986,27 @@ async function efDelete(id, ref) {
   } catch { alToast('خطأ في الاتصال','error','❌'); }
 }
 
+// ══ قيد من-الى: حساب المبلغ المستلم تلقائياً ══
+/* عند إدخال المبلغ المرسل + القص، يُحسب المبلغ المستلم ويظهر فوراً */
+function efCalc() {
+  const fromAmt = parseFloat(document.getElementById('ef-from-amount')?.value) || 0;
+  const cutVal  = parseFloat(document.getElementById('ef-from-cut-val')?.value) || 1;
+  const cutType = document.getElementById('ef-from-cut-type')?.value || 'multiply';
+
+  const toEl = document.getElementById('ef-to-amount');
+  if (!toEl) return;
+
+  // إذا عدّل المستخدم المبلغ المستلم يدوياً، لا نكتب فوقه
+  if (toEl.dataset.manual === '1') return;
+
+  // المبلغ المستلم = القسمة أو الضرب حسب اتجاه القص
+  let toAmt = cutType === 'divide'
+    ? (cutVal ? fromAmt / cutVal : 0)
+    : fromAmt * cutVal;
+
+  toEl.value = toAmt > 0 ? toAmt.toFixed(4).replace(/\.?0+$/, '') : '';
+}
+
 // ══ قيد متقدم ══
 let _aeAll = [], _aeFiltered = [], _aeSortCol = 'refNumber', _aeSortAsc = false, _aePage = 1;
 
