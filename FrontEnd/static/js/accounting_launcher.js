@@ -720,12 +720,25 @@ async function spSave() {
       headers:{'Content-Type':'application/json','X-CSRFToken':_getCsrf()},
       body: JSON.stringify(body),
     });
-    const d = await r.json();
+    // اقرأ النص أولاً لكشف أي خطأ غير JSON (صفحة خطأ HTML مثلاً)
+    const raw = await r.text();
+    let d;
+    try { d = JSON.parse(raw); }
+    catch {
+      alToast(`خطأ ${r.status}: ${raw.slice(0,120)}`,'error','❌');
+      console.error('Branch save — non-JSON response:', r.status, raw.slice(0,500));
+      return;
+    }
     if (d.success) {
       alToast(id ? 'تم التحديث بنجاح' : 'تمت الإضافة بنجاح','success','✅');
       spCloseModal(); spLoadSafes();
-    } else alToast(d.error||'حدث خطأ','error','❌');
-  } catch { alToast('خطأ في الاتصال','error','❌'); }
+    } else {
+      alToast(d.error || d.message || `خطأ ${r.status}`,'error','❌');
+    }
+  } catch (e) {
+    alToast('تعذر الوصول للسيرفر: ' + e.message,'error','❌');
+    console.error('Branch save fetch error:', e);
+  }
 }
 
 async function spDelete(id, name) {
