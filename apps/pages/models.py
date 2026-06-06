@@ -30,12 +30,25 @@ ROLE_HOME = {
 }
 
 
+EMPLOYEE_TYPE_CHOICES = [
+    ('general',    'موظف عادي'),
+    ('accountant', 'محاسب'),
+]
+
+
 class SystemUser(AbstractUser):
     role = models.CharField(
         max_length=4,
         choices=ROLE_CHOICES,
         default='T01',
         verbose_name='الصلاحية',
+    )
+    # نوع الموظف — يُستخدم فقط مع دور E01 للتمييز بين الموظف العادي والمحاسب
+    employee_type = models.CharField(
+        max_length=12,
+        choices=EMPLOYEE_TYPE_CHOICES,
+        default='general',
+        verbose_name='نوع الموظف',
     )
     totp_secret  = models.CharField(max_length=64, blank=True, verbose_name='مفتاح 2FA')
     totp_enabled = models.BooleanField(default=False, verbose_name='2FA مفعّل')
@@ -46,7 +59,14 @@ class SystemUser(AbstractUser):
 
     @property
     def home_page(self):
+        # المحاسب (E01 + accountant) يذهب لصفحة المحاسب
+        if self.role == 'E01' and self.employee_type == 'accountant':
+            return '/accountant-report/'
         return ROLE_HOME.get(self.role, '/login/')
+
+    @property
+    def is_accountant(self):
+        return self.role == 'E01' and self.employee_type == 'accountant'
 
     @property
     def role_name(self):
@@ -1420,6 +1440,84 @@ class DailyReportAttachment(models.Model):
     class Meta:
         verbose_name        = 'مرفق تقرير'
         verbose_name_plural = 'مرفقات التقارير'
+
+    def __str__(self):
+        return self.name or self.file.name
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  AccountantReport — التقرير اليومي للمحاسب (E01 + accountant)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class AccountantReport(models.Model):
+    STATUS_CHOICES = [
+        ('pending',  'قيد المراجعة'),
+        ('reviewed', 'تمت المراجعة'),
+        ('rejected', 'مرفوض'),
+    ]
+
+    accountant  = models.ForeignKey('SystemUser', on_delete=models.CASCADE,
+                                    related_name='accountant_reports', verbose_name='المحاسب')
+    date        = models.DateField(default=timezone.now, verbose_name='تاريخ التقرير')
+    notes       = models.TextField(blank=True, verbose_name='ملاحظات')
+    status      = models.CharField(max_length=10, choices=STATUS_CHOICES,
+                                   default='pending', verbose_name='الحالة')
+    manager_note = models.TextField(blank=True, verbose_name='ملاحظة المدير')
+    created_at  = models.DateTimeField(default=timezone.now, verbose_name='وقت الإرسال')
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name='وقت المراجعة')
+    reviewed_by = models.ForeignKey('SystemUser', on_delete=models.SET_NULL,
+                                    null=True, blank=True, related_name='reviewed_acc_reports',
+                                    verbose_name='راجعه')
+
+    class Meta:
+        verbose_name        = 'تقرير محاسب'
+        verbose_name_plural = 'تقارير المحاسبين'
+        ordering            = ['-created_at']
+        unique_together     = [('accountant', 'date')]
+
+    def __str__(self):
+        return f'{self.accountant.get_full_name() or self.accountant.username} — {self.date}'
+
+
+class SettlementGroup(models.Model):
+    """مجموعة إرسال داخل تقرير المحاسب (اسم المجموعة · الدولة · عدد الحركات)"""
+    report      = models.ForeignKey('AccountantReport', on_delete=models.CASCADE,
+                                    related_name='groups', verbose_name='التقرير')
+    name        = models.CharField(max_length=120, verbose_name='اسم المجموعة')
+    country     = models.CharField(max_length=80, blank=True, verbose_name='الدولة')
+    movements   = models.PositiveIntegerField(default=0, verbose_name='عدد الحركات')
+    day_date    = models.DateField(default=timezone.now, verbose_name='تاريخ اليوم')
+
+    class Meta:
+        verbose_name        = 'مجموعة إرسال'
+        verbose_name_plural = 'مجموعات الإرسال'
+        ordering            = ['id']
+
+    def __str__(self):
+        return f'{self.name} ({self.country})'
+
+
+def _acc_report_upload_path(instance, filename):
+    return f'accountant_reports/{instance.report.accountant_id}/{instance.report.date}/{filename}'
+
+
+class AccountantReportAttachment(models.Model):
+    KIND_CHOICES = [
+        ('images', 'صورة'),
+        ('videos', 'فيديو'),
+        ('files',  'ملف'),
+    ]
+    report     = models.ForeignKey('AccountantReport', on_delete=models.CASCADE,
+                                   related_name='attachments', verbose_name='التقرير')
+    file       = models.FileField(upload_to=_acc_report_upload_path, verbose_name='الملف')
+    kind       = models.CharField(max_length=10, choices=KIND_CHOICES, default='files', verbose_name='النوع')
+    name       = models.CharField(max_length=255, blank=True, verbose_name='اسم الملف')
+    size       = models.PositiveIntegerField(default=0, verbose_name='الحجم')
+    uploaded_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name        = 'مرفق تقرير محاسب'
+        verbose_name_plural = 'مرفقات تقارير المحاسبين'
 
     def __str__(self):
         return self.name or self.file.name

@@ -1,0 +1,433 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}تقرير المحاسب — نظام انترناشونال{% endblock %}
+
+{% block theme_init %}
+<script>
+  (function() {
+    document.documentElement.classList.add('theme-initializing');
+    document.documentElement.setAttribute('data-theme', 'corporate');
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.remove('theme-initializing');
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+<style>
+html {
+  background: linear-gradient(175deg, #03040ed1 0%, #255cdb 100%) !important;
+  background-attachment: fixed !important; min-height: 100%;
+}
+body { color: #1e293b; min-height: 100vh; }
+
+.ar-wrap { max-width: 980px; margin: 28px auto; padding: 0 20px; display: grid; gap: 24px; }
+
+/* Hero */
+.ar-hero {
+  background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 55%, #1e40af 100%);
+  border-radius: 18px; padding: 26px 30px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px; box-shadow: 0 10px 40px rgba(37,99,235,0.35);
+}
+.ar-hero-txt { text-align: right; }
+.ar-hero-txt h2 { color: #fff !important; font-size: 1.45rem; font-weight: 800; margin: 0 0 6px; }
+.ar-hero-txt p  { color: rgba(255,255,255,0.85) !important; font-size: 0.9rem; margin: 0; }
+.ar-hero-icon {
+  width: 58px; height: 58px; border-radius: 14px; background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center; font-size: 1.7rem; flex-shrink: 0;
+}
+
+/* Panels */
+.ar-panel {
+  background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px;
+  padding: 28px 30px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.ar-field { margin-bottom: 24px; }
+.ar-label { display: flex; align-items: center; gap: 6px; color: #1d4ed8; font-weight: 800; font-size: 0.92rem; margin-bottom: 10px; }
+.ar-textarea {
+  width: 100%; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px;
+  color: #1e293b; font-family: 'Cairo', sans-serif; font-size: 0.92rem; padding: 16px 18px;
+  outline: none; resize: none; text-align: right; min-height: 100px;
+}
+.ar-textarea:focus { border-color: #3b82f6; background: #fff; }
+.ar-hint { display: flex; align-items: center; gap: 5px; color: #2563eb; font-size: 0.78rem; margin-top: 6px; }
+
+/* Groups section */
+.ar-groups-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ar-groups-title { display: flex; align-items: center; gap: 8px; color: #1d4ed8; font-weight: 800; }
+.ar-groups-title .cnt { background: rgba(37,99,235,0.1); color: #2563eb; padding: 3px 12px; border-radius: 20px; font-size: 0.76rem; }
+.ar-groups-actions { display: flex; gap: 8px; }
+.ar-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 10px;
+  font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+}
+.ar-btn.add { background: #2563eb; color: #fff; border: 1px solid #1d4ed8; }
+.ar-btn.add:hover { background: #1d4ed8; }
+.ar-btn.del { background: rgba(239,68,68,0.12); color: #000; border: 1px solid #ef4444; }
+.ar-btn.del:hover { background: rgba(239,68,68,0.25); }
+
+.ar-gtable { width: 100%; border-collapse: collapse; }
+.ar-gtable thead th { text-align: right; color: #64748b; font-size: 0.78rem; font-weight: 700; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+.ar-gtable tbody td { padding: 12px; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem; }
+.ar-gtable input {
+  width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 8px 10px; color: #1e293b; font-family: 'Cairo', sans-serif; font-size: 0.82rem; outline: none; text-align: right;
+}
+.ar-gtable input:focus { border-color: #3b82f6; background: #fff; }
+.ar-row-del { width: 34px; height: 34px; border-radius: 8px; border: none; background: rgba(239,68,68,0.12); color: #ef4444; cursor: pointer; }
+.ar-row-del:hover { background: rgba(239,68,68,0.25); }
+.ar-empty-groups { text-align: center; color: #94a3b8; padding: 30px; }
+
+/* Upload tabs */
+.ar-up-label { display: flex; align-items: center; gap: 6px; color: #1d4ed8; font-weight: 800; font-size: 0.92rem; margin-bottom: 12px; }
+.ar-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.ar-tab {
+  display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px;
+  border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.88rem;
+  border: 2px solid #e2e8f0; background: #f8fafc; color: #475569; transition: all 0.2s;
+}
+.ar-tab.active { border-color: #2563eb; background: rgba(37,99,235,0.06); color: #2563eb; }
+.ar-tab .ic { width: 32px; height: 32px; border-radius: 9px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; }
+.ar-drop {
+  border: 2px dashed #cbd5e1; border-radius: 14px; padding: 32px 20px; text-align: center;
+  cursor: pointer; background: #f8fafc; transition: all 0.2s;
+}
+.ar-drop:hover { border-color: #2563eb; }
+.ar-files { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+.ar-file { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+.ar-file .nm { flex: 1; min-width: 0; font-weight: 700; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ar-file .x { color: #94a3b8; cursor: pointer; }
+
+/* Actions */
+.ar-actions { display: flex; align-items: center; justify-content: space-between; padding-top: 22px; border-top: 1px solid #e2e8f0; gap: 12px; flex-wrap: wrap; }
+.ar-actions-left { display: flex; gap: 10px; }
+.ar-abtn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; border: 1px solid #e2e8f0; background: #f1f5f9; color: #475569; transition: all 0.2s; }
+.ar-abtn.primary { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; border: none; padding: 13px 28px; }
+.ar-abtn.danger { background: rgba(239,68,68,0.15); color: #000; border: 1px solid #ef4444; }
+.ar-abtn.download { background: #2563eb; color: #fff; border: 1px solid #1d4ed8; }
+.ar-abtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Reports table */
+.ar-rtable { width: 100%; border-collapse: collapse; }
+.ar-rtable thead th { text-align: right; color: #64748b; font-size: 0.78rem; font-weight: 700; padding: 12px 14px; border-bottom: 1px solid #e2e8f0; }
+.ar-rtable tbody td { padding: 14px; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem; }
+.ar-status { padding: 4px 12px; border-radius: 20px; font-size: 0.74rem; font-weight: 700; }
+.ar-status.pending { background: rgba(251,191,36,0.15); color: #d97706; }
+.ar-status.reviewed { background: rgba(34,197,94,0.15); color: #16a34a; }
+.ar-status.rejected { background: rgba(239,68,68,0.15); color: #dc2626; }
+.ar-empty-row { text-align: center; color: #94a3b8; padding: 40px; }
+
+/* Toast */
+.ar-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 24px; color: #f1f5f9; font-weight: 700; z-index: 9999; transition: transform 0.3s; }
+.ar-toast.show { transform: translateX(-50%) translateY(0); }
+.particles-canvas { display: none !important; }
+
+@media (max-width: 640px) { .ar-tabs, .ar-files { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<canvas class="particles-canvas" id="particles"></canvas>
+
+<header class="header">
+    <div class="header-right">
+        <img src="{% static 'images/الشعار-01.png' %}" alt="شعار" class="header-logo">
+        <div>
+            <div class="h-title">نظام انترناشونال الموحد</div>
+            <div class="h-sub"><span class="status-dot"></span> صفحة التقرير اليومي للمحاسب</div>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+        <span class="h-badge">🧮 محاسب</span>
+    </div>
+    {% include 'layout/navbar.html' %}
+</header>
+
+<div class="ar-wrap">
+
+  <!-- Hero -->
+  <div class="ar-hero">
+    <div class="ar-hero-txt">
+      <h2>التقرير اليومي</h2>
+      <p>قم بتعبئة المطلوب ومن ثم قم بحفظ المطلوب ومن ثم إرسال التقرير</p>
+    </div>
+    <div class="ar-hero-icon">📋</div>
+  </div>
+
+  <!-- Form -->
+  <div class="ar-panel">
+
+    <!-- ملاحظات -->
+    <div class="ar-field">
+      <div class="ar-label">ملاحظات</div>
+      <textarea class="ar-textarea" id="notes" maxlength="2000"
+        placeholder="أكتب ملاحظاتك بالتفصيل في هذه الخانة..."></textarea>
+      <div class="ar-hint">ⓘ أكتب ملاحظاتك بالكامل في هذه الخانة</div>
+    </div>
+
+    <!-- مجموعات الإرسال -->
+    <div class="ar-groups-head">
+      <div class="ar-groups-title">🧾 مجموعات الإرسال <span class="cnt" id="grpCount">0 مجموعة</span></div>
+      <div class="ar-groups-actions">
+        <button class="ar-btn add" onclick="addGroup()">＋ إضافة مجموعة</button>
+        <button class="ar-btn del" onclick="clearGroups()">✕ حذف الكل</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="ar-gtable">
+        <thead>
+          <tr>
+            <th>اسم المجموعة</th>
+            <th>الدولة</th>
+            <th>عدد الحركات</th>
+            <th>تاريخ اليوم</th>
+            <th>حذف</th>
+          </tr>
+        </thead>
+        <tbody id="groupsBody">
+          <tr><td colspan="5" class="ar-empty-groups">لا توجد مجموعات — اضغط "إضافة مجموعة"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Upload + actions -->
+  <div class="ar-panel">
+    <div class="ar-up-label">⬆ أختر طريقة لرفع الملفات</div>
+    <div class="ar-tabs">
+      <div class="ar-tab active" data-type="images" onclick="setUploadType(this)"><span class="ic">🖼️</span> صور</div>
+      <div class="ar-tab" data-type="files" onclick="setUploadType(this)"><span class="ic">📎</span> ملفات</div>
+      <div class="ar-tab" data-type="videos" onclick="setUploadType(this)"><span class="ic">🎥</span> فيديوهات</div>
+    </div>
+    <div class="ar-drop" onclick="openPicker()">
+      <div style="font-size:1.5rem">☁️</div>
+      <div id="dropMain" style="font-weight:700;margin-top:8px">اسحب وأفلت الصور هنا</div>
+      <div style="color:#94a3b8;font-size:0.8rem;margin-top:4px">أو اضغط للتصفّح</div>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+    <div class="ar-files" id="fileList"></div>
+
+    <div class="ar-actions" style="margin-top:24px">
+      <button class="ar-abtn primary" id="submitBtn" onclick="submitReport()">أرسل التقرير ←</button>
+      <div class="ar-actions-left">
+        <button class="ar-abtn danger" onclick="clearAll()">✕ حذف المحتوى</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- سجل التقارير -->
+  <div class="ar-panel">
+    <div class="ar-groups-title" style="margin-bottom:16px">📁 سجل التقارير <span class="cnt" id="repCount">0 تقارير</span></div>
+    <div style="overflow-x:auto">
+      <table class="ar-rtable">
+        <thead>
+          <tr>
+            <th>المحاسب</th>
+            <th>تاريخ التقرير</th>
+            <th>المجموعات</th>
+            <th>الحالة</th>
+            <th>ملاحظة المدير</th>
+            <th>تنزيل</th>
+          </tr>
+        </thead>
+        <tbody id="reportsBody">
+          <tr><td colspan="6" class="ar-empty-row">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="ar-toast" id="toast"></div>
+
+<script>
+let uploadedFiles = [];
+let currentType = 'images';
+
+const TYPES = {
+  images: { accept: 'image/*', main: 'اسحب وأفلت الصور هنا', test: f => f.type.startsWith('image/') },
+  videos: { accept: 'video/*', main: 'اسحب وأفلت الفيديوهات هنا', test: f => f.type.startsWith('video/') },
+  files:  { accept: '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.ppt,.pptx', main: 'اسحب وأفلت الملفات هنا',
+            test: f => ['pdf','doc','docx','xls','xlsx','csv','txt','ppt','pptx'].includes((f.name.split('.').pop()||'').toLowerCase()) },
+};
+
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+
+// ── مجموعات الإرسال ──
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+function addGroup() {
+  const body = document.getElementById('groupsBody');
+  if (body.querySelector('.ar-empty-groups')) body.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="g-name" placeholder="اسم المجموعة"></td>
+    <td><input type="text" class="g-country" placeholder="الدولة"></td>
+    <td><input type="number" class="g-mov" min="0" placeholder="0"></td>
+    <td><input type="date" class="g-date" value="${todayStr()}"></td>
+    <td><button class="ar-row-del" onclick="this.closest('tr').remove();updateGrpCount()">✕</button></td>`;
+  body.appendChild(tr);
+  updateGrpCount();
+}
+
+function clearGroups() {
+  document.getElementById('groupsBody').innerHTML = '<tr><td colspan="5" class="ar-empty-groups">لا توجد مجموعات — اضغط "إضافة مجموعة"</td></tr>';
+  updateGrpCount();
+}
+
+function updateGrpCount() {
+  const n = document.querySelectorAll('#groupsBody tr .g-name').length;
+  document.getElementById('grpCount').textContent = n + ' مجموعة';
+}
+
+function collectGroups() {
+  const rows = document.querySelectorAll('#groupsBody tr');
+  const out = [];
+  rows.forEach(r => {
+    const name = r.querySelector('.g-name'); if (!name) return;
+    const v = name.value.trim(); if (!v) return;
+    out.push({
+      name: v,
+      country: r.querySelector('.g-country').value.trim(),
+      movements: parseInt(r.querySelector('.g-mov').value || '0', 10),
+      dayDate: r.querySelector('.g-date').value || todayStr(),
+    });
+  });
+  return out;
+}
+
+// ── الملفات ──
+function setUploadType(tab) {
+  document.querySelectorAll('.ar-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentType = tab.dataset.type;
+  document.getElementById('fileInput').setAttribute('accept', TYPES[currentType].accept);
+  document.getElementById('dropMain').textContent = TYPES[currentType].main;
+}
+function openPicker() { const i = document.getElementById('fileInput'); i.setAttribute('accept', TYPES[currentType].accept); i.click(); }
+function handleFiles(files) {
+  for (const f of files) {
+    if (f.size > 25*1024*1024) { showToast('❌ '+f.name+' أكبر من 25MB'); continue; }
+    if (!TYPES[currentType].test(f)) { showToast('❌ '+f.name+' نوع غير مطابق'); continue; }
+    uploadedFiles.push(f);
+  }
+  renderFiles();
+  document.getElementById('fileInput').value = '';
+}
+function renderFiles() {
+  document.getElementById('fileList').innerHTML = uploadedFiles.map((f,i)=>`
+    <div class="ar-file"><span>📄</span><div class="nm">${f.name}</div><div class="x" onclick="uploadedFiles.splice(${i},1);renderFiles()">✕</div></div>`).join('');
+}
+
+function clearAll() {
+  document.getElementById('notes').value = '';
+  clearGroups();
+  uploadedFiles = []; renderFiles();
+  showToast('🗑️ تم حذف المحتوى');
+}
+
+async function submitReport() {
+  const notes = document.getElementById('notes').value.trim();
+  const groups = collectGroups();
+  const btn = document.getElementById('submitBtn');
+
+  if (!notes && groups.length === 0) { showToast('❌ أضف مجموعات أو ملاحظات'); return; }
+
+  btn.disabled = true; btn.textContent = '⏳ جاري الإرسال...';
+  try {
+    const fd = new FormData();
+    fd.append('notes', notes);
+    fd.append('date', todayStr());
+    fd.append('groups', JSON.stringify(groups));
+    uploadedFiles.forEach(f => fd.append('attachments', f));
+    const res = await fetch('/api/accountant-report/submit/', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.success) { showToast('✅ تم إرسال التقرير'); clearAll(); loadReports(); }
+    else showToast('❌ ' + (data.error || 'حدث خطأ'));
+  } catch { showToast('❌ تعذر الاتصال بالسيرفر'); }
+  finally { btn.disabled = false; btn.textContent = 'أرسل التقرير ←'; }
+}
+
+async function loadReports() {
+  try {
+    const res = await fetch('/api/accountant-report/my/');
+    const data = await res.json();
+    const body = document.getElementById('reportsBody');
+    const reports = data.reports || [];
+    window._accReports = reports;
+    document.getElementById('repCount').textContent = reports.length + ' تقارير';
+    if (reports.length === 0) { body.innerHTML = '<tr><td colspan="6" class="ar-empty-row">📭 لا توجد تقارير خلال آخر أسبوع</td></tr>'; return; }
+    body.innerHTML = reports.map((r,idx) => {
+      const grpCount = (r.groups||[]).length;
+      return `
+        <tr>
+          <td><strong>${r.accountant}</strong><div style="color:#94a3b8;font-size:0.74rem">محاسب</div></td>
+          <td>${r.date}<div style="color:#94a3b8;font-size:0.74rem">${r.createdAt}</div></td>
+          <td>${grpCount} مجموعة</td>
+          <td><span class="ar-status ${r.status}">${r.statusLabel}</span></td>
+          <td>${r.managerNote || '—'}</td>
+          <td><button class="ar-abtn download" style="padding:7px 14px;font-size:0.78rem" onclick="downloadPdf(${idx})">⬇ PDF</button></td>
+        </tr>`;
+    }).join('');
+  } catch {
+    document.getElementById('reportsBody').innerHTML = '<tr><td colspan="6" class="ar-empty-row">تعذر تحميل التقارير</td></tr>';
+  }
+}
+
+async function downloadPdf(idx) {
+  const r = (window._accReports || [])[idx]; if (!r) return;
+  showToast('⏳ جاري تجهيز PDF...');
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `position:fixed;left:-9999px;top:0;width:794px;padding:48px 56px;background:#fff;color:#1e293b;font-family:'Cairo',sans-serif;direction:rtl;text-align:right;`;
+  const grpRows = (r.groups||[]).map(g =>
+    `<tr><td style="padding:6px;border:1px solid #e2e8f0">${g.name}</td><td style="padding:6px;border:1px solid #e2e8f0">${g.country||'—'}</td><td style="padding:6px;border:1px solid #e2e8f0">${g.movements}</td><td style="padding:6px;border:1px solid #e2e8f0">${g.dayDate}</td></tr>`
+  ).join('') || '<tr><td colspan="4" style="padding:8px;text-align:center;color:#94a3b8">لا توجد مجموعات</td></tr>';
+  wrap.innerHTML = `
+    <div style="border-bottom:3px solid #1d4ed8;padding-bottom:18px;margin-bottom:24px">
+      <h1 style="margin:0;color:#1d4ed8;font-size:26px">تقرير المحاسب اليومي</h1>
+      <p style="margin:6px 0 0;color:#64748b;font-size:14px">نظام انترناشونال الموحد</p>
+    </div>
+    <table style="width:100%;margin-bottom:20px"><tr><td style="padding:6px 0;color:#64748b;width:120px">المحاسب:</td><td style="padding:6px 0;font-weight:700">${r.accountant}</td></tr>
+    <tr><td style="padding:6px 0;color:#64748b">التاريخ:</td><td style="padding:6px 0;font-weight:700">${r.date}</td></tr>
+    <tr><td style="padding:6px 0;color:#64748b">الحالة:</td><td style="padding:6px 0;font-weight:700">${r.statusLabel}</td></tr></table>
+    <h3 style="color:#1d4ed8;border-right:4px solid #1d4ed8;padding-right:10px">مجموعات الإرسال</h3>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px">
+      <thead><tr style="background:#f1f5f9"><th style="padding:8px;border:1px solid #e2e8f0">المجموعة</th><th style="padding:8px;border:1px solid #e2e8f0">الدولة</th><th style="padding:8px;border:1px solid #e2e8f0">الحركات</th><th style="padding:8px;border:1px solid #e2e8f0">التاريخ</th></tr></thead>
+      <tbody>${grpRows}</tbody>
+    </table>
+    ${r.notes ? `<h3 style="color:#1d4ed8;border-right:4px solid #1d4ed8;padding-right:10px">ملاحظات</h3><p style="line-height:1.8;font-size:13px;background:#f8fafc;padding:14px;border-radius:8px">${(r.notes||'').replace(/</g,'&lt;')}</p>` : ''}
+    ${r.managerNote ? `<div style="margin-top:20px;background:rgba(37,99,235,0.06);padding:14px;border-radius:8px;border-right:4px solid #2563eb"><strong style="color:#1d4ed8">ملاحظة المدير:</strong> ${(r.managerNote||'').replace(/</g,'&lt;')}</div>` : ''}`;
+  document.body.appendChild(wrap);
+  try {
+    const canvas = await html2canvas(wrap, { scale: 2, backgroundColor: '#fff' });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p','mm','a4');
+    const pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight();
+    const ih = (canvas.height * pw) / canvas.width;
+    const img = canvas.toDataURL('image/png');
+    let left = ih, pos = 0;
+    pdf.addImage(img,'PNG',0,pos,pw,ih); left -= ph;
+    while (left > 0) { pos = left - ih; pdf.addPage(); pdf.addImage(img,'PNG',0,pos,pw,ih); left -= ph; }
+    pdf.save(`تقرير-محاسب-${r.accountant}-${r.date}.pdf`);
+    showToast('✅ تم تنزيل التقرير');
+  } catch { showToast('❌ تعذر إنشاء الملف'); }
+  finally { document.body.removeChild(wrap); }
+}
+
+loadReports();
+
+// Navbar
+function logout() { window.location.href = '/logout/'; }
+function toggleUserDropdown(e) { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('open'); }
+document.addEventListener('click', () => { const d = document.getElementById('userDropdown'); if (d) d.classList.remove('open'); });
+function goToTasks() { window.location.href = '/tasks/my/'; }
+function open2FASettings() { showToast('المصادقة الثنائية — قريباً'); }
+function openVisualEditor() {}
+(function(){ function t(){ const now=new Date(); const c=document.getElementById('clock'), d=document.getElementById('dateDisplay'); if(c)c.textContent=now.toLocaleTimeString('ar-EG-u-nu-latn',{hour12:false}); if(d)d.textContent=now.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); } setInterval(t,1000); t(); })();
+fetch('/api/me/').then(r=>r.json()).then(u=>{ const name=u.name||u.username||'—'; ['userDisplayName','ud-menu-name'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name;}); ['userDisplayRole','ud-menu-role'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='محاسب';}); }).catch(()=>{});
+</script>
+{% endblock %}

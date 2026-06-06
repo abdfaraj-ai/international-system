@@ -18,6 +18,7 @@ from .api import tasks         as tasks_api
 from .api import admin_voice   as admin_voice_api
 from .api import attendance    as attendance_api
 from .api import daily_report   as daily_report_api
+from .api import accountant_report as accountant_report_api
 from .api import agent_portal  as agent_portal_api
 from .api import whatsapp      as wa_api
 from .api import voice_cmd     as voice_cmd_api
@@ -93,6 +94,13 @@ urlpatterns = [
     path('api/daily-report/all/',             daily_report_api.api_all_reports,    name='api-dr-all'),
     path('api/daily-report/stats/',           daily_report_api.api_reports_stats,  name='api-dr-stats'),
     path('api/daily-report/<int:report_id>/review/', daily_report_api.api_review_report, name='api-dr-review'),
+
+    # ── تقرير المحاسب (E01 + accountant) ─────────────────────────────────────
+    path('accountant-report/',         views.accountant_report_view,       name='accountant-report'),
+    path('api/accountant-report/submit/',         accountant_report_api.api_submit,  name='api-acc-submit'),
+    path('api/accountant-report/my/',             accountant_report_api.api_my,      name='api-acc-my'),
+    path('api/accountant-report/all/',            accountant_report_api.api_all,     name='api-acc-all'),
+    path('api/accountant-report/<int:report_id>/review/', accountant_report_api.api_review, name='api-acc-review'),
 
     # ── 2FA (Google Authenticator) ───────────────────────────────────────────
     path('api/2fa/setup/',             totp_api.api_2fa_setup,             name='api-2fa-setup'),

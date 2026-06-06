@@ -286,7 +286,19 @@ def dashboard_view(request):
 @ensure_csrf_cookie
 @_role_required('E01')
 def daily_report_view(request):
+    # المحاسب لا يرى صفحة الموظف العادي — يُحوّل لصفحته
+    if request.user.employee_type == 'accountant':
+        return redirect('/accountant-report/')
     return render(request, 'pages/daily_report.html')
+
+
+@ensure_csrf_cookie
+@_role_required('E01')
+def accountant_report_view(request):
+    # الموظف العادي لا يرى صفحة المحاسب — يُحوّل لصفحته
+    if request.user.employee_type != 'accountant':
+        return redirect('/daily-report/')
+    return render(request, 'pages/accountant_report.html')
 
 
 @ensure_csrf_cookie

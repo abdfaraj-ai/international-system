@@ -30,7 +30,8 @@ def _detect_kind(filename):
 def _require_e01(request):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'error': 'غير مصرح'}, status=401)
-    if request.user.role != 'E01':
+    # الموظف العادي فقط (E01 + general) — المحاسب له API منفصل
+    if request.user.role != 'E01' or request.user.employee_type == 'accountant':
         return JsonResponse({'success': False, 'error': 'صلاحيات غير كافية'}, status=403)
     return None
 
