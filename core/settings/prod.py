@@ -91,14 +91,18 @@ X_FRAME_OPTIONS                 = 'DENY'
 # Referrer — لا نكشف URL الداخلية لمواقع خارجية
 SECURE_REFERRER_POLICY          = 'strict-origin-when-cross-origin'
 
-# Session Cookie — لا يُرسَل إلا عبر HTTPS ولا يقرأه JS
-SESSION_COOKIE_SECURE           = True
+# Secure cookies — تتطلب HTTPS. على VPS قبل تفعيل SSL، اضبط HTTPS_ENABLED=false
+# لتعمل تجربة HTTP. بعد تركيب شهادة Let's Encrypt اجعلها true.
+_https = os.environ.get('HTTPS_ENABLED', 'true').lower() == 'true'
+
+# Session Cookie
+SESSION_COOKIE_SECURE           = _https
 SESSION_COOKIE_HTTPONLY         = True
 SESSION_COOKIE_SAMESITE         = 'Lax'
 SESSION_COOKIE_AGE              = 28800          # 8 ساعات
 
-# CSRF Cookie — لا يُرسَل إلا عبر HTTPS
-CSRF_COOKIE_SECURE              = True
+# CSRF Cookie
+CSRF_COOKIE_SECURE              = _https
 CSRF_COOKIE_HTTPONLY            = True
 
 # قبول Proxy Headers من Nginx فقط
