@@ -325,6 +325,13 @@ table.sp-table tbody tr:hover { background:#F8FAFC; }
 table.sp-table tbody td { padding:8px 14px; color:var(--al-text1); white-space:nowrap; }
 table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:700; }
 
+/* نصوص سجل القيود (ef-tbody) — بيضاء دائماً على الخلفية الداكنة */
+#ef-tbody td,
+#ef-tbody td.sp-num,
+#ef-tbody td span:not([style*="color"]) {
+  color:#ffffff !important;
+}
+
 /* شارة الحالة */
 .sp-badge {
   display:inline-flex; align-items:center; gap:4px;
