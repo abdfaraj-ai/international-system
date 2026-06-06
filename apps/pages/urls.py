@@ -91,6 +91,7 @@ urlpatterns = [
     path('api/daily-report/submit/',          daily_report_api.api_submit_report,  name='api-dr-submit'),
     path('api/daily-report/my/',              daily_report_api.api_my_reports,     name='api-dr-my'),
     path('api/daily-report/all/',             daily_report_api.api_all_reports,    name='api-dr-all'),
+    path('api/daily-report/stats/',           daily_report_api.api_reports_stats,  name='api-dr-stats'),
     path('api/daily-report/<int:report_id>/review/', daily_report_api.api_review_report, name='api-dr-review'),
 
     # ── 2FA (Google Authenticator) ───────────────────────────────────────────

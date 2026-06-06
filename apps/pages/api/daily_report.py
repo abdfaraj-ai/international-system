@@ -106,7 +106,7 @@ def api_submit_report(request):
     except ValueError:
         report_date = timezone.now().date()
 
-    # تحقق من عدم وجود تقرير لنفس اليوم
+    # تحقق مبكّر من عدم وجود تقرير لنفس اليوم (رسالة ودّية)
     if DailyReport.objects.filter(employee=request.user, date=report_date).exists():
         return JsonResponse({'success': False, 'error': f'لقد أرسلت تقريراً بالفعل لتاريخ {report_date}'})
 
@@ -122,18 +122,27 @@ def api_submit_report(request):
 
     # ── حفظ ذرّي: التقرير + كل المرفقات معاً ──
     # نستخدم create() في حلقة (وليس bulk_create) لأن FileField
-    # يحتاج save() لكتابة الملف فعلياً في التخزين
-    with transaction.atomic():
-        report = DailyReport.objects.create(
-            employee=request.user,
-            date=report_date,
-            content=content,
-            notes=notes,
-        )
-        for f, kind in validated:
-            DailyReportAttachment.objects.create(
-                report=report, file=f, kind=kind, name=f.name, size=f.size,
+    # يحتاج save() لكتابة الملف فعلياً في التخزين.
+    # IntegrityError يحمي من race condition (طلبان متزامنان لنفس اليوم)
+    # بفضل قيد unique_together على (employee, date).
+    from django.db import IntegrityError
+    try:
+        with transaction.atomic():
+            report = DailyReport.objects.create(
+                employee=request.user,
+                date=report_date,
+                content=content,
+                notes=notes,
             )
+            for f, kind in validated:
+                DailyReportAttachment.objects.create(
+                    report=report, file=f, kind=kind, name=f.name, size=f.size,
+                )
+    except IntegrityError:
+        return JsonResponse(
+            {'success': False, 'error': f'لقد أرسلت تقريراً بالفعل لتاريخ {report_date}'},
+            status=409,
+        )
 
     # إشعار المدير عبر WebSocket
     try:
@@ -165,7 +174,11 @@ def api_my_reports(request):
     if err:
         return err
 
-    reports = DailyReport.objects.filter(employee=request.user).order_by('-date')[:30]
+    reports = (DailyReport.objects
+               .filter(employee=request.user)
+               .prefetch_related('attachments')
+               .select_related('reviewed_by')
+               .order_by('-date')[:30])
     return JsonResponse({'success': True, 'reports': [_report_to_dict(r) for r in reports]})
 
 
@@ -173,22 +186,93 @@ def api_my_reports(request):
 
 @require_http_methods(['GET'])
 def api_all_reports(request):
-    """GET /api/daily-report/all/ — كل التقارير (M01)"""
+    """GET /api/daily-report/all/ — كل التقارير (M01)
+       يدعم: ?status= &date= &q= (بحث) &employee= &page= &per_page="""
     err = _require_m01(request)
     if err:
         return err
 
-    status_filter = request.GET.get('status', '')
-    date_filter   = request.GET.get('date', '')
+    from django.db.models import Q
 
-    qs = DailyReport.objects.select_related('employee', 'reviewed_by').order_by('-created_at')
+    status_filter = request.GET.get('status', '').strip()
+    date_filter   = request.GET.get('date', '').strip()
+    search        = request.GET.get('q', '').strip()
+    employee_id   = request.GET.get('employee', '').strip()
+
+    qs = (DailyReport.objects
+          .select_related('employee', 'reviewed_by')
+          .prefetch_related('attachments')
+          .order_by('-created_at'))
 
     if status_filter:
         qs = qs.filter(status=status_filter)
     if date_filter:
         qs = qs.filter(date=date_filter)
+    if employee_id.isdigit():
+        qs = qs.filter(employee_id=int(employee_id))
+    if search:
+        qs = qs.filter(
+            Q(content__icontains=search) |
+            Q(notes__icontains=search) |
+            Q(employee__username__icontains=search) |
+            Q(employee__first_name__icontains=search) |
+            Q(employee__last_name__icontains=search)
+        )
 
-    return JsonResponse({'success': True, 'reports': [_report_to_dict(r) for r in qs[:100]]})
+    # ── ترقيم الصفحات ──
+    try:
+        page = max(1, int(request.GET.get('page', 1)))
+    except ValueError:
+        page = 1
+    try:
+        per_page = min(100, max(5, int(request.GET.get('per_page', 25))))
+    except ValueError:
+        per_page = 25
+
+    total       = qs.count()
+    total_pages = (total + per_page - 1) // per_page
+    start       = (page - 1) * per_page
+    page_items  = qs[start:start + per_page]
+
+    return JsonResponse({
+        'success':    True,
+        'reports':    [_report_to_dict(r) for r in page_items],
+        'pagination': {
+            'page':       page,
+            'perPage':    per_page,
+            'total':      total,
+            'totalPages': total_pages,
+        },
+    })
+
+
+# ── M01: إحصائيات التقارير ────────────────────────────────────────────────────
+
+@require_http_methods(['GET'])
+def api_reports_stats(request):
+    """GET /api/daily-report/stats/ — إحصائيات سريعة (M01)"""
+    err = _require_m01(request)
+    if err:
+        return err
+
+    from django.db.models import Count
+
+    today = timezone.now().date()
+    counts = dict(
+        DailyReport.objects.values_list('status').annotate(c=Count('id'))
+    )
+
+    return JsonResponse({
+        'success': True,
+        'stats': {
+            'total':    DailyReport.objects.count(),
+            'pending':  counts.get('pending', 0),
+            'reviewed': counts.get('reviewed', 0),
+            'rejected': counts.get('rejected', 0),
+            'today':    DailyReport.objects.filter(date=today).count(),
+            'employees': DailyReport.objects.values('employee').distinct().count(),
+        },
+    })
 
 
 # ── M01: مراجعة تقرير ─────────────────────────────────────────────────────────

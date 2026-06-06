@@ -99,6 +99,41 @@
   transition: transform 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 .dra-toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ══ شريط الإحصائيات ══ */
+.dra-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
+.dra-stat {
+  background: var(--bg-secondary, #1a2332); border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+  border-radius: 12px; padding: 16px; text-align: center;
+}
+.dra-stat .s-num { font-size: 1.6rem; font-weight: 800; color: #f1f5f9; }
+.dra-stat .s-lbl { font-size: 0.78rem; color: #94a3b8; margin-top: 4px; }
+.dra-stat.pending  .s-num { color: #fbbf24; }
+.dra-stat.reviewed .s-num { color: #22c55e; }
+.dra-stat.rejected .s-num { color: #f87171; }
+.dra-stat.today    .s-num { color: #60a5fa; }
+
+/* ══ البحث ══ */
+.dra-search-wrap { margin-bottom: 16px; }
+.dra-search {
+  width: 100%; padding: 12px 18px; border-radius: 10px;
+  background: var(--bg-secondary, #1a2332); border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  color: #f1f5f9; font-family: 'Cairo', sans-serif; font-size: 0.9rem; outline: none;
+}
+.dra-search:focus { border-color: #3b82f6; }
+
+/* ══ ترقيم الصفحات ══ */
+.dra-pagination { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 24px; }
+.dra-page-btn {
+  padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;
+  background: var(--bg-secondary, #1a2332); border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  color: #f1f5f9; font-family: 'Cairo', sans-serif; transition: all 0.2s;
+}
+.dra-page-btn:hover:not(:disabled) { background: #1d4ed8; border-color: #1d4ed8; }
+.dra-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.dra-page-info { color: #94a3b8; font-size: 0.85rem; }
+
+@media (max-width: 700px) { .dra-stats { grid-template-columns: repeat(2, 1fr); } }
 </style>
 {% endblock %}
 
@@ -113,6 +148,22 @@
       <a href="/dashboard/" style="color:#60a5fa;text-decoration:none;font-size:0.9rem">← العودة للوحة التحكم</a>
     </div>
 
+    <!-- ── شريط الإحصائيات ── -->
+    <div class="dra-stats" id="statsBar">
+      <div class="dra-stat"><div class="s-num" id="stTotal">—</div><div class="s-lbl">إجمالي التقارير</div></div>
+      <div class="dra-stat pending"><div class="s-num" id="stPending">—</div><div class="s-lbl">قيد المراجعة</div></div>
+      <div class="dra-stat reviewed"><div class="s-num" id="stReviewed">—</div><div class="s-lbl">تمت المراجعة</div></div>
+      <div class="dra-stat rejected"><div class="s-num" id="stRejected">—</div><div class="s-lbl">مرفوض</div></div>
+      <div class="dra-stat today"><div class="s-num" id="stToday">—</div><div class="s-lbl">تقارير اليوم</div></div>
+    </div>
+
+    <!-- ── البحث ── -->
+    <div class="dra-search-wrap">
+      <input type="text" class="dra-search" id="searchInput"
+             placeholder="🔍 ابحث في التقارير (الاسم، المحتوى، الملاحظات)..."
+             oninput="onSearch()">
+    </div>
+
     <div class="dra-filters">
       <button class="dra-filter-btn active" data-status="" onclick="setFilter(this,'')">الكل</button>
       <button class="dra-filter-btn" data-status="pending" onclick="setFilter(this,'pending')">قيد المراجعة</button>
@@ -122,6 +173,13 @@
 
     <div class="dra-grid" id="reportsGrid">
       <div class="dra-empty"><div class="icon">⏳</div><p>جاري التحميل...</p></div>
+    </div>
+
+    <!-- ── ترقيم الصفحات ── -->
+    <div class="dra-pagination" id="pagination" style="display:none">
+      <button class="dra-page-btn" id="prevBtn" onclick="changePage(-1)">‹ السابق</button>
+      <span class="dra-page-info" id="pageInfo">—</span>
+      <button class="dra-page-btn" id="nextBtn" onclick="changePage(1)">التالي ›</button>
     </div>
   </div>
 </div>
@@ -142,6 +200,10 @@
 
 <script>
 let currentFilter = '';
+let currentSearch = '';
+let currentPage   = 1;
+let totalPages    = 1;
+let searchTimer   = null;
 let pendingReview = { id: null, status: null };
 
 function showToast(msg) {
@@ -151,19 +213,72 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+// ── الإحصائيات ──
+async function loadStats() {
+  try {
+    const res  = await fetch('/api/daily-report/stats/');
+    const data = await res.json();
+    if (!data.success) return;
+    const s = data.stats;
+    document.getElementById('stTotal').textContent    = s.total;
+    document.getElementById('stPending').textContent  = s.pending;
+    document.getElementById('stReviewed').textContent = s.reviewed;
+    document.getElementById('stRejected').textContent = s.rejected;
+    document.getElementById('stToday').textContent    = s.today;
+  } catch {}
+}
+
+// ── البحث (مع تأخير لتقليل الطلبات) ──
+function onSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    currentSearch = document.getElementById('searchInput').value.trim();
+    currentPage = 1;
+    loadReports();
+  }, 350);
+}
+
+// ── ترقيم الصفحات ──
+function changePage(delta) {
+  const next = currentPage + delta;
+  if (next < 1 || next > totalPages) return;
+  currentPage = next;
+  loadReports();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function setFilter(btn, status) {
   document.querySelectorAll('.dra-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentFilter = status;
+  currentPage = 1;
   loadReports();
 }
 
 async function loadReports() {
-  const url = '/api/daily-report/all/' + (currentFilter ? `?status=${currentFilter}` : '');
+  const params = new URLSearchParams();
+  if (currentFilter) params.set('status', currentFilter);
+  if (currentSearch) params.set('q', currentSearch);
+  params.set('page', currentPage);
+  params.set('per_page', 25);
+
   try {
-    const res  = await fetch(url);
+    const res  = await fetch('/api/daily-report/all/?' + params.toString());
     const data = await res.json();
     const grid = document.getElementById('reportsGrid');
+
+    // تحديث الترقيم
+    const pg = data.pagination || { page: 1, totalPages: 1 };
+    totalPages = pg.totalPages || 1;
+    const pagEl = document.getElementById('pagination');
+    if (totalPages > 1) {
+      pagEl.style.display = 'flex';
+      document.getElementById('pageInfo').textContent = `صفحة ${pg.page} من ${totalPages} (${pg.total} تقرير)`;
+      document.getElementById('prevBtn').disabled = pg.page <= 1;
+      document.getElementById('nextBtn').disabled = pg.page >= totalPages;
+    } else {
+      pagEl.style.display = 'none';
+    }
 
     if (!data.reports || data.reports.length === 0) {
       grid.innerHTML = `<div class="dra-empty"><div class="icon">📭</div><p>لا توجد تقارير</p></div>`;
@@ -228,6 +343,7 @@ async function confirmReview() {
       showToast('✅ تم تحديث التقرير');
       closeModal();
       loadReports();
+      loadStats();
     } else {
       showToast('❌ ' + (data.error || 'حدث خطأ'));
     }
@@ -238,6 +354,7 @@ async function confirmReview() {
   }
 }
 
+loadStats();
 loadReports();
 </script>
 {% endblock %}
