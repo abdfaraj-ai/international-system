@@ -40,6 +40,7 @@ from .api import am_new_credit         as am_nc_api
 from .api import am_trial_balance      as am_tb_api
 from .api import am_center_profits     as am_cp_api
 from .api import am_cost_center        as am_cc_api
+from .api import am_customers           as am_cust_api
 from .api import am_cut_prices         as am_ctp_api
 from .api import am_cut_distribution   as am_cdist_api
 from .api import am_currencies         as am_currencies_api
@@ -492,6 +493,10 @@ urlpatterns = [
     path('api/cost-centers/<int:center_id>/restore/',       am_cc_api.api_cost_center_restore,           name='api-cost-center-restore'),
     path('api/cost-centers/<int:center_id>/force-delete/',  am_cc_api.api_cost_center_force_delete,      name='api-cost-center-force-delete'),
     path('api/am/cost-center/',                             am_cc_api.api_cost_centers,                  name='api-am-cost-center'),
+    path('api/customers/',                                  am_cust_api.api_customers,                   name='api-customers'),
+    path('api/customers/<int:customer_id>/',                am_cust_api.api_customer_detail,             name='api-customer-detail'),
+    path('api/customers/<int:customer_id>/restore/',        am_cust_api.api_customer_restore,            name='api-customer-restore'),
+    path('api/customers/<int:customer_id>/force-delete/',   am_cust_api.api_customer_force_delete,       name='api-customer-force-delete'),
     path('accounting/transfer-count/',                      views.am_transfer_count_view,               name='am-transfer-count'),
     path('accounting/entry-from-to/',                       views.am_entry_from_to_view,                name='am-entry-from-to'),
     path('api/attendance/sync/',                            attendance_api.api_attendance_sync,         name='api-attendance-sync'),

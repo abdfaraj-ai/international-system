@@ -2975,6 +2975,55 @@ class CostCenter(models.Model):
         }
 
 
+class Customer(models.Model):
+    """عميل / زبون — يُدار من صفحة الحسابات (نفس بنية مركز التكلفة)"""
+    TYPE_CHOICES   = [('main', 'رئيسي'), ('branch', 'فرعي'), ('client', 'عميل'), ('agent', 'وكيل')]
+    STATUS_CHOICES = [('active', 'نشط'), ('inactive', 'غير نشط')]
+
+    name       = models.CharField(max_length=200, verbose_name='الاسم')
+    type       = models.CharField(max_length=20, choices=TYPE_CHOICES, default='main')
+    status     = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    country    = models.CharField(max_length=100, blank=True, default='')
+    city       = models.CharField(max_length=100, blank=True, default='')
+    phone      = models.CharField(max_length=50, blank=True, default='')
+    doc_url    = models.URLField(blank=True, default='')
+    notes      = models.TextField(blank=True, default='')
+
+    dollar     = models.DecimalField(max_digits=18, decimal_places=4, default=0)
+    euro       = models.DecimalField(max_digits=18, decimal_places=4, default=0)
+    lira_tr    = models.DecimalField(max_digits=18, decimal_places=4, default=0)
+
+    lock       = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'عميل'
+
+    def __str__(self):
+        return self.name
+
+    def to_dict(self):
+        return {
+            'id':       self.id,
+            'name':     self.name,
+            'type':     self.type,
+            'status':   self.status,
+            'country':  self.country,
+            'city':     self.city,
+            'phone':    self.phone,
+            'doc_url':  self.doc_url,
+            'notes':    self.notes,
+            'dollar':   float(self.dollar),
+            'euro':     float(self.euro),
+            'lira_tr':  float(self.lira_tr),
+            'lock':     self.lock,
+            'is_deleted': self.is_deleted,
+        }
+
+
 class CutPrice(models.Model):
     """
     سعر القص — ثلاثة أنواع:
