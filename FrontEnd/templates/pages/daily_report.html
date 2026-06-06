@@ -18,10 +18,13 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 <style>
-/* ══ خلفية الصفحة: تدرّج داكن يملأ كامل الارتفاع ══════════════════════════════ */
-html { background: #03040e !important; }
-html, body { min-height: 100%; }
-body { color: #1e293b; }
+/* ══ خلفية الصفحة: تدرّج يملأ كامل الشاشة بدون أي شريط أسود ════════════════════ */
+html {
+  background: linear-gradient(175deg, #03040ed1 0%, #255cdb 100%) !important;
+  background-attachment: fixed !important;
+  min-height: 100%;
+}
+body { color: #1e293b; min-height: 100vh; }
 
 /* ══ Page background ══════════════════════════════════════════════════════════ */
 .dr-wrap { max-width: 980px; margin: 28px auto 28px; padding: 0 20px; display: grid; gap: 24px; }
