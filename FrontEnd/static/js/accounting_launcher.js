@@ -800,21 +800,28 @@ if (_spModalEl) {
 // ══ قيد من الى ══
 let _efAll = [], _efFiltered = [], _efSortCol = 'id', _efSortAsc = true, _efPage = 1;
 
+// خريطة: معرّف المركز → اسم الشركة (لترجمة القيود القديمة المخزّنة بالأرقام)
+let _efCenterMap = {};
+
 async function efLoadCenters() {
   try {
     const r = await fetch('/api/am/cost-center/', {credentials:'include'});
     const d = await r.json();
-    const list = Array.isArray(d) ? d : (d.results || d.centers || []);
+    const list = Array.isArray(d) ? d : (d.records || d.results || d.centers || []);
     const fromSel = document.getElementById('ef-from-center');
     const toSel   = document.getElementById('ef-to-center');
     const fromVal = fromSel.value;
     const toVal   = toSel.value;
+    _efCenterMap = {};
     [fromSel, toSel].forEach(sel => {
       sel.innerHTML = '<option value="">— اختر المركز —</option>';
       list.forEach(c => {
+        const cid  = c.id ?? c.name ?? c.center_name ?? '';
+        const cname = c.name ?? c.center_name ?? c.title ?? '';
+        if (cid !== '') _efCenterMap[String(cid)] = cname;
         const opt = document.createElement('option');
-        opt.value = c.id ?? c.name ?? c.center_name ?? '';
-        opt.textContent = c.name ?? c.center_name ?? c.title ?? '';
+        opt.value = cid;
+        opt.textContent = cname;
         sel.appendChild(opt);
       });
     });
@@ -823,8 +830,17 @@ async function efLoadCenters() {
   } catch { /* لا مشكلة — الـ dropdown تبقى فارغة */ }
 }
 
+// يُرجع اسم الشركة: إن كانت القيمة رقماً (id) يترجمها، وإلا يعيدها كما هي (اسم)
+function _efCenterName(v) {
+  if (v == null || v === '') return '—';
+  const s = String(v);
+  // إن كانت رقماً وموجودة في الخريطة → ترجمها لاسم
+  if (/^\d+$/.test(s) && _efCenterMap[s]) return _efCenterMap[s];
+  return s;  // أصلاً اسم
+}
+
 async function efLoad() {
-  efLoadCenters();
+  await efLoadCenters();   // ننتظر تحميل خريطة أسماء الشركات أولاً
   document.getElementById('ef-tbody').innerHTML =
     '<tr><td colspan="10" class="sp-empty"><div class="sp-spinner"></div></td></tr>';
   try {
@@ -868,10 +884,10 @@ function efRender(p) {
 
   tbody.innerHTML = slice.map((e,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
     <td class="sp-num" style="color:#fff;font-size:10.5px">${e.refNumber || e.id}</td>
-    <td style="font-weight:700;color:#fff">${e.fromCenter || '—'}</td>
+    <td style="font-weight:700;color:#fff">${_efCenterName(e.fromCenter)}</td>
     <td style="font-size:11px;color:#fff;font-weight:600">${e.fromCurrency||''} ${fmtNum(e.fromAmount)}</td>
     <td style="color:#fff;font-weight:600">${e.fromBeneficiary || '—'}</td>
-    <td style="font-weight:700;color:#fff">${e.toCenter || '—'}</td>
+    <td style="font-weight:700;color:#fff">${_efCenterName(e.toCenter)}</td>
     <td style="font-size:11px;color:#fff;font-weight:600">${e.toCurrency||''} ${fmtNum(e.toAmount)}</td>
     <td class="sp-num" style="color:#fff">${e.fromFee ? fmtNum(e.fromFee) : '—'}</td>
     <td class="sp-num" style="color:#fff">${e.toFee ? fmtNum(e.toFee) : '—'}</td>
