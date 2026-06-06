@@ -867,17 +867,17 @@ function efRender(p) {
     : '—';
 
   tbody.innerHTML = slice.map((e,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
-    <td class="sp-num" style="color:rgba(255,255,255,.7);font-size:10.5px">${e.refNumber || e.id}</td>
+    <td class="sp-num" style="color:#fff;font-size:10.5px">${e.refNumber || e.id}</td>
     <td style="font-weight:700;color:#fff">${e.fromCenter || '—'}</td>
-    <td style="font-size:11px;color:#4ADE80">${e.fromCurrency||''} ${fmtNum(e.fromAmount)}</td>
-    <td style="color:#fff">${e.fromBeneficiary || '—'}</td>
-    <td style="font-weight:700;color:#67E8F9">${e.toCenter || '—'}</td>
-    <td style="font-size:11px;color:#FCA5A5">${e.toCurrency||''} ${fmtNum(e.toAmount)}</td>
+    <td style="font-size:11px;color:#fff;font-weight:600">${e.fromCurrency||''} ${fmtNum(e.fromAmount)}</td>
+    <td style="color:#fff;font-weight:600">${e.fromBeneficiary || '—'}</td>
+    <td style="font-weight:700;color:#fff">${e.toCenter || '—'}</td>
+    <td style="font-size:11px;color:#fff;font-weight:600">${e.toCurrency||''} ${fmtNum(e.toAmount)}</td>
     <td class="sp-num" style="color:#fff">${e.fromFee ? fmtNum(e.fromFee) : '—'}</td>
     <td class="sp-num" style="color:#fff">${e.toFee ? fmtNum(e.toFee) : '—'}</td>
     <td class="sp-num">${fmtProfit(e.netProfit)}</td>
-    <td style="font-size:11px;color:rgba(255,255,255,.7)">${e.createdAt || '—'}</td>
-    <td style="font-size:11px;color:rgba(255,255,255,.7)">${e.fromNotes||e.toNotes||'—'}</td>
+    <td style="font-size:11px;color:#fff">${e.createdAt || '—'}</td>
+    <td style="font-size:11px;color:#fff">${e.fromNotes||e.toNotes||'—'}</td>
     <td>
       <button onclick="efDelete(${e.id},'${(e.refNumber||'').replace(/'/g,'')}')"
         style="padding:2px 8px;border:1px solid rgba(252,165,165,.3);background:rgba(252,165,165,.15);color:#FCA5A5;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit">حذف</button>
@@ -940,13 +940,16 @@ function efExportCSV() {
 }
 
 async function efSave() {
-  const fromCenter = document.getElementById('ef-from-center').value.trim();
-  const toCenter   = document.getElementById('ef-to-center').value.trim();
+  const fromSel = document.getElementById('ef-from-center');
+  const toSel   = document.getElementById('ef-to-center');
+  // نحفظ اسم الشركة (النص الظاهر) وليس المعرّف
+  const fromCenter = fromSel.options[fromSel.selectedIndex]?.text.trim() || fromSel.value.trim();
+  const toCenter   = toSel.options[toSel.selectedIndex]?.text.trim() || toSel.value.trim();
   const fromAmount = parseFloat(document.getElementById('ef-from-amount').value) || 0;
 
-  if (!fromCenter) { alToast('يرجى اختيار المركز المرسل','error','❌'); return; }
-  if (!toCenter)   { alToast('يرجى اختيار المركز المستلم','error','❌'); return; }
-  if (fromCenter === toCenter) { alToast('يجب أن يكون المركزان مختلفَين','error','❌'); return; }
+  if (!fromSel.value) { alToast('يرجى اختيار المركز المرسل','error','❌'); return; }
+  if (!toSel.value)   { alToast('يرجى اختيار المركز المستلم','error','❌'); return; }
+  if (fromSel.value === toSel.value) { alToast('يجب أن يكون المركزان مختلفَين','error','❌'); return; }
   if (fromAmount <= 0)         { alToast('يرجى إدخال مبلغ صحيح','error','❌'); return; }
 
   const body = {
