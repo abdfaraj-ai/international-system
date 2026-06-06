@@ -186,10 +186,6 @@ body { color: #1e293b; }
 }
 .dr-btn.danger:hover { background: rgba(239,68,68,0.28); }
 
-.dr-footnote {
-  text-align: center; color: var(--text-muted, #94a3b8); font-size: 0.8rem; margin-top: 14px;
-}
-.dr-footnote a { color: #2563eb; font-weight: 700; text-decoration: none; }
 
 /* ══ Reports table ════════════════════════════════════════════════════════════ */
 .dr-table-head {
@@ -265,15 +261,6 @@ body {
 .dr-table thead th { color: #64748b !important; border-bottom-color: #e2e8f0 !important; }
 .dr-table tbody td { color: #334155 !important; border-bottom-color: #f1f5f9 !important; }
 .dr-emp-name { color: #1e293b !important; }
-/* الفوتر: تدرّج داكن بين #334155 و #0f172a مع نص أبيض */
-.dr-footnote {
-  background: linear-gradient(160deg, #334155 0%, #0f172a 100%) !important;
-  color: #ffffff !important;
-  padding: 14px 20px !important;
-  border-radius: 12px !important;
-  margin-top: 18px !important;
-}
-.dr-footnote a { color: #93c5fd !important; }
 .particles-canvas { display: none !important; }
 </style>
 {% endblock %}
@@ -382,9 +369,6 @@ body {
         <button class="dr-btn danger" onclick="clearForm()">✕ حذف المحتوى</button>
         <button class="dr-btn download" onclick="downloadReport()">💾 تنزيل التقرير</button>
       </div>
-    </div>
-    <div class="dr-footnote">
-      ⓘ عندما تنتهي من التقرير ومن ثم رفعه يمكنك مشاهدة التقرير على سجل التقارير في الأسفل
     </div>
   </div>
 
