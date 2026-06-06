@@ -828,9 +828,9 @@ async function efLoad() {
   document.getElementById('ef-tbody').innerHTML =
     '<tr><td colspan="10" class="sp-empty"><div class="sp-spinner"></div></td></tr>';
   try {
-    const r = await fetch('/api/am/entry-from-to/', {credentials:'include'});
+    const r = await fetch('/api/am/entry-from-to/?per_page=200', {credentials:'include'});
     const d = await r.json();
-    const list = Array.isArray(d) ? d : (d.results || d.entries || []);
+    const list = Array.isArray(d) ? d : (d.records || d.results || d.entries || []);
     _efAll = list; _efFiltered = [..._efAll];
     document.getElementById('sp-count').textContent = `— ${_efAll.length} قيد`;
     efRender(1);
@@ -5127,7 +5127,7 @@ async function asLoadStatement() {
   try {
     const r = await fetch(`/api/account-statement/?${params}`, {credentials:'include'});
     const d = await r.json();
-    _asData = Array.isArray(d) ? d : (d.results || d.entries || d.data || []);
+    _asData = Array.isArray(d) ? d : (d.records || d.results || d.entries || d.data || []);
     asRenderTable();
   } catch {
     if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
@@ -5245,7 +5245,7 @@ async function enSearch() {
   try {
     const r = await fetch(`/api/all-entries/?${params}`, {credentials:'include'});
     const d = await r.json();
-    _enAll = Array.isArray(d) ? d : (d.results || d.entries || d.data || []);
+    _enAll = Array.isArray(d) ? d : (d.records || d.results || d.entries || d.data || []);
     _enFiltered = [..._enAll];
     enRender(1);
   } catch {
