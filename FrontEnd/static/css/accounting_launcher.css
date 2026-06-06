@@ -325,12 +325,21 @@ table.sp-table tbody tr:hover { background:#F8FAFC; }
 table.sp-table tbody td { padding:8px 14px; color:var(--al-text1); white-space:nowrap; }
 table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:700; }
 
-/* نصوص سجل القيود (ef-tbody) — بيضاء دائماً على الخلفية الداكنة */
+/* نصوص سجل القيود (ef-tbody) — بيضاء بارزة وواضحة على الخلفية الداكنة */
 #ef-tbody td,
 #ef-tbody td.sp-num,
 #ef-tbody td span:not([style*="color"]) {
   color:#ffffff !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  letter-spacing:.2px;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
 }
+/* صفوف أوضح بتباعد وارتفاع أكبر */
+#ef-tbody td { padding:11px 14px !important; }
+#ef-tbody tr { border-bottom:1px solid rgba(255,255,255,.12) !important; }
+/* أرقام القيد والمبالغ أبرز قليلاً */
+#ef-tbody td.sp-num { font-size:13.5px !important; font-weight:800 !important; }
 
 /* شارة الحالة */
 .sp-badge {
