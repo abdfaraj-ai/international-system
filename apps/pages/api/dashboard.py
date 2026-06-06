@@ -28,6 +28,7 @@ import logging
 from decimal import Decimal, InvalidOperation
 from django.http        import JsonResponse
 from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import csrf_exempt
 from django.utils       import timezone
 from django.db          import transaction
 from django.db.models   import Sum, Count, Q, F
@@ -167,6 +168,7 @@ def api_org_tree(request):
 # إدارة الفروع
 # ══════════════════════════════════════════════════════════════════════════════
 
+@csrf_exempt
 def api_branches(request):
     """
     GET  /api/branches  ← قائمة الفروع
@@ -218,6 +220,7 @@ def api_branches(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
+@csrf_exempt
 def api_branch_detail(request, branch_id):
     """
     PATCH  /api/branches/<id>  ← تعديل بيانات الفرع
@@ -276,6 +279,7 @@ def api_branch_detail(request, branch_id):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
+@csrf_exempt
 def api_branch_transfer(request):
     """
     POST /api/branches/transfer
@@ -397,6 +401,7 @@ def api_branch_transfers(request, branch_id):
 # إدارة المشرفين
 # ══════════════════════════════════════════════════════════════════════════════
 
+@csrf_exempt
 def api_supervisors(request):
     """
     GET  /api/supervisors         ← قائمة المشرفين
@@ -471,6 +476,7 @@ def api_supervisors(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
+@csrf_exempt
 def api_supervisor_detail(request, username):
     """
     PATCH  /api/supervisors/<username>  ← تعديل بيانات المشرف
@@ -529,6 +535,7 @@ def api_supervisor_detail(request, username):
 # إدارة المستخدمين (كل الأدوار)
 # ══════════════════════════════════════════════════════════════════════════════
 
+@csrf_exempt
 def api_users(request):
     """
     GET  /api/users         ← كل المستخدمين
@@ -619,6 +626,7 @@ def api_users(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
+@csrf_exempt
 def api_user_detail(request, username):
     """
     PATCH  /api/users/<username>  ← تعديل بيانات المستخدم
@@ -686,6 +694,7 @@ def api_user_detail(request, username):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
+@csrf_exempt
 def api_user_password(request, username):
     """POST /api/users/<username>/password ← تغيير كلمة المرور"""
     if request.method != 'POST':
@@ -1346,6 +1355,7 @@ def api_supervisor_boxes(request):
     return JsonResponse({'success': True, 'boxes': result})
 
 
+@csrf_exempt
 def api_supervisor_box_deposit(request):
     """POST /api/supervisor-boxes/deposit — الإدارة تودع في صندوق مشرف"""
     err = _require_roles(request, 'M01')
