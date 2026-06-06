@@ -174,11 +174,14 @@ def api_my_reports(request):
     if err:
         return err
 
+    # عرض تقارير آخر أسبوع فقط (7 أيام)
+    from datetime import timedelta
+    week_ago = timezone.now().date() - timedelta(days=7)
     reports = (DailyReport.objects
-               .filter(employee=request.user)
+               .filter(employee=request.user, date__gte=week_ago)
                .prefetch_related('attachments')
                .select_related('reviewed_by')
-               .order_by('-date')[:30])
+               .order_by('-date'))
     return JsonResponse({'success': True, 'reports': [_report_to_dict(r) for r in reports]})
 
 
