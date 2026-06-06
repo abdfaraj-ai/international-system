@@ -241,8 +241,9 @@ body { background: #ffffff !important; color: #1e293b; }
   .dr-hero-txt { text-align: center; }
 }
 
-/* ══ فرض الوضع الفاتح: خلفية بيضاء · نصوص سوداء (مثل صفحة أقسام التلر) ══════════ */
-body, .dr-wrap { background: #ffffff !important; }
+/* ══ خلفية الصفحة: تدرّج داكن بين #334155 و #0f172a ══════════════════════════ */
+body { background: linear-gradient(160deg, #334155 0%, #0f172a 100%) !important; }
+.dr-wrap { background: transparent !important; }
 .dr-panel { background: #ffffff !important; border-color: #e2e8f0 !important; }
 .dr-textarea, .dr-input { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
 .dr-textarea::placeholder, .dr-input::placeholder { color: #94a3b8; }
@@ -258,7 +259,15 @@ body, .dr-wrap { background: #ffffff !important; }
 .dr-table thead th { color: #64748b !important; border-bottom-color: #e2e8f0 !important; }
 .dr-table tbody td { color: #334155 !important; border-bottom-color: #f1f5f9 !important; }
 .dr-emp-name { color: #1e293b !important; }
-.dr-footnote { color: #64748b !important; }
+/* الفوتر: تدرّج داكن بين #334155 و #0f172a مع نص أبيض */
+.dr-footnote {
+  background: linear-gradient(160deg, #334155 0%, #0f172a 100%) !important;
+  color: #ffffff !important;
+  padding: 14px 20px !important;
+  border-radius: 12px !important;
+  margin-top: 18px !important;
+}
+.dr-footnote a { color: #93c5fd !important; }
 .particles-canvas { display: none !important; }
 </style>
 {% endblock %}
