@@ -18,8 +18,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 <style>
-/* ══ خلفية الصفحة بيضاء والنصوص سوداء ══════════════════════════════════════════ */
-body { background: #ffffff !important; color: #1e293b; }
+/* ══ خلفية الصفحة: تدرّج داكن يملأ كامل الارتفاع ══════════════════════════════ */
+html { background: #0f172a !important; }
+html, body { min-height: 100%; }
+body { color: #1e293b; }
 
 /* ══ Page background ══════════════════════════════════════════════════════════ */
 .dr-wrap { max-width: 980px; margin: 28px auto 28px; padding: 0 20px; display: grid; gap: 24px; }
@@ -241,8 +243,12 @@ body { background: #ffffff !important; color: #1e293b; }
   .dr-hero-txt { text-align: center; }
 }
 
-/* ══ خلفية الصفحة: تدرّج داكن بين #334155 و #0f172a ══════════════════════════ */
-body { background: linear-gradient(160deg, #334155 0%, #0f172a 100%) !important; }
+/* ══ خلفية الصفحة: تدرّج داكن بين #334155 و #0f172a يملأ كامل الشاشة ══════════ */
+body {
+  background: linear-gradient(160deg, #334155 0%, #0f172a 100%) !important;
+  background-attachment: fixed !important;
+  min-height: 100vh !important;
+}
 .dr-wrap { background: transparent !important; }
 .dr-panel { background: #ffffff !important; border-color: #e2e8f0 !important; }
 .dr-textarea, .dr-input { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
