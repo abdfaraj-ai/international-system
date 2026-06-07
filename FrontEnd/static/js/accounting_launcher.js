@@ -955,53 +955,53 @@ function efExportCSV() {
   a.download = 'قيد_جديد.csv'; a.click();
 }
 
-// ── نافذة تأكيد القيد: تعرض ملخص القيد وتنتظر قرار المستخدم ──
-function efConfirmDialog(info) {
+// ── نافذة تأكيد عامة قابلة لإعادة الاستخدام ──
+// title: عنوان النافذة، rows: [{label, value, color}]
+function amConfirmDialog(title, rows) {
   return new Promise(resolve => {
-    // أزل أي نافذة سابقة
-    document.getElementById('ef-confirm-overlay')?.remove();
+    document.getElementById('am-confirm-overlay')?.remove();
 
-    const fmtN = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const rowsHtml = rows.map((r, i) => `
+      <div style="display:flex;justify-content:space-between;padding:9px 0;${i < rows.length-1 ? 'border-bottom:1px solid #f1f5f9' : ''}">
+        <span style="color:#64748b;font-size:.85rem">${r.label}</span>
+        <span style="color:${r.color || '#1e293b'};font-weight:${r.color ? '800' : '700'}">${r.value}</span>
+      </div>`).join('');
+
     const overlay = document.createElement('div');
-    overlay.id = 'ef-confirm-overlay';
+    overlay.id = 'am-confirm-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(3,6,20,.7);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;direction:rtl';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:16px;width:90%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;font-family:'Cairo',sans-serif">
         <div style="background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:18px 24px;text-align:center">
           <div style="font-size:1.6rem">📋</div>
-          <h3 style="color:#fff;margin:6px 0 0;font-size:1.1rem;font-weight:800">تأكيد تسجيل القيد</h3>
+          <h3 style="color:#fff;margin:6px 0 0;font-size:1.1rem;font-weight:800">${title}</h3>
           <p style="color:rgba(255,255,255,.8);margin:4px 0 0;font-size:.8rem">يرجى مراجعة التفاصيل قبل التأكيد</p>
         </div>
-        <div style="padding:22px 24px">
-          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
-            <span style="color:#64748b;font-size:.85rem">المركز المرسل (من)</span>
-            <span style="color:#1e293b;font-weight:700">${info.fromCenter || '—'}</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
-            <span style="color:#64748b;font-size:.85rem">المبلغ المرسل</span>
-            <span style="color:#16a34a;font-weight:800">${fmtN(info.fromAmount)} ${info.fromCur}</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
-            <span style="color:#64748b;font-size:.85rem">المركز المستلم (الى)</span>
-            <span style="color:#1e293b;font-weight:700">${info.toCenter || '—'}</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:9px 0">
-            <span style="color:#64748b;font-size:.85rem">المبلغ المستلم</span>
-            <span style="color:#dc2626;font-weight:800">${fmtN(info.toAmount)} ${info.toCur}</span>
-          </div>
-        </div>
+        <div style="padding:22px 24px">${rowsHtml}</div>
         <div style="display:flex;gap:10px;padding:0 24px 22px">
-          <button id="ef-confirm-cancel" style="flex:1;padding:12px;border:1px solid #e2e8f0;background:#f1f5f9;color:#475569;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">إلغاء</button>
-          <button id="ef-confirm-ok" style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">✓ تأكيد وتسجيل</button>
+          <button id="am-confirm-cancel" style="flex:1;padding:12px;border:1px solid #e2e8f0;background:#f1f5f9;color:#475569;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">إلغاء</button>
+          <button id="am-confirm-ok" style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">✓ تأكيد وتسجيل</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
 
     const close = (val) => { overlay.remove(); resolve(val); };
-    overlay.querySelector('#ef-confirm-ok').onclick     = () => close(true);
-    overlay.querySelector('#ef-confirm-cancel').onclick = () => close(false);
+    overlay.querySelector('#am-confirm-ok').onclick     = () => close(true);
+    overlay.querySelector('#am-confirm-cancel').onclick = () => close(false);
     overlay.onclick = (e) => { if (e.target === overlay) close(false); };
   });
+}
+
+const _fmtConfirm = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// نافذة تأكيد القيد الأساسي (تستخدم الدالة العامة)
+function efConfirmDialog(info) {
+  return amConfirmDialog('تأكيد تسجيل القيد', [
+    { label:'المركز المرسل (من)', value: info.fromCenter || '—' },
+    { label:'المبلغ المرسل',      value: `${_fmtConfirm(info.fromAmount)} ${info.fromCur}`, color:'#16a34a' },
+    { label:'المركز المستلم (الى)', value: info.toCenter || '—' },
+    { label:'المبلغ المستلم',     value: `${_fmtConfirm(info.toAmount)} ${info.toCur}`, color:'#dc2626' },
+  ]);
 }
 
 async function efSave() {
@@ -1321,6 +1321,17 @@ async function aeSave() {
   if (fromCenter === toCenter) { alToast('يجب أن يكون المركزان مختلفَين','error','❌'); return; }
   if (fromAmount <= 0)         { alToast('يرجى إدخال مبلغ صحيح','error','❌'); return; }
   if (cutRate <= 0)            { alToast('سعر القص غير صالح','error','❌'); return; }
+
+  const aeFromCur = document.getElementById('ae-from-currency').value;
+  const aeToCur   = document.getElementById('ae-to-currency').value;
+  const aeToAmt   = parseFloat(document.getElementById('ae-to-amount').value) || 0;
+  const confirmedAe = await amConfirmDialog('تأكيد تسجيل القيد المتقدم', [
+    { label:'المركز المرسل (من)', value: fromCenter || '—' },
+    { label:'المبلغ المرسل',      value: `${_fmtConfirm(fromAmount)} ${aeFromCur}`, color:'#16a34a' },
+    { label:'المركز المستلم (الى)', value: toCenter || '—' },
+    { label:'المبلغ المستلم',     value: `${_fmtConfirm(aeToAmt)} ${aeToCur}`, color:'#dc2626' },
+  ]);
+  if (!confirmedAe) return;
 
   const body = {
     fromCenter:      fromCenter,
@@ -2115,6 +2126,14 @@ async function rvSave() {
   if (!toCenter)          { alToast('اختر المركز المستلم','warning','⚠️'); return; }
   if (!fromAmount || fromAmount <= 0) { alToast('أدخل مبلغاً أكبر من الصفر','warning','⚠️'); return; }
 
+  const confirmedRv = await amConfirmDialog('تأكيد سند القبض', [
+    { label:'المركز المرسل (من)', value: fromCenter || '—' },
+    { label:'المبلغ المرسل',      value: `${_fmtConfirm(fromAmount)} ${fromCurrency}`, color:'#16a34a' },
+    { label:'المركز المستلم (الى)', value: toCenter || '—' },
+    { label:'المبلغ المستلم',     value: `${_fmtConfirm(toAmount)} ${toCurrency}`, color:'#dc2626' },
+  ]);
+  if (!confirmedRv) return;
+
   try {
     const r = await fetch('/api/am/receipt-voucher/', {
       method: 'POST',
@@ -2321,6 +2340,14 @@ async function pvSave() {
   if (!fromCenter) { alToast('اختر المركز المرسل','warning','⚠️'); return; }
   if (!toCenter)   { alToast('اختر المركز المستلم','warning','⚠️'); return; }
   if (!fromAmount||fromAmount<=0) { alToast('أدخل مبلغاً أكبر من الصفر','warning','⚠️'); return; }
+
+  const confirmedPv = await amConfirmDialog('تأكيد سند الدفع', [
+    { label:'المركز المرسل (من)', value: fromCenter || '—' },
+    { label:'المبلغ المرسل',      value: `${_fmtConfirm(fromAmount)} ${fromCurrency}`, color:'#16a34a' },
+    { label:'المركز المستلم (الى)', value: toCenter || '—' },
+    { label:'المبلغ المستلم',     value: `${_fmtConfirm(toAmount)} ${toCurrency}`, color:'#dc2626' },
+  ]);
+  if (!confirmedPv) return;
 
   try {
     const r = await fetch('/api/am/payment-voucher/', {
