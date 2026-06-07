@@ -1325,7 +1325,56 @@ document.addEventListener('DOMContentLoaded', () => {
     toAmtEl.addEventListener('input', () => { toAmtEl.dataset.manual = '1'; aeCalc(); });
     toAmtEl.addEventListener('focus', () => { toAmtEl.dataset.manual = '1'; });
   }
+  // ملء قوائم العملات في كل القيود من العملات المُدارة
+  loadCurrencyOptions();
 });
+
+// ══ تحميل العملات وملء كل قوائم اختيار العملة في القيود ══
+// كل قائمة عملة في القيود لها هذا المعرّف — تُملأ تلقائياً من ManagedCurrency
+const _CURRENCY_SELECT_IDS = [
+  'ef-from-currency','ef-to-currency',
+  'ae-from-currency','ae-to-currency','ae-from-fee-cur','ae-to-fee-cur',
+  'oe-currency','nc-currency',
+  'rv-from-currency','rv-to-currency',
+  'pv-from-currency','pv-to-currency',
+  'ot-send-currency','ot-recv-currency',
+];
+
+// أسماء عربية افتراضية للرموز الشائعة (للعرض)
+const _CUR_AR = {
+  USD:'دولار', EUR:'يورو', TRY:'ليرة تركية', ILS:'شيكل', JOD:'دينار اردني',
+  SAR:'ريال سعودي', AED:'درهم', GBP:'جنيه', SYP:'ليرة سورية', EGP:'جنيه مصري',
+};
+
+async function loadCurrencyOptions() {
+  let currencies = [];
+  try {
+    const r = await fetch('/api/currencies/?active=1', {credentials:'include'});
+    const d = await r.json();
+    currencies = (d.currencies || []).filter(c => c.isActive !== false);
+  } catch { /* عند الفشل نُبقي العملات الافتراضية في HTML */ }
+
+  // إن لم توجد عملات مُدارة، لا نلمس القوائم الثابتة
+  if (!currencies.length) return;
+
+  _CURRENCY_SELECT_IDS.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const prev = sel.value;  // حافظ على الاختيار الحالي
+    sel.innerHTML = '';
+    currencies.forEach(c => {
+      const sym = (c.symbol || '').toUpperCase();
+      if (!sym) return;
+      const label = c.name ? `${_CUR_AR[sym] || c.name}` : (_CUR_AR[sym] || sym);
+      const opt = document.createElement('option');
+      opt.value = sym;
+      opt.textContent = label;
+      sel.appendChild(opt);
+    });
+    // استعد الاختيار السابق إن كان لا يزال موجوداً، وإلا أول عملة
+    if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  });
+}
 
 // ══ حركة تسوية ══
 let _sm2All = [], _sm2Filtered = [], _sm2SortCol = 'refNumber', _sm2SortAsc = false, _sm2Page = 1;
@@ -7508,6 +7557,7 @@ async function cmSave() {
     alToast(d.message || 'تم الحفظ', 'success', '✓');
     cmCloseModal();
     await cmLoad();
+    loadCurrencyOptions();   // حدّث قوائم العملات في القيود فوراً
   } catch { alToast('تعذّر الاتصال', 'error', '✗'); }
 }
 
