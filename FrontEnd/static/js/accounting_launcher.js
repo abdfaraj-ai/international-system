@@ -955,6 +955,55 @@ function efExportCSV() {
   a.download = 'قيد_جديد.csv'; a.click();
 }
 
+// ── نافذة تأكيد القيد: تعرض ملخص القيد وتنتظر قرار المستخدم ──
+function efConfirmDialog(info) {
+  return new Promise(resolve => {
+    // أزل أي نافذة سابقة
+    document.getElementById('ef-confirm-overlay')?.remove();
+
+    const fmtN = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const overlay = document.createElement('div');
+    overlay.id = 'ef-confirm-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(3,6,20,.7);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;direction:rtl';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:16px;width:90%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;font-family:'Cairo',sans-serif">
+        <div style="background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:18px 24px;text-align:center">
+          <div style="font-size:1.6rem">📋</div>
+          <h3 style="color:#fff;margin:6px 0 0;font-size:1.1rem;font-weight:800">تأكيد تسجيل القيد</h3>
+          <p style="color:rgba(255,255,255,.8);margin:4px 0 0;font-size:.8rem">يرجى مراجعة التفاصيل قبل التأكيد</p>
+        </div>
+        <div style="padding:22px 24px">
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
+            <span style="color:#64748b;font-size:.85rem">المركز المرسل (من)</span>
+            <span style="color:#1e293b;font-weight:700">${info.fromCenter || '—'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
+            <span style="color:#64748b;font-size:.85rem">المبلغ المرسل</span>
+            <span style="color:#16a34a;font-weight:800">${fmtN(info.fromAmount)} ${info.fromCur}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9">
+            <span style="color:#64748b;font-size:.85rem">المركز المستلم (الى)</span>
+            <span style="color:#1e293b;font-weight:700">${info.toCenter || '—'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0">
+            <span style="color:#64748b;font-size:.85rem">المبلغ المستلم</span>
+            <span style="color:#dc2626;font-weight:800">${fmtN(info.toAmount)} ${info.toCur}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;padding:0 24px 22px">
+          <button id="ef-confirm-cancel" style="flex:1;padding:12px;border:1px solid #e2e8f0;background:#f1f5f9;color:#475569;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">إلغاء</button>
+          <button id="ef-confirm-ok" style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">✓ تأكيد وتسجيل</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const close = (val) => { overlay.remove(); resolve(val); };
+    overlay.querySelector('#ef-confirm-ok').onclick     = () => close(true);
+    overlay.querySelector('#ef-confirm-cancel').onclick = () => close(false);
+    overlay.onclick = (e) => { if (e.target === overlay) close(false); };
+  });
+}
+
 async function efSave() {
   const fromSel = document.getElementById('ef-from-center');
   const toSel   = document.getElementById('ef-to-center');
@@ -968,9 +1017,20 @@ async function efSave() {
   if (fromSel.value === toSel.value) { alToast('يجب أن يكون المركزان مختلفَين','error','❌'); return; }
   if (fromAmount <= 0)         { alToast('يرجى إدخال مبلغ صحيح','error','❌'); return; }
 
+  const fromCur = document.getElementById('ef-from-currency').value;
+  const toCur   = document.getElementById('ef-to-currency').value;
+  const toAmount = parseFloat(document.getElementById('ef-to-amount').value) || 0;
+
+  // ── نافذة تأكيد قبل تسجيل القيد ──
+  const confirmed = await efConfirmDialog({
+    fromCenter, fromCur, fromAmount,
+    toCenter, toCur, toAmount,
+  });
+  if (!confirmed) return;   // ألغى المستخدم
+
   const body = {
     fromCenter:      fromCenter,
-    fromCurrency:    document.getElementById('ef-from-currency').value,
+    fromCurrency:    fromCur,
     fromAmount:      fromAmount,
     fromFee:         parseFloat(document.getElementById('ef-from-fees').value) || 0,
     fromBeneficiary: document.getElementById('ef-from-beneficiary').value.trim(),
@@ -978,7 +1038,7 @@ async function efSave() {
     cutRate:         parseFloat(document.getElementById('ef-from-cut-val').value) || 1,
     cutDir:          document.getElementById('ef-from-cut-type').value,
     toCenter:        toCenter,
-    toCurrency:      document.getElementById('ef-to-currency').value,
+    toCurrency:      toCur,
     toFee:           parseFloat(document.getElementById('ef-to-fees').value) || 0,
     toNotes:         document.getElementById('ef-to-notes').value.trim(),
   };
