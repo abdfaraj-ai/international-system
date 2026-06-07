@@ -197,6 +197,17 @@ def api_am_entry_from_to(request):
                 net_profit       = net_profit,
                 created_by       = _caller(request),
             )
+            # ── الربط المحاسبي: تسجيل حركتي التحويل على المركزين ──
+            # يخرج from_amt من المُرسل (credit)، ويدخل to_amt للمستلم (debit)
+            from .ledger_utils import post_transfer
+            post_transfer(
+                from_center, to_center,
+                from_currency=from_cur, from_amount=from_amt,
+                to_currency=to_cur,     to_amount=to_amt,
+                source='entry', source_id=record.id,
+                ref_number=record.ref_number,
+                created_by=_caller(request),
+            )
 
         return JsonResponse({
             'success':   True,
@@ -229,7 +240,11 @@ def api_am_entry_from_to_detail(request, entry_id):
 
     if request.method == 'DELETE':
         ref = record.ref_number
-        record.delete()
+        # عكس الحركات المحاسبية قبل الحذف (للحفاظ على توازن الأرصدة)
+        from .ledger_utils import reverse_ledger
+        with transaction.atomic():
+            reverse_ledger('entry', record.id)
+            record.delete()
         return JsonResponse({'success': True, 'message': f'تم حذف القيد {ref}'})
 
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)

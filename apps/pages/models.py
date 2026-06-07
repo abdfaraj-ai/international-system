@@ -2975,6 +2975,68 @@ class CostCenter(models.Model):
         }
 
 
+class CenterLedger(models.Model):
+    """
+    حركة محاسبية على مركز — السجل الأساسي الذي تُبنى منه أرصدة المراكز.
+    كل عملية (قيد/سند/حوالة) تُسجّل حركة أو أكثر هنا.
+    رصيد المركز بعملة ما = مجموع (debit - credit) لكل حركاته بتلك العملة.
+    اصطلاح: debit يزيد رصيد المركز (دخل له)، credit ينقصه (خرج منه).
+    """
+    SOURCE_CHOICES = [
+        ('entry',      'قيد من-الى'),
+        ('adv_entry',  'قيد متقدم'),
+        ('receipt',    'سند قبض'),
+        ('payment',    'سند دفع'),
+        ('exchange',   'صرف عملات'),
+        ('hawala',     'حوالة'),
+        ('opening',    'قيد افتتاحي'),
+        ('manual',     'تسوية يدوية'),
+    ]
+
+    # المركز يُخزَّن بالاسم (متوافق مع طريقة تخزين القيود الحالية)
+    center      = models.CharField(max_length=200, db_index=True, verbose_name='المركز')
+    currency    = models.CharField(max_length=8, db_index=True, verbose_name='العملة')
+    debit       = models.DecimalField(max_digits=18, decimal_places=4, default=0, verbose_name='مدين (دخل)')
+    credit      = models.DecimalField(max_digits=18, decimal_places=4, default=0, verbose_name='دائن (خرج)')
+
+    source      = models.CharField(max_length=12, choices=SOURCE_CHOICES, default='manual', db_index=True)
+    source_id   = models.PositiveIntegerField(null=True, blank=True, verbose_name='معرّف العملية المصدر')
+    ref_number  = models.CharField(max_length=60, blank=True, default='', verbose_name='رقم المرجع')
+    note        = models.CharField(max_length=255, blank=True, default='', verbose_name='ملاحظة')
+
+    created_by  = models.CharField(max_length=120, blank=True, default='')
+    created_at  = models.DateTimeField(default=timezone.now, db_index=True)
+
+    class Meta:
+        verbose_name        = 'حركة مركز'
+        verbose_name_plural = 'حركات المراكز'
+        ordering            = ['-created_at', '-id']
+        indexes = [
+            models.Index(fields=['center', 'currency']),
+            models.Index(fields=['source', 'source_id']),
+        ]
+
+    def __str__(self):
+        return f'{self.center} [{self.currency}] +{self.debit} -{self.credit}'
+
+    def to_dict(self):
+        return {
+            'id':        self.id,
+            'center':    self.center,
+            'currency':  self.currency,
+            'debit':     float(self.debit),
+            'credit':    float(self.credit),
+            'balance':   float(self.debit - self.credit),
+            'source':    self.source,
+            'sourceLabel': self.get_source_display(),
+            'sourceId':  self.source_id,
+            'refNumber': self.ref_number,
+            'note':      self.note,
+            'createdBy': self.created_by,
+            'createdAt': self.created_at.strftime('%Y-%m-%d %H:%M'),
+        }
+
+
 class Customer(models.Model):
     """عميل / زبون — يُدار من صفحة الحسابات (نفس بنية مركز التكلفة)"""
     TYPE_CHOICES   = [('main', 'رئيسي'), ('branch', 'فرعي'), ('client', 'عميل'), ('agent', 'وكيل')]

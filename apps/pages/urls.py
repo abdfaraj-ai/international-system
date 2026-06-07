@@ -45,6 +45,7 @@ from .api import am_cut_prices         as am_ctp_api
 from .api import am_cut_distribution   as am_cdist_api
 from .api import am_currencies         as am_currencies_api
 from .api import am_audit_log          as am_audit_log_api
+from .api import am_center_ledger      as am_cl_api
 
 urlpatterns = [
     # ── Client Portal — بوابة العملاء ───────────────────────────────────────────
@@ -493,6 +494,9 @@ urlpatterns = [
     path('api/cost-centers/<int:center_id>/restore/',       am_cc_api.api_cost_center_restore,           name='api-cost-center-restore'),
     path('api/cost-centers/<int:center_id>/force-delete/',  am_cc_api.api_cost_center_force_delete,      name='api-cost-center-force-delete'),
     path('api/am/cost-center/',                             am_cc_api.api_cost_centers,                  name='api-am-cost-center'),
+    path('api/am/center-balances/',                         am_cl_api.api_center_balances,               name='api-center-balances'),
+    path('api/am/center-balances/<str:center_name>/',       am_cl_api.api_center_balance_detail,         name='api-center-balance-detail'),
+    path('api/am/center-ledger/<str:center_name>/',         am_cl_api.api_center_ledger,                 name='api-center-ledger'),
     path('api/customers/',                                  am_cust_api.api_customers,                   name='api-customers'),
     path('api/customers/<int:customer_id>/',                am_cust_api.api_customer_detail,             name='api-customer-detail'),
     path('api/customers/<int:customer_id>/restore/',        am_cust_api.api_customer_restore,            name='api-customer-restore'),
