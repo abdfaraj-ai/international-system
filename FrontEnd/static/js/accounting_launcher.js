@@ -585,7 +585,7 @@ function sfRender(p) {
     return;
   }
 
-  const fmt = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = v => Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   const cur = _sfCurrency;
 
   tbody.innerHTML = slice.map((m) => {
@@ -877,7 +877,7 @@ function efRender(p) {
     return;
   }
 
-  const fmtNum = v => v != null ? Number(v).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
+  const fmtNum = v => v != null ? Number(v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
   const fmtProfit = v => v != null
     ? `<span style="color:${Number(v)>=0?'#4ADE80':'#FCA5A5'};font-weight:700">${fmtNum(v)}</span>`
     : '—';
@@ -992,7 +992,7 @@ function amConfirmDialog(title, rows) {
   });
 }
 
-const _fmtConfirm = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+const _fmtConfirm = v => Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
 // نافذة تأكيد القيد الأساسي (تستخدم الدالة العامة)
 function efConfirmDialog(info) {
@@ -1051,7 +1051,7 @@ async function efSave() {
     });
     const d = await r.json();
     if (d.success) {
-      const profit = d.netProfit != null ? Number(d.netProfit).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+      const profit = d.netProfit != null ? Number(d.netProfit).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
       alToast(`✅ تم القيد ${d.record?.refNumber || ''} — الربح: ${profit}`, 'success', '✅');
       // تنظيف الحقول
       ['ef-from-amount','ef-from-fees','ef-from-beneficiary',
@@ -1150,7 +1150,7 @@ function aeCalc() {
   const netProfit = cutDiff + fromFee + toFeeBase;
 
   // عرض الأرقام
-  const fmt = v => v.toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = v => v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const el  = id => document.getElementById(id);
 
   if (el('ae-cut-diff'))     el('ae-cut-diff').textContent     = fmt(cutDiff);
@@ -1206,7 +1206,7 @@ async function aeLoad() {
     document.getElementById('sp-count').textContent = `— ${_aeAll.length} قيد`;
     const tp = d.totalProfit ?? 0;
     const tpEl = document.getElementById('ae-total-profit');
-    if (tpEl) tpEl.textContent = `إجمالي الربح: ${Number(tp).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    if (tpEl) tpEl.textContent = `إجمالي الربح: ${Number(tp).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
     aeRender(1);
   } catch {
     _aeAll = []; _aeFiltered = [];
@@ -1223,7 +1223,7 @@ function aeRender(p) {
   const start = (_aePage - 1) * perPage;
   const slice = _aeFiltered.slice(start, start + perPage);
   const tbody = document.getElementById('ae-tbody');
-  const fmt   = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt   = v => Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   const fmtP  = v => `<span style="color:${Number(v||0)>=0?'#4ADE80':'#FCA5A5'};font-weight:700">${fmt(v)}</span>`;
 
   if (!total) {
@@ -1359,7 +1359,7 @@ async function aeSave() {
     });
     const d = await r.json();
     if (d.success) {
-      const profit = Number(d.netProfit||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const profit = Number(d.netProfit||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
       const ref = d.record?.refNumber || '';
       if (document.getElementById('ae-sum-ref')) document.getElementById('ae-sum-ref').textContent = `آخر قيد: ${ref}`;
       alToast(`✅ تم القيد ${ref} — الربح: ${profit}`, 'success', '✅');
@@ -1518,7 +1518,7 @@ function sm2Calc() {
   const totalUs   = rows.reduce((s,r) => s + r.feeUs,   0);
   const totalThem = rows.reduce((s,r) => s + r.feeThem, 0);
   const netProfit = totalUs - totalThem;
-  const fmt = v => Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = v => Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   const el = id => document.getElementById(id);
   if (el('sm2-live-us'))     el('sm2-live-us').textContent     = fmt(totalUs);
@@ -1577,7 +1577,7 @@ async function sm2Load() {
     document.getElementById('sp-count').textContent = `— ${_sm2All.length} سند`;
     const tp = d.totalProfit ?? 0;
     const tpEl = document.getElementById('sm2-total-profit');
-    if (tpEl) tpEl.textContent = `إجمالي الربح: ${Number(tp).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    if (tpEl) tpEl.textContent = `إجمالي الربح: ${Number(tp).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
     sm2Render(1);
   } catch {
     _sm2All = []; _sm2Filtered = [];
@@ -1594,7 +1594,7 @@ function sm2Render(p) {
   const start = (_sm2Page - 1) * perPage;
   const slice = _sm2Filtered.slice(start, start + perPage);
   const tbody = document.getElementById('sm2-tbody');
-  const fmt   = v => Number(v||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt   = v => Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   const fmtP  = v => `<span style="color:${Number(v||0)>=0?'#4ADE80':'#FCA5A5'};font-weight:700">${fmt(v)}</span>`;
 
   if (!total) {
@@ -1696,7 +1696,7 @@ async function sm2Save() {
     const d = await r.json();
     if (d.success) {
       const ref = d.record?.refNumber || '';
-      const profit = Number(d.record?.netProfit||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const profit = Number(d.record?.netProfit||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
       if (document.getElementById('sm2-sum-ref')) document.getElementById('sm2-sum-ref').textContent = `آخر سند: ${ref}`;
       alToast(`✅ تم السند ${ref} — الربح: ${profit}`, 'success', '✅');
       if (d.warning) alToast(d.warning, 'warning', '⚠️');
@@ -2456,13 +2456,13 @@ function tcRender(p) {
   }
 
   const fmtOut = v => v != null && v !== 0
-    ? `<span style="color:#FCA5A5;font-weight:700">${Number(v).toLocaleString('ar-SA')}</span>`
+    ? `<span style="color:#FCA5A5;font-weight:700">${Number(v).toLocaleString('en-US')}</span>`
     : '<span style="color:rgba(255,255,255,.3)">0</span>';
   const fmtIn = v => v != null && v !== 0
-    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('ar-SA')}</span>`
+    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('en-US')}</span>`
     : '<span style="color:rgba(255,255,255,.3)">0</span>';
   const fmtTotal = v => v != null && v !== 0
-    ? `<span style="font-weight:900;font-size:12px;color:#93C5FD">${Number(v).toLocaleString('ar-SA')}</span>`
+    ? `<span style="font-weight:900;font-size:12px;color:#93C5FD">${Number(v).toLocaleString('en-US')}</span>`
     : '<span style="color:rgba(255,255,255,.3)">0</span>';
 
   tbody.innerHTML = slice.map((c,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
@@ -2602,10 +2602,10 @@ function cpRender(p) {
   }
 
   const fmt = v => v != null && v !== 0
-    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
     : '<span style="color:rgba(255,255,255,.3)">—</span>';
   const fmtTotal = v => v != null && v !== 0
-    ? `<span style="color:#93C5FD;font-weight:900;font-size:12px">${Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+    ? `<span style="color:#93C5FD;font-weight:900;font-size:12px">${Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
     : '<span style="color:rgba(255,255,255,.3)">—</span>';
 
   tbody.innerHTML = slice.map((c,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
@@ -2781,7 +2781,7 @@ function smRender(p) {
     return;
   }
 
-  const fmt = v => v != null ? Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+  const fmt = v => v != null ? Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
   const cur = _smCurrency;
 
   tbody.innerHTML = slice.map((m) => {
@@ -3268,7 +3268,7 @@ function cuRender(p) {
     return;
   }
 
-  const fmtNum = v => v != null ? Number(v).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
+  const fmtNum = v => v != null ? Number(v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
   const lockBadge = v => v
     ? '<span class="sp-badge sp-badge-red">🔒 مقفل</span>'
     : '<span class="sp-badge sp-badge-green">🔓 مفتوح</span>';
@@ -4679,10 +4679,10 @@ function ppsRender(p) {
   }
 
   const fmt = v => v != null && v !== 0
-    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+    ? `<span style="color:#4ADE80;font-weight:700">${Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
     : '<span style="color:rgba(255,255,255,.3)">—</span>';
   const fmtTotal = v => v != null && v !== 0
-    ? `<span style="color:#FDE047;font-weight:900;font-size:12px">${Number(v).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+    ? `<span style="color:#FDE047;font-weight:900;font-size:12px">${Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
     : '<span style="color:rgba(255,255,255,.3)">—</span>';
 
   tbody.innerHTML = slice.map((c,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
@@ -4840,7 +4840,7 @@ function brRender(p) {
 
   const fmt = n => {
     const v = parseFloat(n) || 0;
-    return v.toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+    return v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   };
 
   const colMap = {id:'brh-id', city:'brh-city', name:'brh-name', cur:'brh-cur', us:'brh-us', them:'brh-them', debt:'brh-debt'};
@@ -4941,7 +4941,7 @@ async function cutLoadOps() {
     const r = await fetch('/api/cut-centers/operations/', {credentials:'include'});
     const d = await r.json();
     const ops = Array.isArray(d) ? d : (d.results || d.operations || []);
-    const fmt = n => Number(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     if (!ops.length) {
       document.getElementById('cut-ops-tbody').innerHTML =
         '<tr><td colspan="7" class="sp-empty">لا توجد عمليات</td></tr>';
@@ -5000,7 +5000,7 @@ function cutRender(p) {
   const start = (_cutPage - 1) * perPage;
   const slice = _cutFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('cut-tbody').innerHTML =
@@ -5138,7 +5138,7 @@ function ptRender(p) {
     const v = parseFloat(n) || 0;
     if (v === 0) return '<span class="pt-zero">—</span>';
     const cls = v > 0 ? 'pt-pos' : 'pt-neg';
-    return `<span class="${cls}">${v.toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
+    return `<span class="${cls}">${v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
   };
 
   if (!total) {
@@ -5293,7 +5293,7 @@ function asRenderTable() {
   const tbody = document.getElementById('as-tbody');
   if (!tbody) return;
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   if (!_asData.length) {
     tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">لا توجد بيانات للفترة المحددة</td></tr>';
@@ -5448,7 +5448,7 @@ function enRender(p) {
 
   const fmt = n => {
     const v = parseFloat(n) || 0;
-    return v ? v.toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
+    return v ? v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
   };
 
   const TYPE_LABELS = {
@@ -5579,7 +5579,7 @@ function lmRender(p) {
   const start   = (_lmPage - 1) * perPage;
   const slice   = _lmFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('lm-tbody').innerHTML =
@@ -5696,7 +5696,7 @@ function atRender(p) {
   const start   = (_atPage - 1) * perPage;
   const slice   = _atFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   const STATUS = {
     pending:  {label:'قيد الانتظار', bg:'#FEF9C3', color:'#CA8A04', border:'#FDE047'},
@@ -5822,7 +5822,7 @@ function rtRender(p) {
   const start   = (_rtPage - 1) * perPage;
   const slice   = _rtFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('rt-tbody').innerHTML =
@@ -5934,7 +5934,7 @@ function utRender(p) {
   const start   = (_utPage - 1) * perPage;
   const slice   = _utFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('ut-tbody').innerHTML =
@@ -6046,7 +6046,7 @@ function dtRender(p) {
   const start   = (_dtPage - 1) * perPage;
   const slice   = _dtFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   const STATUS = {
     pending:  {label:'قيد الانتظار', bg:'#FEF9C3', color:'#CA8A04', border:'#FDE047'},
@@ -6165,7 +6165,7 @@ function advRender(p) {
   const start   = (_advPage - 1) * perPage;
   const slice   = _advFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   const STATUS = {
     pending:  {label:'قيد الانتظار', bg:'#FEF9C3', color:'#CA8A04', border:'#FDE047'},
@@ -6284,7 +6284,7 @@ function rsvRender(p) {
   const start   = (_rsvPage - 1) * perPage;
   const slice   = _rsvFiltered.slice(start, start + perPage);
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   const STATUS = {
     reserved: {label:'محجوزة',       bg:'#E0F2FE', color:'#0369A1', border:'#7DD3FC'},
@@ -6379,7 +6379,7 @@ async function dlvLoad(type) {
 
 function dlvRenderCards(suffix, summary) {
   const el = document.getElementById(`dlv-${suffix}-cards`);
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:0, maximumFractionDigits:0});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
   const cards = DLV_CURRENCIES.map(c => {
     const val = parseFloat(summary[c.key] ?? 0);
     const cls = val < 0 ? 'neg' : val > 0 ? 'pos' : '';
@@ -6453,7 +6453,7 @@ function dlvRender(type, p) {
   if (type === 'internal') _dlvIntPage = page; else _dlvExtPage = page;
   const start = (page-1) * perPage;
   const slice = filtered.slice(start, start + perPage);
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const tbody = document.getElementById(`dlv-${suffix}-tbody`);
 
   if (!total) {
@@ -6575,7 +6575,7 @@ function deliveredRender(p) {
   _dedPage      = Math.min(Math.max(1, _dedPage), maxPage);
   const start   = (_dedPage - 1) * perPage;
   const slice   = _dedFiltered.slice(start, start + perPage);
-  const fmt     = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt     = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('ded-tbody').innerHTML =
@@ -6694,7 +6694,7 @@ function jrnRender(p) {
   _jrnPage      = Math.min(Math.max(1, _jrnPage), maxPage);
   const start   = (_jrnPage - 1) * perPage;
   const slice   = _jrnFiltered.slice(start, start + perPage);
-  const fmt     = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt     = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   if (!total) {
     document.getElementById('jrn-tbody').innerHTML =
@@ -6839,7 +6839,7 @@ function crRender(type, p) {
   if (type === 'internal') _crIntPage = page; else _crExtPage = page;
   const start  = (page-1) * perPage;
   const slice  = filtered.slice(start, start + perPage);
-  const fmt    = function(n){ return Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2}); };
+  const fmt    = function(n){ return Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); };
   const tbody  = document.getElementById('cr-' + px + '-tbody');
 
   if (!total) {
@@ -6954,7 +6954,7 @@ function delEntRender(p) {
   _delEntPage   = Math.min(Math.max(1, _delEntPage), maxPage);
   const start   = (_delEntPage - 1) * perPage;
   const slice   = _delEntFiltered.slice(start, start + perPage);
-  const fmt     = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt     = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const tbody   = document.getElementById('de-tbody');
 
   if (!total) {
@@ -7202,7 +7202,7 @@ function ctpRenderCard(type) {
     return;
   }
   document.getElementById('ctp-count-' + type).textContent = items.length;
-  const fmt = n => Number(n).toLocaleString('ar-SA', {minimumFractionDigits:4, maximumFractionDigits:6});
+  const fmt = n => Number(n).toLocaleString('en-US', {minimumFractionDigits:4, maximumFractionDigits:6});
   tbody.innerHTML = items.map(p => {
     const activeBadge = p.isActive
       ? '<span style="background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700">نشط</span>'
@@ -7376,7 +7376,7 @@ function cdRenderCard(type) {
     return;
   }
 
-  const fmt = n => Number(n||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:4});
+  const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:4});
   tbody.innerHTML = items.map(x => `
     <tr>
       <td style="font-weight:700;color:#1E293B">${x.centerName || '—'}</td>
@@ -7563,7 +7563,7 @@ function cmRender() {
     return;
   }
 
-  const fmt = v => parseFloat(v||0).toLocaleString('ar-SA', {minimumFractionDigits:4, maximumFractionDigits:6});
+  const fmt = v => parseFloat(v||0).toLocaleString('en-US', {minimumFractionDigits:4, maximumFractionDigits:6});
   tbody.innerHTML = slice.map((c, i) => `
     <tr style="${i%2===1?'background:#F8FAFC':''}">
       <td style="color:#94A3B8;font-size:11px">${start+i+1}</td>
@@ -7809,7 +7809,7 @@ function umRender() {
     if (!iso) return '—';
     try {
       const d = new Date(iso);
-      return d.toLocaleDateString('ar-SA', { year:'numeric', month:'short', day:'numeric' });
+      return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
     } catch { return '—'; }
   };
 
@@ -8107,7 +8107,7 @@ function bsClientFilter(rows, gv) {
 function bsRenderSummary(summary) {
   const bar = document.getElementById('as-info-bar');
   if (!bar || !summary) return;
-  const fmt = v => parseFloat(v || 0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = v => parseFloat(v || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   bar.style.display = 'flex';
   bar.innerHTML = `
     <span class="as-stat-chip as-chip-total">الإجمالي: <strong>${summary.total || 0}</strong></span>
@@ -8163,7 +8163,7 @@ function bsRender() {
     return;
   }
 
-  const fmt = v => parseFloat(v || 0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = v => parseFloat(v || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const si = col => {
     if (_bsSortCol !== col) return '<span class="as-sort-icon">⇅</span>';
     return _bsSortDir === 1 ? '<span class="as-sort-icon active">↑</span>' : '<span class="as-sort-icon active">↓</span>';
@@ -8191,7 +8191,7 @@ function bsRender() {
         ${rows.map((t, i) => {
           const st = BS_STATUS_MAP[t.status] || { label: t.status, bg:'#F8FAFC', color:'#475569', border:'#E2E8F0' };
           const profit = parseFloat(t.amount||0) - parseFloat(t.commission||0);
-          const profitFmt = profit.toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+          const profitFmt = profit.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
           const pc = profit >= 0 ? '#16A34A' : '#DC2626';
           return `
           <tr style="${i%2===1?'background:#F8FAFC':''}">
@@ -8316,7 +8316,7 @@ function aeoRender(p) {
     return;
   }
 
-  const fmt = v => parseFloat(v||0).toLocaleString('ar-SA', {minimumFractionDigits:4, maximumFractionDigits:6});
+  const fmt = v => parseFloat(v||0).toLocaleString('en-US', {minimumFractionDigits:4, maximumFractionDigits:6});
   tbody.innerHTML = slice.map((c, i) => `
     <tr style="${i%2===1?'background:#F8FAFC':''}">
       <td class="aeo-idx">${start+i+1}</td>
@@ -8505,7 +8505,7 @@ function vvRender() {
   _vvPage = Math.min(Math.max(1, _vvPage), maxPage);
   const slice = rows.slice((_vvPage-1)*perPage, _vvPage*perPage);
 
-  const fmt = v => parseFloat(v||0).toLocaleString('ar-SA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt = v => parseFloat(v||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   const si  = col => {
     if (_vvSortCol !== col) return '<span class="vv-si">⇅</span>';
     return _vvSortDir === 1 ? '<span class="vv-si" style="opacity:1">↑</span>' : '<span class="vv-si" style="opacity:1">↓</span>';
