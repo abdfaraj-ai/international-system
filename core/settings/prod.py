@@ -17,6 +17,9 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']  # إلزامي في الإنتاج
 # ── الملفات الثابتة (WhiteNoise) ─────────────────────────────────────────────
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# لا تُعطّل الصفحة إذا كان ملف ثابت من مكتبة خارجية (jazzmin) غير موجود في المانيفست
+WHITENOISE_MANIFEST_STRICT = False
+
 # WhiteNoise يُضاف بعد SecurityMiddleware مباشرةً
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa: F821
 
