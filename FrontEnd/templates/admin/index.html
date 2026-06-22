@@ -8,7 +8,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 20px 24px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -28,6 +28,12 @@
     <div style="font-size: 12px; color: #64748b; font-weight: 500;">
       نظام انترناشونال الموحد — لوحة إدارة قاعدة البيانات والنظام
     </div>
+    {% if intl_stats %}
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+      <span style="font-size:11px;font-weight:700;color:#15803d;background:rgba(34,197,94,0.10);border:1px solid rgba(22,163,74,0.22);border-radius:20px;padding:4px 12px;">📊 عمليات اليوم: {{ intl_stats.ops_today }}</span>
+      <span style="font-size:11px;font-weight:700;color:#b45309;background:rgba(245,158,11,0.10);border:1px solid rgba(217,119,6,0.22);border-radius:20px;padding:4px 12px;">⏳ طلبات معلّقة: {{ intl_stats.pending }}</span>
+    </div>
+    {% endif %}
   </div>
   <a href="/dashboard/" style="
     display: inline-flex; align-items: center; gap: 8px;
@@ -43,132 +49,44 @@
   </a>
 </div>
 
-{% if intl_stats %}
-<!-- ── Stat Cards ──────────────────────────────────────────────────────── -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;">
-  {% with s=intl_stats %}
-  <a href="/admin/pages/systemuser/" style="text-decoration:none;background:#fff;border:1px solid #e2e8f0;border-right:3px solid #2563eb;border-radius:13px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,0.06);display:block;transition:all .15s" onmouseover="this.style.boxShadow='0 6px 18px rgba(15,23,42,0.10)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(15,23,42,0.06)'">
-    <div style="font-size:22px;margin-bottom:6px">👥</div>
-    <div style="font-size:26px;font-weight:900;color:#0f172a;line-height:1">{{ s.users }}</div>
-    <div style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px">المستخدمون النشطون</div>
+{% if intl_tiles %}
+<!-- ── App-Launcher Tiles ──────────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin-bottom:24px;">
+  {% for tile in intl_tiles %}
+  <a href="{{ tile.url }}" style="
+    text-decoration:none; background:#ffffff;
+    border:1px solid #e2e8f0; border-radius:16px;
+    padding:20px 16px;
+    display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
+    box-shadow:0 1px 3px rgba(15,23,42,0.06); transition:all .16s;
+  " onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 26px rgba(15,23,42,0.12)';this.style.borderColor='{{ tile.color }}55'"
+     onmouseout="this.style.transform='';this.style.boxShadow='0 1px 3px rgba(15,23,42,0.06)';this.style.borderColor='#e2e8f0'">
+    <div style="
+      width:54px; height:54px; border-radius:15px;
+      display:flex; align-items:center; justify-content:center; font-size:26px;
+      background:{{ tile.color }}14; border:1px solid {{ tile.color }}33;
+    ">{{ tile.icon }}</div>
+    {% if tile.count is not None %}
+    <div style="font-size:23px; font-weight:900; color:{{ tile.color }}; line-height:1;">{{ tile.count }}</div>
+    {% endif %}
+    <div style="font-size:12.5px; font-weight:700; color:#0f172a; line-height:1.3;">{{ tile.name }}</div>
   </a>
-  <div style="background:#fff;border:1px solid #e2e8f0;border-right:3px solid #16a34a;border-radius:13px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,0.06)">
-    <div style="font-size:22px;margin-bottom:6px">📊</div>
-    <div style="font-size:26px;font-weight:900;color:#0f172a;line-height:1">{{ s.ops_today }}</div>
-    <div style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px">عمليات اليوم</div>
-  </div>
-  <a href="/admin/pages/tellerrequest/" style="text-decoration:none;background:#fff;border:1px solid #e2e8f0;border-right:3px solid #d97706;border-radius:13px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,0.06);display:block;transition:all .15s" onmouseover="this.style.boxShadow='0 6px 18px rgba(15,23,42,0.10)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(15,23,42,0.06)'">
-    <div style="font-size:22px;margin-bottom:6px">⏳</div>
-    <div style="font-size:26px;font-weight:900;color:#0f172a;line-height:1">{{ s.pending }}</div>
-    <div style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px">طلبات معلّقة</div>
-  </a>
-  <a href="/admin/pages/portaltransferrequest/" style="text-decoration:none;background:#fff;border:1px solid #e2e8f0;border-right:3px solid #6366f1;border-radius:13px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,0.06);display:block;transition:all .15s" onmouseover="this.style.boxShadow='0 6px 18px rgba(15,23,42,0.10)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(15,23,42,0.06)'">
-    <div style="font-size:22px;margin-bottom:6px">🌐</div>
-    <div style="font-size:26px;font-weight:900;color:#0f172a;line-height:1">{{ s.portal }}</div>
-    <div style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px">طلبات البوابة</div>
-  </a>
-  <a href="/admin/pages/auditlog/" style="text-decoration:none;background:#fff;border:1px solid #e2e8f0;border-right:3px solid #0ea5e9;border-radius:13px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,0.06);display:block;transition:all .15s" onmouseover="this.style.boxShadow='0 6px 18px rgba(15,23,42,0.10)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(15,23,42,0.06)'">
-    <div style="font-size:22px;margin-bottom:6px">🛡️</div>
-    <div style="font-size:26px;font-weight:900;color:#0f172a;line-height:1">{{ s.audit }}</div>
-    <div style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px">سجل التدقيق</div>
-  </a>
-  {% endwith %}
+  {% endfor %}
 </div>
 
-<!-- ── Quick Shortcuts ─────────────────────────────────────────────────── -->
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;">
-  {% with btn="text-decoration:none;font-size:12px;font-weight:700;color:#1d4ed8;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.20);border-radius:9px;padding:8px 14px;transition:all .15s" %}
-  <a href="/admin/pages/systemuser/"        style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">👥 المستخدمون</a>
-  <a href="/admin/pages/hawalaoperation/"   style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">🌍 الحوالات</a>
-  <a href="/admin/pages/exchangeoperation/" style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">💱 عمليات الصرف</a>
-  <a href="/admin/pages/exchangerate/"      style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">📈 أسعار الصرف</a>
-  <a href="/admin/pages/tellerrequest/"     style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">⏳ طلبات التلر</a>
-  <a href="/admin/pages/auditlog/"          style="{{ btn }}" onmouseover="this.style.background='rgba(37,99,235,0.14)'" onmouseout="this.style.background='rgba(37,99,235,0.06)'">🛡️ سجل التدقيق</a>
-  {% endwith %}
-</div>
-{% endif %}
-
-{% if app_list %}
-<!-- ── Model Cards Grid ─────────────────────────────────────────────────── -->
+{% elif app_list %}
+<!-- ── Fallback: model cards ───────────────────────────────────────────── -->
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px;">
   {% for app in app_list %}
-  <!-- App Card -->
-  <div style="
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(15,23,42,0.06);
-  ">
-    <!-- Card Header -->
-    <div style="
-      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));
-      border-bottom: 1px solid #e2e8f0;
-      padding: 12px 18px;
-      display: flex; align-items: center; gap: 9px;
-    ">
-      <span style="font-size:16px">{% if app.app_label == 'auth' %}🔐{% elif app.app_label == 'pages' %}💼{% else %}🗂️{% endif %}</span>
-      <span style="
-        font-size: 10px; font-weight: 900; letter-spacing: .6px;
-        color: #1d4ed8; text-transform: uppercase; flex:1;
-      ">
-        {{ app.name }}
-      </span>
-      <a href="{{ app.app_url }}" style="
-        font-size: 10px; color: #64748b;
-        text-decoration: none; padding: 2px 8px;
-        border: 1px solid #e2e8f0; border-radius: 4px;
-      ">عرض</a>
-    </div>
-
-    <!-- Models List -->
+  <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,0.06);">
+    <div style="background:linear-gradient(135deg,rgba(37,99,235,0.08),rgba(37,99,235,0.03));border-bottom:1px solid #e2e8f0;padding:12px 18px;font-size:10px;font-weight:900;letter-spacing:.6px;color:#1d4ed8;text-transform:uppercase;">{{ app.name }}</div>
     {% for model in app.models %}
-    <div style="
-      padding: 10px 18px;
-      border-bottom: 1px solid #eef2f7;
-      display: flex; align-items: center; gap: 10px;
-    ">
-      <span style="font-size: 13px; font-weight: 600; color: #0f172a; flex: 1;">
-        {% if model.admin_url %}
-        <a href="{{ model.admin_url }}" style="color: #0f172a; text-decoration: none; font-weight: 600;">
-          {{ model.name }}
-        </a>
-        {% else %}
-        {{ model.name }}
-        {% endif %}
-      </span>
-      <div style="display: flex; gap: 6px;">
-        {% if model.add_url %}
-        <a href="{{ model.add_url }}" style="
-          font-size: 10px; padding: 3px 10px; border-radius: 5px;
-          background: rgba(34,197,94,0.10); color: #15803d;
-          border: 1px solid rgba(22,163,74,0.25); text-decoration: none;
-          font-weight: 700; transition: all .15s;
-        " onmouseover="this.style.background='rgba(34,197,94,0.18)'"
-           onmouseout="this.style.background='rgba(34,197,94,0.10)'">+ إضافة</a>
-        {% endif %}
-        {% if model.admin_url %}
-        <a href="{{ model.admin_url }}" style="
-          font-size: 10px; padding: 3px 10px; border-radius: 5px;
-          background: rgba(37,99,235,0.08); color: #1d4ed8;
-          border: 1px solid rgba(37,99,235,0.20); text-decoration: none;
-          font-weight: 700; transition: all .15s;
-        " onmouseover="this.style.background='rgba(37,99,235,0.16)'"
-           onmouseout="this.style.background='rgba(37,99,235,0.08)'">عرض الكل</a>
-        {% endif %}
-      </div>
+    <div style="padding:10px 18px;border-bottom:1px solid #eef2f7;font-size:13px;font-weight:600;color:#0f172a;">
+      {% if model.admin_url %}<a href="{{ model.admin_url }}" style="color:#0f172a;text-decoration:none;">{{ model.name }}</a>{% else %}{{ model.name }}{% endif %}
     </div>
     {% endfor %}
   </div>
   {% endfor %}
-</div>
-
-{% else %}
-<div style="
-  text-align: center; padding: 60px 20px;
-  color: #64748b; font-size: 14px;
-">
-  لا توجد نماذج مسجّلة في لوحة الإدارة.
 </div>
 {% endif %}
 
@@ -191,23 +109,11 @@
       border-bottom: 1px solid #eef2f7;
     ">
       {% if entry.is_addition %}
-      <span style="
-        font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px;
-        background: rgba(34,197,94,0.10); color: #15803d; border: 1px solid rgba(22,163,74,0.25);
-        white-space: nowrap;
-      ">+ إضافة</span>
+      <span style="font-size:9px;font-weight:800;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.10);color:#15803d;border:1px solid rgba(22,163,74,0.25);white-space:nowrap;">+ إضافة</span>
       {% elif entry.is_change %}
-      <span style="
-        font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px;
-        background: rgba(37,99,235,0.10); color: #1d4ed8; border: 1px solid rgba(37,99,235,0.22);
-        white-space: nowrap;
-      ">تعديل</span>
+      <span style="font-size:9px;font-weight:800;padding:2px 8px;border-radius:4px;background:rgba(37,99,235,0.10);color:#1d4ed8;border:1px solid rgba(37,99,235,0.22);white-space:nowrap;">تعديل</span>
       {% elif entry.is_deletion %}
-      <span style="
-        font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px;
-        background: rgba(239,68,68,0.10); color: #b91c1c; border: 1px solid rgba(220,38,38,0.25);
-        white-space: nowrap;
-      ">حذف</span>
+      <span style="font-size:9px;font-weight:800;padding:2px 8px;border-radius:4px;background:rgba(239,68,68,0.10);color:#b91c1c;border:1px solid rgba(220,38,38,0.25);white-space:nowrap;">حذف</span>
       {% endif %}
       <span style="flex: 1; font-size: 13px; color: #0f172a; font-weight: 600;">
         {% if entry.is_deletion %}
