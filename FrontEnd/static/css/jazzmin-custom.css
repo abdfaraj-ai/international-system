@@ -1,0 +1,107 @@
+/* ════════════════════════════════════════════════════════════════════
+   نظام انترناشونال — تحسينات لوحة Jazzmin (القائمة الجانبية + لمسات)
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── الحاوية الجانبية ──────────────────────────────────────────────── */
+.main-sidebar {
+  box-shadow: 0 0 24px rgba(15, 23, 42, 0.06);
+  border-left: 1px solid #e8edf3;
+}
+.brand-link {
+  border-bottom: 1px solid #eef2f7 !important;
+  font-weight: 800 !important;
+  letter-spacing: -.2px;
+}
+
+/* ── عناصر القائمة ─────────────────────────────────────────────────── */
+.sidebar .nav-sidebar > .nav-item {
+  margin: 1px 8px;
+}
+.sidebar .nav-sidebar > .nav-item > .nav-link {
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #334155;
+  transition: background .15s, color .15s;
+}
+.sidebar .nav-sidebar > .nav-item > .nav-link:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: #1d4ed8;
+}
+
+/* العنصر النشط */
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active,
+.nav-sidebar > .nav-item > .nav-link.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, 0.30);
+}
+
+/* الأيقونات */
+.nav-sidebar .nav-icon {
+  color: #64748b;
+  width: 22px;
+  font-size: 15px;
+}
+.nav-sidebar > .nav-item > .nav-link.active .nav-icon {
+  color: #ffffff;
+}
+
+/* الأبناء (القوائم الفرعية) */
+.nav-sidebar .nav-treeview > .nav-item > .nav-link {
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  color: #64748b;
+}
+.nav-sidebar .nav-treeview > .nav-item > .nav-link:hover {
+  background: rgba(37, 99, 235, 0.06);
+  color: #1d4ed8;
+}
+.nav-sidebar .nav-treeview > .nav-item > .nav-link.active {
+  background: rgba(37, 99, 235, 0.12) !important;
+  color: #1d4ed8 !important;
+}
+
+/* عناوين الأقسام */
+.nav-header {
+  color: #94a3b8 !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: .6px !important;
+  text-transform: uppercase;
+  padding: 14px 16px 6px !important;
+}
+
+/* عدّاد/شارة بجانب العنصر */
+.nav-sidebar .badge {
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* ── لمسات عامة على المحتوى ────────────────────────────────────────── */
+.content-header h1 {
+  font-weight: 800;
+  color: #0f172a;
+}
+.card {
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+.btn-primary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+.btn-primary:hover {
+  background: #1e40af;
+  border-color: #1e40af;
+}
+
+/* شريط التصفية في القائمة */
+#jazzy-navigation .form-control,
+.main-sidebar .form-control {
+  border-radius: 9px;
+  border: 1px solid #e2e8f0;
+}

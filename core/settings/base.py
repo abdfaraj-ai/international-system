@@ -312,9 +312,26 @@ JAZZMIN_SETTINGS = {
     'default_icon_parents':  'fas fa-folder',
     'default_icon_children': 'fas fa-circle',
 
+    # CSS مخصّص لصقل القائمة الجانبية والمظهر
+    'custom_css': 'css/jazzmin-custom.css',
+
     'related_modal_active': True,
     'show_ui_builder': False,
     'changeform_format': 'horizontal_tabs',
+
+    # ── القائمة الجانبية ──
+    'navigation_expanded': True,
+    'hide_apps': [],
+    'hide_models': [],
+    'custom_links': {
+        'pages': [
+            {'name': 'لوحة التحكم الرئيسية', 'url': '/dashboard/', 'icon': 'fas fa-gauge-high'},
+        ],
+    },
+    'usermenu_links': [
+        {'name': 'الصفحة الرئيسية', 'url': '/dashboard/', 'icon': 'fas fa-home'},
+        {'name': 'تغيير كلمة المرور', 'url': 'admin:password_change', 'icon': 'fas fa-key'},
+    ],
 }
 
 # مظهر فاتح احترافي (Bootswatch)
@@ -323,7 +340,18 @@ JAZZMIN_UI_TWEAKS = {
     'dark_mode_theme': None,
     'navbar': 'navbar-white navbar-light',
     'no_navbar_border': True,
+    'body_small_text': False,
+    'navbar_small_text': False,
+    'brand_small_text': False,
     'sidebar': 'sidebar-light-primary',
+    'sidebar_fixed': True,
+    'navbar_fixed': True,
+    'footer_fixed': False,
+    'sidebar_nav_small_text': False,
+    'sidebar_disable_expand': False,
+    'sidebar_nav_child_indent': True,
+    'sidebar_nav_compact_style': False,
+    'sidebar_nav_legacy_style': False,
     'sidebar_nav_flat_style': True,
     'brand_colour': 'navbar-primary',
     'accent': 'accent-primary',
