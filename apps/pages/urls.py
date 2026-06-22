@@ -5,7 +5,6 @@ from .api import portal       as portal_api
 from .api import portal_chat  as portal_chat_api
 from .api import auth_api     as auth_api
 from .api import dashboard    as dashboard_api
-from .api import dashboard_charts as dashboard_charts_api
 from .api import transactions as transactions_api
 from .api import accounts     as accounts_api
 from .api import teller       as teller_api
@@ -239,7 +238,6 @@ urlpatterns = [
     # ── إحصائيات وهيكل ─────────────────────────────────────────────────────
     path('api/dash/stats',              dashboard_api.api_dash_stats,          name='api-dash-stats'),
     path('api/dash/org-tree',           dashboard_api.api_org_tree,            name='api-org-tree'),
-    path('api/dash/charts',             dashboard_charts_api.api_dash_charts,  name='api-dash-charts'),
 
     # ── الفروع ──────────────────────────────────────────────────────────────
     path('api/branches',                    dashboard_api.api_branches,            name='api-branches'),
