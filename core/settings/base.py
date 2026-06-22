@@ -22,6 +22,7 @@ if not SECRET_KEY:
 
 INSTALLED_APPS = [
     'daphne',
+    'jazzmin',            # ثيم لوحة الإدارة — يجب أن يسبق django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -266,3 +267,72 @@ EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS',  'true').lower() == 'true'
 EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER',     '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL',  EMAIL_HOST_USER)
+
+# ── ثيم لوحة الإدارة (Jazzmin) ───────────────────────────────────────────────
+JAZZMIN_SETTINGS = {
+    'site_title':   'نظام انترناشونال',
+    'site_header':  'نظام انترناشونال الموحد',
+    'site_brand':   'انترناشونال',
+    'welcome_sign': 'مرحباً بك في لوحة إدارة النظام',
+    'copyright':    'International Financial Services',
+    'site_logo_classes': 'img-circle',
+
+    # بحث سريع في الشريط العلوي
+    'search_model': ['pages.SystemUser'],
+
+    # روابط علوية
+    'topmenu_links': [
+        {'name': 'الصفحة الرئيسية', 'url': '/dashboard/', 'new_window': False},
+        {'name': 'الموقع', 'url': '/', 'new_window': True},
+    ],
+
+    # ترتيب التطبيقات والنماذج في القائمة الجانبية
+    'order_with_respect_to': ['pages', 'auth'],
+
+    # أيقونات FontAwesome لكل نموذج
+    'icons': {
+        'auth':                          'fas fa-users-cog',
+        'auth.Group':                    'fas fa-users-cog',
+        'pages.SystemUser':              'fas fa-users',
+        'pages.HawalaOperation':         'fas fa-globe',
+        'pages.ExchangeOperation':       'fas fa-exchange-alt',
+        'pages.CashTransaction':         'fas fa-money-bill-wave',
+        'pages.ExchangeRate':            'fas fa-chart-line',
+        'pages.TellerRequest':           'fas fa-bell',
+        'pages.TellerBalance':           'fas fa-balance-scale',
+        'pages.TellerProfile':           'fas fa-user-tie',
+        'pages.TellerPermission':        'fas fa-key',
+        'pages.UploadedImage':           'fas fa-image',
+        'pages.AuditLog':                'fas fa-shield-alt',
+        'pages.PortalTransferRequest':   'fas fa-paper-plane',
+        'pages.PortalCountry':           'fas fa-flag',
+        'pages.PortalReceivingMethod':   'fas fa-inbox',
+        'pages.DevRequest':              'fas fa-tools',
+    },
+    'default_icon_parents':  'fas fa-folder',
+    'default_icon_children': 'fas fa-circle',
+
+    'related_modal_active': True,
+    'show_ui_builder': False,
+    'changeform_format': 'horizontal_tabs',
+}
+
+# مظهر فاتح احترافي (Bootswatch)
+JAZZMIN_UI_TWEAKS = {
+    'theme': 'flatly',
+    'dark_mode_theme': None,
+    'navbar': 'navbar-white navbar-light',
+    'no_navbar_border': True,
+    'sidebar': 'sidebar-light-primary',
+    'sidebar_nav_flat_style': True,
+    'brand_colour': 'navbar-primary',
+    'accent': 'accent-primary',
+    'button_classes': {
+        'primary': 'btn-primary',
+        'secondary': 'btn-secondary',
+        'info': 'btn-info',
+        'warning': 'btn-warning',
+        'danger': 'btn-danger',
+        'success': 'btn-success',
+    },
+}

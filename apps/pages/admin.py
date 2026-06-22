@@ -2,7 +2,6 @@ from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from django.utils import timezone
-from django.urls import reverse
 from .models import (
     SystemUser, ExchangeOperation, HawalaOperation, CashTransaction,
     UploadedImage, ExchangeRate, TellerRequest, TellerBalance,
@@ -770,81 +769,3 @@ class DevRequestAdmin(admin.ModelAdmin):
         ('بيانات الطلب', {'fields': ('title', 'type', 'description', 'sender', 'sender_role', 'sender_page', 'created_at', 'updated_at')}),
         ('إدارة الطلب', {'fields': ('status', 'admin_notes')}),
     )
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  لوحة الإدارة — App-Launcher (بلاطات + إحصائيات حيّة) في الصفحة الرئيسية
-# ═══════════════════════════════════════════════════════════════════════════════
-_orig_admin_index = admin.site.index
-
-# أيقونة + لون لكل نموذج (بالاسم البرمجي)
-_TILE_META = {
-    'SystemUser':            ('👥', '#2563eb'),
-    'HawalaOperation':       ('🌍', '#16a34a'),
-    'ExchangeOperation':     ('💱', '#0891b2'),
-    'CashTransaction':       ('💵', '#65a30d'),
-    'ExchangeRate':          ('📈', '#7c3aed'),
-    'TellerRequest':         ('⏳', '#d97706'),
-    'TellerBalance':         ('⚖️', '#0ea5e9'),
-    'TellerProfile':         ('🧑‍💼', '#475569'),
-    'TellerPermission':      ('🔑', '#a16207'),
-    'UploadedImage':         ('🖼️', '#db2777'),
-    'AuditLog':              ('🛡️', '#0284c7'),
-    'PortalTransferRequest': ('🌐', '#6366f1'),
-    'PortalCountry':         ('🏳️', '#0d9488'),
-    'PortalReceivingMethod': ('📥', '#059669'),
-    'DevRequest':            ('🛠️', '#9333ea'),
-    'Group':                 ('👨‍👩‍👧', '#475569'),
-}
-
-
-def _build_tiles(request):
-    """يبني بلاطات لكل نموذج مسجّل يملك المستخدم صلاحية عرضه (مع عدّاد)."""
-    tiles = []
-    for model, model_admin in admin.site._registry.items():
-        try:
-            if not model_admin.has_view_or_change_permission(request):
-                continue
-            info = (model._meta.app_label, model._meta.model_name)
-            url = reverse('admin:%s_%s_changelist' % info)
-            try:
-                count = model_admin.get_queryset(request).count()
-            except Exception:
-                count = None
-            icon, color = _TILE_META.get(model.__name__, ('🗂️', '#475569'))
-            tiles.append({
-                'name':  str(model._meta.verbose_name_plural),
-                'url':   url,
-                'count': count,
-                'icon':  icon,
-                'color': color,
-            })
-        except Exception:
-            continue
-    tiles.sort(key=lambda t: -(t['count'] or 0))
-    return tiles
-
-
-def _intl_admin_index(request, extra_context=None):
-    extra_context = extra_context or {}
-    today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    try:
-        ops_today = (
-            ExchangeOperation.objects.filter(created_at__gte=today).count()
-            + HawalaOperation.objects.filter(created_at__gte=today).count()
-            + CashTransaction.objects.filter(created_at__gte=today).count()
-        )
-        extra_context['intl_stats'] = {
-            'ops_today': ops_today,
-            'pending':   TellerRequest.objects.filter(status='pending').count(),
-        }
-    except Exception:
-        extra_context['intl_stats'] = None
-    try:
-        extra_context['intl_tiles'] = _build_tiles(request)
-    except Exception:
-        extra_context['intl_tiles'] = []
-    return _orig_admin_index(request, extra_context)
-
-
-admin.site.index = _intl_admin_index
