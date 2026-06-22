@@ -468,7 +468,7 @@ function alGo(key) {
   if (url) {
     window.location.href = url;
   } else {
-    alToast('🚧 هذه الوحدة قيد الإنشاء', 'warning', '🚧');
+    alToast('هذه الوحدة قيد الإنشاء', 'warning', '🚧');
   }
 }
 
@@ -554,7 +554,7 @@ async function spLoadSafes() {
   } catch {
     _sfAll = []; _sfFiltered = [];
     document.getElementById('sf-tbody').innerHTML =
-      '<tr><td colspan="8" class="sp-empty">📭 لا توجد بيانات</td></tr>';
+      '<tr><td colspan="8" class="sp-empty">لا توجد بيانات</td></tr>';
   }
 }
 
@@ -577,7 +577,7 @@ function sfRender(p) {
   });
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('sf-showing').textContent = '—';
     document.getElementById('sf-pages').innerHTML = '';
     document.getElementById('sf-prev').disabled = true;
@@ -853,7 +853,7 @@ async function efLoad() {
   } catch {
     _efAll = []; _efFiltered = [];
     document.getElementById('ef-tbody').innerHTML =
-      '<tr><td colspan="12" class="sp-empty">📭 لا توجد قيود</td></tr>';
+      '<tr><td colspan="12" class="sp-empty">لا توجد قيود</td></tr>';
     document.getElementById('ef-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('ef-pages').innerHTML = '';
   }
@@ -869,7 +869,7 @@ function efRender(p) {
   const tbody = document.getElementById('ef-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="12" class="sp-empty">📭 لا توجد قيود</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="12" class="sp-empty">لا توجد قيود</td></tr>';
     document.getElementById('ef-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('ef-pages').innerHTML = '';
     document.getElementById('ef-prev').disabled = true;
@@ -973,14 +973,13 @@ function amConfirmDialog(title, rows) {
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:16px;width:90%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;font-family:'Cairo',sans-serif">
         <div style="background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:18px 24px;text-align:center">
-          <div style="font-size:1.6rem">📋</div>
           <h3 style="color:#fff;margin:6px 0 0;font-size:1.1rem;font-weight:800">${title}</h3>
           <p style="color:rgba(255,255,255,.8);margin:4px 0 0;font-size:.8rem">يرجى مراجعة التفاصيل قبل التأكيد</p>
         </div>
         <div style="padding:22px 24px">${rowsHtml}</div>
         <div style="display:flex;gap:10px;padding:0 24px 22px">
           <button id="am-confirm-cancel" style="flex:1;padding:12px;border:1px solid #e2e8f0;background:#f1f5f9;color:#475569;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">إلغاء</button>
-          <button id="am-confirm-ok" style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">✓ تأكيد وتسجيل</button>
+          <button id="am-confirm-ok" style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer">تأكيد وتسجيل</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
@@ -1052,7 +1051,7 @@ async function efSave() {
     const d = await r.json();
     if (d.success) {
       const profit = d.netProfit != null ? Number(d.netProfit).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
-      alToast(`✅ تم القيد ${d.record?.refNumber || ''} — الربح: ${profit}`, 'success', '✅');
+      alToast(`تم القيد ${d.record?.refNumber || ''} — الربح: ${profit}`, 'success', '✅');
       // تنظيف الحقول
       ['ef-from-amount','ef-from-fees','ef-from-beneficiary',
        'ef-from-notes','ef-to-amount','ef-to-fees','ef-to-notes']
@@ -1211,7 +1210,7 @@ async function aeLoad() {
   } catch {
     _aeAll = []; _aeFiltered = [];
     document.getElementById('ae-tbody').innerHTML =
-      '<tr><td colspan="13" class="sp-empty">📭 لا توجد قيود</td></tr>';
+      '<tr><td colspan="13" class="sp-empty">لا توجد قيود</td></tr>';
   }
 }
 
@@ -1227,7 +1226,7 @@ function aeRender(p) {
   const fmtP  = v => `<span style="color:${Number(v||0)>=0?'#4ADE80':'#FCA5A5'};font-weight:700">${fmt(v)}</span>`;
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">📭 لا توجد قيود</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">لا توجد قيود</td></tr>';
     document.getElementById('ae-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('ae-pages').innerHTML = '';
     document.getElementById('ae-prev').disabled = true;
@@ -1362,7 +1361,7 @@ async function aeSave() {
       const profit = Number(d.netProfit||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
       const ref = d.record?.refNumber || '';
       if (document.getElementById('ae-sum-ref')) document.getElementById('ae-sum-ref').textContent = `آخر قيد: ${ref}`;
-      alToast(`✅ تم القيد ${ref} — الربح: ${profit}`, 'success', '✅');
+      alToast(`تم القيد ${ref} — الربح: ${profit}`, 'success', '✅');
       // تنظيف الحقول
       ['ae-from-name','ae-from-amount','ae-from-fee','ae-from-notes',
        'ae-to-beneficiary','ae-to-amount','ae-to-fee','ae-to-notes']
@@ -1582,7 +1581,7 @@ async function sm2Load() {
   } catch {
     _sm2All = []; _sm2Filtered = [];
     document.getElementById('sm2-tbody').innerHTML =
-      '<tr><td colspan="9" class="sp-empty">📭 لا توجد سندات</td></tr>';
+      '<tr><td colspan="9" class="sp-empty">لا توجد سندات</td></tr>';
   }
 }
 
@@ -1598,7 +1597,7 @@ function sm2Render(p) {
   const fmtP  = v => `<span style="color:${Number(v||0)>=0?'#4ADE80':'#FCA5A5'};font-weight:700">${fmt(v)}</span>`;
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">📭 لا توجد سندات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">لا توجد سندات</td></tr>';
     document.getElementById('sm2-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('sm2-pages').innerHTML = '';
     document.getElementById('sm2-prev').disabled = true;
@@ -1617,11 +1616,11 @@ function sm2Render(p) {
     <td style="font-size:11px;color:rgba(255,255,255,.7)">${e.notes||'—'}</td>
     <td style="white-space:nowrap">
       <button onclick="sm2Reverse(${e.id},'${(e.refNumber||'').replace(/'/g,'')}')"
-        style="padding:2px 8px;border:1px solid rgba(147,197,253,.3);background:rgba(147,197,253,.15);color:#93C5FD;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;margin-left:4px">🔄 عكس قيد</button>
+        style="padding:2px 8px;border:1px solid rgba(147,197,253,.3);background:rgba(147,197,253,.15);color:#93C5FD;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;margin-left:4px">عكس قيد</button>
       <button onclick="sm2Edit(${e.id})"
-        style="padding:2px 8px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.15);color:#4ADE80;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;margin-left:4px">✎ تعديل</button>
+        style="padding:2px 8px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.15);color:#4ADE80;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;margin-left:4px">تعديل</button>
       <button onclick="sm2Delete(${e.id},'${(e.refNumber||'').replace(/'/g,'')}')"
-        style="padding:2px 8px;border:1px solid rgba(252,165,165,.3);background:rgba(252,165,165,.15);color:#FCA5A5;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit">✕ حذف قيد</button>
+        style="padding:2px 8px;border:1px solid rgba(252,165,165,.3);background:rgba(252,165,165,.15);color:#FCA5A5;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit">حذف قيد</button>
     </td>
   </tr>`; }).join('');
 
@@ -1698,7 +1697,7 @@ async function sm2Save() {
       const ref = d.record?.refNumber || '';
       const profit = Number(d.record?.netProfit||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
       if (document.getElementById('sm2-sum-ref')) document.getElementById('sm2-sum-ref').textContent = `آخر سند: ${ref}`;
-      alToast(`✅ تم السند ${ref} — الربح: ${profit}`, 'success', '✅');
+      alToast(`تم السند ${ref} — الربح: ${profit}`, 'success', '✅');
       if (d.warning) alToast(d.warning, 'warning', '⚠️');
       // تنظيف
       document.getElementById('sm2-center').value = '';
@@ -2431,7 +2430,7 @@ async function tcLoad() {
   } catch {
     _tcAll = []; _tcFiltered = [];
     document.getElementById('tc-tbody').innerHTML =
-      '<tr><td colspan="10" class="sp-empty">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+      '<tr><td colspan="10" class="sp-empty">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('tc-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('tc-pages').innerHTML = '';
   }
@@ -2447,7 +2446,7 @@ function tcRender(p) {
   const tbody = document.getElementById('tc-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('tc-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('tc-pages').innerHTML = '';
     document.getElementById('tc-prev').disabled = true;
@@ -2577,7 +2576,7 @@ async function cpLoad() {
   } catch {
     _cpAll = []; _cpFiltered = [];
     document.getElementById('cp-tbody').innerHTML =
-      '<tr><td colspan="17" class="sp-empty">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+      '<tr><td colspan="17" class="sp-empty">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('cp-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('cp-pages').innerHTML = '';
   }
@@ -2593,7 +2592,7 @@ function cpRender(p) {
   const tbody = document.getElementById('cp-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="17" class="sp-empty">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="17" class="sp-empty">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('cp-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('cp-pages').innerHTML = '';
     document.getElementById('cp-prev').disabled = true;
@@ -2748,7 +2747,7 @@ async function smLoad() {
   } catch {
     _smAll = []; _smFiltered = [];
     document.getElementById('sm-tbody').innerHTML =
-      '<tr><td colspan="8" class="sm-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+      '<tr><td colspan="8" class="sm-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('sm-showing').textContent = '—';
     document.getElementById('sm-pages').innerHTML = '';
   }
@@ -2773,7 +2772,7 @@ function smRender(p) {
   });
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="8" class="sm-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="sm-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('sm-showing').textContent = '—';
     document.getElementById('sm-pages').innerHTML = '';
     document.getElementById('sm-prev').disabled = true;
@@ -2898,7 +2897,7 @@ async function trashLoad() {
   } catch {
     _trashAll = []; _trashFiltered = [];
     document.getElementById('trash-tbody').innerHTML =
-      '<tr><td colspan="7" class="sp-empty">📭 لا توجد مراكز محذوفة</td></tr>';
+      '<tr><td colspan="7" class="sp-empty">لا توجد مراكز محذوفة</td></tr>';
     document.getElementById('trash-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('trash-pages').innerHTML = '';
   }
@@ -2914,7 +2913,7 @@ function trashRender(p) {
   const tbody = document.getElementById('trash-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="7" class="sp-empty">📭 لا توجد مراكز محذوفة</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="sp-empty">لا توجد مراكز محذوفة</td></tr>';
     document.getElementById('trash-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('trash-pages').innerHTML = '';
     document.getElementById('trash-prev').disabled = true;
@@ -2931,10 +2930,10 @@ function trashRender(p) {
     <td style="color:rgba(255,255,255,.7)">${c.phone || '—'}</td>
     <td style="display:flex;gap:4px;align-items:center">
       <button class="sp-tbar-btn" onclick="trashRestore(${c.id},'${(c.name||'').replace(/'/g,"\\'")}' )" style="background:rgba(74,222,128,.15);color:#4ADE80;border-color:rgba(74,222,128,.3)">
-        ↩️ استعادة
+        استعادة
       </button>
       <button class="sp-tbar-btn" onclick="trashPermanentDelete(${c.id},'${(c.name||'').replace(/'/g,"\\'")}' )" style="background:rgba(252,165,165,.15);color:#FCA5A5;border-color:rgba(252,165,165,.3)">
-        🗑️ حذف نهائي
+        حذف نهائي
       </button>
     </td>
   </tr>`; }).join('');
@@ -3027,7 +3026,7 @@ async function ccLoad() {
   } catch {
     _ccAll = []; _ccFiltered = [];
     document.getElementById('cc-tbody').innerHTML =
-      '<tr><td colspan="8" class="cc-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+      '<tr><td colspan="8" class="cc-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('cc-showing').textContent = '—';
     document.getElementById('cc-pages').innerHTML = '';
   }
@@ -3047,7 +3046,7 @@ function ccRender(p) {
   const tbody = document.getElementById('cc-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="8" class="cc-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="cc-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('cc-showing').textContent = '—';
     document.getElementById('cc-pages').innerHTML = '';
     document.getElementById('cc-prev').disabled = true;
@@ -3056,10 +3055,10 @@ function ccRender(p) {
   }
 
   const lockBadge = v => v
-    ? '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#FEE2E2;color:#B91C1C;border-radius:20px;font-size:10.5px;font-weight:800">🔒 مقفل</span>'
-    : '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#DCFCE7;color:#15803D;border-radius:20px;font-size:10.5px;font-weight:800">🔓 مفتوح</span>';
+    ? '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#FEE2E2;color:#B91C1C;border-radius:20px;font-size:10.5px;font-weight:800">مقفل</span>'
+    : '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#DCFCE7;color:#15803D;border-radius:20px;font-size:10.5px;font-weight:800">مفتوح</span>';
   const docLink = url => url
-    ? `<a href="${url}" target="_blank" style="color:#2563EB;font-size:11px;text-decoration:underline">🔗 فتح</a>`
+    ? `<a href="${url}" target="_blank" style="color:#2563EB;font-size:11px;text-decoration:underline">فتح</a>`
     : '<span style="color:#CBD5E1;font-size:11px">—</span>';
 
   tbody.innerHTML = slice.map((c) => `<tr>
@@ -3241,7 +3240,7 @@ async function cuLoad() {
   } catch {
     _cuAll = []; _cuFiltered = [];
     document.getElementById('cu-tbody').innerHTML =
-      '<tr><td colspan="11" class="sp-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+      '<tr><td colspan="11" class="sp-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('cu-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('cu-pages').innerHTML = '';
   }
@@ -3260,7 +3259,7 @@ function cuRender(p) {
   const tbody = document.getElementById('cu-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('cu-showing').textContent = 'يعرض 0 إلى 0 من أصل 0';
     document.getElementById('cu-pages').innerHTML = '';
     document.getElementById('cu-prev').disabled = true;
@@ -3270,10 +3269,10 @@ function cuRender(p) {
 
   const fmtNum = v => v != null ? Number(v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
   const lockBadge = v => v
-    ? '<span class="sp-badge sp-badge-red">🔒 مقفل</span>'
-    : '<span class="sp-badge sp-badge-green">🔓 مفتوح</span>';
+    ? '<span class="sp-badge sp-badge-red">مقفل</span>'
+    : '<span class="sp-badge sp-badge-green">مفتوح</span>';
   const docLink = url => url
-    ? `<a href="${url}" target="_blank" class="sp-tbar-btn" style="font-size:10px;color:#93C5FD;border-color:rgba(147,197,253,.3)">🔗 فتح</a>`
+    ? `<a href="${url}" target="_blank" class="sp-tbar-btn" style="font-size:10px;color:#93C5FD;border-color:rgba(147,197,253,.3)">فتح</a>`
     : '<span style="color:rgba(255,255,255,.3);font-size:11px">—</span>';
 
   tbody.innerHTML = slice.map((c,i) => { const bg=i%2===0?'#1E3A5F':'#162d4a'; return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
@@ -3459,7 +3458,7 @@ async function trLoad() {
   } catch {
     _trAll = []; _trFiltered = [];
     document.getElementById('tr-tbody').innerHTML =
-      '<tr><td colspan="8" class="sp-empty">📭 لا توجد بيانات متاحة في الجدول</td></tr>';
+      '<tr><td colspan="8" class="sp-empty">لا توجد بيانات متاحة في الجدول</td></tr>';
     document.getElementById('tr-showing').textContent = `يعرض 0 إلى 0 من أصل 0`;
     document.getElementById('tr-pages').innerHTML = '';
   }
@@ -3475,7 +3474,7 @@ function trRender(p) {
   const tbody = document.getElementById('tr-tbody');
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">📭 ليست هناك بيانات متاحة في الجدول</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">ليست هناك بيانات متاحة في الجدول</td></tr>';
     document.getElementById('tr-showing').textContent = `يعرض 0 إلى 0 من أصل 0`;
     document.getElementById('tr-pages').innerHTML = '';
     document.getElementById('tr-prev').disabled = true;
@@ -3666,7 +3665,7 @@ function agRender(p) {
   const tbody   = document.getElementById('ag-tbody');
 
   if (!_agFiltered.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">📭 لا توجد نتائج</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">لا توجد نتائج</td></tr>';
     document.getElementById('ag-showing').textContent = '0 نتائج';
     document.getElementById('ag-pages').innerHTML = '';
     return;
@@ -3674,13 +3673,13 @@ function agRender(p) {
 
   tbody.innerHTML = slice.map((a,i) => {
     const typeBadge = a.type === 'external'
-      ? '<span class="sp-badge sp-badge-gray">🌍 خارجي</span>'
-      : '<span class="sp-badge sp-badge-green">🏠 داخلي</span>';
+      ? '<span class="sp-badge sp-badge-gray">خارجي</span>'
+      : '<span class="sp-badge sp-badge-green">داخلي</span>';
     const lockBadge = a.is_locked
-      ? '<span class="sp-badge sp-badge-red">🔒 مقفل</span>'
-      : '<span class="sp-badge sp-badge-green">🔓 مفتوح</span>';
+      ? '<span class="sp-badge sp-badge-red">مقفل</span>'
+      : '<span class="sp-badge sp-badge-green">مفتوح</span>';
     const docLink = a.doc_url
-      ? `<a href="${a.doc_url}" target="_blank" class="sp-tbar-btn" style="font-size:10px;color:#93C5FD;border-color:rgba(147,197,253,.3)">🔗 فتح</a>`
+      ? `<a href="${a.doc_url}" target="_blank" class="sp-tbar-btn" style="font-size:10px;color:#93C5FD;border-color:rgba(147,197,253,.3)">فتح</a>`
       : '<span style="color:rgba(255,255,255,.3);font-size:11px">—</span>';
     const bg = i%2===0?'#1E3A5F':'#162d4a';
     return `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,.08)" onmouseover="this.style.background='#243f6b'" onmouseout="this.style.background='${bg}'">
@@ -3693,8 +3692,8 @@ function agRender(p) {
       <td>${lockBadge}</td>
       <td style="display:flex;gap:4px;align-items:center">
         ${docLink}
-        <button class="sp-tbar-btn" onclick="agOpenEdit(${a.id})" style="background:rgba(147,197,253,.15);color:#93C5FD;border-color:rgba(147,197,253,.3)">✏️ تعديل</button>
-        <button class="sp-tbar-btn" onclick="agDelete(${a.id},'${(a.name||a.username||'').replace(/'/g,"\\'")}' )" style="background:rgba(252,165,165,.15);color:#FCA5A5;border-color:rgba(252,165,165,.3)">🗑️ حذف</button>
+        <button class="sp-tbar-btn" onclick="agOpenEdit(${a.id})" style="background:rgba(147,197,253,.15);color:#93C5FD;border-color:rgba(147,197,253,.3)">تعديل</button>
+        <button class="sp-tbar-btn" onclick="agDelete(${a.id},'${(a.name||a.username||'').replace(/'/g,"\\'")}' )" style="background:rgba(252,165,165,.15);color:#FCA5A5;border-color:rgba(252,165,165,.3)">حذف</button>
       </td>
     </tr>`;
   }).join('');
@@ -4283,7 +4282,7 @@ function tbInit() {
 
 async function tbLoad() {
   const statusEl = document.getElementById('tb-status');
-  if (statusEl) statusEl.textContent = '⏳ جارٍ التحميل...';
+  if (statusEl) statusEl.textContent = 'جارٍ التحميل...';
 
   const df = document.getElementById('tb-date-from')?.value || '';
   const dt = document.getElementById('tb-date-to')?.value   || '';
@@ -4497,7 +4496,7 @@ function eaRender(page) {
         <span style="background:rgba(96,165,250,.2);color:#93C5FD;border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:600;white-space:nowrap;border:1px solid rgba(96,165,250,.3)">صادر</span>
       </td>
     </tr>`).join('')
-  : '<tr><td colspan="9" style="text-align:center;padding:40px;color:#94A3B8;font-size:12px">📭 لا توجد نتائج</td></tr>';
+  : '<tr><td colspan="9" style="text-align:center;padding:40px;color:#94A3B8;font-size:12px">لا توجد نتائج</td></tr>';
 
   const prevBtn = document.getElementById('ea-prev');
   const nextBtn = document.getElementById('ea-next');
@@ -4606,7 +4605,7 @@ function omRender(page) {
       <td style="padding:9px 12px;font-size:11.5px;color:rgba(255,255,255,.7);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.notes||''}">${r.notes||'—'}</td>
       <td style="padding:9px 12px;text-align:center">${statusBadge(r.status||'pending')}</td>
     </tr>`).join('')
-  : '<tr><td colspan="11" style="text-align:center;padding:40px;color:rgba(255,255,255,.4);font-size:12px">📭 لا توجد عمليات</td></tr>';
+  : '<tr><td colspan="11" style="text-align:center;padding:40px;color:rgba(255,255,255,.4);font-size:12px">لا توجد عمليات</td></tr>';
 
   const prevBtn = document.getElementById('om-prev');
   const nextBtn = document.getElementById('om-next');
@@ -4651,7 +4650,7 @@ async function ppsLoad() {
   } catch {
     _ppsAll = []; _ppsFiltered = [];
     document.getElementById('pps-tbody').innerHTML =
-      '<tr><td colspan="17" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+      '<tr><td colspan="17" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('pps-showing').textContent = '—';
   }
 }
@@ -4670,7 +4669,7 @@ function ppsRender(p) {
   const slice  = _ppsFiltered.slice(offset, offset + _ppsPerPage);
 
   if (!total) {
-    tbody.innerHTML = '<tr><td colspan="17" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">📭 لا توجد بيانات لهذه الفترة</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="17" style="text-align:center;padding:30px;color:rgba(255,255,255,.4);font-size:12px">لا توجد بيانات لهذه الفترة</td></tr>';
     document.getElementById('pps-showing').textContent = '—';
     document.getElementById('pps-pages').innerHTML = '';
     document.getElementById('pps-prev').disabled = true;
@@ -4776,7 +4775,7 @@ async function brLoad() {
   } catch {
     _brAll = []; _brFiltered = [];
     document.getElementById('br-tbody').innerHTML =
-      '<tr><td colspan="7" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+      '<tr><td colspan="7" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -4932,7 +4931,7 @@ async function cutLoad() {
   } catch {
     _cutAll = []; _cutFiltered = [];
     document.getElementById('cut-tbody').innerHTML =
-      '<tr><td colspan="6" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+      '<tr><td colspan="6" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -4958,7 +4957,7 @@ async function cutLoadOps() {
     </tr>`).join('');
   } catch {
     document.getElementById('cut-ops-tbody').innerHTML =
-      '<tr><td colspan="7" class="sp-empty">⚠️ فشل تحميل العمليات</td></tr>';
+      '<tr><td colspan="7" class="sp-empty">فشل تحميل العمليات</td></tr>';
   }
 }
 
@@ -5099,7 +5098,7 @@ async function ptLoad() {
   } catch {
     _ptAll = []; _ptFiltered = [];
     document.getElementById('pt-tbody').innerHTML =
-      `<tr><td colspan="21" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>`;
+      `<tr><td colspan="21" class="sp-empty">فشل تحميل البيانات</td></tr>`;
   }
 }
 
@@ -5285,7 +5284,7 @@ async function asLoadStatement() {
     _asData = Array.isArray(d) ? d : (d.records || d.results || d.entries || d.data || []);
     asRenderTable();
   } catch {
-    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5406,7 +5405,7 @@ async function enSearch() {
   } catch {
     _enAll = []; _enFiltered = [];
     document.getElementById('en-tbody').innerHTML =
-      '<tr><td colspan="10" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+      '<tr><td colspan="10" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5540,7 +5539,7 @@ async function lmSearch() {
     lmRender(1);
   } catch {
     _lmAll = []; _lmFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5656,7 +5655,7 @@ async function atSearch() {
     atRender(1);
   } catch {
     _atAll = []; _atFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5782,7 +5781,7 @@ async function rtSearch() {
     rtRender(1);
   } catch {
     _rtAll = []; _rtFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5894,7 +5893,7 @@ async function utSearch() {
     utRender(1);
   } catch {
     _utAll = []; _utFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -6006,7 +6005,7 @@ async function dtSearch() {
     dtRender(1);
   } catch {
     _dtAll = []; _dtFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -6125,7 +6124,7 @@ async function advSearch() {
     advRender(1);
   } catch {
     _advAll = []; _advFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -6244,7 +6243,7 @@ async function rsvSearch() {
     rsvRender(1);
   } catch {
     _rsvAll = []; _rsvFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -6373,7 +6372,7 @@ async function dlvLoad(type) {
     dlvRender(type, 1);
   } catch {
     cardsEl.innerHTML = '';
-    tbody.innerHTML   = `<tr><td colspan="9" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>`;
+    tbody.innerHTML   = `<tr><td colspan="9" class="sp-empty">فشل تحميل البيانات</td></tr>`;
   }
 }
 
@@ -6536,7 +6535,7 @@ async function deliveredSearch() {
     deliveredRender(1);
   } catch {
     _dedAll = []; _dedFiltered = [];
-    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">⚠️ فشل تحميل البيانات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -7066,8 +7065,8 @@ function pkgRender() {
     const opLabel = PKG_OP_LABELS[p.cutOp] || p.cutOp || '—';
     const actions = p.builtIn
       ? '<span style="color:#94A3B8;font-size:11px">للعرض فقط</span>'
-      : `<button class="pkg-btn-edit" onclick="pkgOpenEdit(${p._userIdx})">✏️ تعديل</button>
-         <button class="pkg-btn-del"  onclick="pkgDelete(${p._userIdx})">🗑 حذف</button>`;
+      : `<button class="pkg-btn-edit" onclick="pkgOpenEdit(${p._userIdx})">تعديل</button>
+         <button class="pkg-btn-del"  onclick="pkgDelete(${p._userIdx})">حذف</button>`;
 
     return `<tr>
       <td style="color:#94A3B8;font-size:11px">${i + 1}</td>
@@ -7213,7 +7212,7 @@ function ctpRenderCard(type) {
       <td style="color:#64748B;font-size:12px">${CTP_DIR_LABELS[p.direction]||p.direction}</td>
       <td>${activeBadge}</td>
       <td style="display:flex;gap:6px;justify-content:flex-end">
-        <button class="ctp-btn-edit" onclick="ctpOpenEdit(${p.id})">✏️ تعديل</button>
+        <button class="ctp-btn-edit" onclick="ctpOpenEdit(${p.id})">تعديل</button>
         <button class="ctp-btn-del"  onclick="ctpDelete(${p.id},'${p.currency}')">🗑</button>
       </td>
     </tr>`;
@@ -8520,7 +8519,7 @@ function vvRender() {
   tbody.innerHTML = slice.map((j, i) => {
     const approved = !!_vvApproved[j.id];
     const actionCell = approved
-      ? `<td><span class="vv-approved-badge">✓ تمت المصادقة</span></td>`
+      ? `<td><span class="vv-approved-badge">تمت المصادقة</span></td>`
       : `<td><button class="vv-approve-btn" onclick="vvApprove(${j.id})">مصادقة</button></td>`;
     return `<tr style="${i%2===1?'background:#F8FAFC':''}">
       <td class="vv-idx">${(_vvPage-1)*perPage+i+1}</td>

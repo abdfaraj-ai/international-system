@@ -44,7 +44,7 @@ function totalBalance(balObj) {
 
 function notify(msg, type = 'success') {
   const el = document.getElementById('notification');
-  el.textContent = (type === 'error' ? '⚠️ ' : '✅ ') + msg;
+  el.textContent = msg;
   el.style.borderColor = type === 'error' ? '#FF6B7A' : '#5CB85C';
   el.style.color = type === 'error' ? '#FF6B7A' : '#5CB85C';
   el.classList.add('show');
@@ -283,9 +283,9 @@ function openModal(id) {
   if (id === 'transfer-modal') {
     document.getElementById('transfer-available-label').innerHTML = `
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px">
-        <span class="cur-badge cur-usd">🇺🇸 ${fmtCur(state.mainBox.balances.USD,'USD')}</span>
-        <span class="cur-badge cur-ils">🇵🇸 ${fmtCur(state.mainBox.balances.ILS,'ILS')}</span>
-        <span class="cur-badge cur-jod">🇯🇴 ${fmtCur(state.mainBox.balances.JOD,'JOD')}</span>
+        <span class="cur-badge cur-usd">${fmtCur(state.mainBox.balances.USD,'USD')}</span>
+        <span class="cur-badge cur-ils">${fmtCur(state.mainBox.balances.ILS,'ILS')}</span>
+        <span class="cur-badge cur-jod">${fmtCur(state.mainBox.balances.JOD,'JOD')}</span>
       </div>`;
     const sel = document.getElementById('t-branch');
     const nonMain = state.branches.filter(b => !b.isMain);
@@ -405,7 +405,7 @@ function addSupervisor() {
   document.getElementById('s-name').value  = '';
   document.getElementById('s-phone').value = '';
   closeModal('supervisor-modal');
-  notify('تم إضافة المشرف بنجاح ✅');
+  notify('تم إضافة المشرف بنجاح');
   renderAll();
   renderSupervisors();
 }
@@ -474,9 +474,9 @@ function openDepositModal() {
   const mb = state.mainBox.balances;
   document.getElementById('deposit-current-label').innerHTML = `
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-      <span class="cur-badge cur-usd">🇺🇸 ${fmtCur(mb.USD,'USD')}</span>
-      <span class="cur-badge cur-ils">🇵🇸 ${fmtCur(mb.ILS,'ILS')}</span>
-      <span class="cur-badge cur-jod">🇯🇴 ${fmtCur(mb.JOD,'JOD')}</span>
+      <span class="cur-badge cur-usd">${fmtCur(mb.USD,'USD')}</span>
+      <span class="cur-badge cur-ils">${fmtCur(mb.ILS,'ILS')}</span>
+      <span class="cur-badge cur-jod">${fmtCur(mb.JOD,'JOD')}</span>
     </div><div class="fs-12 text-muted">الرصيد الحالي للخزينة</div>`;
   document.getElementById('dep-amount').value = '';
   document.getElementById('dep-note').value = '';
@@ -512,9 +512,9 @@ function openDistributeModal() {
   const mb = state.mainBox.balances;
   document.getElementById('dist-available-label').innerHTML = `
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-      <span class="cur-badge cur-usd">🇺🇸 ${fmtCur(mb.USD,'USD')}</span>
-      <span class="cur-badge cur-ils">🇵🇸 ${fmtCur(mb.ILS,'ILS')}</span>
-      <span class="cur-badge cur-jod">🇯🇴 ${fmtCur(mb.JOD,'JOD')}</span>
+      <span class="cur-badge cur-usd">${fmtCur(mb.USD,'USD')}</span>
+      <span class="cur-badge cur-ils">${fmtCur(mb.ILS,'ILS')}</span>
+      <span class="cur-badge cur-jod">${fmtCur(mb.JOD,'JOD')}</span>
     </div><div class="fs-12 text-muted">الرصيد المتاح في الخزينة</div>`;
   openModal('distribute-modal');
   renderDistTellers();
@@ -591,9 +591,9 @@ function openEndOfDayModal() {
   const hasBalance = Object.values(totals).some(v => v > 0);
   document.getElementById('eod-summary').innerHTML = hasBalance
     ? `<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:4px">
-        ${totals.USD ? `<span class="cur-badge cur-usd">🇺🇸 ${fmtCur(totals.USD,'USD')}</span>` : ''}
-        ${totals.ILS ? `<span class="cur-badge cur-ils">🇵🇸 ${fmtCur(totals.ILS,'ILS')}</span>` : ''}
-        ${totals.JOD ? `<span class="cur-badge cur-jod">🇯🇴 ${fmtCur(totals.JOD,'JOD')}</span>` : ''}
+        ${totals.USD ? `<span class="cur-badge cur-usd">${fmtCur(totals.USD,'USD')}</span>` : ''}
+        ${totals.ILS ? `<span class="cur-badge cur-ils">${fmtCur(totals.ILS,'ILS')}</span>` : ''}
+        ${totals.JOD ? `<span class="cur-badge cur-jod">${fmtCur(totals.JOD,'JOD')}</span>` : ''}
       </div><div class="fs-12 text-muted">إجمالي الأرصدة المرتجعة من ${tellers.length} تلر</div>`
     : '<div class="fs-13 text-muted">لا توجد أرصدة لدى التلرات حالياً</div>';
   openModal('endofday-modal');
@@ -663,7 +663,7 @@ function addBox() {
   // Clear fields
   ['ab-name','ab-balance','ab-limit'].forEach(id => document.getElementById(id).value = '');
   closeModal('add-box-modal');
-  notify('تم إنشاء صندوق ' + name + ' بنجاح ✓');
+  notify('تم إنشاء صندوق ' + name + ' بنجاح');
   renderAll();
 }
 
@@ -715,7 +715,7 @@ function renderPagesAdmin() {
       + '<div class="spa-pc-desc">' + def.desc + '</div>'
       + '<div class="spa-pc-coverage"><div class="spa-pc-cov-bar"><div class="spa-pc-cov-fill" style="width:' + pct + '%"></div></div>'
       + '<div class="spa-pc-cov-lbl">' + count + '/' + branches.length + ' فرع · ' + pct + '%</div></div>'
-      + '<div class="spa-pc-foot"><button class="spa-pc-manage" onclick="event.stopPropagation();spaScrollToBranch()">⚙ إدارة</button>'
+      + '<div class="spa-pc-foot"><button class="spa-pc-manage" onclick="event.stopPropagation();spaScrollToBranch()">إدارة</button>'
       + '<div class="spa-pc-open">فتح الصفحة <span>←</span></div></div></div>';
   }).join('');
 
@@ -975,8 +975,8 @@ function renderReports() {
               <div class="rp-row-title">${r.title}</div>
               <div class="rp-row-meta">
                 <span class="rp-row-chip" style="background:${src.color}18;color:${src.color}">${src.name}</span>
-                <span class="rp-row-branch">🏢 ${r.branch}</span>
-                <span class="rp-row-sender">👤 ${r.sender || '—'}</span>
+                <span class="rp-row-branch">${r.branch}</span>
+                <span class="rp-row-sender">${r.sender || '—'}</span>
                 ${r.fileSize ? `<span class="rp-row-size">${r.fileSize}</span>` : ''}
               </div>
             </div>
@@ -1038,7 +1038,7 @@ function paAddPage(branchId, pageKey) {
   if (!b) return;
   if (!b.pages) b.pages = {};
   b.pages[pageKey] = { active: true, features: {1:true,2:true,3:true,4:true} };
-  notify('تمت إضافة ' + (SYSTEM_PAGES_DEF[pageKey] || BRANCH_PAGE_DEFS[pageKey]).name + ' إلى ' + b.name + ' ✓');
+  notify('تمت إضافة ' + (SYSTEM_PAGES_DEF[pageKey] || BRANCH_PAGE_DEFS[pageKey]).name + ' إلى ' + b.name);
   renderPagesAdmin(); updateSidebarStats();
 }
 function openPaEdit(branchId, pageKey) {
@@ -1052,7 +1052,7 @@ function openPaEdit(branchId, pageKey) {
   document.getElementById('pa-edit-status').value = String(on);
   document.getElementById('pa-rc-on').classList.toggle('pa-rc-active', on);
   document.getElementById('pa-rc-off').classList.toggle('pa-rc-active', !on);
-  document.getElementById('pa-edit-fields').innerHTML = '<div style="margin-top:4px"><button class="btn btn-sm btn-danger" onclick="paDeletePage(' + branchId + ',\'' + pageKey + '\')">🗑 حذف من الفرع</button></div>';
+  document.getElementById('pa-edit-fields').innerHTML = '<div style="margin-top:4px"><button class="btn btn-sm btn-danger" onclick="paDeletePage(' + branchId + ',\'' + pageKey + '\')">حذف من الفرع</button></div>';
   openModal('pa-edit-modal');
 }
 function setPaStatus(val) {
@@ -1065,7 +1065,7 @@ function savePaEdit() {
   const b = state.branches.find(b => b.id === _paEdit.branchId);
   if (!b || !b.pages || !b.pages[_paEdit.pageKey]) return;
   b.pages[_paEdit.pageKey].active = document.getElementById('pa-edit-status').value === 'true';
-  closeModal('pa-edit-modal'); notify('تم حفظ الإعدادات ✓');
+  closeModal('pa-edit-modal'); notify('تم حفظ الإعدادات');
   renderPagesAdmin(); updateSidebarStats();
 }
 function paDeletePage(branchId, pageKey) {
@@ -1138,7 +1138,7 @@ function renderDashboard() {
 
   document.getElementById('branches-overview').innerHTML = `
     <div class="flex-between mb20">
-      <div class="card-title" style="margin-bottom:0">🏢 حالة الفروع</div>
+      <div class="card-title" style="margin-bottom:0">حالة الفروع</div>
       <button class="btn btn-gold btn-sm" onclick="switchTab(1)">إدارة الفروع</button>
     </div>
     ${state.branches.map(b => `
@@ -1146,7 +1146,7 @@ function renderDashboard() {
         <div class="flex-between">
           <div>
             <div style="font-weight:700;font-size:14px">${b.name} ${b.isMain ? `<span style="font-size:10px;color:#D4AF37;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:10px;margin-right:6px">رئيسي</span>` : ''}</div>
-            <div class="fs-12 text-muted mt4">📍 ${b.location}</div>
+            <div class="fs-12 text-muted mt4">${b.location}</div>
           </div>
           <div style="text-align:left">
             <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
@@ -1160,7 +1160,7 @@ function renderDashboard() {
       </div>`).join('')}`;
 
   document.getElementById('recent-tx').innerHTML = `
-    <div class="card-title">📋 آخر العمليات</div>
+    <div class="card-title">آخر العمليات</div>
     ${state.transactions.slice().reverse().slice(0,5).map(t => `
       <div class="flex-between" style="padding:12px 0;border-bottom:1px solid #1E2638">
         <div>
@@ -1186,7 +1186,7 @@ function renderBranches() {
             ${b.isMain?`<span style="background:linear-gradient(135deg,#D4AF37,#F0C842);color:#0A0E1A;font-size:11px;font-weight:800;padding:3px 10px;border-radius:10px">الفرع الرئيسي</span>`:''}
             <span class="badge ${b.status==='active'?'badge-active':'badge-inactive'}">${b.status==='active'?'نشط':'متوقف'}</span>
           </div>
-          <div class="text-muted fs-13">📍 ${b.location}</div>
+          <div class="text-muted fs-13">${b.location}</div>
         </div>
         <div style="text-align:left">
           <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
@@ -1209,7 +1209,7 @@ function renderBranches() {
             ${b.tellers.map(t=>`
               <div class="teller-card" style="border-color:${t.box.status==='open'?'rgba(92,184,92,0.3)':'rgba(220,53,69,0.3)'}">
                 <div class="flex-between mb8">
-                  <div style="font-weight:700;font-size:13px">💼 صندوق ${t.box.id}</div>
+                  <div style="font-weight:700;font-size:13px">صندوق ${t.box.id}</div>
                   <span class="badge ${t.box.status==='open'?'badge-active':'badge-inactive'}">${t.box.status==='open'?'مفتوح':'مغلق'}</span>
                 </div>
                 <div class="fs-12 text-muted">${t.name}</div>
@@ -1362,19 +1362,19 @@ function renderSupervisors() {
           <div class="sv-card-phone">${s.phone || ''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <span class="sv-badge-type ${s._kind}">${s._kind === 'teller' ? '👔 تلر' : '🌐 حوالات'}</span>
+          <span class="sv-badge-type ${s._kind}">${s._kind === 'teller' ? 'تلر' : 'حوالات'}</span>
           <span class="badge ${isActive ? 'badge-active' : 'badge-inactive'}">${isActive ? 'نشط' : 'متوقف'}</span>
         </div>
       </div>
       <div class="sv-info-row">
-        <span class="sv-badge-shift">🌙 ${s.shift || 'غير محدد'}</span>
-        <span style="font-size:11px;color:#64748b">🏢 ${branch}</span>
+        <span class="sv-badge-shift">${s.shift || 'غير محدد'}</span>
+        <span style="font-size:11px;color:#64748b">${branch}</span>
       </div>
       ${tellerPills}
       <div class="sv-perms-row">${permChips}</div>
       <div class="sv-card-footer">
         <button class="sv-card-btn primary" onclick="openSvDetail(${s.id},'${s._kind}')">التفاصيل</button>
-        <button class="sv-card-btn" onclick="openSvInstructions(${s.id},'${s.name.replace(/'/g,"\\'")}')">📋 تعليمات</button>
+        <button class="sv-card-btn" onclick="openSvInstructions(${s.id},'${s.name.replace(/'/g,"\\'")}')">تعليمات</button>
         <button class="sv-card-btn ${isActive ? 'danger' : 'success'}" onclick="toggleSupervisorStatus(${s.id})">${isActive ? 'إيقاف' : 'تفعيل'}</button>
       </div>
     </div>`;
@@ -1419,7 +1419,7 @@ function svRenderDetailTabs(tab) {
     const isActive = sup.status === 'active';
     el.innerHTML = `
       <div style="display:grid;gap:10px">
-        ${[['الاسم الكامل', sup.name], ['رقم الهاتف', sup.phone || '—'], ['الوردية', sup.shift || '—'], ['نوع المشرف', sup._kind === 'teller' ? '👔 مشرف التلر' : '🌐 مشرف الحوالات'], ['الفرع / القسم', branch]].map(([k,v]) => `
+        ${[['الاسم الكامل', sup.name], ['رقم الهاتف', sup.phone || '—'], ['الوردية', sup.shift || '—'], ['نوع المشرف', sup._kind === 'teller' ? 'مشرف التلر' : 'مشرف الحوالات'], ['الفرع / القسم', branch]].map(([k,v]) => `
           <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(50,184,198,0.11);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
             <span style="font-size:11px;color:#64748b;font-weight:800">${k}</span>
             <span style="font-size:13px;color:#e9edef;font-weight:600">${v}</span>
@@ -1432,8 +1432,8 @@ function svRenderDetailTabs(tab) {
           </div>
         </div>
         <div style="margin-top:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px">
-          <button class="btn btn-blue" style="flex:1" onclick="svOpenEditForm(${sup.id},'${sup._kind}')">✏️ تعديل بيانات المشرف</button>
-          <button class="btn btn-sm" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171" onclick="svDeleteSupervisor(${sup.id},'${sup._kind}','${sup.name.replace(/'/g,"\\'")}')">🗑️ حذف</button>
+          <button class="btn btn-blue" style="flex:1" onclick="svOpenEditForm(${sup.id},'${sup._kind}')">تعديل بيانات المشرف</button>
+          <button class="btn btn-sm" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171" onclick="svDeleteSupervisor(${sup.id},'${sup._kind}','${sup.name.replace(/'/g,"\\'")}')">حذف</button>
         </div>
       </div>`;
   } else if (tab === 'tellers') {
@@ -1489,7 +1489,7 @@ function svRenderPermsTab(supId) {
           </label>
         </div>`).join('')}
     </div>`).join('')
-  + `<div style="margin-top:16px"><button class="btn btn-gold" onclick="svSavePerms(${supId})">💾 حفظ الصلاحيات</button></div>`;
+  + `<div style="margin-top:16px"><button class="btn btn-gold" onclick="svSavePerms(${supId})">حفظ الصلاحيات</button></div>`;
 }
 
 function svSavePerms(supId) {
@@ -1501,7 +1501,7 @@ function svSavePerms(supId) {
     newPerms[key] = chk ? chk.checked : false;
   });
   saveSvPerms(supId, newPerms);
-  notify('تم حفظ الصلاحيات بنجاح ✅', 'success');
+  notify('تم حفظ الصلاحيات بنجاح', 'success');
   renderSupervisors();
 }
 
@@ -1521,7 +1521,7 @@ function svRenderMessagesTab(supId) {
           <span style="font-size:11px;color:#64748b">${i.date}</span>
         </div>
         <div style="font-size:13px;color:#e9edef;line-height:1.6">${i.text}</div>
-        <div style="font-size:11px;color:${i.read?'#5CB85C':'#fbbf24'};margin-top:6px">${i.read?'✅ مقروء':'⏳ لم يُقرأ بعد'}</div>
+        <div style="font-size:11px;color:${i.read?'#5CB85C':'#fbbf24'};margin-top:6px">${i.read?'مقروء':'لم يُقرأ بعد'}</div>
       </div>`).join('');
   }
   if (msgs.length > 0) {
@@ -1575,11 +1575,11 @@ function svOpenEditForm(supId, kind) {
       <div>
         <label style="${labelStyle}">نوع المشرف</label>
         <select id="sv-edit-type" style="${inputStyle}" onchange="svEditTypeChange()">
-          <option value="teller"    ${kind === 'teller'    ? 'selected' : ''}>👔 مشرف التلر</option>
-          <option value="transfers" ${kind === 'transfers' ? 'selected' : ''}>🌐 مشرف الحوالات</option>
+          <option value="teller"    ${kind === 'teller'    ? 'selected' : ''}>مشرف التلر</option>
+          <option value="transfers" ${kind === 'transfers' ? 'selected' : ''}>مشرف الحوالات</option>
         </select>
         <div style="font-size:11px;color:#fbbf24;margin-top:6px;padding:8px 10px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:8px">
-          ⚠️ تغيير النوع سينقل المشرف بين أقسام النظام ويعيد ضبط صلاحياته
+          تغيير النوع سينقل المشرف بين أقسام النظام ويعيد ضبط صلاحياته
         </div>
       </div>
       <div id="sv-edit-branch-row" style="${kind === 'transfers' ? 'display:none' : ''}">
@@ -1587,7 +1587,7 @@ function svOpenEditForm(supId, kind) {
         <select id="sv-edit-branch" style="${inputStyle}">${branchOptions}</select>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-gold" style="flex:1" onclick="svSaveEdit(${supId},'${kind}')">💾 حفظ التعديلات</button>
+        <button class="btn btn-gold" style="flex:1" onclick="svSaveEdit(${supId},'${kind}')">حفظ التعديلات</button>
         <button class="btn btn-sm" style="background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);color:#8B9BB4" onclick="svRenderDetailTabs('profile')">إلغاء</button>
       </div>
     </div>`;
@@ -1653,7 +1653,7 @@ function svSaveEdit(supId, oldKind) {
     _svDetailKind = newKind;
   }
 
-  notify(`تم تحديث بيانات ${name} بنجاح ✅`, 'success');
+  notify(`تم تحديث بيانات ${name} بنجاح`, 'success');
   renderAll();
   renderSupervisors();
   document.getElementById('sv-detail-modal').style.display = 'none';
@@ -1714,7 +1714,7 @@ function svSendInstructions() {
   });
   localStorage.setItem('intl_instr_' + _svInstrId, JSON.stringify(list));
   document.getElementById('sv-instr-modal').style.display = 'none';
-  notify('تم إرسال التعليمات بنجاح ✅', 'success');
+  notify('تم إرسال التعليمات بنجاح', 'success');
 }
 
 function openSvInbox() {
@@ -1768,7 +1768,7 @@ function renderTellerBoxes() {
         <div>
           <div style="font-size:18px;font-weight:900;color:#D4AF37">صندوق #${t.box.id}</div>
           <div style="font-size:13px;margin-top:4px">${t.name}</div>
-          <div class="fs-12 text-muted">🏢 ${t.branch.name}</div>
+          <div class="fs-12 text-muted">${t.branch.name}</div>
         </div>
         <div style="text-align:left">
           <span class="badge ${t.box.status==='open'?'badge-active':'badge-inactive'}">${t.box.status==='open'?'مفتوح':'مغلق'}</span>
@@ -1783,7 +1783,7 @@ function renderTellerBoxes() {
       </div>
       ${sup?`<div class="fs-12 text-muted mb16">المشرف: <span style="color:#E8EAF0">${sup.name}</span> • ${sup.shift}</div>`:''}
       <button class="btn btn-full ${t.box.status==='open'?'btn-danger':'btn-success'}" onclick="toggleBoxStatus(${t.box.id})">
-        ${t.box.status==='open'?'🔒 إغلاق الصندوق':'🔓 فتح الصندوق'}
+        ${t.box.status==='open'?'إغلاق الصندوق':'فتح الصندوق'}
       </button>
     </div>`;
   }).join('');
@@ -1813,18 +1813,18 @@ function renderMainBox() {
             <span class="cur-badge cur-jod">دينار</span>
           </div>
         </div>
-        <div style="margin-top:20px"><span class="badge badge-active">نشط ✓</span></div>
+        <div style="margin-top:20px"><span class="badge badge-active">نشط</span></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px">
         <div class="dark-box text-center"><div style="font-size:22px;font-weight:900;color:#2E86AB">${state.branches.length}</div><div class="fs-12 text-muted">فروع مرتبطة</div></div>
         <div class="dark-box text-center"><div style="font-size:18px;font-weight:900;color:#F18F01">${allTellers().length}</div><div class="fs-12 text-muted">صندوق تلر</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px">
-        <button class="btn btn-gold btn-full" onclick="openModal('transfer-modal')">💸 تحويل للفروع</button>
-        <button class="btn btn-full" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.35);color:#22c55e" onclick="openDepositModal()">💰 القيد الافتتاحي</button>
+        <button class="btn btn-gold btn-full" onclick="openModal('transfer-modal')">تحويل للفروع</button>
+        <button class="btn btn-full" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.35);color:#22c55e" onclick="openDepositModal()">القيد الافتتاحي</button>
       </div>
       <div style="margin-top:10px">
-        <button class="btn btn-full" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.35);color:#60a5fa" onclick="openDistributeModal()">📤 توزيع على التلرات</button>
+        <button class="btn btn-full" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.35);color:#60a5fa" onclick="openDistributeModal()">توزيع على التلرات</button>
       </div>
     </div>
     <div class="card">
@@ -2055,7 +2055,7 @@ function txExportExcel() {
   const now = new Date();
   const stamp = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   XLSX.writeFile(wb, `سجل-العمليات-${stamp}.xlsx`);
-  notify(`تم تصدير ${rows.length} عملية إلى Excel ✅`);
+  notify(`تم تصدير ${rows.length} عملية إلى Excel`);
 }
 
 // ── PDF export ──
@@ -2165,7 +2165,7 @@ function txExportPDF() {
   });
 
   doc.save(`سجل-العمليات-${stamp}.pdf`);
-  notify(`تم تصدير ${rows.length} عملية إلى PDF ✅`);
+  notify(`تم تصدير ${rows.length} عملية إلى PDF`);
 }
 
 // ===================== TREE HIERARCHY CONTROLS =====================
@@ -2296,13 +2296,13 @@ function renderBranchTree() {
     if (branch) {
       panel.style.display = 'block';
       panel.style.animation = 'fadeUp 0.4s ease';
-      document.getElementById('active-branch-label').textContent = '📂 صفحات: ' + branch.name;
+      document.getElementById('active-branch-label').textContent = 'صفحات: ' + branch.name;
       const pageKeys = branch.pages ? Object.keys(branch.pages) : [];
       document.getElementById('active-branch-pages').innerHTML =
         `<div class="bp-nc-grid">` +
         (pageKeys.length
           ? pageKeys.map(k => genPageCard(branch, k)).join('')
-          : `<div class="bp-nc-empty">لا توجد صفحات — اضغط ⚙️ للإضافة</div>`) +
+          : `<div class="bp-nc-empty">لا توجد صفحات — اضغط للإضافة</div>`) +
         `</div>`;
     }
   } else {
@@ -2322,7 +2322,7 @@ function toggleBranchPage(branchId, pageType) {
   if (!b.pages) b.pages = {};
   if (!b.pages[pageType]) b.pages[pageType] = {active:true, features:{1:true,2:true,3:true,4:true}};
   b.pages[pageType].active = !b.pages[pageType].active;
-  notify(b.pages[pageType].active ? 'تم تفعيل الصفحة ✓' : 'تم تعطيل الصفحة', b.pages[pageType].active ? 'success' : 'error');
+  notify(b.pages[pageType].active ? 'تم تفعيل الصفحة' : 'تم تعطيل الصفحة', b.pages[pageType].active ? 'success' : 'error');
   renderBranchTree();
   updateTreeStats();
 }
@@ -2369,7 +2369,7 @@ function renderBranchPagesManager() {
             <div class="bpm-cc-right">
               <button class="bpm-toggle-btn ${isOn ? 'on' : 'off'}"
                       onclick="bpmTogglePage('${key}')">
-                ${isOn ? '✓ مفعّل' : '✗ معطّل'}
+                ${isOn ? 'مفعّل' : 'معطّل'}
               </button>
               <button class="bpm-del-btn" onclick="bpmDeletePage('${key}')" title="حذف">✕</button>
             </div>
@@ -2403,7 +2403,7 @@ function bpmAddPage(pageKey) {
   if (!b || !BRANCH_PAGE_DEFS[pageKey]) return;
   if (!b.pages) b.pages = {};
   b.pages[pageKey] = { active: true, features: {1:true,2:true,3:true,4:true} };
-  notify('تمت إضافة ' + BRANCH_PAGE_DEFS[pageKey].name + ' ✓');
+  notify('تمت إضافة ' + BRANCH_PAGE_DEFS[pageKey].name);
   renderBranchPagesManager();
   updateTreeStats();
 }
@@ -2448,7 +2448,7 @@ function openPageDetail(branchId, pageKey, cardEl) {
   // Header
   document.getElementById('pdm-icon').textContent      = def.icon;
   document.getElementById('pdm-page-name').textContent = def.name;
-  document.getElementById('pdm-branch-tag').textContent = '🏢 ' + b.name + '  ·  ' + def.sub;
+  document.getElementById('pdm-branch-tag').textContent = b.name + '  ·  ' + def.sub;
 
   // Accent bar animated gradient
   document.getElementById('pdm-accent').style.background =
@@ -2519,7 +2519,7 @@ function _fillPdModal(b, pageKey, def) {
       sups.map(s => {
         const cnt = (b.tellers||[]).filter(t=>t.supervisorId===s.id).length;
         return row(s.name.charAt(0), 'av-sup',
-          s.name, `📞 ${s.phone}  ·  🕐 وردية: ${s.shift}`,
+          s.name, `${s.phone}  ·  وردية: ${s.shift}`,
           badge(s.status==='active'?'نشط':'غير نشط', s.status==='active'?'on':'off'),
           cnt + ' تلر تحته');
       }).join('');
@@ -2540,7 +2540,7 @@ function _fillPdModal(b, pageKey, def) {
         const sup     = (b.supervisors||[]).find(s=>s.id===t.supervisorId);
         const boxOpen = t.box && t.box.status === 'open';
         return row(t.name.charAt(0), 'av-teller',
-          t.name, `👨‍💼 ${sup?sup.name:'—'}`,
+          t.name, `${sup?sup.name:'—'}`,
           badge(boxOpen?'مفتوح':'مغلق', boxOpen?'on':'off'),
           fmtCur(t.box?t.box.balance:0, t.box?t.box.currency:'USD'));
       }).join('');
@@ -2557,7 +2557,7 @@ function _fillPdModal(b, pageKey, def) {
     bodyEl.innerHTML = !txs.length ? empty('لا توجد تحويلات بنكية') :
       txs.map(tx =>
         row('🏦', 'av-bank',
-          `${tx.from} ← ${tx.to}`, `📅 ${tx.date}`,
+          `${tx.from} ← ${tx.to}`, `${tx.date}`,
           badge(tx.status==='completed'?'مكتمل':'معلق', tx.status==='completed'?'on':'pend'),
           fmtCur(tx.amount, tx.currency))
       ).join('');
@@ -2574,7 +2574,7 @@ function _fillPdModal(b, pageKey, def) {
     bodyEl.innerHTML = !sups.length ? empty('لا يوجد مشرفو حوالات بعد') :
       sups.map(s =>
         row(s.name.charAt(0), 'av-trans',
-          s.name, `📞 ${s.phone}  ·  🕐 وردية: ${s.shift}`,
+          s.name, `${s.phone}  ·  وردية: ${s.shift}`,
           badge(s.status==='active'?'نشط':'غير نشط', s.status==='active'?'on':'off'))
       ).join('');
     return;
@@ -2590,7 +2590,7 @@ function _fillPdModal(b, pageKey, def) {
     bodyEl.innerHTML = !txs.length ? empty('لا توجد حوالات بعد') :
       txs.map(tx =>
         row('🔄', 'av-tx',
-          `${tx.type}: ${tx.from} ← ${tx.to}`, `📅 ${tx.date}`,
+          `${tx.type}: ${tx.from} ← ${tx.to}`, `${tx.date}`,
           badge(tx.status==='completed'?'مكتمل':'معلق', tx.status==='completed'?'on':'pend'),
           fmtCur(tx.amount, tx.currency))
       ).join('');
@@ -2744,10 +2744,10 @@ function savePermissions() {
   const perms = getPermissions();
   _savePermissionsToServer(perms)
     .then(resp => {
-      if (resp && resp.success) notify('تم حفظ الصلاحيات بنجاح ✅');
-      else notify('حدث خطأ أثناء الحفظ ❌', 'error');
+      if (resp && resp.success) notify('تم حفظ الصلاحيات بنجاح');
+      else notify('حدث خطأ أثناء الحفظ', 'error');
     })
-    .catch(() => notify('تعذّر الاتصال بالخادم ❌', 'error'));
+    .catch(() => notify('تعذّر الاتصال بالخادم', 'error'));
 }
 
 function resetPermissions() {
@@ -2809,7 +2809,7 @@ function renderUsersStats() {
 function renderUsersTable() {
   const body = document.getElementById('users-table-body');
   if (!body) return;
-  body.innerHTML = '<div style="padding:30px;text-align:center;color:#64748b;font-size:13px">⏳ جارٍ تحميل المستخدمين...</div>';
+  body.innerHTML = '<div style="padding:30px;text-align:center;color:#64748b;font-size:13px">جارٍ تحميل المستخدمين...</div>';
 
   apiGet('/api/users')
     .then(resp => {
@@ -2903,7 +2903,7 @@ function _renderUsersTableRows() {
       <td style="font-size:12px;color:var(--text-nav,#64748b)">${lastLogin}</td>
       <td>
         ${has2FA
-          ? `<span class="um-2fa-on">🔐 مفعّل</span>`
+          ? `<span class="um-2fa-on">مفعّل</span>`
           : `<span class="um-2fa-off">— غير مفعّل</span>`}
       </td>
       <td>
@@ -2974,12 +2974,12 @@ function addSystemUser() {
   if (password.length < 12)   { notify('كلمة المرور يجب أن تكون 12 حرفاً على الأقل'); return; }
 
   const btn = document.querySelector('#add-user-modal .btn-gold, #add-user-modal .btn-primary');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ جارٍ الإضافة...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'جارٍ الإضافة...'; }
 
   apiPost('/api/users', { username, password, firstName, lastName, role })
     .then(resp => {
-      if (btn) { btn.disabled = false; btn.textContent = '✅ إضافة المستخدم'; }
-      if (!resp.success) { if (!resp._expired) notify('❌ ' + (resp.message || 'فشل إضافة المستخدم')); return; }
+      if (btn) { btn.disabled = false; btn.textContent = 'إضافة المستخدم'; }
+      if (!resp.success) { if (!resp._expired) notify(resp.message || 'فشل إضافة المستخدم'); return; }
 
       // تحديث الـ cache المحلي فوراً
       const users = getSystemUsers();
@@ -2990,11 +2990,11 @@ function addSystemUser() {
 
       closeAddUserModal();
       renderUsersTable();
-      notify('تم إضافة المستخدم ' + username + ' بنجاح ✅');
+      notify('تم إضافة المستخدم ' + username + ' بنجاح');
     })
     .catch(() => {
-      if (btn) { btn.disabled = false; btn.textContent = '✅ إضافة المستخدم'; }
-      notify('❌ لا يوجد اتصال بالخادم');
+      if (btn) { btn.disabled = false; btn.textContent = 'إضافة المستخدم'; }
+      notify('لا يوجد اتصال بالخادم');
     });
 }
 
@@ -3014,9 +3014,9 @@ function toggleUserActive(username) {
   // مزامنة مع الخادم
   apiPatch('/api/users/' + encodeURIComponent(username), { isActive: newActive })
     .then(resp => {
-      if (!resp.success) notify('⚠️ ' + (resp.message || 'تعذّر تحديث الحالة على الخادم'));
+      if (!resp.success) notify(resp.message || 'تعذّر تحديث الحالة على الخادم');
     })
-    .catch(() => notify('⚠️ لا اتصال — تم التحديث محلياً فقط'));
+    .catch(() => notify('لا اتصال — تم التحديث محلياً فقط'));
 }
 
 // ── Delete User ───────────────────────────────────────
@@ -3026,7 +3026,7 @@ function deleteUser(username) {
 
   apiDelete('/api/users/' + encodeURIComponent(username))
     .then(resp => {
-      if (!resp.success) { notify('❌ ' + (resp.message || 'فشل حذف المستخدم')); return; }
+      if (!resp.success) { notify(resp.message || 'فشل حذف المستخدم'); return; }
       const users = getSystemUsers().filter(u => u.username !== username);
       saveSystemUsers(users);
       localStorage.removeItem('totp_' + username);
@@ -3035,7 +3035,7 @@ function deleteUser(username) {
       _renderUsersTableRows();
       notify('تم حذف المستخدم ' + username);
     })
-    .catch(() => notify('❌ لا يوجد اتصال بالخادم'));
+    .catch(() => notify('لا يوجد اتصال بالخادم'));
 }
 
 // ── Reset 2FA ─────────────────────────────────────────
@@ -3072,9 +3072,9 @@ function uedOpen(username) {
   avatarEl.textContent = username.charAt(0).toUpperCase();
   avatarEl.style.background = `linear-gradient(135deg,${avatarColor},${avatarColor}99)`;
   document.getElementById('ued-hdr-name').textContent = username;
-  document.getElementById('ued-hdr-role').textContent = '⏳ جارٍ التحميل...';
+  document.getElementById('ued-hdr-role').textContent = 'جارٍ التحميل...';
   document.getElementById('ued-info-grid').innerHTML =
-    '<div style="grid-column:span 2;text-align:center;padding:30px;color:#334155">⏳</div>';
+    '<div style="grid-column:span 2;text-align:center;padding:30px;color:#334155"></div>';
 
   // fetch from server
   apiGet('/api/users/' + encodeURIComponent(username))
@@ -3148,7 +3148,7 @@ function _uedRenderInfo() {
         ? '<span style="color:#4ade80">● نشط</span>'
         : '<span style="color:#f87171">● موقوف</span>' },
     { lbl: 'المصادقة الثنائية', val: has2FA
-        ? '<span style="color:#a78bfa">🔐 مفعّلة</span>'
+        ? '<span style="color:#a78bfa">مفعّلة</span>'
         : '<span style="color:#475569">— غير مفعّلة</span>' },
     { lbl: 'تاريخ الإنشاء', val: createdAt },
     { lbl: 'آخر دخول',     val: lastLogin },
@@ -3199,13 +3199,13 @@ function uedSaveEdit(e) {
   const email     = document.getElementById('ued-email').value.trim();
   const role      = document.getElementById('ued-role').value;
 
-  btn.disabled = true; btn.textContent = '⏳ جارٍ الحفظ...';
+  btn.disabled = true; btn.textContent = 'جارٍ الحفظ...';
 
   apiPatch('/api/users/' + encodeURIComponent(_uedUsername), { firstName, lastName, email, role })
     .then(resp => {
       btn.disabled = false;
       btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> حفظ التعديلات`;
-      if (!resp.success) { notify('❌ ' + (resp.message || 'فشل الحفظ')); return; }
+      if (!resp.success) { notify(resp.message || 'فشل الحفظ'); return; }
       // update local cache
       if (resp.user) {
         _uedUser = _apiUserToLocal(resp.user);
@@ -3214,7 +3214,7 @@ function uedSaveEdit(e) {
         if (idx !== -1) users[idx] = _uedUser; else users.push(_uedUser);
         saveSystemUsers(users);
       }
-      notify('✅ تم حفظ التعديلات بنجاح');
+      notify('تم حفظ التعديلات بنجاح');
       _uedRenderInfo();
       _uedFillEditForm();
       _renderUsersTableRows();
@@ -3223,7 +3223,7 @@ function uedSaveEdit(e) {
     .catch(() => {
       btn.disabled = false;
       btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg> حفظ التعديلات`;
-      notify('❌ لا يوجد اتصال');
+      notify('لا يوجد اتصال');
     });
 }
 
@@ -3237,14 +3237,14 @@ function uedSavePassword(e) {
   if (pw1 !== pw2) { notify('كلمتا المرور غير متطابقتين'); return; }
 
   const btn = document.getElementById('ued-pw-save-btn');
-  btn.disabled = true; btn.textContent = '⏳ جارٍ التغيير...';
+  btn.disabled = true; btn.textContent = 'جارٍ التغيير...';
 
   apiPost('/api/users/' + encodeURIComponent(_uedUsername) + '/password', { password: pw1 })
     .then(resp => {
       btn.disabled = false;
       btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> تغيير كلمة المرور`;
-      if (!resp.success) { notify('❌ ' + (resp.message || 'فشل تغيير كلمة المرور')); return; }
-      notify('✅ تم تغيير كلمة المرور وإلغاء جميع الجلسات');
+      if (!resp.success) { notify(resp.message || 'فشل تغيير كلمة المرور'); return; }
+      notify('تم تغيير كلمة المرور وإلغاء جميع الجلسات');
       document.getElementById('ued-pw1').value = '';
       document.getElementById('ued-pw2').value = '';
       uedSwitchTab('info');
@@ -3252,7 +3252,7 @@ function uedSavePassword(e) {
     .catch(() => {
       btn.disabled = false;
       btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> تغيير كلمة المرور`;
-      notify('❌ لا يوجد اتصال');
+      notify('لا يوجد اتصال');
     });
 }
 
@@ -3299,16 +3299,16 @@ function uedToggleActive() {
 
   apiPatch('/api/users/' + encodeURIComponent(_uedUsername), { isActive: newActive })
     .then(resp => {
-      if (!resp.success) { notify('⚠️ ' + (resp.message || 'تعذّر التحديث')); return; }
+      if (!resp.success) { notify(resp.message || 'تعذّر التحديث'); return; }
       const users = getSystemUsers();
       const u = users.find(x => x.username === _uedUsername);
       if (u) { u.active = newActive; saveSystemUsers(users); }
       if (_uedUser) _uedUser.active = newActive;
       _uedRenderInfo();
       _renderUsersTableRows();
-      notify(newActive ? '✅ تم تفعيل الحساب' : '🔴 تم إيقاف الحساب');
+      notify(newActive ? 'تم تفعيل الحساب' : 'تم إيقاف الحساب');
     })
-    .catch(() => notify('❌ لا يوجد اتصال'));
+    .catch(() => notify('لا يوجد اتصال'));
 }
 
 // ── Reset 2FA ──────────────────────────────────────────
@@ -3318,7 +3318,7 @@ function uedReset2FA() {
   localStorage.removeItem('totp_verified_' + _uedUsername);
   _uedRenderInfo();
   _renderUsersTableRows();
-  notify('✅ تم إعادة ضبط 2FA — سيُطلب من المستخدم إعادة المسح');
+  notify('تم إعادة ضبط 2FA — سيُطلب من المستخدم إعادة المسح');
 }
 
 // ── Delete user ────────────────────────────────────────
@@ -3670,9 +3670,9 @@ switchTab = function(idx) {
   };
 
   const KYC_CFG = {
-    verified: { label: '✅ موثّق',    color: '#4ade80', bg: 'rgba(34,197,94,0.12)',   border: 'rgba(34,197,94,0.3)'  },
-    pending:  { label: '⏳ معلّق',    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',  border: 'rgba(251,191,36,0.3)' },
-    rejected: { label: '❌ مرفوض',   color: '#f87171', bg: 'rgba(239,68,68,0.12)',   border: 'rgba(239,68,68,0.3)'  },
+    verified: { label: 'موثّق',    color: '#4ade80', bg: 'rgba(34,197,94,0.12)',   border: 'rgba(34,197,94,0.3)'  },
+    pending:  { label: 'معلّق',    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',  border: 'rgba(251,191,36,0.3)' },
+    rejected: { label: 'مرفوض',   color: '#f87171', bg: 'rgba(239,68,68,0.12)',   border: 'rgba(239,68,68,0.3)'  },
   };
 
   // ── KYC fields per category ─────────────────────────────────────────────────
@@ -3844,7 +3844,7 @@ switchTab = function(idx) {
     if (!fields.length) { wrap.innerHTML = ''; return; }
     wrap.innerHTML = `
       <div style="border-top:1px solid rgba(99,102,241,0.15);padding-top:14px;margin-top:4px;">
-        <div style="font-size:11px;font-weight:700;color:#6366f1;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📋 بيانات KYC</div>
+        <div style="font-size:11px;font-weight:700;color:#6366f1;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">بيانات KYC</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           ${fields.map(f => `
             <div>
@@ -3944,8 +3944,8 @@ switchTab = function(idx) {
 
     document.getElementById('accs-kyc-actions').innerHTML = `
       <button onclick="accs_closeKycModal()" style="flex:1;padding:9px;border-radius:9px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#8696a0;font-family:inherit;font-size:12px;cursor:pointer;">إغلاق</button>
-      <button onclick="accs_setKyc(${id},'rejected')" style="flex:1;padding:9px;border-radius:9px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:#f87171;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">❌ رفض</button>
-      <button onclick="accs_setKyc(${id},'verified')" style="flex:2;padding:9px;border-radius:9px;border:none;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(34,197,94,0.3);">✅ توثيق KYC</button>`;
+      <button onclick="accs_setKyc(${id},'rejected')" style="flex:1;padding:9px;border-radius:9px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:#f87171;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">رفض</button>
+      <button onclick="accs_setKyc(${id},'verified')" style="flex:2;padding:9px;border-radius:9px;border:none;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(34,197,94,0.3);">توثيق KYC</button>`;
 
     document.getElementById('accs-kyc-modal').style.display = 'flex';
   };
@@ -3961,7 +3961,7 @@ switchTab = function(idx) {
     accs_closeKycModal();
     accs_loadAccounts();
     _renderTable();
-    notify(status === 'verified' ? `✅ تم توثيق حساب "${acc.name}"` : `❌ تم رفض حساب "${acc.name}"`, status === 'verified' ? 'success' : 'error');
+    notify(status === 'verified' ? `تم توثيق حساب "${acc.name}"` : `تم رفض حساب "${acc.name}"`, status === 'verified' ? 'success' : 'error');
   };
 
 })();
@@ -4088,7 +4088,7 @@ function buildCard(r){
   var isVisual=r.source==='visual-editor';
   var typeLbl=TL[r.type]||r.type||'طلب';
   var descText=r.desc||r.description||'';
-  var senderText=r.sender?('👤 '+r.sender):(r.pageTitle?('📄 '+r.pageTitle):'');
+  var senderText=r.sender?(r.sender):(r.pageTitle?(r.pageTitle):'');
   var dateText=r.date?fmtDate(r.date):(r.submittedAt||'');
   var rs=r.status==='pending'?'new':r.status;
 
@@ -4111,19 +4111,19 @@ function buildCard(r){
     decisionBar='<div style="margin-top:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'+
         '<div style="font-size:11px;color:#32b8c6;font-weight:700;display:flex;align-items:center;gap:5px"><span style="background:#e94560;width:7px;height:7px;border-radius:50%;display:inline-block"></span>'+r.changes.length+' تعديل بصري مقترح</div>'+
-        '<button class="dr-view-btn" onclick="openDRDetail('+r.id+')">🔍 مراجعة التعديلات</button>'+
+        '<button class="dr-view-btn" onclick="openDRDetail('+r.id+')">مراجعة التعديلات</button>'+
       '</div>'+
       '<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px">'+dots+'</div>'+
       '<div style="display:flex;gap:8px;font-size:11px">'+
-        '<span style="color:#22c55e">✅ '+nAcc+' مقبول</span>'+
-        '<span style="color:#ef4444">❌ '+nRej+' مرفوض</span>'+
-        '<span style="color:#f59e0b">⏳ '+nPend+' بانتظار</span>'+
+        '<span style="color:#22c55e">'+nAcc+' مقبول</span>'+
+        '<span style="color:#ef4444">'+nRej+' مرفوض</span>'+
+        '<span style="color:#f59e0b">'+nPend+' بانتظار</span>'+
       '</div>'+
     '</div>';
   }
 
-  var att=r.attachments&&r.attachments.length?'<div class="devreq-attach-row">'+r.attachments.map(function(a){return'<span class="devreq-attach-pill">📎 '+a+'</span>';}).join('')+'</div>':'';
-  var visualBadge=isVisual?'<span style="background:rgba(233,69,96,.15);color:#e94560;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:6px;border:1px solid rgba(233,69,96,.3)">✏️ محرر بصري</span>':'';
+  var att=r.attachments&&r.attachments.length?'<div class="devreq-attach-row">'+r.attachments.map(function(a){return'<span class="devreq-attach-pill">'+a+'</span>';}).join('')+'</div>':'';
+  var visualBadge=isVisual?'<span style="background:rgba(233,69,96,.15);color:#e94560;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:6px;border:1px solid rgba(233,69,96,.3)">محرر بصري</span>':'';
 
   return '<div class="devreq-card" id="drc-'+r.id+'">'+
     '<div class="devreq-top">'+visualBadge+'<span class="devreq-badge '+(r.type||'')+'">'+typeLbl+'</span><div class="devreq-title">'+esc(r.title)+'</div></div>'+
@@ -4131,12 +4131,12 @@ function buildCard(r){
     decisionBar+att+
     '<div class="devreq-meta" style="margin-top:10px">'+
       '<span>'+senderText+'</span>'+
-      '<span>🕐 '+dateText+'</span>'+
+      '<span>'+dateText+'</span>'+
       '<select class="devreq-status-sel" onchange="updDRStatus('+r.id+',this.value)">'+
-        '<option value="new"'+(rs==='new'?' selected':'')+'>🔴 جديد</option>'+
-        '<option value="inprogress"'+(rs==='inprogress'?' selected':'')+'>⚡ قيد المعالجة</option>'+
-        '<option value="done"'+(rs==='done'?' selected':'')+'>✅ مكتمل</option>'+
-        '<option value="rejected"'+(rs==='rejected'?' selected':'')+'>🚫 مرفوض</option>'+
+        '<option value="new"'+(rs==='new'?' selected':'')+'>جديد</option>'+
+        '<option value="inprogress"'+(rs==='inprogress'?' selected':'')+'>قيد المعالجة</option>'+
+        '<option value="done"'+(rs==='done'?' selected':'')+'>مكتمل</option>'+
+        '<option value="rejected"'+(rs==='rejected'?' selected':'')+'>مرفوض</option>'+
       '</select>'+
     '</div>'+
   '</div>';
@@ -4304,7 +4304,7 @@ window.openDRDetail=function(id){
       var isColor=isColorProp(c.property);
       var itemCls='dr-ch-item'+(d==='accepted'?' acc-ch':d==='rejected'?' rej-ch':'');
       var badgeCls=d==='accepted'?'acc':d==='rejected'?'rej':'pend';
-      var badgeLbl=d==='accepted'?'✅ مقبول':d==='rejected'?'❌ مرفوض':'⏳ بانتظار';
+      var badgeLbl=d==='accepted'?'مقبول':d==='rejected'?'مرفوض':'بانتظار';
       var shortEl=(c.elTag||'')+(c.elPath?' '+c.elPath.split('>').pop().trim():'');
 
       function bval(val,isAft){
@@ -4328,13 +4328,13 @@ window.openDRDetail=function(id){
           '<span style="font-size:10px;color:#555;margin-right:4px" title="انقر للانتقال">🎯</span>'+
         '</div>'+
         '<div class="dr-chi-ba">'+
-          '<div class="dr-ba-box before"><div class="dr-ba-box-lbl">◀ قبل</div><div class="dr-ba-box-val">'+bval(c.oldVal,false)+'</div></div>'+
+          '<div class="dr-ba-box before"><div class="dr-ba-box-lbl">قبل</div><div class="dr-ba-box-val">'+bval(c.oldVal,false)+'</div></div>'+
           '<div class="dr-ba-mid">→</div>'+
-          '<div class="dr-ba-box after"><div class="dr-ba-box-lbl">▶ بعد</div><div class="dr-ba-box-val">'+bval(c.newVal,true)+'</div></div>'+
+          '<div class="dr-ba-box after"><div class="dr-ba-box-lbl">بعد</div><div class="dr-ba-box-val">'+bval(c.newVal,true)+'</div></div>'+
         '</div>'+
         '<div class="dr-chi-foot">'+
-          '<button class="dr-dec-btn accept'+(d==='accepted'?' selected':'')+'" onclick="drDecide('+id+','+c.id+',\'accepted\')">✅ قبول</button>'+
-          '<button class="dr-dec-btn reject'+(d==='rejected'?' selected':'')+'" onclick="drDecide('+id+','+c.id+',\'rejected\')">❌ رفض</button>'+
+          '<button class="dr-dec-btn accept'+(d==='accepted'?' selected':'')+'" onclick="drDecide('+id+','+c.id+',\'accepted\')">قبول</button>'+
+          '<button class="dr-dec-btn reject'+(d==='rejected'?' selected':'')+'" onclick="drDecide('+id+','+c.id+',\'rejected\')">رفض</button>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -4353,14 +4353,14 @@ window.openDRDetail=function(id){
       '<div class="dr-topbar-brand"><div class="dr-topbar-icon">✏️</div>'+
       '<div class="dr-topbar-title">'+esc(r.title)+'</div></div>'+
       '<div class="dr-topbar-tags">'+
-        '<span class="dr-meta-tag visual">✏️ محرر بصري</span>'+
-        (r.pageTitle?'<span class="dr-meta-tag page">📄 '+esc(r.pageTitle)+'</span>':'')+
-        '<span class="dr-meta-tag date">🕐 '+(r.submittedAt||fmtDate(r.date)||'')+'</span>'+
+        '<span class="dr-meta-tag visual">محرر بصري</span>'+
+        (r.pageTitle?'<span class="dr-meta-tag page">'+esc(r.pageTitle)+'</span>':'')+
+        '<span class="dr-meta-tag date">'+(r.submittedAt||fmtDate(r.date)||'')+'</span>'+
       '</div>'+
       '<div class="dr-topbar-actions">'+
-        '<button class="dr-tb-btn accept-all" onclick="drDecideAll('+id+',\'accepted\')">✅ قبول الكل</button>'+
-        '<button class="dr-tb-btn reject-all" onclick="drDecideAll('+id+',\'rejected\')">❌ رفض الكل</button>'+
-        '<button class="dr-tb-btn save" onclick="drSaveFinal('+id+')">💾 حفظ القرار</button>'+
+        '<button class="dr-tb-btn accept-all" onclick="drDecideAll('+id+',\'accepted\')">قبول الكل</button>'+
+        '<button class="dr-tb-btn reject-all" onclick="drDecideAll('+id+',\'rejected\')">رفض الكل</button>'+
+        '<button class="dr-tb-btn save" onclick="drSaveFinal('+id+')">حفظ القرار</button>'+
         '<button class="dr-close" onclick="closeDRDetail()">✕</button>'+
       '</div>'+
     '</div>'+
@@ -4383,7 +4383,7 @@ window.openDRDetail=function(id){
       // panel
       '<div class="dr-panel">'+
         '<div class="dr-panel-hd">'+
-          '<h4>🔧 التعديلات المقترحة</h4>'+
+          '<h4>التعديلات المقترحة</h4>'+
           (r.description?'<div class="dr-panel-desc">'+esc(r.description)+'</div>':'')+
         '</div>'+
         '<div class="dr-changes-list" id="dr-ch-list"></div>'+
@@ -4442,7 +4442,7 @@ window.openDRDetail=function(id){
             if(ld){
               if(applied===0&&failed>0){
                 ld.innerHTML='<div style="color:#f59e0b;font-size:12px;text-align:center;padding:12px">'+
-                  '⚠️ لم يتم إيجاد العناصر المُعدَّلة في الصفحة<br>'+
+                  'لم يتم إيجاد العناصر المُعدَّلة في الصفحة<br>'+
                   '<span style="color:#555;font-size:10px;margin-top:4px;display:block">'+
                   'قد تكون العناصر ديناميكية أو تغيّرت بنية الصفحة</span></div>';
               } else {
@@ -4451,12 +4451,12 @@ window.openDRDetail=function(id){
             }
           }catch(e2){
             var ld=document.getElementById('dr-loading');
-            if(ld)ld.innerHTML='<div style="color:#ef4444;font-size:13px">⚠️ تعذّر تطبيق التعديلات</div>';
+            if(ld)ld.innerHTML='<div style="color:#ef4444;font-size:13px">تعذّر تطبيق التعديلات</div>';
           }
         },500);
       }catch(e){
         var ld=document.getElementById('dr-loading');
-        if(ld)ld.innerHTML='<div style="color:#ef4444;font-size:13px">⚠️ تعذّر تحميل المعاينة (قيد أمان المتصفح)</div>';
+        if(ld)ld.innerHTML='<div style="color:#ef4444;font-size:13px">تعذّر تحميل المعاينة (قيد أمان المتصفح)</div>';
       }
     });
   }
@@ -4528,18 +4528,18 @@ window.openDRDetail=function(id){
     pop.id='dr-cp'; pop.className='dr-cp';
     pop.innerHTML=
       '<div class="dr-cp-topbar">'+
-        '<span class="dr-cp-title">🔍 '+esc(propAr)+'</span>'+
+        '<span class="dr-cp-title">'+esc(propAr)+'</span>'+
         (elTag?'<span class="dr-cp-eltag">&lt;'+esc(elTag)+'&gt;</span>':'')+
         '<button class="dr-cp-close" onclick="var e=document.getElementById(\'dr-cp\');if(e&&e.parentNode)e.parentNode.removeChild(e)">✕</button>'+
       '</div>'+
       '<div class="dr-cp-body">'+
         '<div class="dr-cp-half before">'+
-          '<div class="dr-cp-half-lbl">◀ قبل التعديل</div>'+
+          '<div class="dr-cp-half-lbl">قبل التعديل</div>'+
           '<div class="dr-cp-frame">'+beforeHtml+'</div>'+
         '</div>'+
         '<div class="dr-cp-arrow">→</div>'+
         '<div class="dr-cp-half after">'+
-          '<div class="dr-cp-half-lbl">▶ بعد التعديل</div>'+
+          '<div class="dr-cp-half-lbl">بعد التعديل</div>'+
           '<div class="dr-cp-frame">'+afterHtml+'</div>'+
         '</div>'+
       '</div>';
@@ -4718,7 +4718,7 @@ window.openClearDummyModal = function() {
   var html = `
   <div id="clearDummyModal" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;">
     <div style="background:var(--card-bg,#1e293b);border:1px solid #ef4444;border-radius:12px;padding:32px;max-width:480px;width:90%;color:var(--text,#f1f5f9);">
-      <h2 style="color:#ef4444;margin:0 0 12px;font-size:1.2rem;">⚠️ مسح جميع البيانات الوهمية</h2>
+      <h2 style="color:#ef4444;margin:0 0 12px;font-size:1.2rem;">مسح جميع البيانات الوهمية</h2>
       <p style="margin:0 0 16px;line-height:1.7;font-size:.92rem;">
         سيتم حذف:<br>
         — جميع العمليات (صرافة، حوالات، معاملات نقدية، تحويلات)<br>
@@ -4784,7 +4784,7 @@ window.executeClearDummyData = function() {
 
 var _prAllReceipts = [];
 var _fwdEmployees  = [];
-var PR_STATUS_LABEL = { new:'🔵 جديد', reviewing:'⚡ قيد المراجعة', done:'✅ منفّذ', rejected:'🚫 مرفوض' };
+var PR_STATUS_LABEL = { new:'جديد', reviewing:'قيد المراجعة', done:'منفّذ', rejected:'مرفوض' };
 
 function renderPortalReceipts() {
   const listEl  = document.getElementById('pr-list');
@@ -4853,11 +4853,11 @@ function _applyPortalReceiptsFilter() {
     var safeExtra = ((r.currency || '') + ' ' + (r.countryName || '')).trim().replace(/'/g, "\\'");
 
     var fwdBtn = (r.status !== 'done' && r.status !== 'rejected')
-      ? '<button onclick="openForwardPicker(' + r.id + ',\'' + safeName + '\',\'' + safeExtra + '\')" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">📤 توجيه</button>'
+      ? '<button onclick="openForwardPicker(' + r.id + ',\'' + safeName + '\',\'' + safeExtra + '\')" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">توجيه</button>'
       : '';
 
     var dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-SA') : '';
-    var noteRow = r.forwardedTo ? '<div style="font-size:11px;color:#8696a0;">📝 ' + (r.forwardedNote || 'بدون ملاحظة') + '</div>' : '';
+    var noteRow = r.forwardedTo ? '<div style="font-size:11px;color:#8696a0;">' + (r.forwardedNote || 'بدون ملاحظة') + '</div>' : '';
 
     return '<div style="display:flex;gap:14px;align-items:flex-start;background:#0d1825;border:1px solid #1e2d3d;border-radius:10px;padding:14px 16px;margin-bottom:10px;">'
       + imgThumb
@@ -4866,7 +4866,7 @@ function _applyPortalReceiptsFilter() {
       +     '<span style="font-weight:800;color:#e9edef;font-size:14px;">' + (r.clientName || '—') + '</span>'
       +     statusTag + fwdTag
       +   '</div>'
-      +   '<div style="font-size:12px;color:#8696a0;margin-bottom:4px;">🌍 ' + (r.countryName || '—') + ' &nbsp;|&nbsp; 💰 ' + (r.currency || '—') + ' &nbsp;|&nbsp; 🔑 ' + (r.trackingCode || '—') + '</div>'
+      +   '<div style="font-size:12px;color:#8696a0;margin-bottom:4px;">' + (r.countryName || '—') + ' &nbsp;|&nbsp; ' + (r.currency || '—') + ' &nbsp;|&nbsp; ' + (r.trackingCode || '—') + '</div>'
       +   noteRow
       + '</div>'
       + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'
@@ -4907,7 +4907,7 @@ function _renderFwdEmpList() {
   var selected = document.getElementById('fwd-emp-id').value;
   if (!empList) return;
 
-  var ROLE_LABEL = { T02: '🏦 التحويل البنكي', T03: '🌐 الحوالات الخارجية' };
+  var ROLE_LABEL = { T02: 'التحويل البنكي', T03: 'الحوالات الخارجية' };
   if (!_fwdEmployees.length) {
     empList.innerHTML = '<div style="color:#8696a0;font-size:13px;padding:8px">لا يوجد موظفون من نوع T02/T03</div>';
     return;
@@ -4949,7 +4949,7 @@ function confirmForward() {
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
-        notify('تم توجيه الإشعار بنجاح ✓');
+        notify('تم توجيه الإشعار بنجاح');
         closeDashModal('dm-forward-pick');
         renderPortalReceipts();   // refresh list
       } else {
@@ -5102,7 +5102,7 @@ function _renderCountriesList() {
       + '<div style="display:flex;align-items:center;gap:6px;justify-content:center;">'
       +   '<button onclick="toggleExpand(\'' + c.id + '\');event.stopPropagation()" '
       +   'style="background:rgba(255,255,255,0.04);border:1px solid #2a3942;border-radius:6px;padding:5px 10px;color:#8696a0;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">'
-      +   (isExp ? '▲ إخفاء' : '▼ الطرق') + '</button>'
+      +   (isExp ? 'إخفاء' : 'الطرق') + '</button>'
       +   '<button onclick="openEditCountryForm(\'' + c.id + '\');event.stopPropagation()" '
       +   'style="background:rgba(99,179,237,0.08);border:1px solid rgba(99,179,237,0.2);border-radius:6px;padding:5px 12px;color:#63b3ed;cursor:pointer;font-size:11px;font-weight:700;">تعديل</button>'
       +   '<button onclick="deleteCountry(\'' + c.id + '\',\'' + safeName + '\');event.stopPropagation()" '
@@ -5131,7 +5131,7 @@ function toggleCountryActive(slug, newActive) {
   })
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d.success) { notify(newActive ? 'تم تفعيل الدولة ✓' : 'تم إيقاف الدولة'); renderPortalSettings(); }
+      if (d.success) { notify(newActive ? 'تم تفعيل الدولة' : 'تم إيقاف الدولة'); renderPortalSettings(); }
       else notify(d.error || 'حدث خطأ', 'error');
     })
     .catch(function() { notify('فشل الاتصال', 'error'); });
@@ -5147,7 +5147,7 @@ function deleteCountry(slug, name) {
   })
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d.success) { notify('تم حذف الدولة ✓'); renderPortalSettings(); }
+      if (d.success) { notify('تم حذف الدولة'); renderPortalSettings(); }
       else notify(d.error || 'حدث خطأ', 'error');
     })
     .catch(function() { notify('فشل الاتصال', 'error'); });
@@ -5160,7 +5160,7 @@ function openAddCountryForm() {
   document.getElementById('psf-currency').value = '';
   document.getElementById('psf-rate').value     = '';
   document.getElementById('ps-form-title').textContent = 'إضافة دولة جديدة';
-  document.getElementById('ps-save-btn').textContent   = 'حفظ الدولة ✓';
+  document.getElementById('ps-save-btn').textContent   = 'حفظ الدولة';
   document.getElementById('ps-country-form').style.display = '';
 }
 
@@ -5172,7 +5172,7 @@ function openEditCountryForm(slug) {
   document.getElementById('psf-currency').value = c.currency || '';
   document.getElementById('psf-rate').value     = c.rate     || '';
   document.getElementById('ps-form-title').textContent = 'تعديل: ' + c.name;
-  document.getElementById('ps-save-btn').textContent   = 'حفظ التعديلات ✓';
+  document.getElementById('ps-save-btn').textContent   = 'حفظ التعديلات';
   document.getElementById('ps-country-form').style.display = '';
 }
 
@@ -5203,7 +5203,7 @@ function saveCountryForm() {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {
-        notify(isEdit ? 'تم تحديث الدولة ✓' : 'تم إضافة الدولة ✓');
+        notify(isEdit ? 'تم تحديث الدولة' : 'تم إضافة الدولة');
         cancelCountryForm();
         renderPortalSettings();
       } else {
@@ -5284,7 +5284,7 @@ function saveMethodForm() {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {
-        notify(isEdit ? 'تم تحديث الطريقة ✓' : 'تم إضافة الطريقة ✓');
+        notify(isEdit ? 'تم تحديث الطريقة' : 'تم إضافة الطريقة');
         closeDashModal('dm-method-form');
         _psExpanded[countrySlug] = true;   // keep expanded after save
         renderPortalSettings();
@@ -5305,7 +5305,7 @@ function deleteMethod(methodId, countrySlug) {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {
-        notify('تم حذف الطريقة ✓');
+        notify('تم حذف الطريقة');
         _psExpanded[countrySlug] = true;
         renderPortalSettings();
       } else {
@@ -5525,16 +5525,16 @@ function _sbGetModal() {
   m.onclick = function(e) { if (e.target === m) _sbModalClose(); };
   m.innerHTML = [
     '<div style="background:var(--surface-modal,#1a2235);border:1px solid var(--border-card,rgba(255,255,255,0.1));border-radius:16px;padding:28px;width:90%;max-width:460px;">',
-      '<div style="font-size:18px;font-weight:900;color:#e2e8f0;margin-bottom:6px;">💰 إيداع في صندوق المشرف</div>',
+      '<div style="font-size:18px;font-weight:900;color:#e2e8f0;margin-bottom:6px;">إيداع في صندوق المشرف</div>',
       '<div style="font-size:12px;color:rgba(200,210,220,0.6);margin-bottom:20px;">تحويل مبلغ من الإدارة إلى صندوق المشرف</div>',
       '<div style="display:flex;flex-direction:column;gap:14px;">',
         '<div><label style="font-size:11px;color:rgba(200,210,220,0.7);display:block;margin-bottom:5px;">المشرف *</label>',
           '<select id="sb-dep-supervisor" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;font-size:13px;font-family:Cairo,sans-serif;"></select></div>',
         '<div><label style="font-size:11px;color:rgba(200,210,220,0.7);display:block;margin-bottom:5px;">العملة *</label>',
           '<select id="sb-dep-currency" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;font-size:13px;font-family:Cairo,sans-serif;">',
-            '<option value="USD">🇺🇸 دولار (USD)</option>',
-            '<option value="ILS">🇵🇸 شيكل (ILS)</option>',
-            '<option value="JOD">🇯🇴 دينار (JOD)</option>',
+            '<option value="USD">دولار (USD)</option>',
+            '<option value="ILS">شيكل (ILS)</option>',
+            '<option value="JOD">دينار (JOD)</option>',
           '</select></div>',
         '<div><label style="font-size:11px;color:rgba(200,210,220,0.7);display:block;margin-bottom:5px;">المبلغ *</label>',
           '<input id="sb-dep-amount" type="number" min="0.01" step="0.01" placeholder="0.00" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;font-size:13px;font-family:Cairo,sans-serif;box-sizing:border-box;"></div>',
@@ -5583,7 +5583,7 @@ window.sbOpenDepositModal = function sbOpenDepositModal(username) {
       _sbModalOpen();
     })
     .catch(function() {
-      if (typeof showToast === 'function') showToast('✗ تعذّر تحميل قائمة المشرفين', 'error');
+      if (typeof showToast === 'function') showToast('تعذّر تحميل قائمة المشرفين', 'error');
     });
 }
 
@@ -5605,8 +5605,8 @@ window.sbDoDeposit = function sbDoDeposit() {
   var currency = document.getElementById('sb-dep-currency').value;
   var amount   = parseFloat(document.getElementById('sb-dep-amount').value);
   var notes    = document.getElementById('sb-dep-notes').value;
-  if (!username) { if (typeof showToast === 'function') showToast('⚠️ اختر المشرف', 'warn'); return; }
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('⚠️ أدخل مبلغاً صحيحاً', 'warn'); return; }
+  if (!username) { if (typeof showToast === 'function') showToast('اختر المشرف', 'warn'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('أدخل مبلغاً صحيحاً', 'warn'); return; }
   fetch('/api/supervisor-boxes/deposit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-CSRFToken': (document.cookie.split(';').find(function(c){return c.trim().startsWith('csrftoken=');})||'').split('=')[1]||'' },
@@ -5616,15 +5616,15 @@ window.sbDoDeposit = function sbDoDeposit() {
     .then(function(data) {
       if (data.success || data.ok) {
         _sbModalClose();
-        if (typeof showToast === 'function') showToast('✓ تم الإيداع بنجاح', 'ok');
+        if (typeof showToast === 'function') showToast('تم الإيداع بنجاح', 'ok');
         sbRenderBoxes();
         sbRenderLog(username);
       } else {
-        if (typeof showToast === 'function') showToast('✗ ' + (data.message || data.error || 'فشل الإيداع'), 'error');
+        if (typeof showToast === 'function') showToast(data.message || data.error || 'فشل الإيداع', 'error');
       }
     })
     .catch(function() {
-      if (typeof showToast === 'function') showToast('✗ خطأ في الاتصال', 'error');
+      if (typeof showToast === 'function') showToast('خطأ في الاتصال', 'error');
     });
 }
 
@@ -5667,7 +5667,7 @@ function accAction(key) {
   };
   const url = routes[key];
   if (url) {
-    showToast('🚧 هذه الوحدة قيد الإنشاء', 'warning');
+    showToast('هذه الوحدة قيد الإنشاء', 'warning');
   }
 }
 

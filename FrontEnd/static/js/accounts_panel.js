@@ -75,7 +75,7 @@ function apCalcTransfer() {
     if (field && !field.readOnly) {
       field.value = val;
       field.dispatchEvent(new Event('input', {bubbles:true}));
-      apNotify('✅ تم نقل ' + val, 'success');
+      apNotify('تم نقل ' + val, 'success');
       transferred = true;
     }
   }
@@ -85,7 +85,7 @@ function apCalcTransfer() {
       if (el && el.offsetParent !== null && !el.readOnly) {
         el.value = val;
         el.dispatchEvent(new Event('input', {bubbles:true}));
-        apNotify('✅ تم نقل ' + val, 'success');
+        apNotify('تم نقل ' + val, 'success');
         transferred = true;
         break;
       }
@@ -127,7 +127,7 @@ function _apLogRender() {
       <td style="color:#e9edef;font-weight:700;">${r.amount || '—'}</td>
       <td style="color:#4a6280;">${r.currency || '—'}</td>
       <td style="color:#8696a0;font-size:10px;font-family:monospace;">${r.ref || '—'}</td>
-      <td><span style="padding:2px 8px;border-radius:20px;font-size:10px;background:${sc}22;color:${sc};">${r.status === 'success' ? '✓ تم' : '✗ خطأ'}</span></td>
+      <td><span style="padding:2px 8px;border-radius:20px;font-size:10px;background:${sc}22;color:${sc};">${r.status === 'success' ? 'تم' : 'خطأ'}</span></td>
     </tr>`;
   }).join('');
 }
@@ -240,7 +240,7 @@ function _apWaRenderGroups() {
     const btn = document.createElement('button');
     btn.className = 'ap-wa-grp-btn';
     btn.dataset.jid = jid;
-    btn.textContent = '💬 ' + name;
+    btn.textContent = name;
     btn.onclick = () => apWaFilterGroup(jid, btn);
     container.appendChild(btn);
   });
@@ -300,10 +300,10 @@ function _apWaBuildCard(m) {
 
   // chips البيانات المستخرجة
   const chips = [];
-  if (p.amount)   chips.push(`<span class="ap-wa-chip amount">💰 ${p.amount}</span>`);
+  if (p.amount)   chips.push(`<span class="ap-wa-chip amount">${p.amount}</span>`);
   if (p.currency) chips.push(`<span class="ap-wa-chip cur">${p.currency}</span>`);
-  if (p.name)     chips.push(`<span class="ap-wa-chip name">👤 ${_apWaEsc(p.name)}</span>`);
-  if (p.phone)    chips.push(`<span class="ap-wa-chip phone" style="cursor:pointer;" onclick="apWaOpen('${p.phone}')" title="فتح واتساب">📱 ${p.phone} <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.549 4.099 1.512 5.826L0 24l6.335-1.486A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 01-5.012-1.375l-.36-.213-3.762.883.925-3.67-.234-.376A9.82 9.82 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg></span>`);
+  if (p.name)     chips.push(`<span class="ap-wa-chip name">${_apWaEsc(p.name)}</span>`);
+  if (p.phone)    chips.push(`<span class="ap-wa-chip phone" style="cursor:pointer;" onclick="apWaOpen('${p.phone}')" title="فتح واتساب">${p.phone} <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.549 4.099 1.512 5.826L0 24l6.335-1.486A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 01-5.012-1.375l-.36-.213-3.762.883.925-3.67-.234-.376A9.82 9.82 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg></span>`);
 
   const textPreview = _apWaEsc((m.text || '').slice(0, 140));
   const hasMore     = (m.text || '').length > 140;
@@ -316,7 +316,7 @@ function _apWaBuildCard(m) {
       ${badge}
       <span class="ap-wa-msg-time">${timeStr}</span>
     </div>
-    ${m.groupName ? `<div style="font-size:9px;color:#1a3040;margin:-2px 0 1px;">💬 ${_apWaEsc(m.groupName)}</div>` : ''}
+    ${m.groupName ? `<div style="font-size:9px;color:#1a3040;margin:-2px 0 1px;">${_apWaEsc(m.groupName)}</div>` : ''}
     <div class="ap-wa-msg-text" id="ap-wa-txt-${_apWaEscAttr(m.id)}">${textPreview}${hasMore ? '<span style="color:#1e3050">…</span>' : ''}</div>
     ${chips.length ? `<div class="ap-wa-msg-parsed">${chips.join('')}</div>` : ''}
     <div class="ap-wa-msg-actions">
@@ -427,7 +427,7 @@ function _apWaDoFill(p, msg) {
   });
 
   if (filled.length) {
-    apNotify('✅ تم نقل: ' + filled.join(' · '), 'success');
+    apNotify('تم نقل: ' + filled.join(' · '), 'success');
     apLogAdd({
       type: 'واتساب → ' + (tool || 'أداة'),
       amount: p.amount || '—',
@@ -807,7 +807,7 @@ function ap_trRender(d) {
             ? `<button onclick="ap_trReceive(${r.id})"
                 style="padding:4px 10px;border-radius:7px;background:rgba(34,197,94,0.1);
                 border:1px solid rgba(34,197,94,0.3);color:#4ade80;font-size:11px;cursor:pointer;font-family:inherit;">
-                ✓ استلام</button>`
+                استلام</button>`
             : `<span style="font-size:10px;color:#2d4060;">${r.completedAt||'—'}</span>`}
         </td>
       </tr>`;
@@ -833,7 +833,7 @@ function ap_trReceive(id) {
   })
   .then(r => r.json())
   .then(d => {
-    if (d.success) { apNotify('✅ تم تأكيد الاستلام', 'success'); ap_trFetch(); }
+    if (d.success) { apNotify('تم تأكيد الاستلام', 'success'); ap_trFetch(); }
     else           { apNotify(d.message || 'خطأ', 'error'); }
   })
   .catch(() => apNotify('تعذّر الاتصال', 'error'));
@@ -1037,7 +1037,7 @@ function ap_nm_send() {
   .then(r => r.json())
   .then(d => {
     if (d.success) {
-      apNotify(`✅ تم إنشاء الحوالة ${d.transfer.refNumber}`, 'success');
+      apNotify(`تم إنشاء الحوالة ${d.transfer.refNumber}`, 'success');
       apLogAdd({ type:'حوالة', amount: sendAmt, currency: sendCur, ref: d.transfer.refNumber, status:'success' });
       ap_nm_reset();
       apSwitch(null);
@@ -1100,7 +1100,7 @@ function ap_ex_submit() {
   .then(r => r.json())
   .then(d => {
     if (d.success) {
-      apNotify(`✅ ${d.message}`, 'success');
+      apNotify(`${d.message}`, 'success');
       apLogAdd({ type:'تبديل عملات', amount: a1, currency: cur1 + '→' + cur2, ref: d.ref || '—', status:'success' });
       ap_ex_reset();
       apSwitch(null);
@@ -1186,7 +1186,7 @@ function ap_cut_submit() {
       const profit = d.profitUsd >= 0
         ? `ربح: ${d.profitUsd.toLocaleString('ar')} $`
         : `خسارة: ${Math.abs(d.profitUsd).toLocaleString('ar')} $`;
-      apNotify(`✅ ${d.message} — ${profit}`, 'success');
+      apNotify(`${d.message} — ${profit}`, 'success');
       ap_cut_reset();
       apSwitch(null);
     } else {
@@ -1294,8 +1294,8 @@ function ap_stl_submit() {
     .then(r => r.json())
     .then(d => {
       if (d.success) {
-        apNotify('✅ تم حفظ ' + d.record.refNumber, 'success');
-        if (d.warning) apNotify('⚠️ ' + d.warning, 'warning');
+        apNotify('تم حفظ ' + d.record.refNumber, 'success');
+        if (d.warning) apNotify(d.warning, 'warning');
         apLogAdd({ type:'قيد تسوية', amount: '—', currency: '—', ref: d.record.refNumber, status:'success' });
         document.getElementById('ap-stl-tbody').innerHTML = '';
         _apStlIdx = 1;
@@ -1359,7 +1359,7 @@ function ap_dp_render(rows) {
       <td style="text-align:center;color:#4a6280;">${r.currency||'—'}</td>
       <td style="text-align:center;color:#4a6280;">${r.source||r.branch||'—'}</td>
       <td style="text-align:center;">
-        <button onclick="ap_dp_deliver(${r.id||0})" style="padding:4px 12px;border-radius:7px;border:none;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">تسليم ✓</button>
+        <button onclick="ap_dp_deliver(${r.id||0})" style="padding:4px 12px;border-radius:7px;border:none;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">تسليم</button>
       </td>
     </tr>`).join('');
 }
@@ -1374,7 +1374,7 @@ function ap_dp_deliver(id) {
     .then(r => r.json())
     .then(d => {
       if (d.success || d.ok) {
-        apNotify('✅ تم تسجيل التسليم', 'success');
+        apNotify('تم تسجيل التسليم', 'success');
         apLogAdd({ type:'تسليم حوالة', amount:'—', currency:'—', ref: String(id), status:'success' });
         ap_dp_fetch();
       } else {
@@ -1511,7 +1511,7 @@ function ap_cv_save() {
         const profit = d.profitUsd >= 0
           ? `ربح: ${d.profitUsd.toLocaleString('ar')} $`
           : `خسارة: ${Math.abs(d.profitUsd).toLocaleString('ar')} $`;
-        apNotify(`✅ تم حفظ سند القص ${ref} — ${profit}`, 'success');
+        apNotify(`تم حفظ سند القص ${ref} — ${profit}`, 'success');
         apLogAdd({ type: 'سند قص', amount: ba, currency: bcu, ref, status: 'success' });
         ap_cv_reset();
       } else {
@@ -1519,7 +1519,7 @@ function ap_cv_save() {
       }
     })
     .catch(() => apNotify('تعذّر الاتصال بالخادم', 'error'))
-    .finally(() => { if (btn) { btn.disabled = false; btn.textContent = '✅ حفظ السند'; } });
+    .finally(() => { if (btn) { btn.disabled = false; btn.textContent = 'حفظ السند'; } });
 }
 
 function ap_cv_reset() {

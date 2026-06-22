@@ -51,7 +51,7 @@ function escapeHtml(str) {
 function getGroupLabel(g)  { return { aswar: 'الأساور', abuhashim: 'أبو هاشم', random: 'عشوائية' }[g] || g; }
 function getGroupIcon(g)   { return { aswar: '🟣', abuhashim: '🔵', random: '🟡' }[g] || '⚪'; }
 function getGroupColor(g)  { return { aswar: '#c084fc', abuhashim: '#60a5fa', random: '#fde047' }[g] || '#25D366'; }
-function getStatusLabel(s) { return { waiting: '⏳ بانتظار التنفيذ', executed: '✅ تم التنفيذ', 'sent-back': '📨 تم إرجاع الإشعار' }[s] || s; }
+function getStatusLabel(s) { return { waiting: 'بانتظار التنفيذ', executed: 'تم التنفيذ', 'sent-back': 'تم إرجاع الإشعار' }[s] || s; }
 function generateCode()    { return `${Math.floor(100+Math.random()*900)}-${Math.floor(100+Math.random()*900)}`; }
 
 // ========== FILL WALLET/PHONE FROM BUBBLE CLICK ==========
@@ -88,8 +88,8 @@ function _doFillWallet(walletType, walletNumber) {
   }
 
   const typeLabel = walletType === 'phone'
-    ? '📞 رقم الجوال'
-    : (walletConfig[walletType]?.label ? `${walletConfig[walletType].icon} ${walletConfig[walletType].label}` : '💳 رقم المحفظة');
+    ? 'رقم الجوال'
+    : (walletConfig[walletType]?.label ? `${walletConfig[walletType].icon} ${walletConfig[walletType].label}` : 'رقم المحفظة');
   showToast(`${typeLabel} → تم التعبئة تلقائياً`, 'success');
 }
 
@@ -144,7 +144,7 @@ function _renderTransfersNow() {
   }
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div style="text-align:center;color:#4d6080;padding:30px;font-size:12px">💬 لا توجد رسائل</div>';
+    list.innerHTML = '<div style="text-align:center;color:#4d6080;padding:30px;font-size:12px">لا توجد رسائل</div>';
     document.getElementById('incomingCount').textContent = '0';
     return;
   }
@@ -161,9 +161,9 @@ function _renderTransfersNow() {
     const statusBadge =
       t.status === 'new'          ? `<span style="background:#25D366;color:#000;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;margin-right:4px">جديدة</span>` :
       t.status === 'processing'   ? `<span style="background:#f59e0b;color:#000;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;margin-right:4px">قيد التنفيذ</span>` :
-      t.status === 'sent-to-exec' ? `<span style="background:rgba(37,99,235,0.7);color:#bfdbfe;border-radius:8px;padding:1px 8px;font-size:9px;font-weight:700;margin-right:4px;">⚡ أُرسلت للتنفيذ</span>` :
-      t.status === 'done'         ? `<span style="background:#065f46;color:#34d399;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;margin-right:4px">✅ اكتملت</span>` :
-                                    `<span style="color:#8696a0;font-size:9px;margin-right:4px">✅ منجزة</span>`;
+      t.status === 'sent-to-exec' ? `<span style="background:rgba(37,99,235,0.7);color:#bfdbfe;border-radius:8px;padding:1px 8px;font-size:9px;font-weight:700;margin-right:4px;">أُرسلت للتنفيذ</span>` :
+      t.status === 'done'         ? `<span style="background:#065f46;color:#34d399;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;margin-right:4px">اكتملت</span>` :
+                                    `<span style="color:#8696a0;font-size:9px;margin-right:4px">منجزة</span>`;
     const statusBadgeHtml = `<span data-status-badge>${statusBadge}</span>`;
 
     // ── Phone chip (clickable) ──
@@ -181,7 +181,7 @@ function _renderTransfersNow() {
            "
            onmouseover="this.style.background='rgba(37,211,102,0.2)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 3px 8px rgba(37,211,102,0.3)'"
            onmouseout="this.style.background='rgba(37,211,102,0.09)';this.style.transform='';this.style.boxShadow=''">
-           📞 ${escapeHtml(t.phone)}
+           ${escapeHtml(t.phone)}
          </button>` : '';
 
     // ── Wallet chip (clickable) ──
@@ -207,7 +207,7 @@ function _renderTransfersNow() {
     const chipsRow = (phoneChip || walletChip)
       ? `<div style="margin-top:7px;display:flex;flex-wrap:wrap;gap:4px;padding-top:7px;border-top:1px solid rgba(255,255,255,0.06);">
            ${walletChip}${phoneChip}
-           <span style="font-size:9px;color:#8696a0;align-self:center;margin-right:auto;">← اضغط للتعبئة</span>
+           <span style="font-size:9px;color:#8696a0;align-self:center;margin-right:auto;">اضغط للتعبئة</span>
          </div>` : '';
 
     const isSentToExec = t.status === 'sent-to-exec';
@@ -234,15 +234,15 @@ function _renderTransfersNow() {
         ${icon} ${escapeHtml(t.groupName || getGroupLabel(t.group))} ${statusBadgeHtml}
       </div>
       <div style="background:${bgCard};border:1px solid ${borderCard};border-radius:0 12px 12px 12px;padding:10px 12px;word-break:break-word;transition:all 0.3s;${isSentToExec ? 'box-shadow:0 0 12px rgba(59,130,246,0.15)' : ''}">
-        <div style="font-size:11px;color:#8696a0;margin-bottom:5px">👤 ${escapeHtml(t.sender || t.name)}</div>
+        <div style="font-size:11px;color:#8696a0;margin-bottom:5px">${escapeHtml(t.sender || t.name)}</div>
         <div style="font-size:13px;color:${isSentToExec ? '#93c5fd' : '#e9edef'};direction:rtl;line-height:1.5;margin-bottom:6px">"${escapeHtml(t.msg)}"</div>
         <div style="display:flex;align-items:center;justify-content:space-between">
           <span style="font-weight:900;color:#e8c04a;font-size:14px">${t.amount.toLocaleString()} <span style="font-size:11px;color:#32b8c6">${t.currency}</span></span>
-          <span style="font-size:10px;color:#8696a0">${t.time} ✓</span>
+          <span style="font-size:10px;color:#8696a0">${t.time}</span>
         </div>
         ${chipsRow}
         ${execOverlay}
-        ${isSelected && !isSentToExec ? '<div style="margin-top:6px;font-size:10px;color:#25D366;font-weight:700">← محددة • تحقق من البيانات في المنتصف</div>' : ''}
+        ${isSelected && !isSentToExec ? '<div style="margin-top:6px;font-size:10px;color:#25D366;font-weight:700">محددة • تحقق من البيانات في المنتصف</div>' : ''}
         <div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(255,255,255,.05)">
           <button
             onclick="event.stopPropagation(); _openTransferContext(${t.id})"
@@ -251,7 +251,7 @@ function _renderTransfersNow() {
                    cursor:pointer;width:100%;transition:background .2s;"
             onmouseover="this.style.background='rgba(99,102,241,.28)'"
             onmouseout="this.style.background='rgba(99,102,241,.13)'">
-            💬 عرض سياق المحادثة
+            عرض سياق المحادثة
           </button>
         </div>
       </div>
@@ -295,7 +295,7 @@ function _showCtxPanel(t) {
 
   window.scrollTo({ top: scrollY, behavior: 'instant' });  // أعد الموضع فوراً
 
-  body.innerHTML = '<div style="color:#4d6080;font-size:11px;text-align:center;padding:30px 0;">⏳ جارٍ التحميل...</div>';
+  body.innerHTML = '<div style="color:#4d6080;font-size:11px;text-align:center;padding:30px 0;">جارٍ التحميل...</div>';
 
   if (_ctxCache[t.id]) {
     _renderCtxPanel(t, _ctxCache[t.id]);
@@ -349,7 +349,7 @@ function _renderCtxPanel(t, msgs) {
     const border = isCurrent ? '1px solid rgba(37,211,102,.4)' : isHawala ? '1px solid rgba(99,102,241,.25)' : '1px solid rgba(255,255,255,.05)';
 
     const badge = isCurrent
-      ? '<span style="background:#25D366;color:#000;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700;">← هذه</span>'
+      ? '<span style="background:#25D366;color:#000;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700;">هذه</span>'
       : isHawala
         ? '<span style="background:#6366f1;color:#fff;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px;">حوالة</span>'
         : '';
@@ -408,7 +408,7 @@ function _ctxPanelFill() {
   set('currency',   parsed.currency || t.currency || 'USD');
   if (parsed.wallet) set('walletNumber', parsed.wallet.number);
 
-  showToast('✅ تم التعبئة من سياق المحادثة', 'success');
+  showToast('تم التعبئة من سياق المحادثة', 'success');
 }
 
 // ========== renderExecutions (legacy stub) ==========
@@ -463,14 +463,14 @@ function renderHistory() {
       ? `<div class="hrc-cell" onclick="_openReceiptViewer(${hData})" title="عرض الإيصال">
           ${h.receiptImageUrl
             ? `<img src="${h.receiptImageUrl}" class="hrc-thumb">`
-            : `<span style="font-size:18px;flex-shrink:0;">🧾</span>`
+            : `<span style="font-size:18px;flex-shrink:0;"></span>`
           }
           <div style="min-width:0;">
-            <div class="hrc-label">${h.receiptImageUrl ? '📎 إيصال مرفق' : '💬 إيصال نصي'}</div>
+            <div class="hrc-label">${h.receiptImageUrl ? 'إيصال مرفق' : 'إيصال نصي'}</div>
             <div class="hrc-sub">${escapeHtml((h.receipt || '').substring(0,36) || 'اضغط للعرض')}</div>
           </div>
-          ${h.receiptVerified === true  ? '<span class="hrc-verified">✔ مطابق</span>'   : ''}
-          ${h.receiptVerified === false ? '<span class="hrc-mismatch">✗ غير مطابق</span>' : ''}
+          ${h.receiptVerified === true  ? '<span class="hrc-verified">مطابق</span>'   : ''}
+          ${h.receiptVerified === false ? '<span class="hrc-mismatch">غير مطابق</span>' : ''}
         </div>`
       : '<span style="color:#2d4060;font-size:12px;">—</span>';
 
@@ -487,10 +487,10 @@ function renderHistory() {
       <td class="hc-currency hc-center">${escapeHtml(h.currency || '--')}</td>
       <td class="hc-source">${escapeHtml(h.source || h.group || '—')}</td>
       <td class="hc-agent"><span style="color:${agentColor};">${escapeHtml(agentName)}</span></td>
-      <td class="hc-center"><span class="hst-badge hst-done">✅ مُنفَّذة</span></td>
+      <td class="hc-center"><span class="hst-badge hst-done">مُنفَّذة</span></td>
       <td>${receiptCell}</td>
       <td class="hc-center">
-        <button class="hist-print-btn" onclick="printHistoryRow('${escapeHtml(String(h.id || h.num || i))}')" title="طباعة">🖨</button>
+        <button class="hist-print-btn" onclick="printHistoryRow('${escapeHtml(String(h.id || h.num || i))}')" title="طباعة">طباعة</button>
       </td>
     </tr>`;
   }).join('');
@@ -504,12 +504,12 @@ function searchHistory(q) {
 function _addToHistory(execBubble) {
   const now = new Date().toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit', hour12: true });
   const receiptMsg = [
-    '✅ تم تنفيذ الحوالة',
+    'تم تنفيذ الحوالة',
     '━━━━━━━━━━━━━━━━━━',
-    `👤 الاسم   : ${execBubble.name || '--'}`,
-    `💰 المبلغ  : ${execBubble.amount} ${execBubble.currency}`,
-    `🔐 الكود   : ${execBubble.code || '--'}`,
-    `🕐 الوقت   : ${now}`,
+    `الاسم   : ${execBubble.name || '--'}`,
+    `المبلغ  : ${execBubble.amount} ${execBubble.currency}`,
+    `الكود   : ${execBubble.code || '--'}`,
+    `الوقت   : ${now}`,
     '━━━━━━━━━━━━━━━━━━',
   ].join('\n');
 
@@ -564,7 +564,7 @@ function printHistoryRow(id) {
     `<p><b>الوقت:</b> ${escapeHtml(h.time)}</p>`,
     `<p><b>المُرسلة:</b> ${escapeHtml(h.source)}</p>`,
     `<p><b>المستقبلة:</b> ${escapeHtml(_agentNames[h.agent] || h.agent)}</p>`,
-    '<p><b>الحالة:</b> ✅ مُنفَّذة</p>',
+    '<p><b>الحالة:</b> مُنفَّذة</p>',
     '</body></html>',
   ].join('');
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -587,7 +587,7 @@ let _migFormat = 'json';
 
 function openMigrationModal() {
   if (transferHistory.length === 0) {
-    showToast('⚠️ السجل فارغ — لا توجد حوالات للترحيل', 'warning');
+    showToast('السجل فارغ — لا توجد حوالات للترحيل', 'warning');
     return;
   }
 
@@ -614,9 +614,9 @@ function openMigrationModal() {
       </div>`;
     const amtSummary = Object.entries(byCurr).map(([c,a]) => `${Math.round(a).toLocaleString()} ${c}`).join(' / ');
     summaryEl.innerHTML =
-      card('📋', 'إجمالي الحوالات', total, '#e8c04a') +
-      card('💰', 'المبالغ', amtSummary || '--', '#25D366') +
-      card('🔵', 'أكثر وكيل', topAgent ? (_agentNames[topAgent[0]] || topAgent[0]) : '--', '#60a5fa');
+      card('', 'إجمالي الحوالات', total, '#e8c04a') +
+      card('', 'المبالغ', amtSummary || '--', '#25D366') +
+      card('', 'أكثر وكيل', topAgent ? (_agentNames[topAgent[0]] || topAgent[0]) : '--', '#60a5fa');
   }
 
   // Date range
@@ -730,9 +730,9 @@ function executeMigration() {
     transferHistory.length = 0;
     renderHistory();
     computeStats();
-    showToast(`✅ تم ترحيل ${count} حوالة وتفريغ السجل`, 'success');
+    showToast(`تم ترحيل ${count} حوالة وتفريغ السجل`, 'success');
   } else {
-    showToast(`📦 تم ترحيل ${count} حوالة — السجل محفوظ`, 'success');
+    showToast(`تم ترحيل ${count} حوالة — السجل محفوظ`, 'success');
   }
 }
 
@@ -744,7 +744,7 @@ function clearHistorySearch() {
 }
 
 function exportHistory() {
-  if (transferHistory.length === 0) { showToast('⚠️ السجل فارغ', 'warning'); return; }
+  if (transferHistory.length === 0) { showToast('السجل فارغ', 'warning'); return; }
   const header = ['#', 'الوقت', 'الاسم', 'المبلغ', 'العملة', 'المرسلة', 'المستقبلة', 'الكود'];
   const rows = transferHistory.map((h, i) => [
     transferHistory.length - i,
@@ -766,7 +766,7 @@ function exportHistory() {
 }
 
 function exportNotificationsFile() {
-  if (transferHistory.length === 0) { showToast('⚠️ السجل فارغ', 'warning'); return; }
+  if (transferHistory.length === 0) { showToast('السجل فارغ', 'warning'); return; }
   const lines = transferHistory.map(h =>
     `[${h.time || '--'}] ${h.name || '--'} | ${h.amount} ${h.currency} | ${_agentNames[h.agent] || h.agent} | كود: ${h.code}`
   );
@@ -794,7 +794,7 @@ function selectTransfer(id) {
 
   // ── If form is in manual mode: skip auto-fill, just show source message ──
   if (_formMode === 'manual') {
-    showToast('👁 رسالة المصدر معروضة — الوضع اليدوي للنموذج نشط', 'info');
+    showToast('رسالة المصدر معروضة — الوضع اليدوي للنموذج نشط', 'info');
     return;
   }
 
@@ -847,7 +847,7 @@ function selectTransfer(id) {
 
     document.getElementById('secCode').textContent = generateCode();
     calculateNet();
-    showToast('🤖 تم تحليل الرسالة وملء البيانات تلقائياً', 'info');
+    showToast('تم تحليل الرسالة وملء البيانات تلقائياً', 'info');
   }, 300);
 
   setTimeout(() => {
@@ -859,7 +859,7 @@ function selectTransfer(id) {
 function showSourceChat(t) {
   const groupLbl   = document.getElementById('sourceChatGroup');
   const rawBox     = document.getElementById('rawMsgBox');
-  const groupFull  = { aswar: '🟣 الأساور', abuhashim: '🔵 أبو هاشم', random: '🟡 عشوائية' };
+  const groupFull  = { aswar: 'الأساور', abuhashim: 'أبو هاشم', random: 'عشوائية' };
   const groupColor = { aswar: '#c084fc', abuhashim: '#60a5fa', random: '#fde047' };
 
   const label = t.groupName || groupFull[t.group] || t.group;
@@ -918,7 +918,7 @@ function executeTransfer() {
   const name = document.getElementById('clientName')?.value?.trim();
   const agentEl = document.getElementById('execAgent');
   const agent = agentEl ? agentEl.selectedOptions[0]?.text : 'برهوم تونس';
-  if (!name) { showToast('⚠️ اختر حوالة من القائمة أولاً', 'warning'); return; }
+  if (!name) { showToast('اختر حوالة من القائمة أولاً', 'warning'); return; }
   const confirmText = document.getElementById('confirmText');
   if (confirmText) confirmText.innerHTML = `هل تريد إرسال حوالة <b>${escapeHtml(name)}</b> إلى <b>${escapeHtml(agent)}</b> للتنفيذ الفوري؟`;
   const modal = document.getElementById('confirmModal');
@@ -934,7 +934,7 @@ function confirmExecution() {
   // ── Supervisor limit check ──
   const _svCheck = _checkSupervisorLimits(amount, currency);
   if (!_svCheck.ok) {
-    showToast('⛔ ' + _svCheck.reason, 'error');
+    showToast(_svCheck.reason, 'error');
     return;
   }
 
@@ -946,7 +946,7 @@ function confirmExecution() {
 
   // Deduplication check — block same transfer within 10 minutes
   if (_checkExecDuplicate(name, amount, currency)) {
-    showToast('⚠️ تحذير: يبدو أن هذه الحوالة أُرسلت مسبقاً خلال آخر 10 دقائق!', 'warning');
+    showToast('تحذير: يبدو أن هذه الحوالة أُرسلت مسبقاً خلال آخر 10 دقائق!', 'warning');
     // Still allow but mark as potential duplicate
   }
 
@@ -1011,7 +1011,7 @@ function confirmExecution() {
   // Update agent load indicators
   _renderAgentLoadBadges();
 
-  showToast(`⚡ تم إرسال الحوالة إلى ${_agentNames[agentId] || agentId} — كود: ${code}`, 'success');
+  showToast(`تم إرسال الحوالة إلى ${_agentNames[agentId] || agentId} — كود: ${code}`, 'success');
 
   // ── إرسال عبر واتساب تلقائياً إذا للوكيل رقم ──
   _sendViaWhatsApp({ agentId, agentEl, name, amount, currency, code, walletInfo });
@@ -1028,7 +1028,7 @@ async function _sendViaWhatsApp({ agentId, agentEl, name, amount, currency, code
   const waNumber = selectedOpt ? (selectedOpt.dataset.whatsapp || '') : '';
 
   if (!waNumber) {
-    showToast('⚠️ لا يوجد رقم واتساب لهذا الوكيل — أضفه من صفحة المشرف', 'warning');
+    showToast('لا يوجد رقم واتساب لهذا الوكيل — أضفه من صفحة المشرف', 'warning');
     return;
   }
 
@@ -1036,15 +1036,15 @@ async function _sendViaWhatsApp({ agentId, agentEl, name, amount, currency, code
 
   // بناء نص الرسالة
   const walletLine = walletInfo
-    ? `\n💳 ${walletInfo.type === 'phone' ? 'هاتف' : walletInfo.type === 'iban' ? 'IBAN' : 'محفظة'}: ${walletInfo.number}`
+    ? `\n${walletInfo.type === 'phone' ? 'هاتف' : walletInfo.type === 'iban' ? 'IBAN' : 'محفظة'}: ${walletInfo.number}`
     : '';
 
   const message = [
-    '📥 حوالة جديدة من انترناشونال للصرافة',
+    'حوالة جديدة من انترناشونال للصرافة',
     '━━━━━━━━━━━━━━━━━━━━',
-    `👤 الاسم   : ${name}`,
-    `💰 المبلغ  : ${amount.toLocaleString()} ${currency}`,
-    `🔐 الكود   : ${code}`,
+    `الاسم   : ${name}`,
+    `المبلغ  : ${amount.toLocaleString()} ${currency}`,
+    `الكود   : ${code}`,
     walletLine,
     '━━━━━━━━━━━━━━━━━━━━',
     'يرجى التنفيذ وإرسال الإيصال متضمناً الكود أعلاه',
@@ -1061,15 +1061,15 @@ async function _sendViaWhatsApp({ agentId, agentEl, name, amount, currency, code
 
     console.log('📤 wa-send result:', JSON.stringify(result));
     if (result && result.ok) {
-      showToast(`📱 تم إرسال الحوالة لـ ${agentName} عبر واتساب`, 'success');
+      showToast(`تم إرسال الحوالة لـ ${agentName} عبر واتساب`, 'success');
     } else {
       const errMsg = result?.error || result?.message || JSON.stringify(result) || 'خطأ غير معروف';
       console.error('wa-send failed:', errMsg, 'waNumber:', waNumber);
-      showToast(`⚠️ فشل الإرسال: ${errMsg}`, 'warning');
+      showToast(`فشل الإرسال: ${errMsg}`, 'warning');
     }
   } catch(e) {
     console.error('wa-send exception:', e);
-    showToast(`⚠️ تعذر الاتصال بجسر واتساب: ${e.message}`, 'warning');
+    showToast(`تعذر الاتصال بجسر واتساب: ${e.message}`, 'warning');
   }
 }
 
@@ -1091,7 +1091,7 @@ function onReceiptConfirmed(code, receiptText, confirmedAt) {
 
   renderExecBubbles();
   _addToHistory(exec);
-  showToast(`✅ تم التأكيد من الوكيل — كود: ${code}`, 'success');
+  showToast(`تم التأكيد من الوكيل — كود: ${code}`, 'success');
   computeStats();
 }
 
@@ -1103,19 +1103,19 @@ function closeModal() {
 // ========== EDIT TRANSFER ==========
 function editTransfer() {
   const name = document.getElementById('clientName')?.value?.trim();
-  if (!name) { showToast('⚠️ لا توجد بيانات لتعديلها', 'warning'); return; }
+  if (!name) { showToast('لا توجد بيانات لتعديلها', 'warning'); return; }
   ['mainAmount', 'clientName', 'commission'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.removeAttribute('readonly'); el.classList.add('auto-filled'); }
   });
-  showToast('✏️ وضع التعديل — عدّل البيانات ثم أرسل للتنفيذ', 'info');
+  showToast('وضع التعديل — عدّل البيانات ثم أرسل للتنفيذ', 'info');
 }
 
 // ========== SEND RECEIPT ==========
 function sendReceipt() {
   const name = document.getElementById('clientName')?.value?.trim();
-  if (!name) { showToast('⚠️ لا توجد بيانات لإرسالها', 'warning'); return; }
-  showToast('📨 تم إرسال الوصل عبر واتساب بنجاح', 'success');
+  if (!name) { showToast('لا توجد بيانات لإرسالها', 'warning'); return; }
+  showToast('تم إرسال الوصل عبر واتساب بنجاح', 'success');
 }
 
 // ========== CLEAR FORM ==========
@@ -1145,7 +1145,7 @@ function clearForm() {
 
   _selectedId = null;
   renderTransfers(true); // user cleared form — immediate
-  showToast('🗑️ تم مسح النموذج', 'info');
+  showToast('تم مسح النموذج', 'info');
 }
 
 // ========== COPY SEC CODE ==========
@@ -1153,9 +1153,9 @@ function copySecCode() {
   const code = document.getElementById('secCode')?.textContent?.trim();
   if (!code) return;
   navigator.clipboard.writeText(code).then(() => {
-    showToast(`📋 تم نسخ الرمز: ${code}`, 'success');
+    showToast(`تم نسخ الرمز: ${code}`, 'success');
   }).catch(() => {
-    showToast(`🔐 الرمز: ${code}`, 'info');
+    showToast(`الرمز: ${code}`, 'info');
   });
 }
 
@@ -1247,7 +1247,7 @@ window.addEventListener('storage', function(e) {
   if (e.key === 'intl_botSettings') {
     _loadBotSettings();
     if (typeof showToast === 'function')
-      showToast('⚙️ تم تحديث إعدادات البوت من المشرف', 'info');
+      showToast('تم تحديث إعدادات البوت من المشرف', 'info');
   }
   // Supervisor reading execTransfers / transferHistory is automatic (shared localStorage)
 });
@@ -1331,7 +1331,7 @@ window.addEventListener('storage', function(e) {
   if (e.key === 'intl_employees') {
     _loadEmployeeList();
     if (typeof showToast === 'function')
-      showToast('👤 تم تحديث قائمة الموظفين من المشرف', 'info');
+      showToast('تم تحديث قائمة الموظفين من المشرف', 'info');
   }
 });
 
@@ -1479,7 +1479,7 @@ function _setSourcePausedOverlay(show) {
     // Update header status indicator
     if (statusEl) {
       statusEl.style.color = '#fbbf24';
-      statusEl.innerHTML   = '⏸ البوت متوقف مؤقتاً (يدوي) • <span id="incomingCount">' +
+      statusEl.innerHTML   = 'البوت متوقف مؤقتاً (يدوي) • <span id="incomingCount">' +
         (document.getElementById('incomingCount')?.textContent || '0') + '</span> رسالة';
     }
     // Build overlay if not already present
@@ -1501,7 +1501,6 @@ function _setSourcePausedOverlay(show) {
           border:1px solid rgba(245,158,11,0.25);
           box-shadow:0 8px 32px rgba(0,0,0,0.5);
         ">
-          <div style="font-size:28px;margin-bottom:10px;">✋</div>
           <div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:4px;">وضع يدوي</div>
           <div style="font-size:10px;color:#64748b;margin-bottom:16px;line-height:1.6;">
             البوت متوقف عن جلب الرسائل<br>والتحقق منها
@@ -1515,7 +1514,7 @@ function _setSourcePausedOverlay(show) {
           "
           onmouseover="this.style.background='rgba(37,211,102,0.28)'"
           onmouseout="this.style.background='rgba(37,211,102,0.15)'">
-            ▶ تشغيل البوت
+            تشغيل البوت
           </button>
         </div>
       `;
@@ -1527,7 +1526,7 @@ function _setSourcePausedOverlay(show) {
     // Restore header status
     if (statusEl) {
       statusEl.style.color = '#25D366';
-      statusEl.innerHTML   = '🟢 البوت نشط • <span id="incomingCount">' +
+      statusEl.innerHTML   = 'البوت نشط • <span id="incomingCount">' +
         (document.getElementById('incomingCount')?.textContent || '0') + '</span> رسالة';
     }
     if (overlay) {
@@ -1560,7 +1559,7 @@ function setFormMode(mode) {
     stopFormCountdown();
     // Show pause overlay on source messages panel
     _setSourcePausedOverlay(true);
-    showToast('✋ وضع يدوي — البوت متوقف، تحكم يدوي بالرسائل والحقول', 'warning');
+    showToast('وضع يدوي — البوت متوقف، تحكم يدوي بالرسائل والحقول', 'warning');
 
   } else {
     // ── Resume bot if it was running before ──
@@ -1574,7 +1573,7 @@ function setFormMode(mode) {
     _formModePausedBot = false;
     // Remove pause overlay
     _setSourcePausedOverlay(false);
-    showToast('🤖 وضع ذكي — البوت يجلب الرسائل ويملأ الحقول تلقائياً', 'success');
+    showToast('وضع ذكي — البوت يجلب الرسائل ويملأ الحقول تلقائياً', 'success');
   }
 }
 
@@ -1583,7 +1582,7 @@ function toggleMode() {
   smartMode = !smartMode;
   const btn = document.getElementById('modeToggle');
   if (smartMode) {
-    if (btn) { btn.className = 'mode-badge mode-smart'; btn.innerHTML = '🤖 وضع ذكي'; }
+    if (btn) { btn.className = 'mode-badge mode-smart'; btn.innerHTML = 'وضع ذكي'; }
     _botRunning = true;
     if (window.whatsappBotSimulator) {
       const lims = window._bcState?.maxMsgsPerGroup || { aswar:9, abuhashim:9, random:9 };
@@ -1598,8 +1597,8 @@ function toggleMode() {
     _botRunning    = false;
     _botProcessing = false;
     stopFormCountdown();
-    if (btn) { btn.className = 'mode-badge mode-manual'; btn.innerHTML = '✋ وضع يدوي'; }
-    showToast('✋ وضع يدوي — البوت متوقف', 'warning');
+    if (btn) { btn.className = 'mode-badge mode-manual'; btn.innerHTML = 'وضع يدوي'; }
+    showToast('وضع يدوي — البوت متوقف', 'warning');
     renderTransfers(true); // mode switch — immediate
   }
 }
@@ -1720,7 +1719,6 @@ function _showCorrectionReport(transferName, corrections) {
 
   panel.innerHTML = `
     <div style="background:rgba(251,191,36,0.1);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(251,191,36,0.2);">
-      <span style="font-size:15px;">🔧</span>
       <div style="flex:1;">
         <div style="font-size:11px;font-weight:700;color:#fbbf24;">تصحيح تلقائي</div>
         <div style="font-size:9px;color:#64748b;">${escapeHtml(transferName)}</div>
@@ -1927,12 +1925,12 @@ function logout() {
 // ========== EXEC PANEL STATUS BADGE ==========
 function _execStatusBadge(status) {
   const map = {
-    'executed':   ['#065f46','#34d399','✅ نُفّذت'],
-    'sent-back':  ['#1e3a5f','#60a5fa','📨 أُرجعت'],
-    'cancelled':  ['#3b0f0f','#ef4444','❌ ملغاة'],
-    'reassigned': ['#1a2a1a','#a3e635','🔀 محوّلة'],
+    'executed':   ['#065f46','#34d399','نُفّذت'],
+    'sent-back':  ['#1e3a5f','#60a5fa','أُرجعت'],
+    'cancelled':  ['#3b0f0f','#ef4444','ملغاة'],
+    'reassigned': ['#1a2a1a','#a3e635','محوّلة'],
   };
-  const [bg, color, label] = map[status] || ['#44330a','#fbbf24','⏳ انتظار'];
+  const [bg, color, label] = map[status] || ['#44330a','#fbbf24','انتظار'];
   return `<span style="background:${bg};color:${color};border-radius:6px;padding:1px 6px;font-size:9px;font-weight:700">${label}</span>`;
 }
 
@@ -2007,7 +2005,7 @@ function execManualAction(id, action) {
   if (!execBubble) return;
 
   if (!execCanTransition(execBubble.status, action)) {
-    showToast('⚠️ هذا الإجراء غير متاح في الوضع الحالي', 'warning');
+    showToast('هذا الإجراء غير متاح في الوضع الحالي', 'warning');
     return;
   }
 
@@ -2016,7 +2014,7 @@ function execManualAction(id, action) {
     if (execEntry) { execEntry.status = 'executed'; execEntry.steps = 3; }
     _saveExecTransfers();
     const agentName = _agentNames[execBubble.agent] || execBubble.agent;
-    showToast(`✅ ${agentName} أكد التنفيذ — يتم إرسال الإشعار…`, 'success');
+    showToast(`${agentName} أكد التنفيذ — يتم إرسال الإشعار…`, 'success');
 
     // Update the bubble visually to show "executed" state briefly
     const execElConfirmed = document.getElementById('eBubble-' + id);
@@ -2025,10 +2023,10 @@ function execManualAction(id, action) {
       if (statusStrip) {
         statusStrip.style.background  = 'rgba(37,211,102,0.08)';
         statusStrip.style.borderColor = 'rgba(37,211,102,0.25)';
-        statusStrip.innerHTML = `<span style="color:#25D366;font-size:10px;font-weight:700;">✅ ${agentName} أكد التنفيذ</span>`;
+        statusStrip.innerHTML = `<span style="color:#25D366;font-size:10px;font-weight:700;">${agentName} أكد التنفيذ</span>`;
       }
       const btnRow = execElConfirmed.querySelector('[data-exec-actions]');
-      if (btnRow) btnRow.innerHTML = '<span style="font-size:10px;color:#4d6080;">📨 جارٍ إرسال الإشعار…</span>';
+      if (btnRow) btnRow.innerHTML = '<span style="font-size:10px;color:#4d6080;">جارٍ إرسال الإشعار…</span>';
     }
 
     // Auto: deliver notification to source and remove from exec panel after 1.8s
@@ -2052,9 +2050,9 @@ function execManualAction(id, action) {
         const srcDomEl = document.getElementById('tItem-' + srcId);
         if (srcDomEl) {
           const badge = srcDomEl.querySelector('[data-status-badge]');
-          if (badge) badge.innerHTML = '<span style="background:#065f46;color:#34d399;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;">✅ اكتملت</span>';
+          if (badge) badge.innerHTML = '<span style="background:#065f46;color:#34d399;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;">اكتملت</span>';
         }
-        showToast('📨 تم تسليم الإشعار وتسجيل الحوالة في السجل', 'success');
+        showToast('تم تسليم الإشعار وتسجيل الحوالة في السجل', 'success');
 
         // 2) After 1.2s, fade both out quietly
         setTimeout(() => {
@@ -2077,7 +2075,7 @@ function execManualAction(id, action) {
       }
     } else {
       // No source link — remove exec bubble only
-      showToast('📨 تم تسليم الإشعار وتسجيل الحوالة في السجل', 'success');
+      showToast('تم تسليم الإشعار وتسجيل الحوالة في السجل', 'success');
       setTimeout(() => {
         const execEl = document.getElementById('eBubble-' + execBubble.id);
         _fadeRemove(execEl, () => { _removeExecEntry(id, true); computeStats(); });
@@ -2105,14 +2103,14 @@ function execManualAction(id, action) {
     // Fade exec card out
     const cancelEl = document.getElementById('eBubble-' + id);
     _fadeRemove(cancelEl, () => { _removeExecEntry(id, true); computeStats(); });
-    showToast('❌ تم إلغاء الحوالة وإعادة حالة المصدر', 'warning');
+    showToast('تم إلغاء الحوالة وإعادة حالة المصدر', 'warning');
     _renderAgentLoadBadges();
     return; // skip renderExecBubbles below
 
   } else if (action === 'reassigned') {
     const best = _suggestBestAgent();
     if (best === execBubble.agent) {
-      showToast(`🔀 المنفذ الحالي (${_agentNames[best] || best}) هو الأقل حملاً`, 'info');
+      showToast(`المنفذ الحالي (${_agentNames[best] || best}) هو الأقل حملاً`, 'info');
       return;
     }
     execBubble.agent  = best;
@@ -2120,7 +2118,7 @@ function execManualAction(id, action) {
     if (execEntry) execEntry.agent = best;
     _saveExecTransfers();
     _renderAgentLoadBadges();
-    showToast(`🔀 تم تحويل الحوالة إلى ${_agentNames[best] || best}`, 'success');
+    showToast(`تم تحويل الحوالة إلى ${_agentNames[best] || best}`, 'success');
   }
 
   // Update only the specific card's status strip — no full re-render
@@ -2130,12 +2128,12 @@ function execManualAction(id, action) {
     if (statusStrip && action === 'executed') {
       statusStrip.style.background = 'rgba(34,197,94,0.12)';
       statusStrip.style.borderColor = 'rgba(34,197,94,0.3)';
-      statusStrip.innerHTML = `<span style="color:#22c55e;font-size:10px;font-weight:700;">✅ تم التنفيذ</span>`;
+      statusStrip.innerHTML = `<span style="color:#22c55e;font-size:10px;font-weight:700;">تم التنفيذ</span>`;
     } else if (statusStrip && action === 'reassigned') {
       statusStrip.style.background = 'rgba(163,230,53,0.1)';
       statusStrip.style.borderColor = 'rgba(163,230,53,0.3)';
       const agentName = _agentNames[execBubble.agent] || execBubble.agent;
-      statusStrip.innerHTML = `<span style="color:#a3e635;font-size:10px;font-weight:700;">🔀 نُقل إلى ${agentName}</span>`;
+      statusStrip.innerHTML = `<span style="color:#a3e635;font-size:10px;font-weight:700;">نُقل إلى ${agentName}</span>`;
     }
     // Refresh action buttons
     const btnRow = updatedEl.querySelector('[data-exec-actions]');
@@ -2143,10 +2141,10 @@ function execManualAction(id, action) {
       const allowed = _EXEC_SM[execBubble.status] || [];
       const btnStyle = (bg,c) => `style="padding:5px 10px;border-radius:7px;border:1px solid ${c}44;background:${bg};color:${c};font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;"`;
       const btns = [];
-      if (allowed.includes('executed'))   btns.push(`<button ${btnStyle('#065f46','#34d399')} onclick="execManualAction('${id}','executed')">✅ تأكيد التنفيذ</button>`);
-      if (allowed.includes('sent-back'))  btns.push(`<button ${btnStyle('#1e3a5f','#60a5fa')} onclick="execManualAction('${id}','sent-back')">📨 إرسال للمصدر</button>`);
-      if (allowed.includes('reassigned')) btns.push(`<button ${btnStyle('#1a2a1a','#a3e635')} onclick="execManualAction('${id}','reassigned')">🔀 تحويل</button>`);
-      if (allowed.includes('cancelled'))  btns.push(`<button ${btnStyle('#3b0f0f','#ef4444')} onclick="execManualAction('${id}','cancelled')">❌ إلغاء</button>`);
+      if (allowed.includes('executed'))   btns.push(`<button ${btnStyle('#065f46','#34d399')} onclick="execManualAction('${id}','executed')">تأكيد التنفيذ</button>`);
+      if (allowed.includes('sent-back'))  btns.push(`<button ${btnStyle('#1e3a5f','#60a5fa')} onclick="execManualAction('${id}','sent-back')">إرسال للمصدر</button>`);
+      if (allowed.includes('reassigned')) btns.push(`<button ${btnStyle('#1a2a1a','#a3e635')} onclick="execManualAction('${id}','reassigned')">تحويل</button>`);
+      if (allowed.includes('cancelled'))  btns.push(`<button ${btnStyle('#3b0f0f','#ef4444')} onclick="execManualAction('${id}','cancelled')">إلغاء</button>`);
       btnRow.innerHTML = btns.join('');
     }
   }
@@ -2162,7 +2160,7 @@ function execSetPriority(id, priority) {
   _reorderExecQueue();
   _saveExecTransfers();
   renderExecBubbles();
-  const labels = { high: '🔴 أولوية عالية', normal: '🟡 أولوية عادية', low: '🟢 أولوية منخفضة' };
+  const labels = { high: 'أولوية عالية', normal: 'أولوية عادية', low: 'أولوية منخفضة' };
   showToast(`${labels[priority] || priority} — تم تعيين الأولوية`, 'info');
 }
 
@@ -2256,11 +2254,11 @@ function renderExecStatsBar() {
   const high      = execTransfers.filter(e => e.priority === 'high' && ['waiting','executed','reassigned'].includes(e.status)).length;
   el.innerHTML = `
     <span>الكل: <b style="color:#e9edef">${total}</b></span>
-    <span style="color:#fbbf24">⏳ <b>${waiting}</b></span>
-    <span style="color:#25D366">✅ <b>${executed}</b></span>
-    <span style="color:#60a5fa">📨 <b>${done}</b></span>
-    ${cancelled > 0 ? `<span style="color:#ef4444">❌ <b>${cancelled}</b></span>` : ''}
-    ${high > 0 ? `<span style="color:#f97316">🔴 أولوية: <b>${high}</b></span>` : ''}
+    <span style="color:#fbbf24"><b>${waiting}</b></span>
+    <span style="color:#25D366"><b>${executed}</b></span>
+    <span style="color:#60a5fa"><b>${done}</b></span>
+    ${cancelled > 0 ? `<span style="color:#ef4444"><b>${cancelled}</b></span>` : ''}
+    ${high > 0 ? `<span style="color:#f97316">أولوية: <b>${high}</b></span>` : ''}
   `;
 }
 
@@ -2276,7 +2274,7 @@ const _slaTickerInterval = setInterval(() => {
     // Update countdown text — color transitions smoothly via CSS
     const timerEl = document.getElementById('sla-' + e.id);
     if (timerEl) {
-      timerEl.textContent = `⏳ ${label}`;
+      timerEl.textContent = `${label}`;
       timerEl.style.color = color;
       timerEl.style.animation = 'none'; // no pulse — too distracting
     }
@@ -2300,7 +2298,7 @@ const _slaTickerInterval = setInterval(() => {
     // Mark in memory immediately so ticker skips it next tick
     e.status = 'expired';
 
-    showToast(`⏰ انتهى وقت تنفيذ حوالة "${e.name}" — تم الإلغاء تلقائياً`, 'warning');
+    showToast(`انتهى وقت تنفيذ حوالة "${e.name}" — تم الإلغاء تلقائياً`, 'warning');
 
     // Restore source transfer to 'new' so bot can re-process
     if (e.sourceTransferId) {
@@ -2358,7 +2356,7 @@ function renderExecBubbles() {
   if (countEl) countEl.textContent = execTransfers.length;
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div style="text-align:center;color:#4d6080;padding:30px;font-size:12px">⚡ لا توجد حوالات تنفيذ</div>';
+    list.innerHTML = '<div style="text-align:center;color:#4d6080;padding:30px;font-size:12px">لا توجد حوالات تنفيذ</div>';
     return;
   }
 
@@ -2393,14 +2391,14 @@ function renderExecBubbles() {
         </div>` : '';
 
     // Priority badge
-    const priMap = { high: ['#f97316','🔴 عالية'], normal: ['#fbbf24','🟡 عادية'], low: ['#22c55e','🟢 منخفضة'] };
+    const priMap = { high: ['#f97316','عالية'], normal: ['#fbbf24','عادية'], low: ['#22c55e','منخفضة'] };
     const [priColor, priLabel] = priMap[e.priority || 'normal'] || priMap.normal;
     const priBadge = `<span style="color:${priColor};font-size:9px;font-weight:600">${priLabel}</span>`;
 
     // SLA countdown timer + progress bar
     const sla = _elapsedTime(e.createdAt);
     const slaHtml = isActive
-      ? `<span id="sla-${e.id}" style="font-size:9px;color:${sla.color};font-family:monospace;font-weight:700;">⏳ ${sla.label}</span>`
+      ? `<span id="sla-${e.id}" style="font-size:9px;color:${sla.color};font-family:monospace;font-weight:700;">${sla.label}</span>`
       : '';
     // Progress bar — transition matches ticker interval (3.8s) for smooth drain with no jump
     const slaBarHtml = isActive ? `
@@ -2413,17 +2411,17 @@ function renderExecBubbles() {
 
     // Dedup warning
     const dupWarning = e.isDuplicate
-      ? `<div style="margin-bottom:5px;padding:3px 8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:6px;font-size:9px;color:#fbbf24;">⚠️ تحذير: قد تكون مكررة</div>`
+      ? `<div style="margin-bottom:5px;padding:3px 8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:6px;font-size:9px;color:#fbbf24;">تحذير: قد تكون مكررة</div>`
       : '';
 
     // Control buttons based on state machine
     const allowed = _EXEC_SM[e.status] || [];
     const btnStyle = (bg, color) => `style="padding:4px 10px;border:none;border-radius:12px;font-size:10px;font-weight:700;cursor:pointer;background:${bg};color:${color};transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1"`;
     const ctrlBtns = [];
-    if (allowed.includes('executed'))   ctrlBtns.push(`<button ${btnStyle('#065f46','#34d399')} onclick="execManualAction('${e.id}','executed')">✅ تأكيد التنفيذ</button>`);
-    if (allowed.includes('sent-back'))  ctrlBtns.push(`<button ${btnStyle('#1e3a5f','#60a5fa')} onclick="execManualAction('${e.id}','sent-back')">📨 إرسال للمصدر</button>`);
-    if (allowed.includes('reassigned')) ctrlBtns.push(`<button ${btnStyle('#1a2a1a','#a3e635')} onclick="execManualAction('${e.id}','reassigned')">🔀 تحويل</button>`);
-    if (allowed.includes('cancelled'))  ctrlBtns.push(`<button ${btnStyle('#3b0f0f','#ef4444')} onclick="execManualAction('${e.id}','cancelled')">❌ إلغاء</button>`);
+    if (allowed.includes('executed'))   ctrlBtns.push(`<button ${btnStyle('#065f46','#34d399')} onclick="execManualAction('${e.id}','executed')">تأكيد التنفيذ</button>`);
+    if (allowed.includes('sent-back'))  ctrlBtns.push(`<button ${btnStyle('#1e3a5f','#60a5fa')} onclick="execManualAction('${e.id}','sent-back')">إرسال للمصدر</button>`);
+    if (allowed.includes('reassigned')) ctrlBtns.push(`<button ${btnStyle('#1a2a1a','#a3e635')} onclick="execManualAction('${e.id}','reassigned')">تحويل</button>`);
+    if (allowed.includes('cancelled'))  ctrlBtns.push(`<button ${btnStyle('#3b0f0f','#ef4444')} onclick="execManualAction('${e.id}','cancelled')">إلغاء</button>`);
 
     // Priority change buttons (only for active waiting items)
     const priCtrl = (e.status === 'waiting' || e.status === 'reassigned')
@@ -2464,7 +2462,7 @@ function renderExecBubbles() {
           <span style="font-size:10px;color:#8696a0">${e.time} ${ticks}</span>
         </div>
         <div style="margin-top:5px;font-size:10px;color:#8696a0;">
-          <span>🔐 ${e.code}</span>
+          <span>${e.code}</span>
         </div>
         ${ctrlRow}
       </div>
@@ -2498,7 +2496,7 @@ function execChatClear() {
   execTransfers = [];
   _saveExecTransfers();
   renderExecBubbles();
-  showToast('🗑️ تم مسح قائمة التنفيذ', 'info');
+  showToast('تم مسح قائمة التنفيذ', 'info');
 }
 
 // ========== STATS ==========
@@ -2683,7 +2681,7 @@ function _showReceiptNotification(receipt) {
     }
   }
 
-  showToast(`${hasImg ? '🧾' : '💬'} إيصال وصل للكود ${code} — من: ${sender}`, 'success');
+  showToast(`إيصال وصل للكود ${code} — من: ${sender}`, 'success');
   try { new Audio('/static/sounds/ding.mp3').play().catch(()=>{}); } catch(e) {}
 
   // افتح النافذة تلقائياً فور وصول الإيصال
@@ -2730,7 +2728,7 @@ function _openReceiptViewer(h) {
     <div style="padding:10px 12px;background:rgba(37,211,102,0.08);border-bottom:1px solid rgba(37,211,102,0.15);
                 display:flex;align-items:center;gap:8px;flex-shrink:0;">
       <div style="width:28px;height:28px;border-radius:8px;background:rgba(37,211,102,0.15);
-                  border:1px solid rgba(37,211,102,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🧾</div>
+                  border:1px solid rgba(37,211,102,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;"></div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:11px;font-weight:700;color:#25D366;">إيصال وصل</div>
         <div style="font-size:9px;color:#4d8060;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -2768,11 +2766,11 @@ function _openReceiptViewer(h) {
       <a href="${imgUrl}" download target="_blank"
          style="flex:1;text-align:center;padding:6px;border-radius:8px;
                 background:rgba(37,211,102,0.1);color:#25D366;border:1px solid rgba(37,211,102,0.2);
-                font-size:10px;font-weight:700;text-decoration:none;">⬇️ تحميل</a>
+                font-size:10px;font-weight:700;text-decoration:none;">تحميل</a>
       <button onclick="window.open('${imgUrl}','_blank')"
          style="flex:1;padding:6px;border-radius:8px;background:rgba(50,184,198,0.08);
                 color:#32b8c6;border:1px solid rgba(50,184,198,0.2);font-size:10px;font-weight:700;cursor:pointer;">
-        🔍 تكبير</button>
+        تكبير</button>
     </div>` : ''}
   `;
 
@@ -2838,7 +2836,7 @@ function _renderSrcAgentSelector(agents) {
       </div>
       <div>
         <div style="font-size:12px;font-weight:700;color:#e9edef;" data-name="${a.name}">${a.name}</div>
-        <div style="font-size:9px;color:${hasWA?'#25D366':'#f59e0b'};">${hasWA?'📱 واتساب متاح':'⚠️ لا يوجد رقم'}</div>
+        <div style="font-size:9px;color:${hasWA?'#25D366':'#f59e0b'};">${hasWA?'واتساب متاح':'لا يوجد رقم'}</div>
       </div>
     `;
     sel.appendChild(div);
@@ -2880,7 +2878,7 @@ function _renderExecAgentSelector(agents) {
       </div>
       <div>
         <div style="font-size:12px;font-weight:700;color:#e9edef;" data-name="${a.name}">${a.name}</div>
-        <div style="font-size:9px;color:${hasWA?'#25D366':'#f59e0b'};">${hasWA?'📱 واتساب متاح':'⚠️ لا يوجد رقم'}</div>
+        <div style="font-size:9px;color:${hasWA?'#25D366':'#f59e0b'};">${hasWA?'واتساب متاح':'لا يوجد رقم'}</div>
       </div>
     `;
     sel.appendChild(div);
@@ -2946,7 +2944,7 @@ window.addEventListener('storage', function(e) {
     _syncClientsAgents();
     if (typeof showToast === 'function') {
       const label = e.key === 'intl_agents' ? 'الوكلاء' : 'مجموعات العملاء';
-      showToast('🔄 تم تحديث ' + label + ' من المشرف', 'info');
+      showToast('تم تحديث ' + label + ' من المشرف', 'info');
     }
   }
 });
@@ -2970,5 +2968,5 @@ function trxRptFileChosen(i){if(i.files&&i.files[0])_trxRptRead(i.files[0]);}
 function trxRptFileDrop(e){const f=e.dataTransfer.files;if(f&&f[0])_trxRptRead(f[0]);}
 function trxOpenReportModal(){const overlay=document.getElementById('trxReportOverlay');if(!overlay)return;try{_trxRptFileData=null;_trxRptFileMeta=null;const t=document.getElementById('trxRptTitle');if(t)t.value='';trxRptClearFile();}catch(e){}try{const u=(window._currentUser||{});const el=document.getElementById('trxRptSenderDisplay');if(el&&u.username)el.textContent=u.username;}catch(e){}overlay.style.display='flex';}
 function trxCloseReportModal(){document.getElementById('trxReportOverlay').style.display='none';}
-function trxSubmitReport(){const title=(document.getElementById('trxRptTitle').value||'').trim();if(!title){showToast('يرجى إدخال عنوان التقرير','warning');return;}if(!_trxRptFileData||!_trxRptFileMeta){showToast('يرجى اختيار ملف للرفع','warning');return;}let sender='موظف الحوالات';try{const u=(window._currentUser||{});if(u.username)sender=u.username;}catch(e){}const now=new Date();const p=n=>String(n).padStart(2,'0');const date=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());const obj={source:'transfers',title,fileName:_trxRptFileMeta.name,fileType:_trxRptFileMeta.type,fileSize:_trxRptFmtSz(_trxRptFileMeta.size),fileData:_trxRptFileData,sender,department:'قسم الحوالات',branch:'الفرع الرئيسي',branchId:1,date};try{const ex=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex));}catch(err){try{obj.fileData=null;const ex2=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex2.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex2));}catch(e){}}trxCloseReportModal();showToast('تم إرسال الملف "'+_trxRptFileMeta.name+'" للإدارة بنجاح ✅','success');}
+function trxSubmitReport(){const title=(document.getElementById('trxRptTitle').value||'').trim();if(!title){showToast('يرجى إدخال عنوان التقرير','warning');return;}if(!_trxRptFileData||!_trxRptFileMeta){showToast('يرجى اختيار ملف للرفع','warning');return;}let sender='موظف الحوالات';try{const u=(window._currentUser||{});if(u.username)sender=u.username;}catch(e){}const now=new Date();const p=n=>String(n).padStart(2,'0');const date=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());const obj={source:'transfers',title,fileName:_trxRptFileMeta.name,fileType:_trxRptFileMeta.type,fileSize:_trxRptFmtSz(_trxRptFileMeta.size),fileData:_trxRptFileData,sender,department:'قسم الحوالات',branch:'الفرع الرئيسي',branchId:1,date};try{const ex=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex));}catch(err){try{obj.fileData=null;const ex2=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex2.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex2));}catch(e){}}trxCloseReportModal();showToast('تم إرسال الملف "'+_trxRptFileMeta.name+'" للإدارة بنجاح','success');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('trxReportOverlay').style.display==='flex')trxCloseReportModal();});

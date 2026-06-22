@@ -105,21 +105,21 @@ function renderMainRecent(){
     let rows=[];
     // صرافة
     exLogs.forEach(l=>{
-        rows.push({dept:'exchange',deptName:'💱 صرافة',deptTag:'tag-buy',client:l.client,
+        rows.push({dept:'exchange',deptName:'صرافة',deptTag:'tag-buy',client:l.client,
             detail:`${l.mode==='buy'?'شراء':'بيع'} ${SYMBOLS_LOCAL[l.from]||''}${l.fromAmt.toLocaleString()} → ${SYMBOLS_LOCAL[l.to]||''}${l.toAmt.toLocaleString()}`,
             amount:(l.mode==='buy'?'+':'-')+(SYMBOLS_LOCAL[l.to]||'')+l.toAmt.toLocaleString(),
             cls:l.mode==='buy'?'pos':'neg',time:l.time,id:l.id});
     });
     // حوالات
     itLogs.forEach(l=>{
-        rows.push({dept:'international',deptName:l.direction==='out'?'🌍 صادرة':'🌍 واردة',deptTag:l.direction==='out'?'tag-send':'tag-receive',client:l.sender||l.recipient,
+        rows.push({dept:'international',deptName:l.direction==='out'?'صادرة':'واردة',deptTag:l.direction==='out'?'tag-send':'tag-receive',client:l.sender||l.recipient,
             detail:`${l.direction==='out'?'إرسال إلى':'استقبال من'} ${l.country}`,
             amount:(SYMBOLS_LOCAL[l.currency]||'$')+l.amount.toLocaleString(),
             cls:l.direction==='out'?'neg':'pos',time:l.time,id:l.id});
     });
     // إلكترونية
     elLogs.forEach(l=>{
-        rows.push({dept:'electronic',deptName:'📲 '+l.platform,deptTag:'tag-elec',client:l.client,
+        rows.push({dept:'electronic',deptName:l.platform,deptTag:'tag-elec',client:l.client,
             detail:`${l.platform} — ${l.status==='completed'?'مكتملة':'معلقة'}`,
             amount:(SYMBOLS_LOCAL[l.currency]||'$')+l.amount.toLocaleString(),
             cls:'neg',time:l.time,id:l.id});
@@ -482,7 +482,7 @@ function handleBankNotice(input,section){
     const nameSpan=document.getElementById(section+'BankFileName');
     if(file){
         label.classList.add('has-file');
-        nameSpan.textContent='✅ '+file.name;
+        nameSpan.textContent=file.name;
         showToast('تم تحميل إشعار البنك: '+file.name,'success','📎');
     }else{
         label.classList.remove('has-file');
@@ -503,7 +503,7 @@ function toggleSpecialPrice(){
         spApproved=false;
         document.getElementById('spStatus').style.display='none';
         const sendBtn=document.getElementById('spSendBtn');
-        if(sendBtn){sendBtn.disabled=false;sendBtn.innerHTML='<span>📨</span> إرسال طلب للمشرف'}
+        if(sendBtn){sendBtn.disabled=false;sendBtn.innerHTML='إرسال طلب للمشرف'}
         const lockMsg=document.getElementById('spLockMsg');if(lockMsg)lockMsg.style.display='block';
         const appMsg=document.getElementById('spApprovedMsg');if(appMsg)appMsg.style.display='none';
         const reqRate=document.getElementById('spRequestedRate');if(reqRate)reqRate.value='';
@@ -528,7 +528,7 @@ function openPassTeller(){
     const rateEl=document.getElementById('exRate');const rate=(rateEl&&rateEl.value)||'—';
     const sym1=document.querySelector('.from-sym');const sym2=document.querySelector('.to-sym');
     // Fill strip
-    document.getElementById('ptTxType').textContent=mode==='buy'?'📈 شراء':'📉 بيع';
+    document.getElementById('ptTxType').textContent=mode==='buy'?'شراء':'بيع';
     document.getElementById('ptTxFrom').textContent=fromAmt>0?(sym1?sym1.textContent:'$')+fromAmt.toLocaleString():'—';
     document.getElementById('ptTxTo').textContent=toAmt>0?(sym2?sym2.textContent:'₪')+toAmt.toLocaleString():'—';
     document.getElementById('ptTxRate').textContent=rate!=='—'?rate:'—';
@@ -537,7 +537,7 @@ function openPassTeller(){
     document.getElementById('ptClientId').textContent=clientId||'—';
     document.getElementById('ptClientAvatar').textContent=client?client[0].toUpperCase():'؟';
     const badge=document.getElementById('ptModeBadge');
-    badge.textContent=mode==='buy'?'📈 شراء':'📉 بيع';
+    badge.textContent=mode==='buy'?'شراء':'بيع';
     badge.className='pt-client-badge'+(mode==='sell'?' sell':'');
     // Populate teller select from localStorage
     const select=document.getElementById('ptTargetTeller');
@@ -589,7 +589,7 @@ function requestSpecialPrice(){
     const status=document.getElementById('spStatus');
     const statusIcon=document.getElementById('spStatusIcon');
     const statusText=document.getElementById('spStatusText');
-    btn.disabled=true;btn.innerHTML='<span>⏳</span> جاري الإرسال...';
+    btn.disabled=true;btn.innerHTML='جاري الإرسال...';
     status.style.display='flex';status.className='sp-status';
     if(statusIcon)statusIcon.textContent='⏳';
     if(statusText)statusText.textContent='في انتظار موافقة المشرف...';
@@ -643,7 +643,7 @@ function _handleSpApproved(r){
     if(status){status.className='sp-status approved';}
     if(statusIcon)statusIcon.textContent='✅';
     if(statusText)statusText.textContent='تمت الموافقة من المشرف!';
-    if(btn){btn.innerHTML='<span>✅</span> تمت الموافقة';}
+    if(btn){btn.innerHTML='تمت الموافقة';}
     const rateInput=document.getElementById('specialRateInput');
     if(rateInput){rateInput.disabled=false;if(r.requestedRate)rateInput.value=r.requestedRate;}
     const lockMsg=document.getElementById('spLockMsg');if(lockMsg)lockMsg.style.display='none';
@@ -659,7 +659,7 @@ function _handleSpRejected(r){
     if(status){status.className='sp-status';}
     if(statusIcon)statusIcon.textContent='❌';
     if(statusText)statusText.textContent='رفض المشرف الطلب'+(r.reply?' — '+r.reply:'');
-    if(btn){btn.disabled=false;btn.innerHTML='<span>📨</span> إعادة الطلب';}
+    if(btn){btn.disabled=false;btn.innerHTML='إعادة الطلب';}
     showToast('رفض المشرف طلب السعر المميز','error','❌');
 }
 function applySpecialRate(){calcExchange()}
@@ -674,7 +674,7 @@ function setExMode(mode){
         card.className='tool-card mode-buy';
         label.textContent='شراء';
         label.style.cssText='background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)';
-        if(btn){btn.style.background='linear-gradient(135deg,var(--success),#16a34a)';btn.textContent='تنفيذ عملية الشراء 📈';}
+        if(btn){btn.style.background='linear-gradient(135deg,var(--success),#16a34a)';btn.textContent='تنفيذ عملية الشراء';}
         document.getElementById('fromLabel').textContent='العميل يدفع';
         document.getElementById('toLabel').textContent='العميل يستلم';
     } else {
@@ -682,7 +682,7 @@ function setExMode(mode){
         card.className='tool-card mode-sell';
         label.textContent='بيع';
         label.style.cssText='background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.2)';
-        if(btn){btn.style.background='linear-gradient(135deg,var(--danger),#dc2626)';btn.textContent='تنفيذ عملية البيع 📉';}
+        if(btn){btn.style.background='linear-gradient(135deg,var(--danger),#dc2626)';btn.textContent='تنفيذ عملية البيع';}
         document.getElementById('fromLabel').textContent='العميل يبيع';
         document.getElementById('toLabel').textContent='العميل يستلم';
     }
@@ -751,13 +751,13 @@ function submitExchange(){
     pendingAction={type:'exchange',data:{client,from,to,fromAmt:amt,toAmt:parseFloat(result),rate:rate.toFixed(4),mode:exMode,special:specialPriceActive,dd:ddActive.ex,ddAmt2:ddActive.ex?parseFloat(document.getElementById('exDdAmount2').value)||0:0,ddCur2:ddActive.ex?document.getElementById('exDdCur2').value:''}};
     document.getElementById('cmIcon').textContent=exMode==='buy'?'📈':'📉';document.getElementById('cmTitle').textContent=exMode==='buy'?'تأكيد شراء':'تأكيد بيع';
     let ddHtml='';
-    if(ddActive.ex&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">📋 تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--primary)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
-    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v" style="color:${exMode==='buy'?'var(--success)':'var(--danger)'}">${exMode==='buy'?'📈 شراء':'📉 بيع'}</span></div>${specialPriceActive?'<div class="confirm-row"><span class="c-l">⭐ سعر مميز</span><span class="c-v" style="color:var(--accent)">نعم</span></div>':''}<div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">يدفع</span><span class="c-v" dir="ltr">${SYMBOLS[from]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">يستلم</span><span class="c-v" dir="ltr" style="color:var(--success)">${SYMBOLS[to]}${result}</span></div>${ddHtml}<div class="confirm-row"><span class="c-l">السعر</span><span class="c-v" dir="ltr">${rate.toFixed(4)}</span></div>`;
+    if(ddActive.ex&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--primary)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
+    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v" style="color:${exMode==='buy'?'var(--success)':'var(--danger)'}">${exMode==='buy'?'شراء':'بيع'}</span></div>${specialPriceActive?'<div class="confirm-row"><span class="c-l">سعر مميز</span><span class="c-v" style="color:var(--accent)">نعم</span></div>':''}<div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">يدفع</span><span class="c-v" dir="ltr">${SYMBOLS[from]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">يستلم</span><span class="c-v" dir="ltr" style="color:var(--success)">${SYMBOLS[to]}${result}</span></div>${ddHtml}<div class="confirm-row"><span class="c-l">السعر</span><span class="c-v" dir="ltr">${rate.toFixed(4)}</span></div>`;
     document.getElementById('confirmModal').classList.add('visible');
 }
 function clearExchange(){['exFrom','exClient','exClientId','exNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('exTo').textContent='0.00';if(ddActive.ex){ddActive.ex=false;document.getElementById('exDdSwitch').closest('.double-delivery-toggle').classList.remove('dd-active');document.getElementById('exDdFields').classList.remove('open')};const dd2=document.getElementById('exDdAmount2');if(dd2)dd2.value='';document.getElementById('exDdResult2').textContent='0.00';showToast('تم مسح النموذج','info','♻️')}
 function filterExLogs(el,mode){exFilterMode=mode;el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('fc-on'));el.classList.add('fc-on');renderExLogs()}
-function renderExLogs(){let data=exLogs;if(exFilterMode==='buy')data=exLogs.filter(l=>l.mode==='buy');else if(exFilterMode==='sell')data=exLogs.filter(l=>l.mode==='sell');document.getElementById('exLogBody').innerHTML=data.map(l=>`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td><span class="tag ${l.mode==='buy'?'tag-buy':'tag-sell'}">${l.mode==='buy'?'📈 شراء':'📉 بيع'}</span></td><td style="font-weight:700">${l.client}</td><td class="amount-cell neg">-${SYMBOLS[l.from]}${l.fromAmt.toLocaleString()}</td><td class="amount-cell pos">+${SYMBOLS[l.to]}${l.toAmt.toLocaleString()}</td><td dir="ltr" style="text-align:right;font-weight:600">${l.rate}</td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`).join('')}
+function renderExLogs(){let data=exLogs;if(exFilterMode==='buy')data=exLogs.filter(l=>l.mode==='buy');else if(exFilterMode==='sell')data=exLogs.filter(l=>l.mode==='sell');document.getElementById('exLogBody').innerHTML=data.map(l=>`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td><span class="tag ${l.mode==='buy'?'tag-buy':'tag-sell'}">${l.mode==='buy'?'شراء':'بيع'}</span></td><td style="font-weight:700">${l.client}</td><td class="amount-cell neg">-${SYMBOLS[l.from]}${l.fromAmt.toLocaleString()}</td><td class="amount-cell pos">+${SYMBOLS[l.to]}${l.toAmt.toLocaleString()}</td><td dir="ltr" style="text-align:right;font-weight:600">${l.rate}</td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`).join('')}
 
 // ═══ القارات ═══
 function buildCountryLists(){
@@ -911,7 +911,7 @@ function submitIntlSend(){
     const fee=amt*0.02;
     pendingAction={type:'international',data:{sender,recv:country,country,amt,cur,fee,direction:'out',recvMethod:selectedRecvMethod||document.getElementById('itMethod').value}};
     document.getElementById('cmIcon').textContent='📤';document.getElementById('cmTitle').textContent='تأكيد إرسال الحوالة';
-    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v">📤 إرسال</span></div><div class="confirm-row"><span class="c-l">المرسل</span><span class="c-v">${sender}</span></div><div class="confirm-row"><span class="c-l">الوجهة</span><span class="c-v">${country}</span></div><div class="confirm-row"><span class="c-l">التواصل</span><span class="c-v" dir="ltr">${phone}</span></div>${pendingAction.data.recvMethod?`<div class="confirm-row"><span class="c-l">📦 طريقة الإرسال</span><span class="c-v" style="color:var(--primary)">${pendingAction.data.recvMethod}</span></div>`:''}<div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">الرسوم</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${fee.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l" style="font-weight:700">الإجمالي</span><span class="c-v" dir="ltr" style="color:var(--accent);font-weight:800">${SYMBOLS[cur]}${(amt+fee).toFixed(2)}</span></div>`;
+    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v">إرسال</span></div><div class="confirm-row"><span class="c-l">المرسل</span><span class="c-v">${sender}</span></div><div class="confirm-row"><span class="c-l">الوجهة</span><span class="c-v">${country}</span></div><div class="confirm-row"><span class="c-l">التواصل</span><span class="c-v" dir="ltr">${phone}</span></div>${pendingAction.data.recvMethod?`<div class="confirm-row"><span class="c-l">طريقة الإرسال</span><span class="c-v" style="color:var(--primary)">${pendingAction.data.recvMethod}</span></div>`:''}<div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">الرسوم</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${fee.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l" style="font-weight:700">الإجمالي</span><span class="c-v" dir="ltr" style="color:var(--accent);font-weight:800">${SYMBOLS[cur]}${(amt+fee).toFixed(2)}</span></div>`;
     document.getElementById('confirmModal').classList.add('visible');
 }
 
@@ -925,7 +925,7 @@ function submitIntlRecv(){
     const fee=amt*0.02;
     pendingAction={type:'international',data:{sender:fromCountry||'خارجي',recv,country:fromCountry||'—',amt,cur,fee,direction:'in',recvMethod:document.getElementById('itRecvMethod')?.value||'كاش'}};
     document.getElementById('cmIcon').textContent='📥';document.getElementById('cmTitle').textContent='تأكيد استقبال الحوالة';
-    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v" style="color:var(--success)">📥 استقبال</span></div><div class="confirm-row"><span class="c-l">المستلم</span><span class="c-v">${recv}</span></div><div class="confirm-row"><span class="c-l">دولة المصدر</span><span class="c-v">${fromCountry||'—'}</span></div><div class="confirm-row"><span class="c-l">التواصل</span><span class="c-v" dir="ltr">${phone}</span></div><div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">الرسوم</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${fee.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l" style="font-weight:700">الإجمالي</span><span class="c-v" dir="ltr" style="color:var(--accent);font-weight:800">${SYMBOLS[cur]}${(amt+fee).toFixed(2)}</span></div>`;
+    document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v" style="color:var(--success)">استقبال</span></div><div class="confirm-row"><span class="c-l">المستلم</span><span class="c-v">${recv}</span></div><div class="confirm-row"><span class="c-l">دولة المصدر</span><span class="c-v">${fromCountry||'—'}</span></div><div class="confirm-row"><span class="c-l">التواصل</span><span class="c-v" dir="ltr">${phone}</span></div><div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">الرسوم</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${fee.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l" style="font-weight:700">الإجمالي</span><span class="c-v" dir="ltr" style="color:var(--accent);font-weight:800">${SYMBOLS[cur]}${(amt+fee).toFixed(2)}</span></div>`;
     document.getElementById('confirmModal').classList.add('visible');
 }
 
@@ -980,17 +980,17 @@ function _renderItPageCards(data){
         html+=`
         <div class="it-page-card${hasNew?' it-page-card--new':''}" onclick="_openItPageModal(${p})" title="فتح صفحة ${p+1}">
             <div class="it-pc-header">
-                <div class="it-pc-num">📄 صفحة ${p+1}</div>
+                <div class="it-pc-num">صفحة ${p+1}</div>
                 <div class="it-pc-range">${lastId} ← ${firstId}</div>
             </div>
             <div class="it-pc-stats">
                 <div class="it-pc-stat in">
                     <span class="it-pc-stat-val">${inCount}</span>
-                    <span class="it-pc-stat-lbl">📥 واردة</span>
+                    <span class="it-pc-stat-lbl">واردة</span>
                 </div>
                 <div class="it-pc-stat out">
                     <span class="it-pc-stat-val">${outCount}</span>
-                    <span class="it-pc-stat-lbl">📤 صادرة</span>
+                    <span class="it-pc-stat-lbl">صادرة</span>
                 </div>
                 <div class="it-pc-stat total">
                     <span class="it-pc-stat-val">${pageItems.length}</span>
@@ -1016,19 +1016,19 @@ function _openItPageModal(pageIndex){
 
     document.getElementById('itPmTitle').textContent='صفحة '+(pageIndex+1);
     document.getElementById('itPmSub').textContent=items.length+' حوالة · '+items[items.length-1].id+' — '+items[0].id;
-    document.getElementById('itPmBadgeIn').textContent='📥 '+inCount+' واردة';
-    document.getElementById('itPmBadgeOut').textContent='📤 '+outCount+' صادرة';
+    document.getElementById('itPmBadgeIn').textContent=inCount+' واردة';
+    document.getElementById('itPmBadgeOut').textContent=outCount+' صادرة';
 
     document.getElementById('itPmBody').innerHTML=items.map(l=>`
         <tr>
             <td style="font-size:12px;color:var(--text-muted)">${l.id}</td>
-            <td><span class="tag ${l.direction==='in'?'tag-receive':'tag-send'}">${l.direction==='in'?'📥 واردة':'📤 صادرة'}</span></td>
+            <td><span class="tag ${l.direction==='in'?'tag-receive':'tag-send'}">${l.direction==='in'?'واردة':'صادرة'}</span></td>
             <td style="font-weight:700">${l.sender}</td>
             <td>${l.recipient}</td>
             <td>${l.country}</td>
             <td class="amount-cell ${l.direction==='in'?'pos':'neg'}">${l.direction==='in'?'+':'-'}${SYMBOLS[l.currency]}${Number(l.amount).toLocaleString()}</td>
             <td dir="ltr" style="text-align:right">${SYMBOLS[l.currency]}${l.fee}</td>
-            <td><span class="tag tag-${l.status}">${l.status==='completed'?'✅ مكتملة':'⏳ معلقة'}</span></td>
+            <td><span class="tag tag-${l.status}">${l.status==='completed'?'مكتملة':'معلقة'}</span></td>
             <td style="font-size:12px;color:var(--text-muted)">${l.time}</td>
         </tr>`).join('');
 
@@ -1047,7 +1047,7 @@ function sendIntlWhatsApp(){
     const sender=document.getElementById('itSenderName').value.trim()||'—';
     const country=document.getElementById('itRecvCountry').value||'—';
     const amt=document.getElementById('itAmount').value||'0';const cur=document.getElementById('itCurrency').value;
-    const msg=encodeURIComponent(`🌍 *حوالة دولية — نظام انترناشونال*\n\n📤 المرسل: ${sender}\n🗺️ الوجهة: ${country}\n💰 المبلغ: ${SYMBOLS[cur]}${amt}\n📅 التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
+    const msg=encodeURIComponent(`*حوالة دولية — نظام انترناشونال*\n\nالمرسل: ${sender}\nالوجهة: ${country}\nالمبلغ: ${SYMBOLS[cur]}${amt}\nالتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
     window.open('https://wa.me/?text='+msg,'_blank');
     showToast('جاري فتح واتساب...','success','📱');
 }
@@ -1056,7 +1056,7 @@ function sendRecvWhatsApp(){
     const recv=document.getElementById('itRecvName').value.trim()||'—';
     const fromCountry=document.getElementById('itRecvFromCountry').value||'—';
     const amt=document.getElementById('itRecvAmount').value||'0';const cur=document.getElementById('itRecvCurrency').value;
-    const msg=encodeURIComponent(`📥 *استقبال حوالة — نظام انترناشونال*\n\n📥 المستلم: ${recv}\n🗺️ المصدر: ${fromCountry}\n💰 المبلغ: ${SYMBOLS[cur]}${amt}\n📅 التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
+    const msg=encodeURIComponent(`*استقبال حوالة — نظام انترناشونال*\n\nالمستلم: ${recv}\nالمصدر: ${fromCountry}\nالمبلغ: ${SYMBOLS[cur]}${amt}\nالتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
     window.open('https://wa.me/?text='+msg,'_blank');
     showToast('جاري فتح واتساب...','success','📱');
 }
@@ -1173,7 +1173,7 @@ function switchUsdtNetwork(el,net){
 
 function shareUsdtAddress(){
     const info=USDT_NETWORKS[currentUsdtNet];
-    const text=`💲 عنوان استقبال USDT — ${info.label}\n\n📍 العنوان:\n${info.address}\n\n⚠️ أرسل فقط USDT عبر شبكة ${currentUsdtNet}\n\n🏢 شركة انترناشونال للخدمات المالية`;
+    const text=`عنوان استقبال USDT — ${info.label}\n\nالعنوان:\n${info.address}\n\nأرسل فقط USDT عبر شبكة ${currentUsdtNet}\n\nشركة انترناشونال للخدمات المالية`;
     if(navigator.share){
         navigator.share({title:'عنوان USDT',text}).catch(()=>{});
     }else{
@@ -1189,22 +1189,22 @@ function verifyUsdtTx(){
     const status=document.getElementById('usdtTxStatus');
     status.style.display='block';
     status.className='qr-tx-status tx-pending';
-    status.innerHTML='⏳ جاري التحقق من المعاملة...';
+    status.innerHTML='جاري التحقق من المعاملة...';
     // محاكاة التحقق
     setTimeout(()=>{
         const rand=Math.random();
         if(rand>0.3){
             const amt=(Math.random()*500+50).toFixed(2);
             status.className='qr-tx-status tx-confirmed';
-            status.innerHTML=`✅ <strong>مؤكدة</strong> — المبلغ: <span dir="ltr">${amt} USDT</span> — التأكيدات: ${Math.floor(Math.random()*20+5)}/20`;
+            status.innerHTML=`<strong>مؤكدة</strong> — المبلغ: <span dir="ltr">${amt} USDT</span> — التأكيدات: ${Math.floor(Math.random()*20+5)}/20`;
             showToast('المعاملة مؤكدة!','success','✅');
         }else if(rand>0.1){
             status.className='qr-tx-status tx-pending';
-            status.innerHTML='⏳ <strong>قيد الانتظار</strong> — لم تتم التأكيدات الكافية بعد';
+            status.innerHTML='<strong>قيد الانتظار</strong> — لم تتم التأكيدات الكافية بعد';
             showToast('المعاملة قيد الانتظار','warning','⏳');
         }else{
             status.className='qr-tx-status tx-failed';
-            status.innerHTML='❌ <strong>لم يتم العثور</strong> — تأكد من TX Hash والشبكة الصحيحة';
+            status.innerHTML='<strong>لم يتم العثور</strong> — تأكد من TX Hash والشبكة الصحيحة';
             showToast('لم يتم العثور على المعاملة','error','❌');
         }
     },2000);
@@ -1220,18 +1220,18 @@ function submitElec(){
     pendingAction={type:'electronic',data:{client,platform,amt,cur,fee,dd:ddActive.el,ddAmt2:ddActive.el?parseFloat(document.getElementById('elDdAmount2').value)||0:0,ddCur2:ddActive.el?document.getElementById('elDdCur2').value:'',ddNote2:ddActive.el?document.getElementById('elDdNote2')?.value||'':''}};
     document.getElementById('cmIcon').textContent='📲';document.getElementById('cmTitle').textContent='تأكيد المعاملة';
     let ddHtml='';
-    if(ddActive.el&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">📋 تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--blue)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
+    if(ddActive.el&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--blue)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
     document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">المنصة</span><span class="c-v">${platform}</span></div><div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${amt.toFixed(2)}</span></div>${ddHtml}<div class="confirm-row"><span class="c-l">الرسوم</span><span class="c-v" dir="ltr">${SYMBOLS[cur]}${fee.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l" style="font-weight:700">الإجمالي</span><span class="c-v" dir="ltr" style="color:var(--accent);font-weight:800">${SYMBOLS[cur]}${(amt+fee).toFixed(2)}</span></div>`;
     document.getElementById('confirmModal').classList.add('visible');
 }
 function clearElec(){['elClient','elClientId','elAccount','elAmount','elNote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('elPlatform').value='';document.getElementById('elPlatLabel').textContent='اختر منصة';document.getElementById('elFeeDisp').textContent='$0.00';document.getElementById('elAmtDisp').textContent='$0.00';document.getElementById('elTotalDisp').textContent='$0.00';document.querySelectorAll('.platform-card').forEach(c=>c.classList.remove('active-plat'));if(ddActive.el){ddActive.el=false;const tgl=document.getElementById('elDdToggle');if(tgl)tgl.classList.remove('dd-active');document.getElementById('elDdFields').classList.remove('open')};['elDdCashAmt','elDdBankAmt'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});const qrs=document.getElementById('elecQrSide');if(qrs)qrs.style.display='none';const lay=document.getElementById('elecSplitLayout');if(lay)lay.classList.remove('with-qr');const ddz=document.getElementById('elDdZone');if(ddz)ddz.style.display='none';const cr=document.getElementById('elClientReq');if(cr)cr.style.display='inline';showToast('تم مسح النموذج','info','♻️')}
 function filterElLogs(el,mode){elFilterMode=mode;el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('fc-on'));el.classList.add('fc-on');renderElLogs()}
-function renderElLogs(){let data=elLogs;if(elFilterMode==='completed')data=elLogs.filter(l=>l.status==='completed');else if(elFilterMode==='pending')data=elLogs.filter(l=>l.status==='pending');document.getElementById('elLogBody').innerHTML=data.map(l=>`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td style="font-weight:700">${l.client}</td><td><span class="tag tag-e-wallet">${l.platform}</span></td><td class="amount-cell neg">-${SYMBOLS[l.currency]}${l.amount.toLocaleString()}</td><td dir="ltr" style="text-align:right">${SYMBOLS[l.currency]}${l.fee}</td><td><span class="tag tag-${l.status}">${l.status==='completed'?'✅ مكتملة':'⏳ معلقة'}</span></td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`).join('')}
+function renderElLogs(){let data=elLogs;if(elFilterMode==='completed')data=elLogs.filter(l=>l.status==='completed');else if(elFilterMode==='pending')data=elLogs.filter(l=>l.status==='pending');document.getElementById('elLogBody').innerHTML=data.map(l=>`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td style="font-weight:700">${l.client}</td><td><span class="tag tag-e-wallet">${l.platform}</span></td><td class="amount-cell neg">-${SYMBOLS[l.currency]}${l.amount.toLocaleString()}</td><td dir="ltr" style="text-align:right">${SYMBOLS[l.currency]}${l.fee}</td><td><span class="tag tag-${l.status}">${l.status==='completed'?'مكتملة':'معلقة'}</span></td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`).join('')}
 
 function sendElecWhatsApp(){
     const client=document.getElementById('elClient').value.trim()||'—';const platform=document.getElementById('elPlatform').value||'—';
     const amt=document.getElementById('elAmount').value||'0';const cur=document.getElementById('elCurrency').value;
-    const msg=encodeURIComponent(`📲 *معاملة إلكترونية — نظام انترناشونال*\n\n👤 العميل: ${client}\n💳 المنصة: ${platform}\n💰 المبلغ: ${SYMBOLS[cur]}${amt}\n📅 التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
+    const msg=encodeURIComponent(`*معاملة إلكترونية — نظام انترناشونال*\n\nالعميل: ${client}\nالمنصة: ${platform}\nالمبلغ: ${SYMBOLS[cur]}${amt}\nالتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n_شركة انترناشونال للخدمات المالية_`);
     window.open('https://wa.me/?text='+msg,'_blank');
     showToast('جاري فتح واتساب...','success','📱');
 }
@@ -1310,7 +1310,7 @@ async function confirmAction(){
         const sign=isD?1:-1;
         tellerBalances[data.cur]=(tellerBalances[data.cur]||0)+(sign*data.amt);
         cdLogs.unshift({id,mode:data.mode,payType:data.payType||'cash',client:data.client,amount:data.amt,currency:data.cur,rate:data.rate||0,ref:data.ref,time:now});
-        const payLabel=data.payType==='bank'?'🏦 بنكي':'💵 كاش';
+        const payLabel=data.payType==='bank'?'بنكي':'كاش';
         allRecent.unshift({icon:isD?'📥':'📤',type:'cashdesk',name:`${isD?'إيداع':'سحب'} ${payLabel} — ${data.client}`,desc:`${SYMBOLS[data.cur]}${data.amt}`,time:now,amount:`${isD?'+':'-'}${SYMBOLS[data.cur]}${data.amt}`,cls:isD?'pos':'neg'});
         _pushToSvOps(id,isD?'deposit':'withdraw',`${isD?'إيداع':'سحب'} (${payLabel}) — ${data.client}: ${SYMBOLS[data.cur]}${data.amt}`,data.amt,data.cur);
         // ── قيد مزدوج ──
@@ -1344,7 +1344,7 @@ function openGeneralRequest(type){
     _grType=type;
     const lbl=document.getElementById('grTypeLabel');
     if(lbl){
-        lbl.textContent=type==='urgent'?'🔴 طلب عاجل':'🟡 طلب عادي';
+        lbl.textContent=type==='urgent'?'طلب عاجل':'طلب عادي';
         lbl.style.background=type==='urgent'?'rgba(239,68,68,0.1)':'rgba(245,158,11,0.1)';
         lbl.style.color=type==='urgent'?'#f87171':'#fbbf24';
         lbl.style.border=type==='urgent'?'1px solid rgba(239,68,68,0.3)':'1px solid rgba(245,158,11,0.3)';
@@ -1422,7 +1422,7 @@ function _applyOpeningBalance(data){
     initOpeningBox();
     updateTellerBox();
     updateMainBalances();
-    showToast('تم تثبيت الصندوق الافتتاحي ✅','success','🏦');
+    showToast('تم تثبيت الصندوق الافتتاحي','success','🏦');
 }
 function updateMainBalances(){
     const tot=tellerBalances.USD+(tellerBalances.ILS/RATES.ILS)+(tellerBalances.JOD/RATES.JOD);
@@ -1438,7 +1438,7 @@ function updateMainBalances(){
     const diff=Math.round(tot)-Math.round(openTot);
     const diffEl=document.getElementById('closingDiff');
     if(diff!==0){
-        diffEl.innerHTML=`${diff>0?'📈 ربح':'📉 خسارة'}: <span dir="ltr">$${Math.abs(diff).toLocaleString()}</span>`;
+        diffEl.innerHTML=`${diff>0?'ربح':'خسارة'}: <span dir="ltr">$${Math.abs(diff).toLocaleString()}</span>`;
         diffEl.className='cl-diff '+(diff>0?'positive':'negative');
     }else{diffEl.innerHTML='';diffEl.className='cl-diff'}
 }
@@ -1460,7 +1460,7 @@ function addExtraPair(from,to,flag1,flag2,name,btn){
     const pairHtml=`<div class="pair-card" onclick="selectPair('${from}','${to}')" id="${pairId}"><div class="pair-flags">${flag1} <span class="pair-arrow">⇄</span> ${flag2}</div><div class="pair-name">${name}</div><div class="pair-rate" id="pairRate-${from}-${to}">1 ${from} = ${rate<1?rate.toFixed(4):rate.toFixed(3)} ${to}</div><div class="pair-code">${from}/${to}</div></div>`;
     const wpDropdown=document.querySelector('#dept-exchange .right-column .world-prices-dropdown');
     wpDropdown.insertAdjacentHTML('beforebegin',pairHtml);
-    btn.classList.add('added');btn.textContent='✅ تمت الإضافة';
+    btn.classList.add('added');btn.textContent='تمت الإضافة';
     addedPairs.push({from,to});
     showToast(`تمت إضافة زوج ${from}/${to}`,'success','✅');
 }
@@ -1679,14 +1679,14 @@ const CD_CUR_NAMES={USD:'دولار أمريكي',JOD:'دينار أردني',IL
 
 function _cd2UpdateBadge(){
     const isD=cdMode==='deposit';const isCash=cdPayType==='cash';
-    const icon=isD?'📥':'📤';const typeLabel=isCash?'💵 كاش':'🏦 بنكي';
+    const icon=isD?'📥':'📤';const typeLabel=isCash?'كاش':'بنكي';
     const label=`${typeLabel} · ${isD?'إيداع':'سحب'}`;
     const badge=document.getElementById('cd2OpBadge');
     if(badge){badge.textContent=label;badge.style.background=isD?'rgba(34,197,94,0.12)':'rgba(239,68,68,0.12)';badge.style.color=isD?'var(--success)':'var(--danger)';badge.style.border=isD?'1px solid rgba(34,197,94,0.25)':'1px solid rgba(239,68,68,0.25)'}
     const cardIcon=document.getElementById('cd2CardIcon');if(cardIcon)cardIcon.textContent=icon;
     const cardTitle=document.getElementById('cd2CardTitle');if(cardTitle)cardTitle.textContent=isD?'تفاصيل الإيداع':'تفاصيل السحب';
     const btn=document.getElementById('cd2SubmitBtn');
-    if(btn){btn.textContent=isD?'تنفيذ الإيداع 📥':'تنفيذ السحب 📤';btn.style.background=isD?'linear-gradient(135deg,var(--success),#16a34a)':'linear-gradient(135deg,var(--danger),#b91c1c)'}
+    if(btn){btn.textContent=isD?'تنفيذ الإيداع':'تنفيذ السحب';btn.style.background=isD?'linear-gradient(135deg,var(--success),#16a34a)':'linear-gradient(135deg,var(--danger),#b91c1c)'}
     const calcType=document.getElementById('cd2CalcType');if(calcType)calcType.textContent=`${typeLabel} · ${isD?'إيداع':'سحب'}`;
     const calcIcon=document.getElementById('cd2CalcIcon');if(calcIcon)calcIcon.textContent=isCash?'💵':'🏦';
 }
@@ -1753,7 +1753,7 @@ function submitCd2(){
     let equivText='—';
     if(cdCurrency==='ILS') equivText=`₪${amt.toLocaleString(undefined,{minimumFractionDigits:2})}`;
     else if(rate>0) equivText=`₪${(amt*rate).toLocaleString(undefined,{minimumFractionDigits:2})}`;
-    const details=`<div class="confirm-row"><span class="c-l">العملية</span><span class="c-v" style="color:${isD?'var(--success)':'var(--danger)'}">${isD?'📥 إيداع':'📤 سحب'}</span></div><div class="confirm-row"><span class="c-l">الطريقة</span><span class="c-v">${isCash?'💵 كاش':'🏦 بنكي'}</span></div><div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" style="font-size:18px;font-weight:900;color:${isD?'var(--success)':'var(--danger)'};">${sym}${amt.toLocaleString(undefined,{minimumFractionDigits:2})}</span></div>${rate>0?`<div class="confirm-row"><span class="c-l">السعر</span><span class="c-v">${rate} ₪/${cdCurrency}</span></div>`:''}${equivText!=='—'?`<div class="confirm-row"><span class="c-l">المعادل</span><span class="c-v" style="color:var(--primary);font-weight:900">${equivText}</span></div>`:''}${ref?`<div class="confirm-row"><span class="c-l">المرجع</span><span class="c-v">${ref}</span></div>`:''}`;
+    const details=`<div class="confirm-row"><span class="c-l">العملية</span><span class="c-v" style="color:${isD?'var(--success)':'var(--danger)'}">${isD?'إيداع':'سحب'}</span></div><div class="confirm-row"><span class="c-l">الطريقة</span><span class="c-v">${isCash?'كاش':'بنكي'}</span></div><div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">المبلغ</span><span class="c-v" style="font-size:18px;font-weight:900;color:${isD?'var(--success)':'var(--danger)'};">${sym}${amt.toLocaleString(undefined,{minimumFractionDigits:2})}</span></div>${rate>0?`<div class="confirm-row"><span class="c-l">السعر</span><span class="c-v">${rate} ₪/${cdCurrency}</span></div>`:''}${equivText!=='—'?`<div class="confirm-row"><span class="c-l">المعادل</span><span class="c-v" style="color:var(--primary);font-weight:900">${equivText}</span></div>`:''}${ref?`<div class="confirm-row"><span class="c-l">المرجع</span><span class="c-v">${ref}</span></div>`:''}`;
     document.getElementById('cmIcon').textContent=isD?'📥':'📤';
     document.getElementById('cmTitle').textContent=isD?'تأكيد الإيداع':'تأكيد السحب';
     document.getElementById('cmDetails').innerHTML=details;
@@ -1787,7 +1787,7 @@ function renderCdLogs(){
         let equiv='—';
         if(l.currency==='ILS')equiv=`₪${l.amount.toLocaleString(undefined,{minimumFractionDigits:2})}`;
         else if(l.rate>0)equiv=`₪${(l.amount*l.rate).toLocaleString(undefined,{minimumFractionDigits:2})}`;
-        return`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td><span class="tag ${isD?'tag-deposit':'tag-withdraw'}">${isD?'📥 إيداع':'📤 سحب'}</span></td><td><span class="tag ${isCash?'tag-cash-type':'tag-bank-type'}">${isCash?'💵 كاش':'🏦 بنكي'}</span></td><td style="font-weight:700">${l.client}</td><td class="amount-cell ${isD?'pos':'neg'}">${isD?'+':'-'}${sym}${l.amount.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td style="direction:ltr;text-align:right;font-weight:700">${l.rate||'—'}</td><td class="amount-cell pos">${equiv}</td><td style="font-size:12px;color:var(--text-muted)">${l.ref||'—'}</td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`;
+        return`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td><span class="tag ${isD?'tag-deposit':'tag-withdraw'}">${isD?'إيداع':'سحب'}</span></td><td><span class="tag ${isCash?'tag-cash-type':'tag-bank-type'}">${isCash?'كاش':'بنكي'}</span></td><td style="font-weight:700">${l.client}</td><td class="amount-cell ${isD?'pos':'neg'}">${isD?'+':'-'}${sym}${l.amount.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td style="direction:ltr;text-align:right;font-weight:700">${l.rate||'—'}</td><td class="amount-cell pos">${equiv}</td><td style="font-size:12px;color:var(--text-muted)">${l.ref||'—'}</td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`;
     }).join('');
     document.getElementById('cdLogCount').textContent=cdLogs.length+' عملية';
 }
@@ -1954,7 +1954,7 @@ function submitReconcile(){
     }catch(e){}
 
     // إرسال إشعار المطابقة للمشرف عبر API
-    const text = '⚖️ مطابقة الصندوق\n'
+    const text = 'مطابقة الصندوق\n'
         + 'الافتتاحي: $'+opening.USD+' | ₪'+opening.ILS+' | JD'+opening.JOD+'\n'
         + 'الحالي:    $'+current.USD+' | ₪'+current.ILS+' | JD'+current.JOD+'\n'
         + 'الفارق:    $'+diff.USD+' | ₪'+diff.ILS+' | JD'+diff.JOD
@@ -1979,7 +1979,7 @@ function submitReconcile(){
     }).catch(()=>{});
 
     closeReconcileModal();
-    showToast('تمت المطابقة وأُرسل الإشعار للمشرف ✅','success','⚖️');
+    showToast('تمت المطابقة وأُرسل الإشعار للمشرف','success','⚖️');
 }
 
 
@@ -2023,7 +2023,7 @@ function _updateSessionBar(){
             +'<span style="font-size:13px;font-weight:800;color:#f59e0b">صندوق افتتاحي جاهز — في انتظار التأكيد</span>'
             +'<span style="font-size:11px;color:rgba(200,210,220,0.55);direction:ltr">$'+(ob.USD||0)+' / ₪'+(ob.ILS||0)+' / JD '+(ob.JOD||0)+'</span>'
             +'</div>'
-            +'<button onclick="_confirmOpeningAndStart()" style="display:flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(234,179,8,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:10px;color:#f59e0b;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap">✅ تأكيد الصندوق والبدء</button>';
+            +'<button onclick="_confirmOpeningAndStart()" style="display:flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(234,179,8,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:10px;color:#f59e0b;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap">تأكيد الصندوق والبدء</button>';
     } else if(_sessionIsOpen()){
         bar.style.background='linear-gradient(135deg,rgba(34,197,94,0.1),rgba(16,185,129,0.07))';
         bar.style.borderColor='rgba(34,197,94,0.25)';
@@ -2033,7 +2033,7 @@ function _updateSessionBar(){
             +'<span style="font-size:12px;color:rgba(200,210,220,0.7);font-weight:700;background:rgba(34,197,94,0.1);padding:2px 10px;border-radius:8px;border:1px solid rgba(34,197,94,0.2)">'+_session.id+'</span>'
             +'<span style="font-size:11px;color:rgba(200,210,220,0.45)">بدأت: '+(_session.confirmedAt?new Date(_session.confirmedAt).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}):_session.startTime||'')+ ' • مضى: '+_getElapsed(_session.confirmedAt||_session.startTimestamp||_session.openedAt)+'</span>'
             +'</div>'
-            +'<button onclick="openCloseSessionModal()" style="display:flex;align-items:center;gap:6px;padding:8px 18px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);border-radius:10px;color:#f87171;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap">🔒 إغلاق الصندوق</button>';
+            +'<button onclick="openCloseSessionModal()" style="display:flex;align-items:center;gap:6px;padding:8px 18px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);border-radius:10px;color:#f87171;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap">إغلاق الصندوق</button>';
     } else {
         bar.style.background='linear-gradient(135deg,rgba(100,116,139,0.08),rgba(71,85,105,0.05))';
         bar.style.borderColor='rgba(100,116,139,0.2)';
@@ -2112,8 +2112,8 @@ function calcSessionDiff(){
     });
     var ind=document.getElementById('csMatchIndicator');
     if(ind) ind.innerHTML=total<0.01
-        ?'<span style="color:#22c55e;font-size:14px">✅ الصندوق متطابق تماماً</span>'
-        :'<span style="color:#f87171;font-size:13px">⚠️ فارق إجمالي: $'+total.toFixed(2)+'</span>';
+        ?'<span style="color:#22c55e;font-size:14px">الصندوق متطابق تماماً</span>'
+        :'<span style="color:#f87171;font-size:13px">فارق إجمالي: $'+total.toFixed(2)+'</span>';
 }
 
 function confirmCloseSession(){
@@ -2325,7 +2325,7 @@ async function submitBankTransferFromTeller() {
 
     const btn = document.getElementById('btm-submit-btn');
     const SEND_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>';
-    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ جاري الإرسال...'; btn.style.opacity = '0.7'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = 'جاري الإرسال...'; btn.style.opacity = '0.7'; }
 
     try {
         const resp = await apiBkTransferCreate({
@@ -2379,14 +2379,14 @@ async function submitBankTransferFromTeller() {
 
             if (msg.type === 'rates_update' && msg.rates) {
                 _applyRatesData(msg.rates);
-                showToast('تم تحديث الأسعار من المشرف ⚡', 'success', '💱');
+                showToast('تم تحديث الأسعار من المشرف', 'success', '💱');
             }
 
             if (msg.type === 'teller_box_opened' && msg.payload) {
                 // المشرف فتح الصندوق — حدّث الجلسة والأرصدة فوراً
                 var p = msg.payload;
                 showToast(
-                    '🏦 فتح المشرف صندوقك — $' + (p.usd||0) + ' | ₪' + (p.ils||0) + ' | JD' + (p.jod||0),
+                    'فتح المشرف صندوقك — $' + (p.usd||0) + ' | ₪' + (p.ils||0) + ' | JD' + (p.jod||0),
                     'success', '🏦'
                 );
                 // اجلب الجلسة الجديدة من الخادم مباشرة

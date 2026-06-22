@@ -157,20 +157,20 @@
       if(d.success){
         feedback.style.background='rgba(46,204,113,.15)';
         feedback.style.color='#2ecc71';
-        feedback.textContent='✅ '+d.message;
+        feedback.textContent=d.message;
         document.getElementById('sup-message').value='';
         document.getElementById('sup-subject').value='';
         setTimeout(closeSupportModal, 2500);
       } else {
         feedback.style.background='rgba(231,76,60,.15)';
         feedback.style.color='#e74c3c';
-        feedback.textContent='❌ '+d.message;
+        feedback.textContent=d.message;
       }
     } catch(e){
       feedback.style.display='block';
       feedback.style.background='rgba(231,76,60,.15)';
       feedback.style.color='#e74c3c';
-      feedback.textContent='❌ تعذّر الاتصال بالسيرفر';
+      feedback.textContent='تعذّر الاتصال بالسيرفر';
     }
     btn.disabled=false; btn.textContent='إرسال الرسالة';
   }
@@ -243,8 +243,8 @@
     if(d.success){
       document.getElementById('modal2FA').style.display='none';
       const lbl = document.getElementById('nav2faLabel');
-      if(lbl) lbl.textContent='2FA: مفعّل ✅';
-      alert('✅ ' + d.message);
+      if(lbl) lbl.textContent='2FA: مفعّل';
+      alert(d.message);
     } else { alert(d.message||'الكود غير صحيح'); }
   }
 

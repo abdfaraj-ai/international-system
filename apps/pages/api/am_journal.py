@@ -12,7 +12,6 @@ GET  /api/am/journal/<id>/      ← تفاصيل قيد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, F
 
@@ -86,7 +85,6 @@ def _journal_dict(j):
 # GET + POST  /api/am/accounts/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_accounts(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -163,7 +161,6 @@ def api_am_accounts(request):
 # GET + PUT  /api/am/accounts/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_account_detail(request, account_id):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -210,7 +207,6 @@ def api_am_account_detail(request, account_id):
 # GET + POST  /api/am/journal/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_journal(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

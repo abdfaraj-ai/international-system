@@ -8,7 +8,6 @@ GET  /api/am/settlement/<id>/   ← تفاصيل سند واحد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q
 
@@ -66,7 +65,6 @@ def _voucher_dict(v, include_rows=True):
 # GET + POST  /api/am/settlement/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_settlement(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -206,7 +204,6 @@ def api_am_settlement(request):
 # GET  /api/am/settlement/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_settlement_detail(request, voucher_id):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

@@ -292,9 +292,9 @@ table.am-table tbody td.num{font-variant-numeric:tabular-nums;font-weight:700;}
     </div>
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     <div class="am-udrop">
-      <a href="/accounting/launcher/">🏠 المشغّل المحاسبي</a>
-      <a href="/dashboard/">📊 لوحة الإدارة</a>
-      <button class="danger" onclick="window.location.href='/logout/'">🚪 تسجيل الخروج</button>
+      <a href="/accounting/launcher/">المشغّل المحاسبي</a>
+      <a href="/dashboard/">لوحة الإدارة</a>
+      <button class="danger" onclick="window.location.href='/logout/'">تسجيل الخروج</button>
     </div>
   </div>
 </div>
@@ -321,7 +321,7 @@ table.am-table tbody td.num{font-variant-numeric:tabular-nums;font-weight:700;}
       المراكز المحذوفة
     </button>
     <button class="am-btn" style="background:#0D9488;color:#fff" onclick="openTransitsModal()">
-      🚉 العوابر
+      العوابر
     </button>
   </div>
 
@@ -536,7 +536,7 @@ function renderPage(p) {
       <td>${b.manager || '—'}</td>
       <td>${b.phone || '—'}</td>
       <td>
-        <button class="am-tbar-btn" onclick="openEditModal(${b.id})" title="تعديل">✏️ تعديل</button>
+        <button class="am-tbar-btn" onclick="openEditModal(${b.id})" title="تعديل">تعديل</button>
         <button class="am-tbar-btn" style="color:#DC2626" onclick="deleteBranch(${b.id},'${b.name}')" title="حذف">🗑️</button>
       </td>
     </tr>`;

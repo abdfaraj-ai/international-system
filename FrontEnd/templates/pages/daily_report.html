@@ -288,7 +288,7 @@ body {
         </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-        <span class="h-badge">🧑‍💼 موظف</span>
+        <span class="h-badge">موظف</span>
     </div>
     {% include 'layout/navbar.html' %}
 </header>
@@ -314,7 +314,7 @@ body {
         placeholder="أكتب التقرير اليومي بالكامل في هذه الخانة..."
         oninput="updateCount(this,'contentCount')"></textarea>
       <div class="dr-count"><span id="contentCount">0</span> / 2000</div>
-      <div class="dr-field-hint">ⓘ أكتب التقرير اليومي بالكامل في هذه الخانة</div>
+      <div class="dr-field-hint">أكتب التقرير اليومي بالكامل في هذه الخانة</div>
     </div>
 
     <!-- الروابط المستخدمة -->
@@ -324,11 +324,11 @@ body {
         placeholder="ضع الروابط التي تم إنشاؤها في هذه الخانة..."
         oninput="updateCount(this,'notesCount')"></textarea>
       <div class="dr-count"><span id="notesCount">0</span> / 2000</div>
-      <div class="dr-field-hint">ⓘ ضع الروابط التي تم إنشاؤها في هذه الخانة</div>
+      <div class="dr-field-hint">ضع الروابط التي تم إنشاؤها في هذه الخانة</div>
     </div>
 
     <!-- طريقة رفع الملفات -->
-    <div class="dr-upload-label">⬆ أختر طريقة لرفع الملفات</div>
+    <div class="dr-upload-label">أختر طريقة لرفع الملفات</div>
     <div class="dr-upload-tabs">
       <div class="dr-tab active" data-type="images" onclick="setUploadType(this)">
         <span class="tab-ic">🖼️</span> صور
@@ -341,7 +341,7 @@ body {
       </div>
     </div>
 
-    <div class="dr-attach-title">📎 إرفاق <span id="attachTypeLabel">صور</span> <span style="color:var(--text-muted);font-weight:400">(اختياري)</span></div>
+    <div class="dr-attach-title">إرفاق <span id="attachTypeLabel">صور</span> <span style="color:var(--text-muted);font-weight:400">(اختياري)</span></div>
     <div class="dr-dropzone" id="dropzone" onclick="openPicker()">
       <div class="dz-icon" id="dzIcon">🖼️</div>
       <div class="dz-main" id="dzMain">اسحب وأفلت الصور هنا</div>
@@ -353,7 +353,7 @@ body {
 
     <!-- تاريخ / وقت التقرير -->
     <div style="margin-top:28px">
-      <div class="dr-datetime-head">🕐 تاريخ / وقت التقرير <span class="req">*</span></div>
+      <div class="dr-datetime-head">تاريخ / وقت التقرير <span class="req">*</span></div>
       <div class="dr-datetime-grid">
         <div>
           <div class="dr-dt-label">بداية الوقت / والتاريخ</div>
@@ -365,8 +365,8 @@ body {
         </div>
       </div>
       <div class="dr-dt-badges">
-        <div class="dr-dt-badge info">⏳ <span id="durationTxt">المدة: —</span></div>
-        <div class="dr-dt-badge warn">⚠ <span id="deadlineTxt">الموعد النهائي: —</span></div>
+        <div class="dr-dt-badge info"><span id="durationTxt">المدة: —</span></div>
+        <div class="dr-dt-badge warn"><span id="deadlineTxt">الموعد النهائي: —</span></div>
       </div>
     </div>
 
@@ -376,8 +376,8 @@ body {
         أرسل التقرير ←
       </button>
       <div class="dr-actions-left">
-        <button class="dr-btn danger" onclick="clearForm()">✕ حذف المحتوى</button>
-        <button class="dr-btn download" onclick="downloadReport()">💾 تنزيل التقرير</button>
+        <button class="dr-btn danger" onclick="clearForm()">حذف المحتوى</button>
+        <button class="dr-btn download" onclick="downloadReport()">تنزيل التقرير</button>
       </div>
     </div>
   </div>
@@ -385,7 +385,7 @@ body {
   <!-- ══ سجل التقارير ══ -->
   <div class="dr-panel">
     <div class="dr-table-head">
-      <div class="tt">📁 سجل التقارير <span class="cnt" id="reportsCount">0 تقارير</span></div>
+      <div class="tt">سجل التقارير <span class="cnt" id="reportsCount">0 تقارير</span></div>
     </div>
     <div style="overflow-x:auto">
       <table class="dr-table">
@@ -508,11 +508,11 @@ function handleFiles(files) {
   const cfg = UPLOAD_TYPES[currentUploadType];
   for (const f of files) {
     if (f.size > 25 * 1024 * 1024) {
-      showToast('❌ الملف ' + f.name + ' أكبر من 25MB');
+      showToast('الملف ' + f.name + ' أكبر من 25MB');
       continue;
     }
     if (!cfg.test(f)) {
-      showToast('❌ ' + f.name + ' — ' + cfg.errMsg);
+      showToast(f.name + ' — ' + cfg.errMsg);
       continue;
     }
     uploadedFiles.push({ file: f, kind: currentUploadType });
@@ -538,7 +538,7 @@ function renderFiles() {
           <div class="f-name">${f.name}</div>
           <div class="f-meta">${size}</div>
         </div>
-        <div class="f-ok">✓ جاهز</div>
+        <div class="f-ok">جاهز</div>
         <div class="f-x" onclick="removeFile(${i})">✕</div>
       </div>`;
   }).join('');
@@ -552,12 +552,12 @@ function clearForm() {
   document.getElementById('contentCount').textContent = '0';
   document.getElementById('notesCount').textContent   = '0';
   uploadedFiles = []; renderFiles();
-  showToast('🗑️ تم حذف المحتوى');
+  showToast('تم حذف المحتوى');
 }
 
 function downloadReport() {
   const content = document.getElementById('reportContent').value.trim();
-  if (!content) { showToast('❌ لا يوجد محتوى للتنزيل'); return; }
+  if (!content) { showToast('لا يوجد محتوى للتنزيل'); return; }
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -577,10 +577,10 @@ async function submitReport() {
   const notes   = document.getElementById('reportNotes').value.trim();
   const btn     = document.getElementById('submitBtn');
 
-  if (!content) { showToast('❌ يرجى كتابة وصف التقرير'); return; }
+  if (!content) { showToast('يرجى كتابة وصف التقرير'); return; }
 
   btn.disabled = true;
-  btn.textContent = '⏳ جاري الإرسال...';
+  btn.textContent = 'جاري الإرسال...';
 
   try {
     // FormData لإرسال النص + الملفات معاً
@@ -598,14 +598,14 @@ async function submitReport() {
     });
     const data = await res.json();
     if (data.success) {
-      showToast('✅ تم إرسال التقرير بنجاح');
+      showToast('تم إرسال التقرير بنجاح');
       clearForm();
       loadReports();
     } else {
-      showToast('❌ ' + (data.error || 'حدث خطأ'));
+      showToast(data.error || 'حدث خطأ');
     }
   } catch {
-    showToast('❌ تعذر الاتصال بالسيرفر');
+    showToast('تعذر الاتصال بالسيرفر');
   } finally {
     btn.disabled = false;
     btn.textContent = 'أرسل التقرير ←';
@@ -623,7 +623,7 @@ async function loadReports() {
     document.getElementById('reportsCount').textContent = reports.length + ' تقارير';
 
     if (reports.length === 0) {
-      body.innerHTML = `<tr><td colspan="6" class="dr-empty-row">📭 لا توجد تقارير خلال آخر أسبوع</td></tr>`;
+      body.innerHTML = `<tr><td colspan="6" class="dr-empty-row">لا توجد تقارير خلال آخر أسبوع</td></tr>`;
       return;
     }
 
@@ -659,7 +659,7 @@ async function loadReports() {
           <td>${r.managerNote || '—'}</td>
           <td>
             <button class="dr-dl-btn" onclick="downloadReportPdf(${idx})" title="تنزيل PDF">
-              ⬇ PDF
+              PDF
             </button>
           </td>
         </tr>`;
@@ -675,7 +675,7 @@ async function downloadReportPdf(idx) {
   const r = (window._myReports || [])[idx];
   if (!r) return;
 
-  showToast('⏳ جاري تجهيز ملف PDF...');
+  showToast('جاري تجهيز ملف PDF...');
 
   // بناء عنصر HTML مؤقت بتصميم التقرير
   const wrap = document.createElement('div');
@@ -733,9 +733,9 @@ async function downloadReportPdf(idx) {
       left -= pageH;
     }
     pdf.save(`تقرير-${r.employee}-${r.date}.pdf`);
-    showToast('✅ تم تنزيل التقرير');
+    showToast('تم تنزيل التقرير');
   } catch (e) {
-    showToast('❌ تعذر إنشاء الملف');
+    showToast('تعذر إنشاء الملف');
   } finally {
     document.body.removeChild(wrap);
   }

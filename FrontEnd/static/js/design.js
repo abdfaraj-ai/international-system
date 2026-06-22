@@ -139,9 +139,9 @@
         var isManager = true; // TODO: wire to role
         var actionBtns = '';
         if (p.status === 'pending' && isManager) {
-          actionBtns = '<button class="ds-post-btn approve" onclick="event.stopPropagation();design_openReview(' + p.id + ')">✅ مراجعة</button>';
+          actionBtns = '<button class="ds-post-btn approve" onclick="event.stopPropagation();design_openReview(' + p.id + ')">مراجعة</button>';
         } else {
-          actionBtns = '<button class="ds-post-btn" onclick="event.stopPropagation();design_openEditPost(' + p.id + ')">✏️ تعديل</button>'
+          actionBtns = '<button class="ds-post-btn" onclick="event.stopPropagation();design_openEditPost(' + p.id + ')">تعديل</button>'
             + '<button class="ds-post-btn reject" onclick="event.stopPropagation();design_deletePost(' + p.id + ')">🗑</button>';
         }
         return '<div class="ds-post-card" onclick="design_openEditPost(' + p.id + ')">'
@@ -321,7 +321,7 @@
     post.status = statusOverride || 'published';
     design_closeReviewModal();
     design_render();
-    notify(statusOverride === 'scheduled' ? 'تم جدولة المنشور ✅' : 'تم الموافقة والنشر ✅');
+    notify(statusOverride === 'scheduled' ? 'تم جدولة المنشور' : 'تم الموافقة والنشر');
   };
 
   window.design_rejectPost = function() {
@@ -366,7 +366,7 @@
       notes:     'مولّد تلقائياً',
     });
     design_render();
-    notify('تم توليد منشور سعر الذهب — بانتظار الموافقة ✅');
+    notify('تم توليد منشور سعر الذهب — بانتظار الموافقة');
   };
 
   // ── AI caption (sidebar) ─────────────────────────────
@@ -376,7 +376,7 @@
     if (!prompt) { notify('يرجى كتابة فكرة المنشور', 'error'); return; }
     var resultEl = document.getElementById('ds-ai-result');
     resultEl.style.display = '';
-    resultEl.innerHTML = '<span style="color:#8696a0;font-size:12px">⏳ جاري التوليد...</span>';
+    resultEl.innerHTML = '<span style="color:#8696a0;font-size:12px">جاري التوليد...</span>';
 
     fetch('/api/admin/voice/', {
       method: 'POST',
@@ -404,7 +404,7 @@
     var type   = document.getElementById('dsm-type').value;
     if (!title) { notify('يرجى كتابة عنوان المنشور أولاً', 'error'); return; }
     var captionEl = document.getElementById('dsm-caption');
-    captionEl.value = '⏳ جاري التوليد...';
+    captionEl.value = 'جاري التوليد...';
 
     fetch('/api/admin/voice/', {
       method: 'POST',

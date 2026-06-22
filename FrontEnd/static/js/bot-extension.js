@@ -213,7 +213,7 @@ function sendMessageToGroup(groupId, text) {
     msgs.scrollTop = msgs.scrollHeight;
 
     if (typeof showToast === 'function')
-        showToast('📤 تم إرسال الرسالة للجروب: ' + (groupLabels[groupId] || groupId), 'success');
+        showToast('تم إرسال الرسالة للجروب: ' + (groupLabels[groupId] || groupId), 'success');
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -221,7 +221,7 @@ function sendMessageToGroup(groupId, text) {
 // ════════════════════════════════════════════════════════════════════
 function sendCorrectionMessage(groupId, message) {
     if (!message || !message.trim()) {
-        if (typeof showToast === 'function') showToast('⚠️ أدخل نص التصحيح', 'warning');
+        if (typeof showToast === 'function') showToast('أدخل نص التصحيح', 'warning');
         return;
     }
 
@@ -281,7 +281,7 @@ function showReceiptPopup(num) {
         <!-- Header -->
         <div style="background:linear-gradient(135deg,#0d2a1a,#0a1f14);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(37,211,102,0.12);">
           <div>
-            <div style="font-size:13px;font-weight:800;color:#25D366;">✅ إشعار التأكيد</div>
+            <div style="font-size:13px;font-weight:800;color:#25D366;">إشعار التأكيد</div>
             <div style="font-size:10px;color:#4d8c6a;margin-top:2px;">حوالة #${num} • ${groupLabels[h.group] || h.group}</div>
           </div>
           <button onclick="document.getElementById('_receiptPopup').remove()" style="
@@ -312,7 +312,7 @@ function showReceiptPopup(num) {
             background:rgba(139,92,246,0.1);color:#a78bfa;font-size:11px;font-weight:700;
             cursor:pointer;font-family:inherit;transition:all .2s;
           " onmouseover="this.style.background='rgba(139,92,246,0.22)'"
-             onmouseout="this.style.background='rgba(139,92,246,0.1)'">📄 تصدير</button>
+             onmouseout="this.style.background='rgba(139,92,246,0.1)'">تصدير</button>
           <button onclick="document.getElementById('_receiptPopup').remove()" style="
             padding:7px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.1);
             background:rgba(255,255,255,0.05);color:#7b96be;font-size:11px;font-weight:700;
@@ -341,7 +341,7 @@ function searchHistory(query) {
     const info = document.getElementById('historySearchInfo');
     if (info) {
         info.textContent = q
-            ? (visible > 0 ? `✅ ${visible} نتيجة` : '❌ لا توجد نتائج')
+            ? (visible > 0 ? `${visible} نتيجة` : 'لا توجد نتائج')
             : '';
         info.style.color = visible > 0 ? '#22c55e' : '#ef4444';
     }
@@ -357,7 +357,7 @@ function clearHistorySearch() {
 // ── Export single transfer notification (opens print window) ─────
 function exportSingleNotification(num) {
     const h = transferHistory.find(x => (x.num || 0) == num);
-    if (!h) { if (typeof showToast === 'function') showToast('⚠️ لم يتم العثور على الحوالة', 'warning'); return; }
+    if (!h) { if (typeof showToast === 'function') showToast('لم يتم العثور على الحوالة', 'warning'); return; }
     _printNotification([h]);
 }
 
@@ -370,7 +370,7 @@ function exportNotificationsFile() {
 
     const list = transferHistory.filter(h => nums.includes(h.num || 0));
     if (list.length === 0) {
-        if (typeof showToast === 'function') showToast('⚠️ لا توجد حوالات لتصديرها', 'warning');
+        if (typeof showToast === 'function') showToast('لا توجد حوالات لتصديرها', 'warning');
         return;
     }
     _printNotification(list);
@@ -386,18 +386,18 @@ function _printNotification(list) {
         return `
         <div class="notif-card">
           <div class="notif-header">
-            <div class="notif-logo">🏦 شركة إنترناشيونال للحوالات</div>
+            <div class="notif-logo">شركة إنترناشيونال للحوالات</div>
             <div class="notif-ref">رقم الحوالة: <strong>#${num}</strong></div>
           </div>
           <div class="notif-title">إشعار تحويل أموال</div>
           <div class="notif-grid">
-            <div class="notif-field"><span class="nf-label">👤 اسم المستفيد</span><span class="nf-value">${h.name || '—'}</span></div>
-            <div class="notif-field"><span class="nf-label">💰 المبلغ</span><span class="nf-value amount">${Number(h.amount).toLocaleString()} ${h.currency}</span></div>
-            <div class="notif-field"><span class="nf-label">📤 المجموعة المرسلة</span><span class="nf-value">${groupLabels[h.group] || h.group || '—'}</span></div>
-            <div class="notif-field"><span class="nf-label">📥 جهة التنفيذ</span><span class="nf-value">${h.agent || '—'}</span></div>
-            <div class="notif-field"><span class="nf-label">🕐 وقت التنفيذ</span><span class="nf-value">${h.time || '—'}</span></div>
-            <div class="notif-field"><span class="nf-label">📅 التاريخ</span><span class="nf-value">${now}</span></div>
-            <div class="notif-field full"><span class="nf-label">✅ الحالة</span><span class="nf-value status">${h.status || 'تم التنفيذ'}</span></div>
+            <div class="notif-field"><span class="nf-label">اسم المستفيد</span><span class="nf-value">${h.name || '—'}</span></div>
+            <div class="notif-field"><span class="nf-label">المبلغ</span><span class="nf-value amount">${Number(h.amount).toLocaleString()} ${h.currency}</span></div>
+            <div class="notif-field"><span class="nf-label">المجموعة المرسلة</span><span class="nf-value">${groupLabels[h.group] || h.group || '—'}</span></div>
+            <div class="notif-field"><span class="nf-label">جهة التنفيذ</span><span class="nf-value">${h.agent || '—'}</span></div>
+            <div class="notif-field"><span class="nf-label">وقت التنفيذ</span><span class="nf-value">${h.time || '—'}</span></div>
+            <div class="notif-field"><span class="nf-label">التاريخ</span><span class="nf-value">${now}</span></div>
+            <div class="notif-field full"><span class="nf-label">الحالة</span><span class="nf-value status">${h.status || 'تم التنفيذ'}</span></div>
           </div>
           <div class="notif-footer">
             تم إصدار هذا الإشعار إلكترونياً من نظام شركة إنترناشيونال — ${now}
@@ -455,7 +455,7 @@ function _printNotification(list) {
         a.click();
     }
     if (typeof showToast === 'function')
-        showToast(`📄 تم إنشاء ${list.length} إشعار`, 'success');
+        showToast(`تم إنشاء ${list.length} إشعار`, 'success');
 }
 
 function renderHistoryStats() {
@@ -626,7 +626,7 @@ const whatsappBotSimulator = {
         // Stop entirely when all groups hit their limit
         if (this._allGroupsDone()) {
             if (typeof showToast === 'function')
-                showToast('✅ البوت: وصل عدد الرسائل إلى الحد المحدد في صلاحيات البوت', 'success');
+                showToast('البوت: وصل عدد الرسائل إلى الحد المحدد في صلاحيات البوت', 'success');
             return; // do NOT reschedule
         }
 
@@ -681,18 +681,18 @@ const whatsappBotSimulator = {
         // Toast notification only (no form touch)
         const groupNames = { aswar: 'الأساور', abuhashim: 'أبو هاشم', random: 'العشوائية' };
         if (typeof showToast === 'function')
-            showToast(`📥 رسالة جديدة من ${groupNames[raw.group]}: ${transfer.name} — ${transfer.amount} ${transfer.currency}`, 'warning');
+            showToast(`رسالة جديدة من ${groupNames[raw.group]}: ${transfer.name} — ${transfer.amount} ${transfer.currency}`, 'warning');
 
         // Notify user when a group hits its limit
         if (reached && typeof showToast === 'function')
-            showToast(`🔔 ${groupNames[raw.group]}: وصل عدد الرسائل إلى الحد المحدد (${this._groupLimits[raw.group]})`, 'info');
+            showToast(`${groupNames[raw.group]}: وصل عدد الرسائل إلى الحد المحدد (${this._groupLimits[raw.group]})`, 'info');
 
         // Only reschedule if there are still groups with remaining capacity
         if (!this._allGroupsDone()) {
             this._scheduleNext();
         } else {
             if (typeof showToast === 'function')
-                showToast('✅ البوت: تم استقبال الحد الأقصى من الرسائل لجميع المجموعات', 'success');
+                showToast('البوت: تم استقبال الحد الأقصى من الرسائل لجميع المجموعات', 'success');
         }
     },
 
@@ -731,7 +731,7 @@ const whatsappBotSimulator = {
         const group    = document.getElementById('sourceGroup')?.value  || 'aswar';
 
         if (!name) {
-            if (typeof showToast === 'function') showToast('⚠️ لا توجد بيانات لإرسالها', 'warning');
+            if (typeof showToast === 'function') showToast('لا توجد بيانات لإرسالها', 'warning');
             return;
         }
 
@@ -783,7 +783,7 @@ const waChat = {
         const agentMsgs = this.messages.agent[this.activeAgent] || [];
 
         if (agentMsgs.length === 0) {
-            box.innerHTML = '<div style="text-align:center;color:#4d6080;font-size:11px;padding:24px 10px;">📤 أرسل حوالة من الوسط لتظهر هنا</div>';
+            box.innerHTML = '<div style="text-align:center;color:#4d6080;font-size:11px;padding:24px 10px;">أرسل حوالة من الوسط لتظهر هنا</div>';
             return;
         }
 
@@ -801,7 +801,7 @@ const waChat = {
 
     _updateTitle() {
         const el = document.getElementById('waChatTitle');
-        if (el) el.textContent = '📤 ' + (this.agentLabels[this.activeAgent] || 'جهة التنفيذ');
+        if (el) el.textContent = (this.agentLabels[this.activeAgent] || 'جهة التنفيذ');
     },
 
     // ── Add incoming message — stored only; center column is updated by selectTransfer() ──
@@ -824,7 +824,7 @@ const waChat = {
         if (agentId === this.activeAgent) this._render();
 
         const strip = document.getElementById('exec-strip');
-        if (strip) strip.textContent = '✅ تم الإرسال لـ ' + (this.agentLabels[agentId] || agentId) + ' — ' + this._now();
+        if (strip) strip.textContent = 'تم الإرسال لـ ' + (this.agentLabels[agentId] || agentId) + ' — ' + this._now();
     },
 
     // ── Switch incoming group tab ──

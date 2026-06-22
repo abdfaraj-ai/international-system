@@ -567,7 +567,7 @@
                 </button>
 
                 <div class="gate-privacy">
-                    🔒 نستخدم Google للتحقق من هويتك فقط — لا نخزّن كلمات المرور
+                    نستخدم Google للتحقق من هويتك فقط — لا نخزّن كلمات المرور
                 </div>
 
             </div>
@@ -581,7 +581,7 @@
                 <span class="ni">⚠️</span>
                 <p style="color:#ff9eaa" id="g3-msg">الرابط غير صالح أو انتهت صلاحيته.</p>
             </div>
-            <button class="btn btn-pri" onclick="showGate()">← العودة لتسجيل الدخول</button>
+            <button class="btn btn-pri" onclick="showGate()">العودة لتسجيل الدخول</button>
         </div>
     </div>
 
@@ -629,7 +629,7 @@
             </div>
             <div class="c-grid" id="c-grid"></div>
             <div class="divider"></div>
-            <button class="btn btn-pri" onclick="toStep2()">متابعة ←</button>
+            <button class="btn btn-pri" onclick="toStep2()">متابعة</button>
         </div>
 
         <!-- Step 2: Account details -->
@@ -648,7 +648,7 @@
             </div>
             <div class="divider"></div>
             <div class="btn-row">
-                <button class="btn btn-ghost" onclick="goW(1)">← رجوع</button>
+                <button class="btn btn-ghost" onclick="goW(1)">رجوع</button>
                 <button class="btn btn-share" onclick="shareAccountDetails()">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
                         <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -656,7 +656,7 @@
                     </svg>
                     مشاركة
                 </button>
-                <button class="btn btn-pri"   onclick="goW(3)">متابعة →</button>
+                <button class="btn btn-pri"   onclick="goW(3)">متابعة</button>
             </div>
         </div>
 
@@ -684,8 +684,8 @@
                 </div>
             </div>
             <div class="btn-row">
-                <button class="btn btn-ghost" onclick="goW(2)">← رجوع</button>
-                <button class="btn btn-pri"   onclick="submitForm()">إرسال الإشعار 📤</button>
+                <button class="btn btn-ghost" onclick="goW(2)">رجوع</button>
+                <button class="btn btn-pri"   onclick="submitForm()">إرسال الإشعار</button>
             </div>
         </div>
 
@@ -705,7 +705,7 @@
                     <div class="track-hint">احتفظ بهذا الرمز للاستعلام عن حالة حوالتك</div>
                 </div>
                 <button class="btn btn-ghost" onclick="resetWizard()" style="max-width:260px;margin:0 auto">
-                    ↺ إرسال حوالة جديدة
+                    إرسال حوالة جديدة
                 </button>
             </div>
         </div>
@@ -766,7 +766,7 @@ let chosen = null, chosenMethod = null, curW = 1;
         if (r.ok) {
             const d = await r.json();
             startWizard(d.email, d.name, d.picture);
-            toast('مرحباً بك في البوابة! 👋', 'ok');
+            toast('مرحباً بك في البوابة!', 'ok');
             history.replaceState({}, '', '/portal/');
             return;
         }
@@ -845,7 +845,7 @@ async function onGoogleCredential(response) {
         const d = await r.json();
         if (d.success) {
             startWizard(d.email, d.name, d.picture);
-            toast(`أهلاً ${d.name || d.email}! 👋`, 'ok');
+            toast(`أهلاً ${d.name || d.email}!`, 'ok');
         } else {
             toast(d.message || 'تعذّر التحقق من الهوية', 'err');
             btn.disabled = false; btn.classList.remove('loading');
@@ -968,14 +968,14 @@ function toStep2() {
             <div class="d-lbl">${lbl}</div>
             <div class="d-row">
                 <div class="d-val ${lbl.includes('بنك')||lbl.includes('فيد')?'plain':''}">${val}</div>
-                ${copyable?`<button class="copy-btn" onclick="doCopy('${val.replace(/'/g,"\\'")}',this)">📋 نسخ</button>`:''}
+                ${copyable?`<button class="copy-btn" onclick="doCopy('${val.replace(/'/g,"\\'")}',this)">نسخ</button>`:''}
             </div>
         </div>`;
 
     let html = '';
     if (chosen.rate && chosen.rate !== 1) {
         const note = chosen.rateNote || `1 USD = ${chosen.rate} ${chosen.currency}`;
-        html += `<div style="background:rgba(0,201,112,.07);border:1px solid rgba(0,201,112,.18);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--green)">💱 سعر الصرف: ${note}</div>`;
+        html += `<div style="background:rgba(0,201,112,.07);border:1px solid rgba(0,201,112,.18);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--green)">سعر الصرف: ${note}</div>`;
     }
     if (chosenMethod) {
         if (chosenMethod.bank)        html += mk('اسم البنك / الجهة', chosenMethod.bank, false);
@@ -1036,14 +1036,14 @@ async function submitForm() {
         if (data.success) {
             document.getElementById('track-code').textContent = data.trackingCode;
             goW(4);
-            toast('تم إرسال إشعارك بنجاح! ✓','ok');
+            toast('تم إرسال إشعارك بنجاح!','ok');
         } else {
             toast(data.error || 'حدث خطأ أثناء الإرسال','err');
         }
     } catch(e) {
         toast('تعذّر الاتصال بالخادم','err');
     } finally {
-        if (btn) { btn.disabled = false; btn.textContent = 'إرسال الإشعار 📤'; }
+        if (btn) { btn.disabled = false; btn.textContent = 'إرسال الإشعار'; }
     }
 }
 
@@ -1077,19 +1077,19 @@ function shareAccountDetails() {
     const iban    = chosenMethod?.iban || '';
     const benef   = chosenMethod?.beneficiary || '';
     const rate    = (chosen?.rate && chosen.rate !== 1)
-        ? `\n💱 سعر الصرف: 1 USD = ${chosen.rate} ${chosen.currency}`
+        ? `\nسعر الصرف: 1 USD = ${chosen.rate} ${chosen.currency}`
         : '';
 
     const lines = [
-        `🏦 بيانات التحويل — انترناشونال للصرافة`,
-        `🌍 الدولة: ${country}`,
-        method  ? `📋 الطريقة: ${method}`      : '',
-        bank    ? `🏛 البنك: ${bank}`           : '',
-        iban    ? `💳 الحساب / IBAN: ${iban}`   : '',
-        benef   ? `👤 المستفيد: ${benef}`        : '',
+        `بيانات التحويل — انترناشونال للصرافة`,
+        `الدولة: ${country}`,
+        method  ? `الطريقة: ${method}`      : '',
+        bank    ? `البنك: ${bank}`           : '',
+        iban    ? `الحساب / IBAN: ${iban}`   : '',
+        benef   ? `المستفيد: ${benef}`        : '',
         rate,
         ``,
-        `⚠️ بعد التحويل، أرسل لنا صورة الإيصال عبر البوابة.`,
+        `بعد التحويل، أرسل لنا صورة الإيصال عبر البوابة.`,
     ].filter(l => l !== '').join('\n');
 
     // Web Share API (mobile native)
@@ -1297,10 +1297,10 @@ function getCsrf() {
     <div id="chat-messages"></div>
 
     <div class="chat-suggestions" id="chat-suggestions">
-        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي الدول المتاحة للتحويل؟')">🌍 الدول المتاحة</button>
-        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('كيف أتتبع حوالتي؟')">🔍 تتبع حوالة</button>
-        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('احسب لي مبلغ تحويل')">💱 احسب المبلغ</button>
-        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي أوقات العمل؟')">🕐 أوقات العمل</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي الدول المتاحة للتحويل؟')">الدول المتاحة</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('كيف أتتبع حوالتي؟')">تتبع حوالة</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('احسب لي مبلغ تحويل')">احسب المبلغ</button>
+        <button type="button" class="chat-suggest-btn" onclick="sendSuggestion('ما هي أوقات العمل؟')">أوقات العمل</button>
     </div>
 
     <div class="chat-input-row">
@@ -1324,7 +1324,7 @@ function toggleChat() {
     const box = document.getElementById('ai-chat-box');
     box.classList.toggle('open', _chatOpen);
     if (_chatOpen && _chatHistory.length === 0) {
-        appendBotMsg('مرحباً! 👋 أنا مساعد انترناشونال الذكي.\nكيف يمكنني مساعدتك اليوم؟');
+        appendBotMsg('مرحباً! أنا مساعد انترناشونال الذكي.\nكيف يمكنني مساعدتك اليوم؟');
     }
     if (_chatOpen) setTimeout(()=>document.getElementById('chat-input').focus(), 100);
 }
@@ -1451,7 +1451,7 @@ async function sendChat() {
                         removeTyping();
                         const ind = document.createElement('div');
                         ind.className = 'chat-msg tool-indicator';
-                        ind.textContent = '⚙️ ' + (toolNames[data.name] || 'جاري المعالجة...');
+                        ind.textContent = (toolNames[data.name] || 'جاري المعالجة...');
                         document.getElementById('chat-messages').appendChild(ind);
                         document.getElementById('chat-messages').scrollTop = 9999;
                         setTimeout(() => ind.remove(), 3000);

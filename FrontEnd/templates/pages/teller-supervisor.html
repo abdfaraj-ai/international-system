@@ -37,8 +37,8 @@
         </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-        <span class="h-badge">📋 مشرف التلر</span>
-        <span class="h-badge" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--success)" id="headerOnline">🟢 5 تلر متصل</span>
+        <span class="h-badge">مشرف التلر</span>
+        <span class="h-badge" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--success)" id="headerOnline">5 تلر متصل</span>
     </div>
     {% include 'layout/navbar.html' with report_fn="openReportModal" page_name="teller-supervisor" page_title="مشرف التلر" %}
 
@@ -98,13 +98,13 @@
         <div class="page-section active" id="sec-tellers">
             <div class="tellers-section-header">
                 <div class="tsh-left">
-                    <div class="tsh-title">👥 إدارة التلرات</div>
+                    <div class="tsh-title">إدارة التلرات</div>
                     <div class="tsh-sub"><span class="tsh-live-dot"></span> مراقبة الدخول والخروج في الوقت الفعلي — <span id="headerOnline">جاري التحميل...</span></div>
                 </div>
                 <div style="display:flex;gap:10px;align-items:center">
-                    <span class="badge badge-live" style="font-size:12px;padding:6px 16px">🔴 مباشر</span>
+                    <span class="badge badge-live" style="font-size:12px;padding:6px 16px">مباشر</span>
                     <button onclick="openAddTellerModal()" style="display:flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,rgba(50,184,198,0.15),rgba(99,102,241,0.1));border:1px solid rgba(50,184,198,0.35);border-radius:12px;color:#32b8c6;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.28),rgba(99,102,241,0.2))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.15),rgba(99,102,241,0.1))'">
-                        <span style="font-size:16px">➕</span> إضافة تلر جديد
+                        إضافة تلر جديد
                     </button>
                 </div>
             </div>
@@ -224,8 +224,8 @@
                 <!-- نظرة عامة على أرصدة التلرات -->
                 <div class="bal-overview-panel">
                     <div class="bal-overview-header">
-                        <span class="bal-ov-title">📊 أرصدة التلرات الحالية</span>
-                        <span class="badge badge-live">🟢 مباشر</span>
+                        <span class="bal-ov-title">أرصدة التلرات الحالية</span>
+                        <span class="badge badge-live">مباشر</span>
                     </div>
                     <div class="bal-teller-cards" id="balTellerCards"></div>
                 </div>
@@ -261,7 +261,7 @@
             <!-- Hero header -->
             <div class="rqs-hero">
                 <div class="rqs-hero-left">
-                    <div class="rqs-hero-title">📩 طلبات التلرات</div>
+                    <div class="rqs-hero-title">طلبات التلرات</div>
                     <div class="rqs-hero-sub">الطلبات الواردة من التلرات في الوقت الفعلي</div>
                 </div>
                 <div class="rqs-hero-stats">
@@ -281,11 +281,11 @@
             </div>
             <!-- Filter pills -->
             <div class="rqs-pills-bar">
-                <button class="rqs-pill active" onclick="filterRequests(this,'all')">📋 الكل</button>
-                <button class="rqs-pill" onclick="filterRequests(this,'pending')">⏳ المعلقة <span class="rqs-pill-cnt" id="reqCount">0</span></button>
-                <button class="rqs-pill" onclick="filterRequests(this,'urgent')">🔴 العاجلة</button>
-                <button class="rqs-pill" onclick="filterRequests(this,'special_price')">⭐ السعر المميز</button>
-                <button class="rqs-pill" onclick="filterRequests(this,'resolved')">✅ المنتهية</button>
+                <button class="rqs-pill active" onclick="filterRequests(this,'all')">الكل</button>
+                <button class="rqs-pill" onclick="filterRequests(this,'pending')">المعلقة <span class="rqs-pill-cnt" id="reqCount">0</span></button>
+                <button class="rqs-pill" onclick="filterRequests(this,'urgent')">العاجلة</button>
+                <button class="rqs-pill" onclick="filterRequests(this,'special_price')">السعر المميز</button>
+                <button class="rqs-pill" onclick="filterRequests(this,'resolved')">المنتهية</button>
             </div>
             <div class="requests-list" id="requestsList"></div>
         </div>
@@ -484,8 +484,8 @@
         <!-- ═══ قسم تعليمات الإدارة ═══ -->
         <div class="page-section" id="sec-admin-msgs">
             <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-                <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">📋 تعليمات الإدارة العامة</h2>
-                <button onclick="svSendMessageToAdmin()" class="btn-primary" style="padding:8px 16px;border-radius:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);color:#32b8c6;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">📤 إرسال رسالة للإدارة</button>
+                <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">تعليمات الإدارة العامة</h2>
+                <button onclick="svSendMessageToAdmin()" class="btn-primary" style="padding:8px 16px;border-radius:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);color:#32b8c6;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">إرسال رسالة للإدارة</button>
             </div>
             <div id="sv-instr-list"></div>
         </div>
@@ -493,7 +493,7 @@
         <!-- ══ إعدادات بوابة العملاء ══ -->
         <div class="page-section" id="sec-portal-settings">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:12px">
-                <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">🌐 إعدادات بوابة العملاء</h2>
+                <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">إعدادات بوابة العملاء</h2>
                 <button onclick="openAddCountryModal()" style="padding:9px 18px;border-radius:10px;background:rgba(30,144,255,.15);border:1px solid rgba(30,144,255,.3);color:#60b4ff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">+ إضافة دولة</button>
             </div>
 
@@ -597,22 +597,22 @@
         <!-- Time strip -->
         <div class="cr-modal-timestrip">
             <div class="cr-modal-time-item">
-                <span class="cr-modal-time-lbl">🕐 بدء الصندوق</span>
+                <span class="cr-modal-time-lbl">بدء الصندوق</span>
                 <span class="cr-modal-time-val" id="crModalStart">—</span>
             </div>
             <div class="cr-modal-time-arrow">←</div>
             <div class="cr-modal-time-item">
-                <span class="cr-modal-time-lbl">🔒 إغلاق الصندوق</span>
+                <span class="cr-modal-time-lbl">إغلاق الصندوق</span>
                 <span class="cr-modal-time-val" id="crModalEnd">—</span>
             </div>
             <div class="cr-modal-time-arrow">•</div>
             <div class="cr-modal-time-item">
-                <span class="cr-modal-time-lbl">⏱️ المدة</span>
+                <span class="cr-modal-time-lbl">المدة</span>
                 <span class="cr-modal-time-val" id="crModalDuration">—</span>
             </div>
             <div class="cr-modal-time-arrow">•</div>
             <div class="cr-modal-time-item">
-                <span class="cr-modal-time-lbl">⚡ العمليات</span>
+                <span class="cr-modal-time-lbl">العمليات</span>
                 <span class="cr-modal-time-val" id="crModalOps">—</span>
             </div>
         </div>
@@ -628,7 +628,7 @@
 
         <!-- Note -->
         <div class="cr-modal-note" id="crModalNote" style="display:none">
-            <span class="cr-modal-note-lbl">📝 ملاحظة التلر:</span>
+            <span class="cr-modal-note-lbl">ملاحظة التلر:</span>
             <span class="cr-modal-note-text" id="crModalNoteText"></span>
         </div>
 
@@ -644,7 +644,7 @@
         <div class="modal-title">تأكيد تعيين الرصيد</div>
         <div class="modal-desc" id="balConfirmText"></div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="confirmBalance()">تأكيد ✅</button>
+            <button class="btn-primary" onclick="confirmBalance()">تأكيد</button>
             <button class="btn-secondary" onclick="closeModal('balanceModal')">إلغاء</button>
         </div>
     </div>
@@ -662,7 +662,7 @@
             </div>
         </div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="sendReply()">إرسال الرد 📤</button>
+            <button class="btn-primary" onclick="sendReply()">إرسال الرد</button>
             <button class="btn-secondary" onclick="closeModal('replyModal')">إلغاء</button>
         </div>
     </div>
@@ -860,7 +860,7 @@
     </div>
 
     <div class="modal-btns" style="margin-top:22px">
-      <button class="btn-primary" onclick="submitReport()" style="flex:1">📤 إرسال للإدارة</button>
+      <button class="btn-primary" onclick="submitReport()" style="flex:1">إرسال للإدارة</button>
       <button class="btn-secondary" onclick="closeReportModal()">إلغاء</button>
     </div>
   </div>
@@ -915,7 +915,7 @@
             </div>
         </div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="confirmAddTeller()">✅ إضافة التلر</button>
+            <button class="btn-primary" onclick="confirmAddTeller()">إضافة التلر</button>
             <button class="btn-secondary" onclick="closeAddTellerModal()">إلغاء</button>
         </div>
     </div>
@@ -927,10 +927,10 @@
         <div class="modal-icon">✅</div>
         <div class="modal-title">تمت إضافة التلر بنجاح</div>
         <div id="tellerCredsSmsSent" style="display:none;text-align:center;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:10px;margin-bottom:14px;font-size:13px;color:#4ade80">
-            📱 تم إرسال بيانات الدخول عبر SMS
+            تم إرسال بيانات الدخول عبر SMS
         </div>
         <div id="tellerCredsSmsFail" style="display:none;text-align:center;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:10px;padding:10px;margin-bottom:14px;font-size:12px;color:#fbbf24">
-            ⚠️ لم يُرسَل SMS — شارك بيانات الدخول يدوياً
+            لم يُرسَل SMS — شارك بيانات الدخول يدوياً
         </div>
         <div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:16px;margin:12px 0;font-family:monospace;direction:ltr">
             <div style="margin-bottom:10px">
@@ -946,7 +946,7 @@
                 <span id="credsPassword" style="color:#e2e8f0;font-size:15px;font-weight:700"></span>
             </div>
         </div>
-        <button onclick="copyTellerCreds()" style="width:100%;padding:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);border-radius:10px;color:#32b8c6;cursor:pointer;font-size:13px;margin-bottom:10px">📋 نسخ بيانات الدخول</button>
+        <button onclick="copyTellerCreds()" style="width:100%;padding:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);border-radius:10px;color:#32b8c6;cursor:pointer;font-size:13px;margin-bottom:10px">نسخ بيانات الدخول</button>
         <div class="modal-btns">
             <button class="btn-primary" onclick="closeModal('tellerCredsModal')">حسناً</button>
         </div>
@@ -969,7 +969,7 @@
             </div>
         </div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="confirmChangePwd()">🔑 تغيير كلمة المرور</button>
+            <button class="btn-primary" onclick="confirmChangePwd()">تغيير كلمة المرور</button>
             <button class="btn-secondary" onclick="closeModal('changePwdModal')">إلغاء</button>
         </div>
     </div>
@@ -1031,9 +1031,9 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     <div class="dr-field">
       <label class="dr-label">نوع الطلب</label>
       <div class="dr-type-btns">
-        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
-        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
-        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">مشكلة تواجهني</button>
       </div>
     </div>
     <div class="dr-field">
@@ -1042,12 +1042,12 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     </div>
     <div class="dr-field">
       <label class="dr-label">مرفقات (اختياري)</label>
-      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <label class="dr-attach-lbl" for="drAttach">اضغط لإرفاق ملفات أو صور</label>
       <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
       <div class="dr-attach-files" id="drAttachFiles"></div>
     </div>
     <div class="dr-footer">
-      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-send" onclick="submitDevRequest()">إرسال للإدارة</button>
       <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
     </div>
   </div>
@@ -1084,7 +1084,7 @@ async function submitDevRequest(){
   try{
     var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'teller-supervisor'})});
     var data=await res.json();
-    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح','success');else alert('تم إرسال طلبك للإدارة بنجاح');}
     else{alert(data.error||'حدث خطأ أثناء الإرسال');}
   }catch(e){alert('تعذّر الاتصال بالخادم');}
 }
@@ -1135,14 +1135,14 @@ function renderPortalCountries() {
                             : '<span style="font-size:10.5px;background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.18);border-radius:20px;padding:2px 9px;color:#ff6b6b">مخفية</span>'}
                     </div>
                     <div style="font-size:11.5px;color:#8899aa;margin-top:4px">
-                        ${c.rate && c.rate !== 1 ? `💱 سعر الصرف: ${c.rateNote || '1 USD = '+c.rate+' '+c.currency}` : 'بدون سعر صرف'}
+                        ${c.rate && c.rate !== 1 ? `سعر الصرف: ${c.rateNote || '1 USD = '+c.rate+' '+c.currency}` : 'بدون سعر صرف'}
                         &nbsp;·&nbsp; ${c.methods.length} طريقة استقبال
                         ${c.updatedBy ? ` · آخر تعديل: ${c.updatedBy}` : ''}
                     </div>
                 </div>
                 <div style="display:flex;gap:8px;flex-shrink:0">
-                    <button onclick="openMethodsModal('${c.id}')" style="padding:7px 13px;border-radius:8px;background:rgba(0,198,255,.1);border:1px solid rgba(0,198,255,.2);color:#00c6ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🔧 الطرق</button>
-                    <button onclick="openEditCountryModal('${c.id}')" style="padding:7px 13px;border-radius:8px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.2);color:#60b4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✏️ تعديل</button>
+                    <button onclick="openMethodsModal('${c.id}')" style="padding:7px 13px;border-radius:8px;background:rgba(0,198,255,.1);border:1px solid rgba(0,198,255,.2);color:#00c6ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">الطرق</button>
+                    <button onclick="openEditCountryModal('${c.id}')" style="padding:7px 13px;border-radius:8px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.2);color:#60b4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">تعديل</button>
                     <button onclick="deleteCountry('${c.id}')" style="padding:7px 13px;border-radius:8px;background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.18);color:#ff6b6b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🗑</button>
                 </div>
             </div>
@@ -1337,7 +1337,7 @@ window.addEventListener('ws:voice_rates', function(e) {
     });
     if (changed.length) {
         if (typeof saveAllRates === 'function') saveAllRates();
-        if (window.WsNotif) WsNotif.showToast('📱 تحديث أسعار بالصوت', changed.join(' | '), 'success');
+        if (window.WsNotif) WsNotif.showToast('تحديث أسعار بالصوت', changed.join(' | '), 'success');
     }
 });
 </script>

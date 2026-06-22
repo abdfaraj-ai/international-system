@@ -157,14 +157,14 @@
   function buildModalHTML() {
     return `
       <div class="vt-modal" dir="rtl">
-        <div class="vt-title">🎤 الأمر الصوتي</div>
+        <div class="vt-title">الأمر الصوتي</div>
         <div class="vt-sub">اختر القسم ثم اضغط الميكروفون وتحدث</div>
 
         <div class="vt-dept-tabs">
-          <button class="vt-dept-tab" data-dept="exchange">💱 صرافة</button>
-          <button class="vt-dept-tab" data-dept="international">🌍 حوالات</button>
-          <button class="vt-dept-tab" data-dept="cashdesk">🏦 سحب/إيداع</button>
-          <button class="vt-dept-tab" data-dept="electronic">📲 إلكترونية</button>
+          <button class="vt-dept-tab" data-dept="exchange">صرافة</button>
+          <button class="vt-dept-tab" data-dept="international">حوالات</button>
+          <button class="vt-dept-tab" data-dept="cashdesk">سحب/إيداع</button>
+          <button class="vt-dept-tab" data-dept="electronic">إلكترونية</button>
         </div>
 
         <button class="vt-mic-btn">
@@ -178,7 +178,7 @@
 
         <div class="vt-btn-row">
           <button class="vt-btn vt-btn-cancel">إلغاء</button>
-          <button class="vt-btn vt-btn-apply" id="vtApplyBtn">✅ تطبيق</button>
+          <button class="vt-btn vt-btn-apply" id="vtApplyBtn">تطبيق</button>
         </div>
       </div>`;
   }
@@ -254,7 +254,7 @@
         const name = NAV_DEPT_NAMES[parsedData.target] || parsedData.target;
         speakArabic('انتقلت إلى ' + name);
         closeOverlay();
-        showToast('✅ انتقلت إلى ' + name);
+        showToast('انتقلت إلى ' + name);
         parsedData = null;
         return;
       }
@@ -263,7 +263,7 @@
       if (parsedData && parsedData.dept === 'print') {
         closeOverlay();
         speakArabic('جاري طباعة الإيصال');
-        showToast('🖨️ جاري طباعة الإيصال...', 'info');
+        showToast('جاري طباعة الإيصال...', 'info');
         setTimeout(() => {
           if (typeof printExchangeReceipt === 'function') {
             printExchangeReceipt();
@@ -279,13 +279,13 @@
       if (parsedData) {
         result.innerHTML     = formatResult(parsedData);
         result.style.display = 'block';
-        apply.textContent    = '✅ تطبيق';
+        apply.textContent    = 'تطبيق';
         apply.style.display  = 'block';
 
         if (parsedData.autoConfirm) {
-          status.textContent = '⚡ تم اكتشاف تأكيد — جاري التنفيذ...';
+          status.textContent = 'تم اكتشاف تأكيد — جاري التنفيذ...';
         } else {
-          status.textContent = '🎙️ قل "تأكيد" أو "موافق" للتنفيذ — أو "إلغاء" للتراجع';
+          status.textContent = 'قل "تأكيد" أو "موافق" للتنفيذ — أو "إلغاء" للتراجع';
         }
         // في كلا الحالتين نعتمد على onend لتنفيذ الخطوة التالية
         _needsConfirmListen = true;
@@ -361,11 +361,11 @@
 
       if (isConfirm) {
         _confirmPending = 'apply';
-        if (statusEl) statusEl.textContent = '⚡ تم التأكيد — جاري التنفيذ...';
+        if (statusEl) statusEl.textContent = 'تم التأكيد — جاري التنفيذ...';
         // لا نستدعي شيئاً هنا — ننتظر onend
       } else if (isCancel) {
         _confirmPending = 'cancel';
-        if (statusEl) statusEl.textContent = '❌ تم الإلغاء';
+        if (statusEl) statusEl.textContent = 'تم الإلغاء';
       } else {
         // كلام غير معروف — أعد الاستماع عبر onend
         _confirmShouldRetry = true;
@@ -378,7 +378,7 @@
       if (e.error === 'no-speech') {
         // صمت — أعد الاستماع عبر onend
         _confirmShouldRetry = true;
-        if (statusEl && overlayEl) statusEl.textContent = '🎙️ في انتظار تأكيدك... قل "تأكيد" أو "موافق"';
+        if (statusEl && overlayEl) statusEl.textContent = 'في انتظار تأكيدك... قل "تأكيد" أو "موافق"';
       }
     };
 
@@ -658,11 +658,10 @@
       rows.push(row('المنصة',    d.platform));
       rows.push(row('العميل',    d.client));
     } else if (d.dept === 'print') {
-      rows.push(`<div style="text-align:center;font-size:28px">🖨️</div>`);
       rows.push(`<div style="text-align:center;color:#34d399;font-weight:700">طباعة إيصال آخر عملية صرافة</div>`);
     }
     if (d.autoConfirm) {
-      rows.push(`<div style="margin-top:8px;padding:6px 10px;background:rgba(255,160,0,.15);border-radius:8px;color:#FFB300;font-size:12px;font-weight:700">⚡ تأكيد تلقائي مُفعَّل</div>`);
+      rows.push(`<div style="margin-top:8px;padding:6px 10px;background:rgba(255,160,0,.15);border-radius:8px;color:#FFB300;font-size:12px;font-weight:700">تأكيد تلقائي مُفعَّل</div>`);
     }
     return rows.join('');
   }
@@ -672,7 +671,7 @@
   // فحص الجلسة قبل التنفيذ التلقائي
   function _voiceAutoSubmit(submitFn, confirmMsg) {
     if (typeof _sessionIsOpen === 'function' && !_sessionIsOpen()) {
-      showToast('⚠️ افتح الصندوق أولاً لتفعيل التنفيذ التلقائي');
+      showToast('افتح الصندوق أولاً لتفعيل التنفيذ التلقائي');
       speakArabic('يجب فتح الصندوق أولاً');
       return;
     }
@@ -782,7 +781,7 @@
     } else if (d.dept === 'print') {
       closeOverlay();
       speakArabic('جاري طباعة الإيصال');
-      showToast('🖨️ جاري طباعة الإيصال...', 'info');
+      showToast('جاري طباعة الإيصال...', 'info');
       setTimeout(() => {
         if (typeof printExchangeReceipt === 'function') {
           printExchangeReceipt();
@@ -795,7 +794,7 @@
     }
 
     closeOverlay();
-    showToast(d.autoConfirm ? '⚡ جاري التنفيذ التلقائي...' : '✅ تم ملء الحقول — راجعها وأكد التنفيذ');
+    showToast(d.autoConfirm ? 'جاري التنفيذ التلقائي...' : 'تم ملء الحقول — راجعها وأكد التنفيذ');
   }
 
   // ── إشعار مؤقت ───────────────────────────────────────────────────────────────
@@ -912,7 +911,7 @@
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-size:22px">${icon}</span>
         <div>
-          <div style="font-weight:800;font-size:13px;margin-bottom:2px">📱 من هاتف ${operator}</div>
+          <div style="font-weight:800;font-size:13px;margin-bottom:2px">من هاتف ${operator}</div>
           <div style="font-size:12px;opacity:.85">${label}</div>
         </div>
       </div>`;
@@ -945,7 +944,7 @@
   // بدء الاستماع من الشريط المدمج
   function vtInlineStart(dept) {
     if (!SpeechRecognition) {
-      _vtInlineSetLabel(dept, '⚠️ المتصفح لا يدعم الصوت');
+      _vtInlineSetLabel(dept, 'المتصفح لا يدعم الصوت');
       return;
     }
     // إذا كان يستمع بالفعل — أوقف
@@ -962,7 +961,7 @@
     if (micBtn) micBtn.classList.add('vb-listening');
     if (resultBar) resultBar.style.display = 'none';
 
-    _vtInlineSetLabel(dept, '🎙️ جاري الاستماع...');
+    _vtInlineSetLabel(dept, 'جاري الاستماع...');
     _vtInlineHideSpoken(dept);
     _inlineData[dept] = null;
 
@@ -975,27 +974,27 @@
     rec.onresult = (e) => {
       const text = e.results[0][0].transcript.trim();
       _vtInlineShowSpoken(dept, text);
-      _vtInlineSetLabel(dept, '⚙️ جاري التحليل...');
+      _vtInlineSetLabel(dept, 'جاري التحليل...');
 
       const parsed = parseCommand(text, dept);
       _inlineData[dept] = parsed;
 
       if (parsed && parsed.dept === dept) {
         _vtInlineShowResult(dept, parsed);
-        _vtInlineSetLabel(dept, '✅ تم — راجع النتيجة وطبّق');
+        _vtInlineSetLabel(dept, 'تم — راجع النتيجة وطبّق');
         if (parsed.autoConfirm) {
           setTimeout(() => vtInlineApply(dept), 400);
         }
       } else if (parsed && parsed.dept === 'nav') {
         if (typeof switchDept === 'function') switchDept(parsed.target);
-        _vtInlineSetLabel(dept, '↩️ انتقلت إلى قسم آخر');
+        _vtInlineSetLabel(dept, 'انتقلت إلى قسم آخر');
       } else {
-        _vtInlineSetLabel(dept, '❓ لم أتعرف على الأمر — حاول مجدداً');
+        _vtInlineSetLabel(dept, 'لم أتعرف على الأمر — حاول مجدداً');
       }
     };
 
     rec.onerror = (e) => {
-      _vtInlineSetLabel(dept, e.error === 'no-speech' ? '🔇 لم يُسمع كلام' : '❌ خطأ: ' + e.error);
+      _vtInlineSetLabel(dept, e.error === 'no-speech' ? 'لم يُسمع كلام' : 'خطأ: ' + e.error);
     };
 
     rec.onend = () => {
@@ -1011,7 +1010,7 @@
     };
 
     try { rec.start(); } catch (_) {
-      _vtInlineSetLabel(dept, '❌ تعذر تشغيل الميكروفون');
+      _vtInlineSetLabel(dept, 'تعذر تشغيل الميكروفون');
     }
   }
 
@@ -1068,7 +1067,7 @@
     _vtInlineResetLabel(dept);
     document.getElementById('vbResult-' + dept).style.display = 'none';
     _inlineData[dept] = null;
-    showToast('✅ تم ملء الحقول — راجع وأكد التنفيذ');
+    showToast('تم ملء الحقول — راجع وأكد التنفيذ');
   }
 
   // مسح نتيجة الشريط المدمج
@@ -1085,7 +1084,7 @@
     const hint = document.getElementById('vbHint-' + dept);
     if (!btn) return;
     const isManual = btn.classList.toggle('vb-manual-active');
-    if (hint) hint.textContent = isManual ? '✏️ وضع الكتابة اليدوية — الحقول أدناه قابلة للتعديل' : _vtDefaultHint(dept);
+    if (hint) hint.textContent = isManual ? 'وضع الكتابة اليدوية — الحقول أدناه قابلة للتعديل' : _vtDefaultHint(dept);
   }
 
   function _vtDefaultHint(dept) {
@@ -1109,7 +1108,7 @@
   function _vtInlineShowSpoken(dept, text) {
     const wrap = document.getElementById('vbSpokenWrap-' + dept);
     const span = document.getElementById('vbSpokenText-' + dept);
-    if (wrap && span) { span.textContent = '🗣 ' + text; wrap.style.display = 'block'; }
+    if (wrap && span) { span.textContent = text; wrap.style.display = 'block'; }
   }
 
   function _vtInlineHideSpoken(dept) {
@@ -1136,12 +1135,12 @@
       chips.push(chip('المنصة',  d.platform, '#60a5fa'));
       chips.push(chip('العميل',  d.client,   '#a78bfa'));
     } else if (dept === 'cashdesk') {
-      chips.push(chip('النوع',   d.type === 'deposit' ? '📥 إيداع' : '📤 سحب', d.type === 'deposit' ? '#34d399' : '#f87171'));
+      chips.push(chip('النوع',   d.type === 'deposit' ? 'إيداع' : 'سحب', d.type === 'deposit' ? '#34d399' : '#f87171'));
       chips.push(chip('المبلغ',  d.amount ? d.amount + ' ' + (d.currency||'USD') : null, '#fcd34d'));
       chips.push(chip('العميل',  d.client, '#a78bfa'));
     }
 
-    if (d.autoConfirm) chips.push(chip('', '⚡ تأكيد تلقائي', '#FFB300'));
+    if (d.autoConfirm) chips.push(chip('', 'تأكيد تلقائي', '#FFB300'));
 
     fields.innerHTML = chips.join('');
     rb.style.display = 'flex';

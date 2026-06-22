@@ -397,7 +397,7 @@
       }
     }
     updateHistoryUI(); refreshChangesList();
-    showToast('تم التراجع ✓');
+    showToast('تم التراجع');
   }
 
   function undoLast() {
@@ -406,7 +406,7 @@
     applyChange(c, 'undo');
     ve.redoStack.push(c);
     updateHistoryUI(); refreshChangesList();
-    showToast('تراجع ✓');
+    showToast('تراجع');
   }
 
   function redoLast() {
@@ -415,7 +415,7 @@
     applyChange(c, 'redo');
     ve.changes.push(c);
     updateHistoryUI(); refreshChangesList();
-    showToast('تقدم ✓');
+    showToast('تقدم');
   }
 
   function revertAll() {
@@ -645,25 +645,25 @@
         '<div class="ve-el-breadcrumb" id="ve-breadcrumb">' + breadHtml + '</div>' +
       '</div>' +
 
-      sec('📐 الموضع والحجم', true,
+      sec('الموضع والحجم', true,
         row('X', '<input class="ve-inp ve-inp-sm" type="number" id="ve-tx" value="'+tx+'">') +
         row('Y', '<input class="ve-inp ve-inp-sm" type="number" id="ve-ty" value="'+ty+'">') +
         row('عرض', '<input class="ve-inp ve-inp-sm" type="number" id="ve-w" value="'+cW+'">') +
         row('ارتفاع', '<input class="ve-inp ve-inp-sm" type="number" id="ve-h" value="'+cH+'">') +
-        '<button class="ve-apply" onclick="veApplyPos()">✓ تطبيق الموضع والحجم</button>'
+        '<button class="ve-apply" onclick="veApplyPos()">تطبيق الموضع والحجم</button>'
       ) +
 
-      (hasText ? sec('✏️ النص', true,
+      (hasText ? sec('النص', true,
         '<textarea class="ve-textarea" id="ve-text-val">'+esc(el.textContent)+'</textarea>' +
         '<div class="ve-align-row" style="margin-top:5px">' +
           '<button class="ve-align-btn'+(cTA==='right'?' active':'')+'" onclick="veTextAlign(\'right\')">يمين←</button>' +
           '<button class="ve-align-btn'+(cTA==='center'?' active':'')+'" onclick="veTextAlign(\'center\')">⊙</button>' +
           '<button class="ve-align-btn'+(cTA==='left'?' active':'')+'" onclick="veTextAlign(\'left\')">→يسار</button>' +
         '</div>' +
-        '<button class="ve-apply" onclick="veApplyText()">✓ تطبيق النص</button>'
+        '<button class="ve-apply" onclick="veApplyText()">تطبيق النص</button>'
       ) : '') +
 
-      sec('🔤 الطباعة', false,
+      sec('الطباعة', false,
         row('حجم', '<input class="ve-inp ve-inp-sm" type="number" id="ve-fs" value="'+cFS+'"><span style="color:#555;font-size:10px;margin-right:3px">px</span>') +
         row('وزن',
           '<select class="ve-sel" id="ve-fw">' +
@@ -672,16 +672,16 @@
             }).join('') +
           '</select>'
         ) +
-        '<button class="ve-apply" onclick="veApplyTypo()">✓ تطبيق الطباعة</button>'
+        '<button class="ve-apply" onclick="veApplyTypo()">تطبيق الطباعة</button>'
       ) +
 
-      sec('🎨 الألوان', false,
+      sec('الألوان', false,
         clrRow('النص',    'clr',  cC) +
         clrRow('الخلفية', 'bg',   cBg) +
-        '<button class="ve-apply" onclick="veApplyColors()">✓ تطبيق الألوان</button>'
+        '<button class="ve-apply" onclick="veApplyColors()">تطبيق الألوان</button>'
       ) +
 
-      sec('📦 التباعد', false,
+      sec('التباعد', false,
         '<div class="ve-bm">' +
           '<div class="ve-bm-lbl">MARGIN</div>' +
           '<div class="ve-bm-margin">' +
@@ -703,10 +703,10 @@
             '<div class="ve-bm-bottom"><input class="ve-bm-inp" id="ve-mb" type="number" value="'+mb+'"></div>' +
           '</div>' +
         '</div>' +
-        '<button class="ve-apply" onclick="veApplySpacing()">✓ تطبيق التباعد</button>'
+        '<button class="ve-apply" onclick="veApplySpacing()">تطبيق التباعد</button>'
       ) +
 
-      sec('🔲 الحدود', false,
+      sec('الحدود', false,
         row('سمك', '<input class="ve-inp ve-inp-sm" type="number" id="ve-bw" value="'+cBW+'"><span style="color:#555;font-size:10px;margin-right:3px">px</span>') +
         row('نوع',
           '<select class="ve-sel" id="ve-bs">' +
@@ -720,21 +720,21 @@
           '<input class="ve-range" type="range" id="ve-br" min="0" max="50" value="'+cBR+'">' +
           '<span class="ve-range-val" id="ve-br-v">'+cBR+'px</span>'
         ) +
-        '<button class="ve-apply" onclick="veApplyBorder()">✓ تطبيق الحدود</button>'
+        '<button class="ve-apply" onclick="veApplyBorder()">تطبيق الحدود</button>'
       ) +
 
-      sec('✨ التأثيرات', false,
+      sec('التأثيرات', false,
         row('شفافية',
           '<input class="ve-range" type="range" id="ve-op" min="0" max="1" step="0.05" value="'+cOp+'">' +
           '<span class="ve-range-val" id="ve-op-v">'+Math.round(cOp*100)+'%</span>'
         ) +
         '<div class="ve-row"><label>ظل</label>' +
           '<input class="ve-inp" type="text" id="ve-shadow" placeholder="0 4px 12px rgba(0,0,0,.4)" value="'+esc(cSh)+'"></div>' +
-        '<button class="ve-apply" onclick="veApplyEffects()">✓ تطبيق التأثيرات</button>'
+        '<button class="ve-apply" onclick="veApplyEffects()">تطبيق التأثيرات</button>'
       ) +
 
       '<div class="ve-sec"><div class="ve-sec-hd" onclick="veSec(this)">' +
-        '<div class="ve-sec-title">📋 التعديلات المسجلة</div>' +
+        '<div class="ve-sec-title">التعديلات المسجلة</div>' +
         '<span class="ve-sec-arrow">▼</span></div>' +
         '<div class="ve-sec-body open">' + changesHtml() + '</div>' +
       '</div>';
@@ -829,7 +829,7 @@
     }
     if (wi && wi.value) { recordChange('style',el,'width', el.style.width||'',wi.value+'px','عرض: '+wi.value+'px'); el.style.width=wi.value+'px'; }
     if (hi && hi.value) { recordChange('style',el,'height',el.style.height||'',hi.value+'px','ارتفاع: '+hi.value+'px'); el.style.height=hi.value+'px'; }
-    syncOverlays(); showToast('✓ الموضع والحجم');
+    syncOverlays(); showToast('الموضع والحجم');
   };
 
   global.veApplyText = function() {
@@ -838,7 +838,7 @@
     var old = el.textContent, nv = inp.value;
     el.textContent = nv;
     recordChange('text', el, 'textContent', old, nv, 'نص: "'+nv.substring(0,20)+'"');
-    showToast('✓ النص'); syncOverlays();
+    showToast('النص'); syncOverlays();
   };
 
   global.veTextAlign = function(align) {
@@ -854,7 +854,7 @@
     var fs = document.getElementById('ve-fs'), fw = document.getElementById('ve-fw');
     if (fs&&fs.value) { recordChange('style',el,'fontSize',el.style.fontSize||'',fs.value+'px','حجم الخط: '+fs.value+'px'); el.style.fontSize=fs.value+'px'; }
     if (fw)           { recordChange('style',el,'fontWeight',el.style.fontWeight||'',fw.value,'وزن الخط: '+fw.value); el.style.fontWeight=fw.value; }
-    showToast('✓ الطباعة'); syncOverlays();
+    showToast('الطباعة'); syncOverlays();
   };
 
   global.veApplyColors = function() {
@@ -862,7 +862,7 @@
     var ct = document.getElementById('ve-clr-t'), bt = document.getElementById('ve-bg-t');
     if (ct) { recordChange('style',el,'color',el.style.color||'',ct.value,'لون النص: '+ct.value); el.style.color=ct.value; }
     if (bt) { recordChange('style',el,'backgroundColor',el.style.backgroundColor||'',bt.value,'لون الخلفية: '+bt.value); el.style.backgroundColor=bt.value; }
-    showToast('✓ الألوان');
+    showToast('الألوان');
   };
 
   global.veApplySpacing = function() {
@@ -875,7 +875,7 @@
       recordChange('style',el,f[1],el.style[f[1]]||'',nv,f[1]+': '+nv);
       el.style[f[1]] = nv;
     });
-    showToast('✓ التباعد'); syncOverlays();
+    showToast('التباعد'); syncOverlays();
   };
 
   global.veApplyBorder = function() {
@@ -886,7 +886,7 @@
     if (bs) { recordChange('style',el,'borderStyle',el.style.borderStyle||'',bs.value,'نوع الحد: '+bs.value); el.style.borderStyle=bs.value; }
     if (bc) { recordChange('style',el,'borderColor',el.style.borderColor||'',bc.value,'لون الحد: '+bc.value); el.style.borderColor=bc.value; }
     if (br) { recordChange('style',el,'borderRadius',el.style.borderRadius||'',br.value+'px','انحناء: '+br.value+'px'); el.style.borderRadius=br.value+'px'; }
-    showToast('✓ الحدود'); syncOverlays();
+    showToast('الحدود'); syncOverlays();
   };
 
   global.veApplyEffects = function() {
@@ -894,7 +894,7 @@
     var op=document.getElementById('ve-op'), sh=document.getElementById('ve-shadow');
     if (op) { recordChange('style',el,'opacity',el.style.opacity||'',op.value,'شفافية: '+Math.round(op.value*100)+'%'); el.style.opacity=op.value; }
     if (sh) { recordChange('style',el,'boxShadow',el.style.boxShadow||'',sh.value,'ظل'); el.style.boxShadow=sh.value; }
-    showToast('✓ التأثيرات');
+    showToast('التأثيرات');
   };
 
   /* ═══════════════════════════════════════════════════
@@ -948,7 +948,7 @@
     document.querySelectorAll('.ve-tool').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.mode === m);
     });
-    showToast(m === 'move' ? '✋ وضع التحريك — اسحب العناصر' : '🖱️ وضع الاختيار');
+    showToast(m === 'move' ? 'وضع التحريك — اسحب العناصر' : 'وضع الاختيار');
   }
 
   /* ═══════════════════════════════════════════════════
@@ -960,13 +960,13 @@
     modal.className = 've-modal-bg'; modal.id = 've-submit-modal';
     modal.innerHTML =
       '<div class="ve-modal">' +
-        '<h3>📨 إرسال طلب التعديل</h3>' +
+        '<h3>إرسال طلب التعديل</h3>' +
         '<div class="ve-modal-sub">' + ve.changes.length + ' تعديل — ' + esc(ve.pageTitle) + '</div>' +
         '<div class="ve-mf"><label>عنوان الطلب *</label><input type="text" id="ve-req-t" placeholder="مثال: تعديل ألوان القسم الرئيسي"></div>' +
         '<div class="ve-mf"><label>النوع</label><select id="ve-req-tp"><option>تصميم</option><option>تحسين</option><option>وظيفة جديدة</option><option>إصلاح</option></select></div>' +
         '<div class="ve-mf"><label>الوصف</label><textarea id="ve-req-d" placeholder="اشرح سبب هذه التعديلات..."></textarea></div>' +
         '<div class="ve-modal-actions">' +
-          '<button class="ve-m-submit" onclick="veDoSubmit()">إرسال للإدارة 📨</button>' +
+          '<button class="ve-m-submit" onclick="veDoSubmit()">إرسال للإدارة</button>' +
           '<button class="ve-m-cancel" onclick="veCloseModal()">إلغاء</button>' +
         '</div>' +
       '</div>';
@@ -1002,7 +1002,7 @@
     all.unshift(req);
     localStorage.setItem('devRequests', JSON.stringify(all));
     global.veCloseModal();
-    showToast('تم الإرسال للإدارة ✓');
+    showToast('تم الإرسال للإدارة');
     setTimeout(function() { closeEditor(false); }, 1400);
   };
 
@@ -1076,8 +1076,8 @@
         '<button class="ve-hbtn" id="ve-undo-btn" onclick="veUndoLast()" disabled title="تراجع Ctrl+Z">↩</button>' +
         '<button class="ve-hbtn" id="ve-redo-btn" onclick="veRedoLast()" disabled title="تقدم Ctrl+Y">↪</button>' +
         '<span class="ve-changes-pill" id="ve-count-pill">0 تعديل</span>' +
-        '<button class="ve-btn ve-btn-submit" onclick="veOpenSubmit()">📨 إرسال</button>' +
-        '<button class="ve-btn ve-btn-close"  onclick="veCloseEditor()">✕ إغلاق</button>' +
+        '<button class="ve-btn ve-btn-submit" onclick="veOpenSubmit()">إرسال</button>' +
+        '<button class="ve-btn ve-btn-close"  onclick="veCloseEditor()">إغلاق</button>' +
       '</div>';
     document.body.insertBefore(banner, document.body.firstChild);
     ve.bannerEl  = banner;
@@ -1147,7 +1147,7 @@
 
     document.body.classList.add('ve-mode-select');
 
-    showToast('🖱️ انقر على أي عنصر لتعديله');
+    showToast('انقر على أي عنصر لتعديله');
   };
 
   // Banner buttons
@@ -1175,7 +1175,7 @@
     ['transform','width','height','fontSize','fontWeight','color','backgroundColor',
      'padding','margin','border','opacity','visibility','borderRadius','boxShadow'
     ].forEach(function(p) { ve.selectedEl.style[p] = ''; });
-    showToast('✓ تمت إعادة الضبط');
+    showToast('تمت إعادة الضبط');
     syncOverlays(); buildSidebarContent();
   };
 

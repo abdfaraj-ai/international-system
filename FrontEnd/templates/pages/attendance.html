@@ -525,7 +525,6 @@ select.date-input option { background: #FFFFFF; }
     </div>
 
     <div id="header-section-name">
-        <span class="sec-icon">🖐</span>
         <span>الحضور والانصراف</span>
     </div>
 
@@ -536,9 +535,9 @@ select.date-input option { background: #FFFFFF; }
             <span id="device-badge-text">جاري الفحص...</span>
         </div>
 
-        <button class="btn btn-outline" onclick="checkDevice()">🔄 فحص</button>
-        <button class="btn btn-gold" onclick="syncData()" id="sync-btn">⬇️ مزامنة</button>
-        <button class="btn" onclick="openManualPunchModal()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;">✋ بصمة يدوية</button>
+        <button class="btn btn-outline" onclick="checkDevice()">فحص</button>
+        <button class="btn btn-gold" onclick="syncData()" id="sync-btn">مزامنة</button>
+        <button class="btn" onclick="openManualPunchModal()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;">بصمة يدوية</button>
 
         <div class="clock-toggle-wrap">
             <div class="clock-box">
@@ -580,11 +579,11 @@ select.date-input option { background: #FFFFFF; }
 <aside class="emp-sidebar">
     <div class="emp-sidebar-head">
         <div class="emp-sidebar-title">
-            <span>👥 الموظفون</span>
+            <span>الموظفون</span>
             <span class="emp-sidebar-count" id="sidebar-emp-count">0</span>
         </div>
         <input class="emp-search" id="emp-sidebar-search" type="text"
-               placeholder="🔍 ابحث بالاسم..." oninput="filterSidebarEmps()">
+               placeholder="ابحث بالاسم..." oninput="filterSidebarEmps()">
     </div>
     <div class="emp-list" id="emp-sidebar-list">
         <div style="text-align:center;padding:24px;color:var(--att-text2);font-size:12px">
@@ -608,7 +607,7 @@ select.date-input option { background: #FFFFFF; }
     <!-- Stats — compact strip -->
     <div class="stats-grid" id="stats-grid">
         <div class="stat-card" style="border-right-color:#2563EB">
-            <div class="stat-icon" style="background:rgba(37,99,235,0.08)">👥</div>
+            <div class="stat-icon" style="background:rgba(37,99,235,0.08)"></div>
             <div class="stat-info">
                 <div class="stat-label">إجمالي الموظفين</div>
                 <div class="stat-value" id="stat-employees" style="color:#2563EB">—</div>
@@ -616,7 +615,7 @@ select.date-input option { background: #FFFFFF; }
             </div>
         </div>
         <div class="stat-card" style="border-right-color:#16A34A">
-            <div class="stat-icon" style="background:rgba(22,163,74,0.08)">📅</div>
+            <div class="stat-icon" style="background:rgba(22,163,74,0.08)"></div>
             <div class="stat-info">
                 <div class="stat-label">سجلات اليوم</div>
                 <div class="stat-value" id="stat-today" style="color:#16A34A">—</div>
@@ -624,7 +623,7 @@ select.date-input option { background: #FFFFFF; }
             </div>
         </div>
         <div class="stat-card" style="border-right-color:#D97706">
-            <div class="stat-icon" style="background:rgba(217,119,6,0.08)">📆</div>
+            <div class="stat-icon" style="background:rgba(217,119,6,0.08)"></div>
             <div class="stat-info">
                 <div class="stat-label">سجلات الأسبوع</div>
                 <div class="stat-value" id="stat-week" style="color:#D97706">—</div>
@@ -632,7 +631,7 @@ select.date-input option { background: #FFFFFF; }
             </div>
         </div>
         <div class="stat-card" style="border-right-color:#7C3AED">
-            <div class="stat-icon" style="background:rgba(124,58,237,0.08)">📊</div>
+            <div class="stat-icon" style="background:rgba(124,58,237,0.08)"></div>
             <div class="stat-info">
                 <div class="stat-label">إجمالي السجلات</div>
                 <div class="stat-value" id="stat-total" style="color:#7C3AED">—</div>
@@ -650,17 +649,17 @@ select.date-input option { background: #FFFFFF; }
                 <div class="emp-detail-meta" id="edp-meta">—</div>
             </div>
             <div class="emp-detail-actions">
-                <button class="btn-sm-white" onclick="toggleRenameInline()">✏️ تعديل الاسم</button>
-                <button class="btn-sm-white" onclick="openNotesModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">📝 ملاحظات</button>
-                <button class="btn-sm-white" onclick="openExcusedModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">📋 إذن</button>
-                <button class="btn-sm-white" onclick="openEmpReportModal(_selectedEmpId, document.getElementById('edp-name').textContent)">📄 تقرير</button>
+                <button class="btn-sm-white" onclick="toggleRenameInline()">تعديل الاسم</button>
+                <button class="btn-sm-white" onclick="openNotesModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">ملاحظات</button>
+                <button class="btn-sm-white" onclick="openExcusedModal(_selectedEmpDbId, document.getElementById('edp-name').textContent)">إذن</button>
+                <button class="btn-sm-white" onclick="openEmpReportModal(_selectedEmpId, document.getElementById('edp-name').textContent)">تقرير</button>
                 <button class="btn-sm-white" onclick="closeEmpDetail()">✕</button>
             </div>
         </div>
         <!-- Rename row -->
         <div class="rename-inline" id="rename-inline">
             <input type="text" id="rename-input" placeholder="أدخل الاسم الجديد...">
-            <button class="btn-rename-save" onclick="saveRename()">💾 حفظ</button>
+            <button class="btn-rename-save" onclick="saveRename()">حفظ</button>
             <button class="btn-rename-cancel" onclick="toggleRenameInline()">إلغاء</button>
         </div>
         <!-- Stats row -->
@@ -685,7 +684,7 @@ select.date-input option { background: #FFFFFF; }
         <!-- Detail records table -->
         <div style="padding:0">
             <div style="padding:12px 20px;background:#F8FBFF;border-bottom:1px solid var(--att-border);display:flex;align-items:center;justify-content:space-between">
-                <div style="font-size:13px;font-weight:700;color:var(--att-text1)">📋 سجلات البصمات</div>
+                <div style="font-size:13px;font-weight:700;color:var(--att-text1)">سجلات البصمات</div>
                 <div style="display:flex;gap:6px">
                     <button class="filter-btn active" id="edp-filter-today" onclick="setEdpPeriod('today',this)">اليوم</button>
                     <button class="filter-btn" id="edp-filter-week" onclick="setEdpPeriod('week',this)">الأسبوع</button>
@@ -708,20 +707,20 @@ select.date-input option { background: #FFFFFF; }
 
     <!-- Tabs -->
     <div class="att-tabs" id="main-tabs">
-        <button class="att-tab active" onclick="switchTab('records', this)">📋 سجلات الحضور</button>
-        <button class="att-tab" onclick="switchTab('employees', this)">👥 الموظفون</button>
-        <button class="att-tab" onclick="switchTab('daily', this)">📅 الدوام اليومي</button>
-        <button class="att-tab" onclick="switchTab('alerts', this)">🔔 التنبيهات</button>
-        <button class="att-tab" onclick="switchTab('report', this)">📊 التقرير</button>
-        <button class="att-tab" onclick="switchTab('stats', this)">📈 الإحصائيات</button>
-        <button class="att-tab" onclick="switchTab('export', this)">📥 استخراج فردي</button>
+        <button class="att-tab active" onclick="switchTab('records', this)">سجلات الحضور</button>
+        <button class="att-tab" onclick="switchTab('employees', this)">الموظفون</button>
+        <button class="att-tab" onclick="switchTab('daily', this)">الدوام اليومي</button>
+        <button class="att-tab" onclick="switchTab('alerts', this)">التنبيهات</button>
+        <button class="att-tab" onclick="switchTab('report', this)">التقرير</button>
+        <button class="att-tab" onclick="switchTab('stats', this)">الإحصائيات</button>
+        <button class="att-tab" onclick="switchTab('export', this)">استخراج فردي</button>
     </div>
 
     <!-- Tab: Records -->
     <div class="tab-panel active" id="tab-records">
         <div class="sec-card">
             <div class="sec-card-header">
-                <div class="sec-card-title">📋 سجلات الحضور والانصراف</div>
+                <div class="sec-card-title">سجلات الحضور والانصراف</div>
                 <div style="font-size:12px;color:var(--text2)" id="records-count"></div>
             </div>
             <div class="filters-row">
@@ -761,7 +760,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="tab-panel" id="tab-employees">
         <div class="sec-card">
             <div class="sec-card-header">
-                <div class="sec-card-title">👥 الموظفون المسجّلون في الجهاز</div>
+                <div class="sec-card-title">الموظفون المسجّلون في الجهاز</div>
                 <div style="font-size:12px;color:var(--text2)" id="employees-count"></div>
             </div>
             <div class="sec-card-body">
@@ -787,13 +786,13 @@ select.date-input option { background: #FFFFFF; }
     <div class="tab-panel" id="tab-export">
         <div class="sec-card">
             <div class="sec-card-header">
-                <div class="sec-card-title">📥 استخراج تقرير موظف</div>
+                <div class="sec-card-title">استخراج تقرير موظف</div>
                 <div style="font-size:12px;color:var(--text2)" id="export-emp-count"></div>
             </div>
             <div style="padding:16px 20px 0">
                 <!-- بحث -->
                 <input type="text" id="export-search"
-                    placeholder="🔍 ابحث عن موظف بالاسم أو الرقم..."
+                    placeholder="ابحث عن موظف بالاسم أو الرقم..."
                     oninput="filterExportEmps()"
                     style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(201,168,76,.25);background:#0d1626;color:#e8eaf0;font-size:13px;font-family:inherit;outline:none;margin-bottom:14px">
             </div>
@@ -812,7 +811,7 @@ select.date-input option { background: #FFFFFF; }
             <!-- Header -->
             <div style="padding:22px 24px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
                 <div>
-                    <div style="font-size:16px;font-weight:800;color:#e8eaf0">📄 استخراج تقرير موظف</div>
+                    <div style="font-size:16px;font-weight:800;color:#e8eaf0">استخراج تقرير موظف</div>
                     <div style="font-size:12px;color:var(--text2);margin-top:3px" id="emp-report-name">—</div>
                 </div>
                 <button type="button" onclick="closeEmpReportModal()" style="width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
@@ -823,9 +822,9 @@ select.date-input option { background: #FFFFFF; }
                 <div>
                     <div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600">نوع التقرير</div>
                     <div style="display:flex;gap:8px">
-                        <button type="button" class="filter-btn active" id="erp-week-btn"  onclick="setEmpReportPeriod('week',this)">📅 أسبوعي</button>
-                        <button type="button" class="filter-btn"        id="erp-month-btn" onclick="setEmpReportPeriod('month',this)">📆 شهري</button>
-                        <button type="button" class="filter-btn"        id="erp-custom-btn" onclick="setEmpReportPeriod('custom',this)">🗓 مخصص</button>
+                        <button type="button" class="filter-btn active" id="erp-week-btn"  onclick="setEmpReportPeriod('week',this)">أسبوعي</button>
+                        <button type="button" class="filter-btn"        id="erp-month-btn" onclick="setEmpReportPeriod('month',this)">شهري</button>
+                        <button type="button" class="filter-btn"        id="erp-custom-btn" onclick="setEmpReportPeriod('custom',this)">مخصص</button>
                     </div>
                 </div>
                 <!-- تواريخ مخصصة -->
@@ -846,15 +845,15 @@ select.date-input option { background: #FFFFFF; }
                 </div>
                 <!-- معلومة -->
                 <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:12px 14px;font-size:12px;color:#9aa3b8;line-height:1.7">
-                    📊 سيحتوي الملف على <strong style="color:#C9A84C">3 أوراق</strong>: ملخص الإحصائيات، التفاصيل اليومية، وجميع البصمات.
+                    سيحتوي الملف على <strong style="color:#C9A84C">3 أوراق</strong>: ملخص الإحصائيات، التفاصيل اليومية، وجميع البصمات.
                 </div>
                 <!-- أزرار التنزيل -->
                 <div style="display:flex;gap:10px">
                     <button type="button" class="btn btn-gold" style="flex:1;padding:12px;font-size:13px" onclick="downloadEmpReport()">
-                        ⬇ Excel (3 أوراق)
+                        Excel (3 أوراق)
                     </button>
                     <button type="button" onclick="printEmpPDF()" style="flex:1;padding:12px;font-size:13px;font-family:'Cairo',sans-serif;font-weight:700;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#1E40AF,#2563EB);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-                        🖨 كشف PDF
+                        كشف PDF
                     </button>
                 </div>
             </div>
@@ -865,10 +864,10 @@ select.date-input option { background: #FFFFFF; }
     <div class="tab-panel" id="tab-report">
         <div class="sec-card">
             <div class="sec-card-header">
-                <div class="sec-card-title">📊 تقرير الحضور</div>
+                <div class="sec-card-title">تقرير الحضور</div>
                 <div style="display:flex;gap:8px">
-                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('records')">⬇ Excel</button>
-                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('report')">🖨 PDF</button>
+                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('records')">Excel</button>
+                    <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('report')">PDF</button>
                 </div>
             </div>
             <div class="filters-row">
@@ -907,7 +906,7 @@ select.date-input option { background: #FFFFFF; }
         <!-- فلاتر الفترة -->
         <div class="sec-card" style="margin-bottom:20px">
             <div class="sec-card-header">
-                <div class="sec-card-title">⚙️ إعدادات الإحصائيات</div>
+                <div class="sec-card-title">إعدادات الإحصائيات</div>
             </div>
             <div class="filters-row" style="gap:14px">
                 <button class="filter-btn" onclick="setStatsPeriod('today',this)">اليوم</button>
@@ -939,12 +938,12 @@ select.date-input option { background: #FFFFFF; }
         <!-- جدول الإحصائيات التفصيلية -->
         <div class="sec-card">
             <div class="sec-card-header">
-                <div class="sec-card-title">📈 إحصائيات الحضور لكل موظف</div>
+                <div class="sec-card-title">إحصائيات الحضور لكل موظف</div>
                 <div style="display:flex;align-items:center;gap:12px">
                     <div style="font-size:12px;color:var(--text2)" id="stats-period-label"></div>
                     <div style="display:flex;gap:8px">
-                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('stats')">⬇ Excel</button>
-                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('stats')">🖨 PDF</button>
+                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportExcel('stats')">Excel</button>
+                        <button type="button" class="btn btn-outline" style="font-size:12px;padding:6px 14px" onclick="exportPDF('stats')">PDF</button>
                     </div>
                 </div>
             </div>
@@ -983,10 +982,10 @@ select.date-input option { background: #FFFFFF; }
         <!-- فلتر اليوم -->
         <div class="sec-card" style="margin-bottom:20px">
             <div class="sec-card-header">
-                <div class="sec-card-title">📅 تقرير الدوام اليومي</div>
+                <div class="sec-card-title">تقرير الدوام اليومي</div>
                 <div style="display:flex;align-items:center;gap:10px">
                     <input type="date" class="date-input" id="daily-date" onchange="loadDaily()">
-                    <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadDaily()">🔄 تحديث</button>
+                    <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadDaily()">تحديث</button>
                 </div>
             </div>
             <div class="filters-row">
@@ -1026,7 +1025,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="tab-panel" id="tab-alerts">
         <div class="sec-card" style="margin-bottom:20px">
             <div class="sec-card-header">
-                <div class="sec-card-title">🔔 تنبيهات الغياب المتكرر</div>
+                <div class="sec-card-title">تنبيهات الغياب المتكرر</div>
             </div>
             <div class="filters-row">
                 <span style="font-size:12px;color:var(--text2)">الشهر:</span>
@@ -1034,7 +1033,7 @@ select.date-input option { background: #FFFFFF; }
                 <span style="font-size:12px;color:var(--text2)">حد الغياب:</span>
                 <input type="number" class="date-input" id="alert-threshold" value="3" min="1" max="30" onchange="loadAlerts()" style="width:65px">
                 <span style="font-size:12px;color:var(--text2)">أيام</span>
-                <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadAlerts()">🔍 فحص</button>
+                <button class="btn btn-gold" style="padding:6px 14px;font-size:12px" onclick="loadAlerts()">فحص</button>
                 <div id="alerts-summary" style="margin-right:auto;font-size:12px;color:var(--text2)"></div>
             </div>
         </div>
@@ -1042,7 +1041,7 @@ select.date-input option { background: #FFFFFF; }
         <!-- الموظفون الذين تجاوزوا الحد -->
         <div id="alerts-section" style="display:none">
             <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px">
-                <span>⚠</span> <span id="alerts-title">تجاوزوا حد الغياب</span>
+                <span id="alerts-title">تجاوزوا حد الغياب</span>
             </div>
             <div class="sec-card" style="margin-bottom:20px">
                 <div class="sec-card-body">
@@ -1066,7 +1065,7 @@ select.date-input option { background: #FFFFFF; }
 
         <!-- الموظفون الطبيعيون -->
         <div id="normal-section">
-            <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px">✓ حضور طبيعي</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px">حضور طبيعي</div>
             <div class="sec-card">
                 <div class="sec-card-body">
                     <table class="att-table">
@@ -1097,7 +1096,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="modal-box">
         <div class="modal-head">
             <div>
-                <div style="font-size:15px;font-weight:800;color:#e8eaf0">📝 ملاحظات الموظف</div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">ملاحظات الموظف</div>
                 <div style="font-size:12px;color:var(--text2);margin-top:2px" id="notes-emp-name">—</div>
             </div>
             <button class="modal-close" onclick="closeNotesModal()">✕</button>
@@ -1109,16 +1108,16 @@ select.date-input option { background: #FFFFFF; }
                 <div>
                     <div class="form-label">نوع الملاحظة</div>
                     <select class="form-input form-select" id="note-type-sel">
-                        <option value="note">📋 ملاحظة</option>
-                        <option value="warning">⚠ تحذير</option>
-                        <option value="praise">⭐ شكر وتقدير</option>
+                        <option value="note">ملاحظة</option>
+                        <option value="warning">تحذير</option>
+                        <option value="praise">شكر وتقدير</option>
                     </select>
                 </div>
                 <div>
                     <div class="form-label">نص الملاحظة</div>
                     <textarea class="form-input form-textarea" id="note-body" placeholder="اكتب الملاحظة هنا..."></textarea>
                 </div>
-                <button class="btn btn-gold" onclick="saveNote()">💾 حفظ الملاحظة</button>
+                <button class="btn btn-gold" onclick="saveNote()">حفظ الملاحظة</button>
             </div>
             <!-- قائمة الملاحظات -->
             <div id="notes-list" style="display:flex;flex-direction:column;gap:10px">
@@ -1133,7 +1132,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="modal-box">
         <div class="modal-head">
             <div>
-                <div style="font-size:15px;font-weight:800;color:#e8eaf0">✋ إضافة بصمة يدوية</div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">إضافة بصمة يدوية</div>
                 <div style="font-size:12px;color:#9aa3b8;margin-top:3px">لموظف نسي البصم — وقت تقديري</div>
             </div>
             <button class="modal-close" onclick="closeManualPunchModal()">✕</button>
@@ -1150,11 +1149,11 @@ select.date-input option { background: #FFFFFF; }
                 <div style="display:flex;gap:10px">
                     <label style="flex:1;display:flex;align-items:center;gap:8px;background:rgba(0,201,122,.08);border:1px solid rgba(0,201,122,.2);border-radius:8px;padding:10px 14px;cursor:pointer">
                         <input type="radio" name="mp-punch" value="0" checked style="accent-color:#00c97a">
-                        <span style="color:#00c97a;font-weight:700;font-size:13px">🟢 دخول</span>
+                        <span style="color:#00c97a;font-weight:700;font-size:13px">دخول</span>
                     </label>
                     <label style="flex:1;display:flex;align-items:center;gap:8px;background:rgba(255,77,106,.08);border:1px solid rgba(255,77,106,.2);border-radius:8px;padding:10px 14px;cursor:pointer">
                         <input type="radio" name="mp-punch" value="1" style="accent-color:#ff4d6a">
-                        <span style="color:#ff4d6a;font-weight:700;font-size:13px">🔴 خروج</span>
+                        <span style="color:#ff4d6a;font-weight:700;font-size:13px">خروج</span>
                     </label>
                 </div>
             </div>
@@ -1173,7 +1172,7 @@ select.date-input option { background: #FFFFFF; }
                 <textarea class="form-input form-textarea" id="mp-reason" placeholder="مثال: نسي الموظف البصم عند الدخول..."></textarea>
             </div>
             <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#a78bfa;line-height:1.7">
-                ⚠️ سيُسجَّل هذا الإدخال كبصمة <strong>يدوية / تقديرية</strong> باسمك كمدير. لا يمكن استخدامه كبديل عن البصمة الفعلية في السجلات الرسمية.
+                سيُسجَّل هذا الإدخال كبصمة <strong>يدوية / تقديرية</strong> باسمك كمدير. لا يمكن استخدامه كبديل عن البصمة الفعلية في السجلات الرسمية.
             </div>
             <button class="btn btn-gold" id="mp-save-btn" onclick="saveManualPunch()" style="width:100%;padding:11px">
                 حفظ البصمة اليدوية
@@ -1187,7 +1186,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="modal-box">
         <div class="modal-head">
             <div>
-                <div style="font-size:15px;font-weight:800;color:#1E3A5F">✏️ تعديل بصمة</div>
+                <div style="font-size:15px;font-weight:800;color:#1E3A5F">تعديل بصمة</div>
                 <div style="font-size:12px;color:var(--att-text2);margin-top:3px" id="ep-emp-name">—</div>
             </div>
             <button class="modal-close" onclick="closeEditPunchModal()">✕</button>
@@ -1197,10 +1196,10 @@ select.date-input option { background: #FFFFFF; }
             <div>
                 <div class="form-label">نوع البصمة *</div>
                 <select class="form-input form-select" id="ep-punch">
-                    <option value="0">🟢 دخول</option>
-                    <option value="1">🔴 خروج</option>
-                    <option value="4">⏸ خروج استراحة</option>
-                    <option value="5">▶️ دخول استراحة</option>
+                    <option value="0">دخول</option>
+                    <option value="1">خروج</option>
+                    <option value="4">خروج استراحة</option>
+                    <option value="5">دخول استراحة</option>
                 </select>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -1218,10 +1217,10 @@ select.date-input option { background: #FFFFFF; }
                 <textarea class="form-input form-textarea" id="ep-reason" placeholder="مثال: تصحيح خطأ في وقت الدخول..."></textarea>
             </div>
             <div style="background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#D97706;line-height:1.7">
-                ⚠️ سيُسجَّل هذا التعديل في سجل المراجعة باسمك. سيُصنَّف السجل كبصمة <strong>يدوية</strong> بعد التعديل.
+                سيُسجَّل هذا التعديل في سجل المراجعة باسمك. سيُصنَّف السجل كبصمة <strong>يدوية</strong> بعد التعديل.
             </div>
             <button class="btn btn-gold" id="ep-save-btn" onclick="saveEditPunch()" style="width:100%;padding:11px">
-                💾 حفظ التعديل
+                حفظ التعديل
             </button>
         </div>
     </div>
@@ -1232,7 +1231,7 @@ select.date-input option { background: #FFFFFF; }
     <div class="modal-box">
         <div class="modal-head">
             <div>
-                <div style="font-size:15px;font-weight:800;color:#e8eaf0">📋 أذونات الغياب</div>
+                <div style="font-size:15px;font-weight:800;color:#e8eaf0">أذونات الغياب</div>
                 <div style="font-size:12px;color:var(--text2);margin-top:2px" id="excused-emp-name">—</div>
             </div>
             <button class="modal-close" onclick="closeExcusedModal()">✕</button>
@@ -1244,11 +1243,11 @@ select.date-input option { background: #FFFFFF; }
                 <div>
                     <div class="form-label">نوع الغياب</div>
                     <select class="form-input form-select" id="absence-type-sel">
-                        <option value="annual">🏖 إجازة سنوية</option>
-                        <option value="sick">🏥 إجازة مرضية</option>
-                        <option value="emergency">🚨 إجازة طارئة</option>
-                        <option value="unpaid">💸 غياب بدون راتب</option>
-                        <option value="other">📌 أخرى</option>
+                        <option value="annual">إجازة سنوية</option>
+                        <option value="sick">إجازة مرضية</option>
+                        <option value="emergency">إجازة طارئة</option>
+                        <option value="unpaid">غياب بدون راتب</option>
+                        <option value="other">أخرى</option>
                     </select>
                 </div>
                 <div style="display:flex;gap:10px">
@@ -1265,7 +1264,7 @@ select.date-input option { background: #FFFFFF; }
                     <div class="form-label">السبب (اختياري)</div>
                     <textarea class="form-input form-textarea" id="absence-reason" placeholder="سبب الغياب..." style="min-height:60px"></textarea>
                 </div>
-                <button class="btn btn-gold" onclick="saveExcused()">✅ تسجيل الإذن</button>
+                <button class="btn btn-gold" onclick="saveExcused()">تسجيل الإذن</button>
             </div>
             <!-- قائمة الأذونات -->
             <div id="excused-list" style="display:flex;flex-direction:column;gap:10px">
@@ -1392,7 +1391,7 @@ async function checkDevice() {
         const d = await r.json();
         if (d.online) {
             badge.className = 'device-badge online';
-            text.textContent = 'متصل ✓';
+            text.textContent = 'متصل';
         } else {
             badge.className = 'device-badge offline';
             text.textContent = 'غير متصل';
@@ -1407,7 +1406,7 @@ async function checkDevice() {
 async function syncData() {
     const btn = document.getElementById('sync-btn');
     btn.disabled = true;
-    btn.textContent = '⏳ جاري المزامنة...';
+    btn.textContent = 'جاري المزامنة...';
     try {
         const r = await fetch('/api/attendance/sync/', {
             method: 'POST',
@@ -1415,7 +1414,7 @@ async function syncData() {
         });
         const d = await r.json();
         if (d.success) {
-            toast(`✓ تمت المزامنة — ${d.new_records} سجل جديد`, 'ok');
+            toast(`تمت المزامنة — ${d.new_records} سجل جديد`, 'ok');
             document.getElementById('sync-bar').style.display = 'flex';
             document.getElementById('last-sync-time').textContent = d.last_sync;
             document.getElementById('total-records').textContent  = d.total_records;
@@ -1424,13 +1423,13 @@ async function syncData() {
             loadRecords();
             loadStats();
         } else {
-            toast('✗ ' + (d.error || 'فشلت المزامنة'), 'err');
+            toast((d.error || 'فشلت المزامنة'), 'err');
         }
     } catch (e) {
-        toast('✗ خطأ في الاتصال', 'err');
+        toast('خطأ في الاتصال', 'err');
     } finally {
         btn.disabled = false;
-        btn.textContent = '⬇️ مزامنة البيانات';
+        btn.textContent = 'مزامنة البيانات';
     }
 }
 
@@ -1550,7 +1549,7 @@ async function saveRename() {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ تم تحديث الاسم بنجاح', 'ok');
+            toast('تم تحديث الاسم بنجاح', 'ok');
             document.getElementById('edp-name').textContent = newName;
             document.getElementById('rename-inline').classList.remove('open');
             // Update local list
@@ -1559,9 +1558,9 @@ async function saveRename() {
             // Refresh employees table if visible
             loadEmployees();
         } else {
-            toast('✗ ' + (d.error || 'فشل التحديث'), 'err');
+            toast((d.error || 'فشل التحديث'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 // ── Employee Detail Records ────────────────────────────────────────────────────
@@ -1581,7 +1580,7 @@ async function loadEdpRecords() {
         const d = await r.json();
         document.getElementById('edp-stat-total').textContent = d.count ?? '—';
         if (!d.records?.length) {
-            tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">📋</div>لا توجد سجلات</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state">لا توجد سجلات</div></td></tr>`;
             return;
         }
         tbody.innerHTML = d.records.map(rec => {
@@ -1589,7 +1588,7 @@ async function loadEdpRecords() {
             if (rec.punch === 0) badgeClass = 'punch-in';
             if (rec.punch === 1) badgeClass = 'punch-out';
             const manualBadge = rec.is_manual
-                ? `<span style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700">✋ يدوي</span>`
+                ? `<span style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700">يدوي</span>`
                 : '';
             const timeRaw = rec.time ? rec.time.replace(/\s*(AM|PM)\s*/i,'').trim() : '';
             let timeVal = '';
@@ -1641,7 +1640,7 @@ async function loadEmployees() {
 
         const tbody = document.getElementById('employees-tbody');
         if (!d.employees.length) {
-            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">👥</div>لا يوجد موظفون — قم بمزامنة الجهاز أولاً</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">لا يوجد موظفون — قم بمزامنة الجهاز أولاً</div></td></tr>`;
             return;
         }
         tbody.innerHTML = d.employees.map(e => `
@@ -1658,19 +1657,19 @@ async function loadEmployees() {
                 <td style="display:flex;gap:6px;align-items:center">
                     <button type="button" class="btn btn-gold" style="font-size:11px;padding:5px 10px"
                         onclick="selectEmployee('${e.user_id}','${e.name.replace(/'/g,"\\'")}','${e.id}')">
-                        👁 تفاصيل
+                        تفاصيل
                     </button>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px"
                         onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}')">
-                        📄 تقرير
+                        تقرير
                     </button>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px"
                         onclick="openNotesModal(${e.id},'${e.name.replace(/'/g,"\\'")}')">
-                        📝 ملاحظة
+                        ملاحظة
                     </button>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:5px 10px;color:var(--att-blue);border-color:rgba(37,99,235,.3)"
                         onclick="openExcusedModal(${e.id},'${e.name.replace(/'/g,"\\'")}')">
-                        📋 إذن
+                        إذن
                     </button>
                 </td>
             </tr>
@@ -1713,7 +1712,7 @@ async function loadRecords() {
         document.getElementById('records-count').textContent = `${d.count} سجل`;
 
         if (!d.records?.length) {
-            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📋</div>لا توجد سجلات للفترة المحددة</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">لا توجد سجلات للفترة المحددة</div></td></tr>`;
             return;
         }
 
@@ -1722,7 +1721,7 @@ async function loadRecords() {
             if (rec.punch === 0) badgeClass = 'punch-in';
             if (rec.punch === 1) badgeClass = 'punch-out';
             const manualBadge = rec.is_manual
-                ? `<span title="${rec.manual_reason || ''}" style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;cursor:default">✋ يدوي</span>`
+                ? `<span title="${rec.manual_reason || ''}" style="margin-right:6px;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;cursor:default">يدوي</span>`
                 : '';
             // تحويل وقت السجل إلى صيغة HH:MM لحقل time
             const timeRaw = rec.time ? rec.time.replace(/\s*(AM|PM)\s*/i, '').trim() : '';
@@ -1814,7 +1813,7 @@ async function loadStats2() {
             `${d.period.from} — ${d.period.to} | أيام عمل: ${d.total_work_days}`;
 
         if (!d.stats.length) {
-            tbody.innerHTML = `<tr><td colspan="14"><div class="empty-state"><div class="empty-icon">📈</div>لا توجد بيانات</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="14"><div class="empty-state">لا توجد بيانات</div></td></tr>`;
             return;
         }
 
@@ -1833,10 +1832,10 @@ async function loadStats2() {
             const hoursColor = noHours ? 'var(--text2)' : '#a78bfa';
 
             let rating, rClass;
-            if (e.pct_present >= 90 && e.pct_late <= 10)      { rating = '⭐ ممتاز';  rClass = 'status-good'; }
-            else if (e.pct_present >= 75 && e.pct_late <= 25)  { rating = '✓ جيد';    rClass = 'status-good'; }
-            else if (e.pct_present >= 60)                       { rating = '⚠ مقبول';  rClass = 'status-warn'; }
-            else                                                 { rating = '✗ ضعيف';  rClass = 'status-bad';  }
+            if (e.pct_present >= 90 && e.pct_late <= 10)      { rating = 'ممتاز';  rClass = 'status-good'; }
+            else if (e.pct_present >= 75 && e.pct_late <= 25)  { rating = 'جيد';    rClass = 'status-good'; }
+            else if (e.pct_present >= 60)                       { rating = 'مقبول';  rClass = 'status-warn'; }
+            else                                                 { rating = 'ضعيف';  rClass = 'status-bad';  }
 
             return `<tr>
                 <td><strong>${e.name}</strong></td>
@@ -1880,7 +1879,7 @@ async function loadReport() {
         const d = await r.json();
 
         if (!d.report?.length) {
-            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📊</div>لا توجد بيانات للفترة المحددة</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">لا توجد بيانات للفترة المحددة</div></td></tr>`;
             return;
         }
 
@@ -2047,7 +2046,7 @@ async function printEmpPDF() {
     params.set('late_hour', lh);
     params.set('late_min',  lm);
 
-    toast('⏳ جاري تحضير الكشف...', 'ok');
+    toast('جاري تحضير الكشف...', 'ok');
 
     try {
         const [statsRes, recsRes] = await Promise.all([
@@ -2404,7 +2403,7 @@ async function printEmpPDF() {
         if (!pw) { toast('يرجى السماح بالنوافذ المنبثقة لطباعة الكشف', 'err'); return; }
         pw.document.write(html);
         pw.document.close();
-        toast('✅ جاهز للطباعة — اختر "حفظ كـ PDF" من نافذة الطباعة', 'ok');
+        toast('جاهز للطباعة — اختر "حفظ كـ PDF" من نافذة الطباعة', 'ok');
 
     } catch(err) {
         console.error(err);
@@ -2468,11 +2467,11 @@ function renderExportGrid(emps) {
             <div style="display:flex;gap:8px">
                 <button type="button" onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}','week')"
                     style="flex:1;padding:7px;border-radius:8px;border:none;background:linear-gradient(135deg,#c9a84c,#f0c96b);color:#0b1120;font-size:11px;font-weight:700;cursor:pointer">
-                    📅 أسبوعي
+                    أسبوعي
                 </button>
                 <button type="button" onclick="openEmpReportModal('${e.user_id}','${e.name.replace(/'/g,"\\'")}','month')"
                     style="flex:1;padding:7px;border-radius:8px;border:1px solid rgba(201,168,76,.3);background:transparent;color:#c9a84c;font-size:11px;font-weight:700;cursor:pointer">
-                    📆 شهري
+                    شهري
                 </button>
                 <button type="button" onclick="_empReportUserId='${e.user_id}';document.getElementById('emp-report-name').textContent='${e.name.replace(/'/g,"\\'")}';_empReportPeriod='month';printEmpPDF()"
                     style="padding:7px 10px;border-radius:8px;border:none;background:linear-gradient(135deg,#1E40AF,#2563EB);color:#fff;font-size:12px;cursor:pointer" title="طباعة PDF">
@@ -2520,15 +2519,15 @@ async function loadDaily() {
         document.getElementById('dc-excused').textContent = d.counts.excused;
 
         if (!d.employees.length) {
-            tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📅</div>لا توجد بيانات لهذا اليوم</div></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">لا توجد بيانات لهذا اليوم</div></td></tr>';
             return;
         }
 
         const statusMap = {
-            present: { cls: 'ds-present', lbl: '✓ حاضر' },
-            late:    { cls: 'ds-late',    lbl: '⏰ متأخر' },
-            absent:  { cls: 'ds-absent',  lbl: '✗ غائب'  },
-            excused: { cls: 'ds-excused', lbl: '📋 بإذن'  },
+            present: { cls: 'ds-present', lbl: 'حاضر' },
+            late:    { cls: 'ds-late',    lbl: 'متأخر' },
+            absent:  { cls: 'ds-absent',  lbl: 'غائب'  },
+            excused: { cls: 'ds-excused', lbl: 'بإذن'  },
         };
 
         tbody.innerHTML = d.employees.map(e => {
@@ -2541,13 +2540,13 @@ async function loadDaily() {
                 <td>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px"
                         onclick="openNotesModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
-                        📝 ملاحظة
+                        ملاحظة
                     </button>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:var(--blue);border-color:rgba(59,130,246,.3)"
                         onclick="openExcusedModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
-                        📋 إذن
+                        إذن
                     </button>
                 </td>
             </tr>`;
@@ -2595,11 +2594,11 @@ async function loadAlerts() {
                 <td style="color:var(--red);font-weight:700">${e.absent}</td>
                 <td style="color:var(--blue)">${e.excused}</td>
                 <td style="color:var(--text2)">${e.total_work}</td>
-                <td><span class="alert-badge">⚠ ${e.absent} أيام غياب</span></td>
+                <td><span class="alert-badge">${e.absent} أيام غياب</span></td>
                 <td>
                     <button type="button" class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:var(--red);border-color:rgba(255,77,106,.3)"
                         onclick="openNotesModal(${e.emp_id},'${e.name.replace(/'/g,"\\'")}')">
-                        📝 تحذير
+                        تحذير
                     </button>
                 </td>
             </tr>`).join('');
@@ -2613,7 +2612,7 @@ async function loadAlerts() {
             <td style="color:var(--text2)">${e.absent}</td>
             <td style="color:var(--blue)">${e.excused}</td>
             <td style="color:var(--text2)">${e.total_work}</td>
-            <td><span class="normal-badge">✓ منتظم</span></td>
+            <td><span class="normal-badge">منتظم</span></td>
         </tr>`).join('') : '<tr><td colspan="6"><div class="empty-state">لا توجد بيانات</div></td></tr>';
 
     } catch {
@@ -2683,13 +2682,13 @@ async function saveNote() {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ تم حفظ الملاحظة', 'ok');
+            toast('تم حفظ الملاحظة', 'ok');
             document.getElementById('note-body').value = '';
             loadNotes();
         } else {
-            toast('✗ ' + (d.error || 'فشل الحفظ'), 'err');
+            toast((d.error || 'فشل الحفظ'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 async function deleteNote(noteId) {
@@ -2701,8 +2700,8 @@ async function deleteNote(noteId) {
         });
         const d = await r.json();
         if (d.success) { toast('تم الحذف', 'ok'); loadNotes(); }
-        else toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+        else toast((d.error || 'فشل الحذف'), 'err');
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 // إغلاق الـ modal بالنقر خارجه
@@ -2753,7 +2752,7 @@ async function loadExcused() {
                     </div>
                 </div>
                 <div style="font-size:13px;color:var(--text1)">
-                    📅 ${a.date_from} — ${a.date_to}
+                    ${a.date_from} — ${a.date_to}
                     <span style="font-size:12px;color:var(--gold);margin-right:8px">${a.days} أيام</span>
                 </div>
                 ${a.reason ? `<div style="font-size:12px;color:var(--text2);margin-top:4px">${a.reason}</div>` : ''}
@@ -2778,13 +2777,13 @@ async function saveExcused() {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ ' + d.message, 'ok');
+            toast(d.message, 'ok');
             document.getElementById('absence-reason').value = '';
             loadExcused();
         } else {
-            toast('✗ ' + (d.error || 'فشل التسجيل'), 'err');
+            toast((d.error || 'فشل التسجيل'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 async function deleteExcused(absenceId) {
@@ -2796,8 +2795,8 @@ async function deleteExcused(absenceId) {
         });
         const d = await r.json();
         if (d.success) { toast('تم الحذف', 'ok'); loadExcused(); }
-        else toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+        else toast((d.error || 'فشل الحذف'), 'err');
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 document.getElementById('excused-modal').addEventListener('click', function(e) {
@@ -2839,7 +2838,7 @@ async function saveManualPunch() {
     const time   = document.getElementById('mp-time').value;
     const reason = document.getElementById('mp-reason').value.trim();
 
-    if (!empId || !date || !time) { toast('✗ اختر الموظف والتاريخ والوقت', 'err'); return; }
+    if (!empId || !date || !time) { toast('اختر الموظف والتاريخ والوقت', 'err'); return; }
 
     const btn = document.getElementById('mp-save-btn');
     btn.disabled = true;
@@ -2853,13 +2852,13 @@ async function saveManualPunch() {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ ' + d.message, 'ok');
+            toast(d.message, 'ok');
             closeManualPunchModal();
             loadRecords();
         } else {
-            toast('✗ ' + (d.error || 'فشل الحفظ'), 'err');
+            toast((d.error || 'فشل الحفظ'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
     finally {
         btn.disabled = false;
         btn.textContent = 'حفظ البصمة اليدوية';
@@ -2880,7 +2879,7 @@ function openEditPunchModal(recordId, empName, date, time, punch) {
     document.getElementById('ep-punch').value = punch;
     document.getElementById('ep-reason').value = '';
     document.getElementById('ep-save-btn').disabled = false;
-    document.getElementById('ep-save-btn').textContent = '💾 حفظ التعديل';
+    document.getElementById('ep-save-btn').textContent = 'حفظ التعديل';
     document.getElementById('edit-punch-modal').classList.add('open');
 }
 
@@ -2895,7 +2894,7 @@ async function saveEditPunch() {
     const punch    = parseInt(document.getElementById('ep-punch').value);
     const reason   = document.getElementById('ep-reason').value.trim();
 
-    if (!date || !time) { toast('✗ التاريخ والوقت مطلوبان', 'err'); return; }
+    if (!date || !time) { toast('التاريخ والوقت مطلوبان', 'err'); return; }
 
     const btn = document.getElementById('ep-save-btn');
     btn.disabled = true;
@@ -2909,17 +2908,17 @@ async function saveEditPunch() {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ تم تعديل البصمة بنجاح', 'ok');
+            toast('تم تعديل البصمة بنجاح', 'ok');
             closeEditPunchModal();
             loadRecords();
             if (_selectedEmpId) loadEdpRecords();
         } else {
-            toast('✗ ' + (d.error || 'فشل التعديل'), 'err');
+            toast((d.error || 'فشل التعديل'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
     finally {
         btn.disabled = false;
-        btn.textContent = '💾 حفظ التعديل';
+        btn.textContent = 'حفظ التعديل';
     }
 }
 
@@ -2933,14 +2932,14 @@ async function deleteRecord(recordId, empName, timeLabel) {
         });
         const d = await r.json();
         if (d.success) {
-            toast('✓ تم حذف السجل', 'ok');
+            toast('تم حذف السجل', 'ok');
             // إزالة الصف من الجدول مباشرة دون إعادة تحميل
             const row = document.getElementById(`rec-row-${recordId}`);
             if (row) row.remove();
         } else {
-            toast('✗ ' + (d.error || 'فشل الحذف'), 'err');
+            toast((d.error || 'فشل الحذف'), 'err');
         }
-    } catch { toast('✗ خطأ في الاتصال', 'err'); }
+    } catch { toast('خطأ في الاتصال', 'err'); }
 }
 
 document.getElementById('edit-punch-modal').addEventListener('click', function(e) {

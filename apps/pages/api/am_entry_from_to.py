@@ -9,7 +9,6 @@ DELETE /api/am/entry-from-to/<id>/ ← حذف قيد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Sum
 
@@ -88,7 +87,6 @@ def _calc_profit(from_amt: Decimal, to_amt: Decimal,
 # GET + POST  /api/am/entry-from-to/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_entry_from_to(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -224,7 +222,6 @@ def api_am_entry_from_to(request):
 # GET + DELETE  /api/am/entry-from-to/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_entry_from_to_detail(request, entry_id):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

@@ -37,7 +37,7 @@
   <!-- الوسط: وضع التشغيل -->
   <div style="display:flex;align-items:center;gap:10px;">
     <span class="mode-badge mode-manual" id="modeToggle" onclick="toggleMode()"
-      style="border-radius:999px !important;padding:6px 18px !important;font-size:12px !important;font-weight:800 !important;cursor:pointer;">✋ وضع يدوي</span>
+      style="border-radius:999px !important;padding:6px 18px !important;font-size:12px !important;font-weight:800 !important;cursor:pointer;">وضع يدوي</span>
     <span id="stat-done" style="display:none">0</span>
     <span id="stat-pending" style="display:none">0</span>
     <span id="stat-total" style="display:none">0</span>
@@ -52,7 +52,7 @@
     </button>
     <button class="calc-trigger-btn" onclick="openPortalNotifPanel()" title="إشعارات البوابة"
       style="position:relative;background:rgba(37,99,235,0.07);border-color:rgba(37,99,235,0.20);color:#1E40AF;">
-      📬 البوابة
+      البوابة
       <span id="trx-portal-badge" style="position:absolute;top:-5px;left:-5px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;border-radius:50%;width:16px;height:16px;align-items:center;justify-content:center;line-height:1;display:none">0</span>
     </button>
     {% include 'layout/navbar.html' with report_fn="trxOpenReportModal" page_name="transactions" page_title="قسم الحوالات" %}
@@ -70,8 +70,8 @@
     <div style="background:#1f2c34;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(37,211,102,0.15)">
       <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📲</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:#e9edef">💬 رسائل المصدر</div>
-        <div id="sourceBotStatus" style="font-size:10px;color:#25D366">🟢 البوت نشط • <span id="incomingCount">8</span> رسالة</div>
+        <div style="font-size:13px;font-weight:700;color:#e9edef">رسائل المصدر</div>
+        <div id="sourceBotStatus" style="font-size:10px;color:#25D366">البوت نشط • <span id="incomingCount">8</span> رسالة</div>
       </div>
       <!-- زر مراسلة المصدر -->
       <button onclick="openMsgModal()" title="مراسلة المصدر" style="
@@ -89,17 +89,17 @@
     </div>
 
     <!-- Search bar -->
-    <input id="transferSearch" class="transfer-search" placeholder="🔍 بحث بالاسم أو المبلغ..." oninput="searchTransfers(this.value)">
+    <input id="transferSearch" class="transfer-search" placeholder="بحث بالاسم أو المبلغ..." oninput="searchTransfers(this.value)">
 
     <!-- حالة اتصال واتساب -->
     <div style="background:#111b21;padding:4px 10px;border-bottom:1px solid rgba(50,184,198,0.1);display:flex;align-items:center;justify-content:space-between;gap:8px">
-      <span id="wa-bridge-status" style="font-size:11px;color:#f87171;">🔴 واتساب غير متصل</span>
+      <span id="wa-bridge-status" style="font-size:11px;color:#f87171;">واتساب غير متصل</span>
       <div style="display:flex;align-items:center;gap:6px">
         <span style="font-size:10px;color:#556570;">يتجدد كل 3 ثوانٍ</span>
         <!-- زر الانتظار -->
         <button onclick="waBridgeOpenPending()" title="رسائل تحتاج مراجعة"
           style="position:relative;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:3px 8px;cursor:pointer;font-size:11px;color:#c9a84c;font-family:inherit;display:flex;align-items:center;gap:4px">
-          ⏳ انتظار
+          انتظار
           <span id="wa-pending-badge"
             style="display:none;background:#ff4d6a;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:800;align-items:center;justify-content:center;flex-shrink:0">0</span>
         </button>
@@ -139,7 +139,7 @@
             </div>
             <!-- رمز الحوالة -->
             <button class="sec-code-chip" id="secCodeChip" onclick="copySecCode()" title="نسخ رمز الحوالة" style="flex-shrink:0;">
-              🔐 <span id="secCode">847-291</span> <span class="chip-copy">⧉</span>
+              <span id="secCode">847-291</span> <span class="chip-copy">⧉</span>
             </button>
             <!-- عداد التنفيذ التلقائي -->
             <div id="fcBadge" style="
@@ -169,8 +169,8 @@
               </div>
             </div>
             <div style="display:flex;gap:5px;align-items:center;">
-              <button id="formBtnManual" onclick="setFormMode('manual')" style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.35);transition:all 0.25s;">✋ يدوي</button>
-              <button id="formBtnSmart"  onclick="setFormMode('smart')"  style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(255,255,255,0.05);color:#4d6080;border:1px solid rgba(50,184,198,0.15);transition:all 0.25s;">🤖 ذكي</button>
+              <button id="formBtnManual" onclick="setFormMode('manual')" style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.35);transition:all 0.25s;">يدوي</button>
+              <button id="formBtnSmart"  onclick="setFormMode('smart')"  style="padding:4px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:rgba(255,255,255,0.05);color:#4d6080;border:1px solid rgba(50,184,198,0.15);transition:all 0.25s;">ذكي</button>
             </div>
           </div>
 
@@ -183,47 +183,47 @@
           <!-- حقول النموذج -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;flex-shrink:0;">
             <div class="form-group">
-              <label>💵 المبلغ</label>
+              <label>المبلغ</label>
               <input type="number" id="mainAmount" placeholder="0.00" oninput="calculateNet()">
             </div>
             <div class="form-group">
-              <label>💲 العملة</label>
+              <label>العملة</label>
               <select id="currency" onchange="calculateNet()">
-                <option value="USD">USD — دولار 🇺🇸</option>
-                <option value="ILS">ILS — شيكل 🇮🇱</option>
-                <option value="JOD">JOD — دينار 🇯🇴</option>
-                <option value="EUR">EUR — يورو 🇪🇺</option>
-                <option value="EGP">EGP — جنيه 🇪🇬</option>
+                <option value="USD">USD — دولار</option>
+                <option value="ILS">ILS — شيكل</option>
+                <option value="JOD">JOD — دينار</option>
+                <option value="EUR">EUR — يورو</option>
+                <option value="EGP">EGP — جنيه</option>
               </select>
             </div>
             <div class="form-group">
-              <label>👤 اسم الزبون</label>
+              <label>اسم الزبون</label>
               <input type="text" id="clientName" placeholder="الاسم الكامل...">
             </div>
             <div class="form-group">
-              <label>🏷️ العمولة ($)</label>
+              <label>العمولة ($)</label>
               <input type="number" id="commission" placeholder="0" oninput="calculateNet()">
             </div>
             <div class="form-group">
-              <label>📡 المجموعة المصدر</label>
+              <label>المجموعة المصدر</label>
               <select id="sourceGroup">
                 <option value="">— تُحدَّد من الرسالة —</option>
               </select>
             </div>
             <div class="form-group">
-              <label>🎯 جهة التنفيذ</label>
+              <label>جهة التنفيذ</label>
               <select id="execAgent">
                 <option value="">— اختر وكيل التنفيذ —</option>
               </select>
             </div>
             <div class="form-group" id="walletRow">
-              <label id="walletTypeLabel">💳 نوع الحساب</label>
+              <label id="walletTypeLabel">نوع الحساب</label>
               <select id="walletType" disabled class="wallet-type-select">
                 <option value="">— لا يوجد رقم في الرسالة —</option>
-                <option value="ewallet">📱 محفظة إلكترونية</option>
-                <option value="bank">🏦 حساب بنكي</option>
-                <option value="iban">🔢 IBAN</option>
-                <option value="phone">📞 هاتف (تحويل)</option>
+                <option value="ewallet">محفظة إلكترونية</option>
+                <option value="bank">حساب بنكي</option>
+                <option value="iban">IBAN</option>
+                <option value="phone">هاتف (تحويل)</option>
               </select>
             </div>
             <div class="form-group" style="position:relative;">
@@ -244,10 +244,10 @@
 
           <!-- أزرار الإجراءات -->
           <div class="action-buttons" style="margin-top:12px;flex-shrink:0;">
-            <button class="btn btn-sm btn-execute" onclick="executeTransfer()" title="Ctrl+Enter">⚡ تنفيذ</button>
-            <button class="btn btn-sm btn-edit"    onclick="editTransfer()"    title="Ctrl+E">✏️ تعديل</button>
-            <button class="btn btn-sm btn-full"    onclick="sendReceipt()">📨 وصل</button>
-            <button class="btn btn-sm btn-clear"   onclick="clearForm()"       title="Ctrl+D">🗑️ مسح</button>
+            <button class="btn btn-sm btn-execute" onclick="executeTransfer()" title="Ctrl+Enter">تنفيذ</button>
+            <button class="btn btn-sm btn-edit"    onclick="editTransfer()"    title="Ctrl+E">تعديل</button>
+            <button class="btn btn-sm btn-full"    onclick="sendReceipt()">وصل</button>
+            <button class="btn btn-sm btn-clear"   onclick="clearForm()"       title="Ctrl+D">مسح</button>
           </div>
         </div>
 
@@ -271,7 +271,7 @@
               style="background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(37,99,235,.08));color:#93c5fd;border:1px solid rgba(37,99,235,.35);border-radius:9px;padding:6px 14px;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0;position:relative;"
               onmouseover="this.style.background='linear-gradient(135deg,rgba(37,99,235,.35),rgba(37,99,235,.15))';this.style.color='#bfdbfe'"
               onmouseout="this.style.background='linear-gradient(135deg,rgba(37,99,235,.2),rgba(37,99,235,.08))';this.style.color='#93c5fd'"
-              title="تعبئة النموذج من السياق">✏️ تعبئة</button>
+              title="تعبئة النموذج من السياق">تعبئة</button>
             <button onclick="_closeCtxPanel()"
               style="background:rgba(255,255,255,.04);color:#374151;border:1px solid rgba(255,255,255,.07);border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;position:relative;"
               onmouseover="this.style.background='rgba(239,68,68,.12)';this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.25)'"
@@ -311,8 +311,8 @@
     <div style="background:#1f2c34;padding:9px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(50,184,198,0.15);">
       <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#32b8c6,#0e6b7a);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">⚡</div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;font-weight:700;color:#e9edef;">⚡ حوالات التنفيذ</div>
-        <div style="font-size:9px;color:#32b8c6;">🟦 جاهز • <span id="execCount">0</span> حوالة</div>
+        <div style="font-size:12px;font-weight:700;color:#e9edef;">حوالات التنفيذ</div>
+        <div style="font-size:9px;color:#32b8c6;">جاهز • <span id="execCount">0</span> حوالة</div>
       </div>
       <!-- زر مراسلة المنفذ -->
       <button onclick="openExecMsgModal()" title="مراسلة المنفذ" style="
@@ -327,18 +327,18 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
         مراسلة المنفذ
       </button>
-      <button onclick="execChatClear()" title="مسح" style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:14px;padding:0;">🗑️</button>
+      <button onclick="execChatClear()" title="مسح" style="background:none;border:none;color:#8696a0;cursor:pointer;font-size:14px;padding:0;"></button>
     </div>
 
     <!-- Search -->
-    <input id="execSearch" class="transfer-search" placeholder="🔍 بحث..." oninput="searchExecBubbles(this.value)" style="margin:5px 6px;width:calc(100% - 12px);">
+    <input id="execSearch" class="transfer-search" placeholder="بحث..." oninput="searchExecBubbles(this.value)" style="margin:5px 6px;width:calc(100% - 12px);">
 
     <!-- Agent tabs -->
     <div style="background:#1f2c34;display:flex;flex-shrink:0;border-bottom:1px solid rgba(50,184,198,0.11);">
       <button class="wa-src-tab active" id="etab-all"     onclick="filterExec('all',this)"    >الكل</button>
-      <button class="wa-src-tab"        id="etab-barhoum" onclick="filterExec('barhoum',this)" >🔵 برهوم <span id="load-barhoum" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
-      <button class="wa-src-tab"        id="etab-agent2"  onclick="filterExec('agent2',this)"  >🟢 2 <span id="load-agent2" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
-      <button class="wa-src-tab"        id="etab-agent3"  onclick="filterExec('agent3',this)"  >🟡 3 <span id="load-agent3" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+      <button class="wa-src-tab"        id="etab-barhoum" onclick="filterExec('barhoum',this)" >برهوم <span id="load-barhoum" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+      <button class="wa-src-tab"        id="etab-agent2"  onclick="filterExec('agent2',this)"  >2 <span id="load-agent2" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
+      <button class="wa-src-tab"        id="etab-agent3"  onclick="filterExec('agent3',this)"  >3 <span id="load-agent3" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
     </div>
 
     <!-- Stats bar -->
@@ -346,7 +346,7 @@
 
     <!-- Bubbles list -->
     <div id="execBubblesList" style="flex:1;overflow-y:auto;padding:8px 6px;scroll-behavior:smooth;">
-      <div style="text-align:center;color:#4d6080;font-size:10px;padding:20px 6px;">⚡ نفّذ حوالة لتظهر هنا</div>
+      <div style="text-align:center;color:#4d6080;font-size:10px;padding:20px 6px;">نفّذ حوالة لتظهر هنا</div>
     </div>
 
     <!-- Hidden: legacy compatibility -->
@@ -368,7 +368,7 @@
     animation:prDrawerIn 0.25s ease;">
     <!-- Header -->
     <div style="background:#0a1520;border-bottom:1px solid #1e2d3d;padding:16px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
-      <div style="font-size:22px">📬</div>
+      <div style="font-size:22px"></div>
       <div style="flex:1">
         <div style="font-weight:800;color:#e9edef;font-size:15px;">إشعارات البوابة الخارجية</div>
         <div id="trx-portal-stats" style="font-size:11px;color:#8696a0;">—</div>
@@ -464,7 +464,6 @@
             padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);
             background:rgba(255,255,255,0.03);text-align:center;
           ">
-            <div style="font-size:18px;margin-bottom:4px;">📊</div>
             <div style="font-size:11px;font-weight:700;color:#8696a0;">CSV</div>
             <div style="font-size:10px;color:#4d6080;margin-top:2px;">للجداول والإكسيل</div>
           </div>
@@ -475,7 +474,6 @@
             padding:10px;border-radius:10px;border:1px solid rgba(50,184,198,0.15);
             background:rgba(255,255,255,0.03);text-align:center;
           ">
-            <div style="font-size:18px;margin-bottom:4px;">📄</div>
             <div style="font-size:11px;font-weight:700;color:#8696a0;">TXT</div>
             <div style="font-size:10px;color:#4d6080;margin-top:2px;">ملف نصي بسيط</div>
           </div>
@@ -516,7 +514,7 @@
         border:none;color:#000;font-size:13px;font-weight:800;
         cursor:pointer;transition:opacity 0.2s;
       " onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-        📦 تنفيذ الترحيل
+        تنفيذ الترحيل
       </button>
       <button onclick="closeMigrationModal()" style="
         padding:12px 20px;border-radius:12px;
@@ -530,11 +528,11 @@
 <!-- CONFIRMATION MODAL -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal">
-    <h3>⚡ تأكيد التنفيذ الفوري</h3>
+    <h3>تأكيد التنفيذ الفوري</h3>
     <p id="confirmText">هل تريد إرسال الحوالة إلى <b>برهوم تونس</b> للتنفيذ؟</p>
     <div class="modal-btns">
-      <button class="btn btn-execute" onclick="confirmExecution()">✅ نعم، نفّذ</button>
-      <button class="btn" style="background:var(--bg-input);border:1px solid var(--border);" onclick="closeModal()">❌ إلغاء</button>
+      <button class="btn btn-execute" onclick="confirmExecution()">نعم، نفّذ</button>
+      <button class="btn" style="background:var(--bg-input);border:1px solid var(--border);" onclick="closeModal()">إلغاء</button>
     </div>
   </div>
 </div>
@@ -568,14 +566,14 @@
     <div style="font-size:28px">📱</div>
     <div style="flex:1">
       <div style="font-weight:700; color:#e9edef; font-size:14px">WhatsApp Bot Simulator</div>
-      <div id="waBotStatus" style="font-size:11px; color:#25D366">🟢 البوت نشط — يراقب الجروبات</div>
+      <div id="waBotStatus" style="font-size:11px; color:#25D366">البوت نشط — يراقب الجروبات</div>
     </div>
     <div style="display:flex; gap:8px">
       <button onclick="triggerRandomMessage()" style="
         background:rgba(37,211,102,0.15); border:1px solid rgba(37,211,102,0.3);
         color:#25D366; border-radius:8px; padding:5px 10px; cursor:pointer;
         font-size:11px; font-weight:700;
-      ">⚡ رسالة عشوائية</button>
+      ">رسالة عشوائية</button>
       <button onclick="toggleWAPanel()" style="
         background:none; border:none; color:#8696a0; cursor:pointer; font-size:18px;
       ">✕</button>
@@ -588,13 +586,13 @@
       style="flex:1; padding:8px 4px; border:none; background:transparent;
              color:#32b8c6; font-size:11px; font-weight:700; cursor:pointer;
              border-bottom:2px solid #32b8c6;">
-      📥 الكل
+      الكل
     </button>
     <button class="wa-grp-tab" id="wgt-agent" onclick="switchWAGroup('agent', this)"
       style="flex:1; padding:8px 4px; border:none; background:transparent;
              color:#8696a0; font-size:11px; font-weight:700; cursor:pointer;
              border-bottom:2px solid transparent;">
-      📤 صادر
+      صادر
     </button>
   </div>
 
@@ -610,20 +608,20 @@
   <div id="waTyping" style="
     padding:6px 16px; font-size:11px; color:#25D366;
     background:#1f2c34; display:none;
-  ">🤖 البوت يحلل الرسالة...</div>
+  ">البوت يحلل الرسالة...</div>
 
   <!-- Quick messages -->
   <div style="
     background:#1f2c34; padding:8px 10px;
     border-top:1px solid rgba(50,184,198,0.11);
   ">
-    <div style="font-size:10px; color:#8696a0; margin-bottom:6px">💡 رسائل محاكاة سريعة:</div>
+    <div style="font-size:10px; color:#8696a0; margin-bottom:6px">رسائل محاكاة سريعة:</div>
     <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px">
-      <button onclick="sendSimMsg('text_simple')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">💵 حوالة نصية</button>
-      <button onclick="sendSimMsg('text_complex')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">📝 طلب مفصّل</button>
-      <button onclick="sendSimMsg('image_receipt')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">📷 صورة إيصال</button>
-      <button onclick="sendSimMsg('inquiry')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">❓ استفسار سعر</button>
-      <button onclick="sendSimMsg('confirm')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">✅ تأكيد تنفيذ</button>
+      <button onclick="sendSimMsg('text_simple')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">حوالة نصية</button>
+      <button onclick="sendSimMsg('text_complex')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">طلب مفصّل</button>
+      <button onclick="sendSimMsg('image_receipt')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">صورة إيصال</button>
+      <button onclick="sendSimMsg('inquiry')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">استفسار سعر</button>
+      <button onclick="sendSimMsg('confirm')" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;border-radius:12px;padding:4px 10px;font-size:10px;cursor:pointer;">تأكيد تنفيذ</button>
     </div>
 
     <!-- Input row -->
@@ -701,19 +699,19 @@
   <!-- Header -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="font-size:18px;font-weight:800;color:#a5c8ff">🌐 طلبات البوابة الإلكترونية</div>
+      <div style="font-size:18px;font-weight:800;color:#a5c8ff">طلبات البوابة الإلكترونية</div>
       <span id="portalReqCount" style="background:rgba(30,144,255,0.15);color:#60a5fa;border:1px solid rgba(30,144,255,0.3);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;">0</span>
     </div>
-    <button onclick="loadPortalRequests()" style="background:rgba(30,144,255,0.1);border:1px solid rgba(30,144,255,0.25);color:#60a5fa;border-radius:10px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;">🔄 تحديث</button>
+    <button onclick="loadPortalRequests()" style="background:rgba(30,144,255,0.1);border:1px solid rgba(30,144,255,0.25);color:#60a5fa;border-radius:10px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;">تحديث</button>
   </div>
 
   <!-- Stat badges -->
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
     <button class="pr-tab active" id="pr-tab-all"       onclick="filterPortalReqs('',this)">الكل <span id="pr-cnt-all">0</span></button>
-    <button class="pr-tab new"    id="pr-tab-new"       onclick="filterPortalReqs('new',this)">🔵 جديد <span id="pr-cnt-new">0</span></button>
-    <button class="pr-tab rev"    id="pr-tab-reviewing" onclick="filterPortalReqs('reviewing',this)">🟡 قيد المراجعة <span id="pr-cnt-rev">0</span></button>
-    <button class="pr-tab done"   id="pr-tab-done"      onclick="filterPortalReqs('done',this)">🟢 منفّذ <span id="pr-cnt-done">0</span></button>
-    <button class="pr-tab rej"    id="pr-tab-rejected"  onclick="filterPortalReqs('rejected',this)">🔴 مرفوض <span id="pr-cnt-rej">0</span></button>
+    <button class="pr-tab new"    id="pr-tab-new"       onclick="filterPortalReqs('new',this)">جديد <span id="pr-cnt-new">0</span></button>
+    <button class="pr-tab rev"    id="pr-tab-reviewing" onclick="filterPortalReqs('reviewing',this)">قيد المراجعة <span id="pr-cnt-rev">0</span></button>
+    <button class="pr-tab done"   id="pr-tab-done"      onclick="filterPortalReqs('done',this)">منفّذ <span id="pr-cnt-done">0</span></button>
+    <button class="pr-tab rej"    id="pr-tab-rejected"  onclick="filterPortalReqs('rejected',this)">مرفوض <span id="pr-cnt-rej">0</span></button>
   </div>
 
   <!-- Table -->
@@ -743,7 +741,7 @@
     <!-- Modal header -->
     <div style="padding:18px 22px;border-bottom:1px solid rgba(30,144,255,0.15);display:flex;align-items:center;justify-content:space-between;background:rgba(10,24,50,0.6);">
       <div>
-        <div style="font-size:15px;font-weight:800;color:#a5c8ff">🌐 تفاصيل طلب البوابة</div>
+        <div style="font-size:15px;font-weight:800;color:#a5c8ff">تفاصيل طلب البوابة</div>
         <div id="prm-code" style="font-size:11px;color:#60a5fa;margin-top:2px;font-family:monospace"></div>
       </div>
       <button onclick="closePortalReqModal()" style="background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;color:#8696a0;font-size:16px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.color='#ef4444'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8696a0'">✕</button>
@@ -775,10 +773,10 @@
       <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
         <div style="font-size:11px;color:#5a80a8;margin-bottom:10px;font-weight:700;">تحديث الحالة</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-          <button class="prs-btn" data-status="reviewing" onclick="setPRStatus('reviewing')">🟡 قيد المراجعة</button>
-          <button class="prs-btn" data-status="done"      onclick="setPRStatus('done')">🟢 منفّذ</button>
-          <button class="prs-btn" data-status="new"       onclick="setPRStatus('new')">🔵 جديد</button>
-          <button class="prs-btn" data-status="rejected"  onclick="setPRStatus('rejected')">🔴 مرفوض</button>
+          <button class="prs-btn" data-status="reviewing" onclick="setPRStatus('reviewing')">قيد المراجعة</button>
+          <button class="prs-btn" data-status="done"      onclick="setPRStatus('done')">منفّذ</button>
+          <button class="prs-btn" data-status="new"       onclick="setPRStatus('new')">جديد</button>
+          <button class="prs-btn" data-status="rejected"  onclick="setPRStatus('rejected')">مرفوض</button>
         </div>
         <textarea id="prm-notes" rows="3" placeholder="ملاحظات (اختياري)…" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(30,144,255,0.15);border-radius:10px;color:#c9dfff;font-size:12px;padding:9px 12px;resize:vertical;outline:none;direction:rtl;font-family:inherit;box-sizing:border-box;"></textarea>
         <button onclick="savePortalReqStatus()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#1555e8,#00c6ff);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:11px;cursor:pointer;">حفظ التغييرات</button>
@@ -1025,7 +1023,7 @@
   <!-- Header -->
   <div class="hist-header">
     <div class="hist-title-group">
-      <div class="hist-title">📜 سجل الحوالات</div>
+      <div class="hist-title">سجل الحوالات</div>
       <span id="historyCount" class="hist-badge">0</span>
     </div>
     <span id="histStatTotal" style="display:none">0</span>
@@ -1033,21 +1031,21 @@
     <span id="histStatReceipts" style="display:none">0</span>
     <!-- Action buttons -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button onclick="exportNotificationsFile()" class="hist-btn purple">📄 إشعارات التحويل</button>
-      <button onclick="exportHistory()"           class="hist-btn cyan">📥 تصدير CSV</button>
-      <button onclick="clearHistory()"            class="hist-btn red">🗑️ مسح السجل</button>
+      <button onclick="exportNotificationsFile()" class="hist-btn purple">إشعارات التحويل</button>
+      <button onclick="exportHistory()"           class="hist-btn cyan">تصدير CSV</button>
+      <button onclick="clearHistory()"            class="hist-btn red">مسح السجل</button>
     </div>
   </div>
 
   <!-- Toolbar: Search -->
   <div class="hist-toolbar">
     <div class="hist-search-wrap">
-      <span class="hist-search-icon">🔍</span>
+      <span class="hist-search-icon"></span>
       <input id="historySearchInput" type="text" class="hist-search-input"
              placeholder="ابحث بالاسم أو المبلغ أو الوكيل أو الرقم..."
              oninput="searchHistory(this.value)">
     </div>
-    <button onclick="clearHistorySearch()" class="hist-btn">✕ مسح</button>
+    <button onclick="clearHistorySearch()" class="hist-btn">مسح</button>
     <div id="historySearchInfo" class="hist-search-info"></div>
   </div>
 
@@ -1057,16 +1055,16 @@
       <thead>
         <tr>
           <th class="center" style="width:46px">#</th>
-          <th style="width:90px">⏱ الوقت</th>
-          <th>👤 المُرسِل</th>
-          <th>📱 رقم المستفيد</th>
-          <th class="center">💰 المبلغ</th>
+          <th style="width:90px">الوقت</th>
+          <th>المُرسِل</th>
+          <th>رقم المستفيد</th>
+          <th class="center">المبلغ</th>
           <th class="center">العملة</th>
-          <th>📤 مصدر الحوالة</th>
-          <th>⚡ الوكيل المنفّذ</th>
+          <th>مصدر الحوالة</th>
+          <th>الوكيل المنفّذ</th>
           <th class="center">الحالة</th>
-          <th>🧾 الإيصال</th>
-          <th class="center" style="width:60px">🖨</th>
+          <th>الإيصال</th>
+          <th class="center" style="width:60px"></th>
         </tr>
       </thead>
       <tbody id="transferHistoryBody">
@@ -1100,7 +1098,7 @@
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#e9edef;letter-spacing:.3px;">مراسلة المنفذ</div>
         <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-          <span style="font-size:10px;color:#32b8c6;">⚡ تعليمات مباشرة لوكيل التنفيذ</span>
+          <span style="font-size:10px;color:#32b8c6;">تعليمات مباشرة لوكيل التنفيذ</span>
           <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(50,184,198,0.15);color:#32b8c6;border:1px solid rgba(50,184,198,0.3);font-weight:700;">متصل</span>
         </div>
       </div>
@@ -1114,9 +1112,9 @@
 
     <!-- TAB BAR -->
     <div style="display:flex;background:rgba(0,0,0,0.28);border-bottom:1px solid rgba(50,184,198,0.1);flex-shrink:0;">
-      <button class="mc-tab" id="exec-tab-send" onclick="mcSwitchTab('exec','send',this)" style="color:#32b8c6;border-bottom-color:#32b8c6;">✉️ إرسال</button>
-      <button class="mc-tab" id="exec-tab-history" onclick="mcSwitchTab('exec','history',this)">📜 السجل</button>
-      <button class="mc-tab" id="exec-tab-schedule" onclick="mcSwitchTab('exec','schedule',this)">⏰ جدولة</button>
+      <button class="mc-tab" id="exec-tab-send" onclick="mcSwitchTab('exec','send',this)" style="color:#32b8c6;border-bottom-color:#32b8c6;">إرسال</button>
+      <button class="mc-tab" id="exec-tab-history" onclick="mcSwitchTab('exec','history',this)">السجل</button>
+      <button class="mc-tab" id="exec-tab-schedule" onclick="mcSwitchTab('exec','schedule',this)">جدولة</button>
     </div>
 
     <!-- BODY PANELS -->
@@ -1134,7 +1132,7 @@
           <!-- تُملأ ديناميكياً من DB عند تحميل الصفحة -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;" id="execAgentSelector">
             <div id="wa-no-exec-agents-hint" style="grid-column:1/-1;text-align:center;color:#4d6080;font-size:11px;padding:10px;">
-              ⏳ جارٍ تحميل الوكلاء...
+              جارٍ تحميل الوكلاء...
             </div>
           </div>
         </div>
@@ -1145,17 +1143,17 @@
             <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">الأولوية</label>
             <div style="display:flex;gap:5px;" id="execPriorityBar">
               <button class="mc-pri-btn exec-pri-active" onclick="setExecPriority(this,'normal','عادي','rgba(50,184,198,0.15)','#32b8c6','rgba(50,184,198,0.35)')" style="flex:1;">عادي</button>
-              <button class="mc-pri-btn" onclick="setExecPriority(this,'urgent','🔴 عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">🔴 عاجل</button>
-              <button class="mc-pri-btn" onclick="setExecPriority(this,'critical','🚨 حرج','rgba(239,68,68,0.2)','#ff2020','rgba(239,68,68,0.5)')" style="flex:1;">🚨 حرج</button>
+              <button class="mc-pri-btn" onclick="setExecPriority(this,'urgent','عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">عاجل</button>
+              <button class="mc-pri-btn" onclick="setExecPriority(this,'critical','حرج','rgba(239,68,68,0.2)','#ff2020','rgba(239,68,68,0.5)')" style="flex:1;">حرج</button>
             </div>
           </div>
           <div style="flex:1;min-width:130px;">
             <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">نوع الرسالة</label>
             <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px;" class="no-scrollbar" id="execMsgTypeBar">
-              <button class="exec-type-chip exec-type-active" onclick="setExecMsgType(this,'instruction')" style="white-space:nowrap;flex-shrink:0;">📋 تعليمات</button>
-              <button class="exec-type-chip" onclick="setExecMsgType(this,'confirm')" style="white-space:nowrap;flex-shrink:0;">✅ تأكيد</button>
-              <button class="exec-type-chip" onclick="setExecMsgType(this,'cancel')" style="white-space:nowrap;flex-shrink:0;">❌ إلغاء</button>
-              <button class="exec-type-chip" onclick="setExecMsgType(this,'query')" style="white-space:nowrap;flex-shrink:0;">❓ استفسار</button>
+              <button class="exec-type-chip exec-type-active" onclick="setExecMsgType(this,'instruction')" style="white-space:nowrap;flex-shrink:0;">تعليمات</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'confirm')" style="white-space:nowrap;flex-shrink:0;">تأكيد</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'cancel')" style="white-space:nowrap;flex-shrink:0;">إلغاء</button>
+              <button class="exec-type-chip" onclick="setExecMsgType(this,'query')" style="white-space:nowrap;flex-shrink:0;">استفسار</button>
             </div>
           </div>
         </div>
@@ -1164,14 +1162,14 @@
         <div>
           <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:7px;letter-spacing:.5px;">رسائل سريعة</label>
           <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;" class="no-scrollbar">
-            <button onclick="insertExecQuickMsg('⚡ نفّذ الحوالة فوراً')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⚡ نفّذ فوراً</button>
-            <button onclick="insertExecQuickMsg('⏸️ أوقف التنفيذ مؤقتاً حتى إشعار آخر')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⏸️ وقف مؤقت</button>
-            <button onclick="insertExecQuickMsg('✅ تم التأكيد، أكمل التنفيذ')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">✅ تأكيد</button>
-            <button onclick="insertExecQuickMsg('❌ ألغِ الحوالة، هناك مشكلة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">❌ إلغاء</button>
-            <button onclick="insertExecQuickMsg('🔄 أعد الإرسال مرة أخرى')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">🔄 إعادة</button>
-            <button onclick="insertExecQuickMsg('📞 تواصل مع المستفيد للتحقق')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">📞 تحقق</button>
-            <button onclick="insertExecQuickMsg('💰 أرسل المبلغ كاملاً دون خصم')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">💰 كامل</button>
-            <button onclick="insertExecQuickMsg('⚠️ انتبه، الحوالة حساسة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">⚠️ تنبيه</button>
+            <button onclick="insertExecQuickMsg('نفّذ الحوالة فوراً')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">نفّذ فوراً</button>
+            <button onclick="insertExecQuickMsg('أوقف التنفيذ مؤقتاً حتى إشعار آخر')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">وقف مؤقت</button>
+            <button onclick="insertExecQuickMsg('تم التأكيد، أكمل التنفيذ')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">تأكيد</button>
+            <button onclick="insertExecQuickMsg('ألغِ الحوالة، هناك مشكلة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">إلغاء</button>
+            <button onclick="insertExecQuickMsg('أعد الإرسال مرة أخرى')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">إعادة</button>
+            <button onclick="insertExecQuickMsg('تواصل مع المستفيد للتحقق')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">تحقق</button>
+            <button onclick="insertExecQuickMsg('أرسل المبلغ كاملاً دون خصم')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">كامل</button>
+            <button onclick="insertExecQuickMsg('انتبه، الحوالة حساسة')" class="exec-quick-chip" style="white-space:nowrap;flex-shrink:0;">تنبيه</button>
           </div>
         </div>
 
@@ -1228,18 +1226,18 @@
         </div>
         <div id="execHistoryList">
           <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">🔵 برهوم</span><span class="mc-hi-time">10:24</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">⚡ نفّذ الحوالة فوراً</div>
+            <div class="mc-hi-meta"><span class="mc-hi-group">برهوم</span><span class="mc-hi-time">10:24</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">نفّذ الحوالة فوراً</div>
             <div class="mc-hi-status"><span class="mc-ticks read">✓✓</span> تمت القراءة</div>
           </div>
           <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">📢 الكل</span><span class="mc-hi-time">09:58</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">✅ تم التأكيد، أكمل التنفيذ</div>
+            <div class="mc-hi-meta"><span class="mc-hi-group">الكل</span><span class="mc-hi-time">09:58</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">تم التأكيد، أكمل التنفيذ</div>
             <div class="mc-hi-status"><span class="mc-ticks delivered">✓✓</span> تم التسليم</div>
           </div>
           <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">🟢 وكيل 2</span><span class="mc-hi-time">09:30</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">⚠️ انتبه، الحوالة حساسة</div>
+            <div class="mc-hi-meta"><span class="mc-hi-group">وكيل 2</span><span class="mc-hi-time">09:30</span></div>
+            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">انتبه، الحوالة حساسة</div>
             <div class="mc-hi-status"><span class="mc-ticks sent">✓</span> مُرسل</div>
           </div>
         </div>
@@ -1257,7 +1255,7 @@
             <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">التاريخ</label><input type="date" id="execScheduleDate" style="width:100%;box-sizing:border-box;background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#32b8c6'" onblur="this.style.borderColor='rgba(50,184,198,0.18)'"></div>
             <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">الوقت</label><input type="time" id="execScheduleTime" style="width:100%;box-sizing:border-box;background:rgba(50,184,198,0.04);border:1.5px solid rgba(50,184,198,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#32b8c6'" onblur="this.style.borderColor='rgba(50,184,198,0.18)'"></div>
           </div>
-          <button onclick="addExecScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#32b8c6,#0e6b7a);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(50,184,198,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(50,184,198,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(50,184,198,0.3)'">⏰ جدولة الإرسال</button>
+          <button onclick="addExecScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#32b8c6,#0e6b7a);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(50,184,198,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(50,184,198,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(50,184,198,0.3)'">جدولة الإرسال</button>
           <div id="execScheduledList"><div style="font-size:11px;font-weight:700;color:#8696a0;margin-bottom:8px;letter-spacing:.5px;">الرسائل المجدولة</div><div style="text-align:center;padding:20px;color:#4d6080;font-size:11px;">لا توجد رسائل مجدولة</div></div>
         </div>
       </div><!-- end schedule panel -->
@@ -1304,8 +1302,8 @@
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#e9edef;letter-spacing:.3px;">مراسلة المصدر</div>
         <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-          <span style="font-size:10px;color:#25D366;">💬 رسالة مباشرة لمجموعة المصدر</span>
-          <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);font-weight:700;">🟢 نشط</span>
+          <span style="font-size:10px;color:#25D366;">رسالة مباشرة لمجموعة المصدر</span>
+          <span style="font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);font-weight:700;">نشط</span>
         </div>
       </div>
       <!-- sent counter -->
@@ -1318,9 +1316,9 @@
 
     <!-- TAB BAR -->
     <div style="display:flex;background:rgba(0,0,0,0.28);border-bottom:1px solid rgba(37,211,102,0.1);flex-shrink:0;">
-      <button class="mc-tab" id="src-tab-send" onclick="mcSwitchTab('src','send',this)" style="color:#25D366;border-bottom-color:#25D366;">✉️ إرسال</button>
-      <button class="mc-tab" id="src-tab-history" onclick="mcSwitchTab('src','history',this)">📜 السجل</button>
-      <button class="mc-tab" id="src-tab-schedule" onclick="mcSwitchTab('src','schedule',this)">⏰ جدولة</button>
+      <button class="mc-tab" id="src-tab-send" onclick="mcSwitchTab('src','send',this)" style="color:#25D366;border-bottom-color:#25D366;">إرسال</button>
+      <button class="mc-tab" id="src-tab-history" onclick="mcSwitchTab('src','history',this)">السجل</button>
+      <button class="mc-tab" id="src-tab-schedule" onclick="mcSwitchTab('src','schedule',this)">جدولة</button>
     </div>
 
     <!-- BODY PANELS -->
@@ -1338,7 +1336,7 @@
           <!-- تُملأ ديناميكياً من DB عند تحميل الصفحة -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;" id="groupSelector">
             <div id="wa-no-agents-hint" style="grid-column:1/-1;text-align:center;color:#4d6080;font-size:11px;padding:10px;">
-              ⏳ جارٍ تحميل الوكلاء...
+              جارٍ تحميل الوكلاء...
             </div>
           </div>
         </div>
@@ -1348,8 +1346,8 @@
           <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;letter-spacing:.5px;">الأولوية</label>
           <div style="display:flex;gap:6px;" id="srcPriorityBar">
             <button class="mc-pri-btn src-pri-active" onclick="setSrcPriority(this,'normal','عادي','rgba(37,211,102,0.15)','#25D366','rgba(37,211,102,0.35)')" style="flex:1;">عادي</button>
-            <button class="mc-pri-btn" onclick="setSrcPriority(this,'urgent','🔴 عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">🔴 عاجل</button>
-            <button class="mc-pri-btn" onclick="setSrcPriority(this,'info','ℹ️ معلومة','rgba(59,130,246,0.12)','#3b82f6','rgba(59,130,246,0.3)')" style="flex:1;">ℹ️ معلومة</button>
+            <button class="mc-pri-btn" onclick="setSrcPriority(this,'urgent','عاجل','rgba(239,68,68,0.12)','#ef4444','rgba(239,68,68,0.3)')" style="flex:1;">عاجل</button>
+            <button class="mc-pri-btn" onclick="setSrcPriority(this,'info','معلومة','rgba(59,130,246,0.12)','#3b82f6','rgba(59,130,246,0.3)')" style="flex:1;">معلومة</button>
           </div>
         </div>
 
@@ -1357,14 +1355,14 @@
         <div>
           <label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:7px;letter-spacing:.5px;">رسائل سريعة</label>
           <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;" class="no-scrollbar">
-            <button onclick="insertQuickMsg('✅ تم استلام الحوالة بنجاح')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">✅ تم الاستلام</button>
-            <button onclick="insertQuickMsg('⏳ الرجاء الانتظار، جاري المعالجة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">⏳ جاري المعالجة</button>
-            <button onclick="insertQuickMsg('❌ الحوالة مرفوضة، يرجى المراجعة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">❌ مرفوضة</button>
-            <button onclick="insertQuickMsg('💰 يرجى إرسال مبلغ الحوالة كاملاً')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">💰 إرسال المبلغ</button>
-            <button onclick="insertQuickMsg('📋 يرجى إرسال بيانات المستفيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">📋 بيانات</button>
-            <button onclick="insertQuickMsg('🔄 تم التحديث، شكراً لتعاملكم')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">🔄 تحديث</button>
-            <button onclick="insertQuickMsg('📲 يرجى إرسال صورة الإيصال')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">📲 إيصال</button>
-            <button onclick="insertQuickMsg('✔️ تم التحويل بنجاح، الرجاء التأكيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">✔️ تحويل ناجح</button>
+            <button onclick="insertQuickMsg('تم استلام الحوالة بنجاح')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">تم الاستلام</button>
+            <button onclick="insertQuickMsg('الرجاء الانتظار، جاري المعالجة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">جاري المعالجة</button>
+            <button onclick="insertQuickMsg('الحوالة مرفوضة، يرجى المراجعة')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">مرفوضة</button>
+            <button onclick="insertQuickMsg('يرجى إرسال مبلغ الحوالة كاملاً')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">إرسال المبلغ</button>
+            <button onclick="insertQuickMsg('يرجى إرسال بيانات المستفيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">بيانات</button>
+            <button onclick="insertQuickMsg('تم التحديث، شكراً لتعاملكم')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">تحديث</button>
+            <button onclick="insertQuickMsg('يرجى إرسال صورة الإيصال')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">إيصال</button>
+            <button onclick="insertQuickMsg('تم التحويل بنجاح، الرجاء التأكيد')" class="quick-msg-chip" style="white-space:nowrap;flex-shrink:0;">تحويل ناجح</button>
           </div>
         </div>
 
@@ -1421,7 +1419,7 @@
         </div>
         <div id="srcHistoryList">
           <div style="text-align:center;padding:30px;color:#4d6080;font-size:11px;">
-            📭 لا توجد رسائل مُرسلة بعد
+            لا توجد رسائل مُرسلة بعد
           </div>
         </div>
       </div><!-- end history panel -->
@@ -1438,7 +1436,7 @@
             <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">التاريخ</label><input type="date" id="srcScheduleDate" style="width:100%;box-sizing:border-box;background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='rgba(37,211,102,0.18)'"></div>
             <div><label style="display:block;font-size:11px;font-weight:700;color:#8696a0;margin-bottom:6px;">الوقت</label><input type="time" id="srcScheduleTime" style="width:100%;box-sizing:border-box;background:rgba(37,211,102,0.04);border:1.5px solid rgba(37,211,102,0.18);border-radius:12px;padding:8px 10px;color:#e9edef;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;color-scheme:dark;" onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='rgba(37,211,102,0.18)'"></div>
           </div>
-          <button onclick="addSrcScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#075E54);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(37,211,102,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(37,211,102,0.3)'">⏰ جدولة الإرسال</button>
+          <button onclick="addSrcScheduledMsg()" style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#075E54);color:#fff;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 5px 16px rgba(37,211,102,0.45)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(37,211,102,0.3)'">جدولة الإرسال</button>
           <div id="srcScheduledList"><div style="font-size:11px;font-weight:700;color:#8696a0;margin-bottom:8px;letter-spacing:.5px;">الرسائل المجدولة</div><div style="text-align:center;padding:20px;color:#4d6080;font-size:11px;">لا توجد رسائل مجدولة</div></div>
         </div>
       </div><!-- end schedule panel -->
@@ -1453,7 +1451,7 @@
         <span id="srcPriorityLabel" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(37,211,102,0.12);color:#25D366;border:1px solid rgba(37,211,102,0.25);">عادي</span>
         <button onclick="debugCheckSrcNumber()" title="تحقق من صحة الرقم"
           style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:2px 8px;color:#8696a0;font-size:10px;cursor:pointer;font-family:inherit">
-          🔍 فحص الرقم
+          فحص الرقم
         </button>
       </div>
       <div style="display:flex;gap:7px;">
@@ -1510,7 +1508,7 @@
             <div id="trxRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
             <div id="trxRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
           </div>
-          <button onclick="trxRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✕ إزالة</button>
+          <button onclick="trxRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">إزالة</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -1525,7 +1523,7 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:24px;">
-      <button onclick="trxSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(232,192,74,0.9),rgba(251,191,36,0.8));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(232,192,74,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="trxSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(232,192,74,0.9),rgba(251,191,36,0.8));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(232,192,74,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">إرسال للإدارة</button>
       <button onclick="trxCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
     </div>
   </div>
@@ -1585,9 +1583,9 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     <div class="dr-field">
       <label class="dr-label">نوع الطلب</label>
       <div class="dr-type-btns">
-        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
-        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
-        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">مشكلة تواجهني</button>
       </div>
     </div>
     <div class="dr-field">
@@ -1596,12 +1594,12 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     </div>
     <div class="dr-field">
       <label class="dr-label">مرفقات (اختياري)</label>
-      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <label class="dr-attach-lbl" for="drAttach">اضغط لإرفاق ملفات أو صور</label>
       <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
       <div class="dr-attach-files" id="drAttachFiles"></div>
     </div>
     <div class="dr-footer">
-      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-send" onclick="submitDevRequest()">إرسال للإدارة</button>
       <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
     </div>
   </div>
@@ -1749,7 +1747,7 @@ async function savePortalReqStatus() {
     if (data.success) {
       closePortalReqModal();
       loadPortalRequests();
-      if (typeof showToast === 'function') showToast('تم تحديث الطلب بنجاح ✅','success');
+      if (typeof showToast === 'function') showToast('تم تحديث الطلب بنجاح','success');
     } else {
       alert(data.error || 'حدث خطأ');
     }
@@ -1796,7 +1794,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (typeof loadPortalRequests === 'function') loadPortalRequests();
                 // إشعار مرئي
                 if (typeof showToast === 'function')
-                    showToast('طلب بوابة جديد ⚡ — ' + (r.clientEmail || '') + ' — ' + (r.countryName || ''), 'success', '🌐');
+                    showToast('طلب بوابة جديد — ' + (r.clientEmail || '') + ' — ' + (r.countryName || ''), 'success', '🌐');
                 // شارة حمراء على لوحة البوابة
                 var badge = document.getElementById('portalReqCount');
                 if (badge) {
@@ -1845,14 +1843,14 @@ async function submitDevRequest(){
   try{
     var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'transactions'})});
     var data=await res.json();
-    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح','success');else alert('تم إرسال طلبك للإدارة بنجاح');}
     else{alert(data.error||'حدث خطأ أثناء الإرسال');}
   }catch(e){alert('تعذّر الاتصال بالخادم');}
 }
 
 // ═══ Portal Notifications for T03 ═══
 (function(){
-  var PR_STATUS_LABEL = { new:'🔵 جديد', reviewing:'⚡ قيد المراجعة', done:'✅ منفّذ', rejected:'🚫 مرفوض' };
+  var PR_STATUS_LABEL = { new:'جديد', reviewing:'قيد المراجعة', done:'منفّذ', rejected:'مرفوض' };
 
   window.openPortalNotifPanel = function() {
     var overlay = document.getElementById('portal-notif-overlay');
@@ -1898,7 +1896,7 @@ async function submitDevRequest(){
             : '<div style="width:68px;height:68px;border-radius:8px;background:#0d1825;border:1px solid #2a3942;display:flex;align-items:center;justify-content:center;color:#8696a0;font-size:20px;flex-shrink:0">🖼️</div>';
 
           var statusTag = '<span style="font-size:10px;padding:2px 7px;border-radius:5px;background:rgba(255,255,255,0.05);color:#8696a0;border:1px solid #2a3942;">' + (PR_STATUS_LABEL[r.status] || r.status) + '</span>';
-          var noteRow = r.forwardedNote ? '<div style="font-size:11px;color:#8696a0;margin-top:3px;">📝 ' + r.forwardedNote + '</div>' : '';
+          var noteRow = r.forwardedNote ? '<div style="font-size:11px;color:#8696a0;margin-top:3px;">' + r.forwardedNote + '</div>' : '';
           var dateStr = r.forwardedAt ? new Date(r.forwardedAt).toLocaleDateString('ar-SA') : '';
 
           return '<div style="display:flex;gap:12px;align-items:flex-start;background:#111b22;border:1px solid #1e2d3d;border-radius:10px;padding:12px 14px;margin-bottom:10px;">'
@@ -1909,7 +1907,7 @@ async function submitDevRequest(){
             +     statusTag
             +   '</div>'
             +   '<div style="font-size:11px;color:#8696a0;margin-bottom:3px;">'
-            +     '🌍 ' + (r.countryName || '—') + ' | 💰 ' + (r.currency || '—') + ' | 🔑 ' + (r.trackingCode || '—')
+            +     (r.countryName || '—') + ' | ' + (r.currency || '—') + ' | ' + (r.trackingCode || '—')
             +   '</div>'
             +   noteRow
             +   '<div style="font-size:10px;color:#8696a0;margin-top:4px;">' + dateStr + '</div>'
@@ -1944,7 +1942,7 @@ async function submitDevRequest(){
     <!-- Header -->
     <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;background:#0d1626;position:sticky;top:0;z-index:1">
       <div>
-        <div style="font-size:15px;font-weight:800;color:#e8eaf0">⏳ رسائل تحتاج مراجعة</div>
+        <div style="font-size:15px;font-weight:800;color:#e8eaf0">رسائل تحتاج مراجعة</div>
         <div style="font-size:11px;color:#9aa3b8;margin-top:2px">النظام غير متأكد من كونها حوالات — قرر أنت</div>
       </div>
       <button onclick="waBridgeClosePending()"
@@ -1953,7 +1951,7 @@ async function submitDevRequest(){
 
     <!-- Info bar -->
     <div style="padding:10px 22px;background:rgba(201,168,76,.06);border-bottom:1px solid rgba(201,168,76,.1);font-size:11px;color:#9aa3b8;line-height:1.6">
-      💡 <strong style="color:#c9a84c">نظام النقاط:</strong>
+      <strong style="color:#c9a84c">نظام النقاط:</strong>
       عملة +3 · كلمة حوالة +2 · هاتف +2 · مبلغ +2 · اسم +1 · رد/تأكيد −3
       | <strong style="color:#00c97a">≥4 تُقبل تلقائياً</strong> · <strong style="color:#f59e0b">2-3 تنتظر هنا</strong> · <strong style="color:#ff4d6a">&lt;2 تُتجاهل</strong>
     </div>
@@ -1967,7 +1965,7 @@ async function submitDevRequest(){
     <div style="padding:14px 22px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:flex-end;gap:8px">
       <button onclick="waBridgeRejectAllPending()"
         style="padding:8px 16px;border-radius:10px;border:1px solid rgba(255,77,106,.3);background:transparent;color:#ff4d6a;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
-        ✗ تجاهل الكل
+        تجاهل الكل
       </button>
       <button onclick="waBridgeClosePending()"
         style="padding:8px 18px;border-radius:10px;border:none;background:rgba(255,255,255,.08);color:#e8eaf0;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">

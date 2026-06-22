@@ -294,7 +294,7 @@ function trRender(d) {
             ? `<button onclick="trReceive(${r.id})"
                 style="padding:4px 10px;border-radius:7px;background:rgba(34,197,94,0.1);
                 border:1px solid rgba(34,197,94,0.3);color:#4ade80;font-size:11px;cursor:pointer;font-family:inherit;">
-                ✓ استلام</button>`
+                استلام</button>`
             : `<span style="font-size:10px;color:#2d4060;">${r.completedAt||'—'}</span>`}
         </td>
       </tr>`;
@@ -321,7 +321,7 @@ function trReceive(id) {
   })
   .then(r => r.json())
   .then(d => {
-    if (d.success) { showNotification('✅ تم تأكيد الاستلام', 'success'); trFetch(); }
+    if (d.success) { showNotification('تم تأكيد الاستلام', 'success'); trFetch(); }
     else           { showNotification(d.message || 'خطأ', 'error'); }
   })
   .catch(() => showNotification('تعذّر الاتصال', 'error'));
@@ -536,7 +536,7 @@ function nm_send() {
   .then(r => r.json())
   .then(d => {
     if (d.success) {
-      showNotification(`✅ تم إنشاء الحوالة ${d.transfer.refNumber}`, 'success');
+      showNotification(`تم إنشاء الحوالة ${d.transfer.refNumber}`, 'success');
       nm_reset();
       amSwitch(null);
       // حدّث قائمة الحوالات إن كانت مفتوحة
@@ -599,7 +599,7 @@ function ex_submit() {
   .then(r => r.json())
   .then(d => {
     if (d.success) {
-      showNotification(`✅ ${d.message}`, 'success');
+      showNotification(`${d.message}`, 'success');
       ex_reset();
       amSwitch(null);
     } else {
@@ -684,7 +684,7 @@ function cut_submit() {
       const profit = d.profitUsd >= 0
         ? `ربح: ${d.profitUsd.toLocaleString('ar')} $`
         : `خسارة: ${Math.abs(d.profitUsd).toLocaleString('ar')} $`;
-      showNotification(`✅ ${d.message} — ${profit}`, 'success');
+      showNotification(`${d.message} — ${profit}`, 'success');
       cut_reset();
       amSwitch(null);
     } else {

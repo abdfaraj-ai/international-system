@@ -8,7 +8,6 @@ DELETE /api/cut-prices/<id>/      ← حذف سعر
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from ..models import CutPrice
 from core.permissions import require_roles as _require_roles, caller_name as _caller
@@ -32,7 +31,6 @@ def _parse(request):
         return None, JsonResponse({'success': False, 'message': 'JSON غير صالح'}, status=400)
 
 
-@csrf_exempt
 def api_cut_prices(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -101,7 +99,6 @@ def api_cut_prices(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
-@csrf_exempt
 def api_cut_price_detail(request, price_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

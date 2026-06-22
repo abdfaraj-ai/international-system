@@ -6,6 +6,7 @@ POST /api/auth/logout/  ← تسجيل الخروج وإلغاء الـ token
 """
 import secrets
 import hashlib
+import logging
 from datetime import timedelta
 
 from django.http import JsonResponse
@@ -15,7 +16,13 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 from django.conf import settings
 
-from ..models import SystemUser, FlutterAuthToken
+from ..models import SystemUser, FlutterAuthToken, AuditLog
+from core.permissions import (
+    check_rate_limit, get_client_ip,
+    check_account_lockout, record_failed_login, reset_failed_logins,
+)
+
+security_log = logging.getLogger('intl.security')
 
 
 # ── الصلاحيات المسموحة لكل دور ───────────────────────────────────────────────
@@ -111,6 +118,12 @@ def api_login(request):
     if err:
         return err
 
+    # ── Rate limiting: حماية من brute-force حسب الـ IP ──
+    ip = get_client_ip(request)
+    rate_err = check_rate_limit(ip)
+    if rate_err:
+        return rate_err
+
     try:
         body = json.loads(request.body)
         username = (body.get('username') or '').strip()
@@ -121,13 +134,28 @@ def api_login(request):
     if not username or not password:
         return JsonResponse({'success': False, 'message': 'أدخل اسم المستخدم وكلمة المرور'}, status=400)
 
+    # ── Account lockout: حماية من brute-force حسب الحساب ──
+    lockout_err = check_account_lockout(username)
+    if lockout_err:
+        return lockout_err
+
     user = authenticate(username=username, password=password)
 
     if user is None:
+        record_failed_login(username)
+        AuditLog.log('login_failed', request=request, actor=username,
+                     detail='تطبيق الموبايل — كلمة مرور خاطئة')
+        security_log.warning('APP_LOGIN_FAILED ip=%s username=%s reason=wrong_password', ip, username)
         return JsonResponse({'success': False, 'message': 'اسم المستخدم أو كلمة المرور غلط'}, status=401)
 
     if not user.is_active:
+        AuditLog.log('login_failed', request=request, actor=username,
+                     detail='تطبيق الموبايل — حساب موقوف')
+        security_log.warning('APP_LOGIN_FAILED ip=%s username=%s reason=inactive', ip, username)
         return JsonResponse({'success': False, 'message': 'الحساب موقوف، تواصل مع المشرف'}, status=403)
+
+    # ── نجاح المصادقة — صفّر عداد المحاولات الفاشلة ──
+    reset_failed_logins(username)
 
     # إلغاء الجلسات القديمة لنفس المستخدم على هذا الجهاز (اختياري — يمنع تعدد الجلسات)
     device_id = request.headers.get('X-Device-Id', '')

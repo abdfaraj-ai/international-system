@@ -51,9 +51,9 @@
 
     <div class="header-right">
         <img class="header-logo" src="{% static 'images/الشعار-01.png' %}" alt="شعار انترناشونال">
-        <div><div class="h-title">نظام انترناشونال الموحد</div><div class="h-sub"><span class="status-dot"></span> أقسام التلر ◆ إدارة العمليات المالية</div></div>
+        <div><div class="h-title">نظام انترناشونال الموحد</div><div class="h-sub"><span class="status-dot"></span> أقسام التلر إدارة العمليات المالية</div></div>
     </div>
-    <div class="h-center"><span class="h-badge" id="deptNameHeader">🏠 القسم الرئيسي</span></div>
+    <div class="h-center"><span class="h-badge" id="deptNameHeader">القسم الرئيسي</span></div>
     <div style="display:flex;align-items:center;gap:16px;">
       <button class="calc-trigger-btn" onclick="toggleCalc()" title="الحاسبة">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
@@ -65,12 +65,12 @@
 </header>
 
 <div class="nav-bar">
-    <div class="nav-tab active" data-dept="main" onclick="switchDept('main')"><span class="nav-tab-icon">🏠</span><span>الرئيسي</span></div>
-    <div class="nav-tab" data-dept="exchange" onclick="switchDept('exchange')"><span class="nav-tab-icon">💱</span><span>الصرافة</span><span class="nav-tab-badge" id="exchCount">0</span></div>
-    <div class="nav-tab" data-dept="international" onclick="switchDept('international')"><span class="nav-tab-icon">🌍</span><span>حوالات دولية</span><span class="nav-tab-badge" id="intlCount">0</span></div>
-    <div class="nav-tab" data-dept="electronic" onclick="switchDept('electronic')"><span class="nav-tab-icon">📲</span><span>إلكترونية</span><span class="nav-tab-badge" id="elecCount">0</span></div>
-    <div class="nav-tab" data-dept="cashdesk" onclick="switchDept('cashdesk')"><span class="nav-tab-icon">🏦</span><span>سحب وإيداع</span><span class="nav-tab-badge" id="cdCount">0</span></div>
-    <div class="nav-tab" data-dept="acctmgr" onclick="switchDept('acctmgr')"><span class="nav-tab-icon">📒</span><span>إدارة الحسابات</span></div>
+    <div class="nav-tab active" data-dept="main" onclick="switchDept('main')"><span class="nav-tab-icon"></span><span>الرئيسي</span></div>
+    <div class="nav-tab" data-dept="exchange" onclick="switchDept('exchange')"><span class="nav-tab-icon"></span><span>الصرافة</span><span class="nav-tab-badge" id="exchCount">0</span></div>
+    <div class="nav-tab" data-dept="international" onclick="switchDept('international')"><span class="nav-tab-icon"></span><span>حوالات دولية</span><span class="nav-tab-badge" id="intlCount">0</span></div>
+    <div class="nav-tab" data-dept="electronic" onclick="switchDept('electronic')"><span class="nav-tab-icon"></span><span>إلكترونية</span><span class="nav-tab-badge" id="elecCount">0</span></div>
+    <div class="nav-tab" data-dept="cashdesk" onclick="switchDept('cashdesk')"><span class="nav-tab-icon"></span><span>سحب وإيداع</span><span class="nav-tab-badge" id="cdCount">0</span></div>
+    <div class="nav-tab" data-dept="acctmgr" onclick="switchDept('acctmgr')"><span class="nav-tab-icon"></span><span>إدارة الحسابات</span></div>
 </div>
 
 <!-- ══ شريط الصندوق ══ -->
@@ -92,14 +92,14 @@
     <div class="main-boxes-layout">
         <!-- الصندوق الافتتاحي - يمين -->
         <div class="opening-box">
-            <div class="ob-header"><div class="ob-icon">📦</div><span>الصندوق الافتتاحي</span><span class="ob-badge">بداية اليوم</span></div>
+            <div class="ob-header"><div class="ob-icon"></div><span>الصندوق الافتتاحي</span><span class="ob-badge">بداية اليوم</span></div>
             <div class="ob-main-balance"><div class="ob-label">الرصيد الافتتاحي المجموع بالدولار</div><div class="ob-val" id="openingTotal">$0.00</div></div>
             <div class="ob-currencies">
-                <div class="ob-cur-row"><span class="ob-cur-flag">🇺🇸</span><span class="ob-cur-name">دولار</span><span class="ob-cur-val" id="openingUSD">$0.00</span></div>
-                <div class="ob-cur-row"><span class="ob-cur-flag">🇵🇸</span><span class="ob-cur-name">شيكل</span><span class="ob-cur-val" id="openingILS">₪0.00</span></div>
-                <div class="ob-cur-row"><span class="ob-cur-flag">🇯🇴</span><span class="ob-cur-name">دينار</span><span class="ob-cur-val" id="openingJOD">JD 0.00</span></div>
+                <div class="ob-cur-row"><span class="ob-cur-flag"></span><span class="ob-cur-name">دولار</span><span class="ob-cur-val" id="openingUSD">$0.00</span></div>
+                <div class="ob-cur-row"><span class="ob-cur-flag"></span><span class="ob-cur-name">شيكل</span><span class="ob-cur-val" id="openingILS">₪0.00</span></div>
+                <div class="ob-cur-row"><span class="ob-cur-flag"></span><span class="ob-cur-name">دينار</span><span class="ob-cur-val" id="openingJOD">JD 0.00</span></div>
             </div>
-            <div class="ob-timestamp"><span>🕐</span> تم الافتتاح: <span id="openingTime">--:--</span></div>
+            <div class="ob-timestamp"><span></span> تم الافتتاح: <span id="openingTime">--:--</span></div>
             <button onclick="openReconcileModal()" id="reconcileBtn" style="
                 width:100%;margin-top:10px;
                 display:flex;align-items:center;justify-content:center;gap:7px;
@@ -112,19 +112,19 @@
                 cursor:pointer;font-family:inherit;
                 transition:all .2s;
             " onmouseover="this.style.background='linear-gradient(135deg,rgba(167,139,250,0.22),rgba(99,102,241,0.16))';this.style.borderColor='rgba(167,139,250,0.5)';this.style.boxShadow='0 4px 14px rgba(167,139,250,0.2)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(167,139,250,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(167,139,250,0.25)';this.style.boxShadow=''">
-                <span style="font-size:14px">⚙️</span> مطابقة الصندوق
+                مطابقة الصندوق
             </button>
         </div>
 
         <!-- رصيد الصندوق الحالي - الوسط -->
         <div class="current-balance-box">
-            <div class="cb-header"><div class="cb-icon-wrap"><div class="cb-icon">💰</div></div><span>رصيد الصندوق الحالي</span><span class="cb-live-dot"></span></div>
+            <div class="cb-header"><div class="cb-icon-wrap"><div class="cb-icon"></div></div><span>رصيد الصندوق الحالي</span><span class="cb-live-dot"></span></div>
             <div class="cb-main-val" id="mBalance">$0.00</div>
             <div class="cb-sub-label">مجموع بالدولار الأمريكي</div>
             <div class="cb-currencies">
-                <div class="cb-cur"><div class="cb-cur-icon">🇺🇸</div><div class="cb-cur-info"><span class="cb-cur-name">دولار</span><span class="cb-cur-val" id="mBalanceUSD">$0.00</span></div></div>
-                <div class="cb-cur"><div class="cb-cur-icon">🇵🇸</div><div class="cb-cur-info"><span class="cb-cur-name">شيكل</span><span class="cb-cur-val" id="mBalanceILS">₪0.00</span></div></div>
-                <div class="cb-cur"><div class="cb-cur-icon">🇯🇴</div><div class="cb-cur-info"><span class="cb-cur-name">دينار</span><span class="cb-cur-val" id="mBalanceJOD">JD 0.00</span></div></div>
+                <div class="cb-cur"><div class="cb-cur-icon"></div><div class="cb-cur-info"><span class="cb-cur-name">دولار</span><span class="cb-cur-val" id="mBalanceUSD">$0.00</span></div></div>
+                <div class="cb-cur"><div class="cb-cur-icon"></div><div class="cb-cur-info"><span class="cb-cur-name">شيكل</span><span class="cb-cur-val" id="mBalanceILS">₪0.00</span></div></div>
+                <div class="cb-cur"><div class="cb-cur-icon"></div><div class="cb-cur-info"><span class="cb-cur-name">دينار</span><span class="cb-cur-val" id="mBalanceJOD">JD 0.00</span></div></div>
             </div>
             <div class="cb-stats-mini">
                 <div class="cb-stat-item"><span class="cb-stat-num" id="mOps">0</span><span class="cb-stat-lbl">عمليات اليوم</span></div>
@@ -135,16 +135,16 @@
 
         <!-- الصندوق الختامي - يسار -->
         <div class="closing-box">
-            <div class="cl-header"><div class="cl-icon">📁</div><span>الصندوق الختامي</span><span class="cl-badge">نهاية اليوم</span></div>
+            <div class="cl-header"><div class="cl-icon"></div><span>الصندوق الختامي</span><span class="cl-badge">نهاية اليوم</span></div>
             <div class="cl-main-balance"><div class="cl-label">الرصيد الختامي المجموع بالدولار</div><div class="cl-val" id="closingTotal">$0.00</div></div>
             <div class="cl-currencies">
-                <div class="cl-cur-row"><span class="cl-cur-flag">🇺🇸</span><span class="cl-cur-name">دولار</span><span class="cl-cur-val" id="closingUSD">$0.00</span></div>
-                <div class="cl-cur-row"><span class="cl-cur-flag">🇵🇸</span><span class="cl-cur-name">شيكل</span><span class="cl-cur-val" id="closingILS">₪0.00</span></div>
-                <div class="cl-cur-row"><span class="cl-cur-flag">🇯🇴</span><span class="cl-cur-name">دينار</span><span class="cl-cur-val" id="closingJOD">JD 0.00</span></div>
+                <div class="cl-cur-row"><span class="cl-cur-flag"></span><span class="cl-cur-name">دولار</span><span class="cl-cur-val" id="closingUSD">$0.00</span></div>
+                <div class="cl-cur-row"><span class="cl-cur-flag"></span><span class="cl-cur-name">شيكل</span><span class="cl-cur-val" id="closingILS">₪0.00</span></div>
+                <div class="cl-cur-row"><span class="cl-cur-flag"></span><span class="cl-cur-name">دينار</span><span class="cl-cur-val" id="closingJOD">JD 0.00</span></div>
             </div>
             <div class="cl-diff" id="closingDiff"></div>
             <button class="btn-carryover" id="carryoverBtn" onclick="carryoverBalances()">
-                <span class="carryover-icon">🔁</span>
+                <span class="carryover-icon"></span>
                 <span>ترحيل الأرصدة</span>
                 <span class="carryover-arrow">→</span>
             </button>
@@ -152,24 +152,24 @@
     </div>
 
     <div class="card">
-        <div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل العمليات</div><span class="badge badge-live">🟢 مباشر</span></div>
+        <div class="card-head"><div class="card-title"><div class="ct-icon"></div> سجل العمليات</div><span class="badge badge-live">مباشر</span></div>
         <div class="main-log-tabs">
-            <div class="main-log-tab mlt-active" onclick="filterMainLog(this,'all')">📊 الكل</div>
-            <div class="main-log-tab" onclick="filterMainLog(this,'exchange')">💱 الصرافة</div>
-            <div class="main-log-tab" onclick="filterMainLog(this,'international')">🌍 الحوالات</div>
-            <div class="main-log-tab" onclick="filterMainLog(this,'electronic')">📲 الإلكترونية</div>
+            <div class="main-log-tab mlt-active" onclick="filterMainLog(this,'all')">الكل</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'exchange')">الصرافة</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'international')">الحوالات</div>
+            <div class="main-log-tab" onclick="filterMainLog(this,'electronic')">الإلكترونية</div>
         </div>
         <div id="mainLogCount" style="font-size:11px;color:#475569;padding:6px 0;font-weight:700"></div>
         <div class="table-wrap"><table><thead><tr><th>الرقم</th><th>القسم</th><th>العميل</th><th>التفاصيل</th><th>المبلغ</th><th>الوقت</th></tr></thead><tbody id="mainLogBody"></tbody></table></div>
-        <div id="mainLogEmpty" style="display:none;text-align:center;padding:30px;color:#475569"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-weight:700;color:#334155">لا توجد عمليات بعد</div></div>
+        <div id="mainLogEmpty" style="display:none;text-align:center;padding:30px;color:#475569"><div style="font-weight:700;color:#334155">لا توجد عمليات بعد</div></div>
     </div>
 
     <!-- بطاقة إرسال طلب للمشرف -->
     <div class="card" style="margin-top:16px">
-        <div class="card-head"><div class="card-title"><div class="ct-icon">📨</div> التواصل مع المشرف</div></div>
+        <div class="card-head"><div class="card-title"><div class="ct-icon"></div> التواصل مع المشرف</div></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;padding:4px 0">
-            <button onclick="openGeneralRequest('urgent')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.08);color:#f87171;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">🚨 طلب عاجل للمشرف</button>
-            <button onclick="openGeneralRequest('normal')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.08);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">🟡 طلب عادي للمشرف</button>
+            <button onclick="openGeneralRequest('urgent')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.08);color:#f87171;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">طلب عاجل للمشرف</button>
+            <button onclick="openGeneralRequest('normal')" style="flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.08);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center">طلب عادي للمشرف</button>
         </div>
     </div>
 </div>
@@ -179,32 +179,32 @@
     <div class="tri-layout">
         <!-- أزواج العملات -->
         <div class="right-column">
-            <div class="col-title">⚡ أزواج العملات</div>
+            <div class="col-title">أزواج العملات</div>
             <div class="pair-card active-pair" onclick="selectPair('USD','JOD')" id="pair-USD-JOD"><div class="pair-flags"><span class="pair-iso">US</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">JO</span></div><div class="pair-name">دولار / دينار</div><div class="pair-rate" id="pairRate-USD-JOD">--</div><div class="pair-code">USD/JOD</div></div>
             <div class="pair-card" onclick="selectPair('USD','ILS')" id="pair-USD-ILS"><div class="pair-flags"><span class="pair-iso">US</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">PS</span></div><div class="pair-name">دولار / شيكل</div><div class="pair-rate" id="pairRate-USD-ILS">--</div><div class="pair-code">USD/ILS</div></div>
             <div class="pair-card" onclick="selectPair('ILS','JOD')" id="pair-ILS-JOD"><div class="pair-flags"><span class="pair-iso">PS</span> <span class="pair-arrow">⇌</span> <span class="pair-iso">JO</span></div><div class="pair-name">شيكل / دينار</div><div class="pair-rate" id="pairRate-ILS-JOD">--</div><div class="pair-code">ILS/JOD</div></div>
-            <div class="world-prices-dropdown"><div class="world-prices-header" onclick="toggleWorldPrices()"><span>🌍 أسعار عالمية رئيسية</span><span class="arrow" id="wpArrow">▼</span></div>
+            <div class="world-prices-dropdown"><div class="world-prices-header" onclick="toggleWorldPrices()"><span>أسعار عالمية رئيسية</span><span class="arrow" id="wpArrow">▼</span></div>
                 <div class="world-prices-body" id="wpBody">
-                    <div class="price-section-title">💵 عملات عالمية</div>
-                    <div class="price-row"><span class="p-name">🇪🇺 يورو</span><span><span class="p-change" id="wp-eur-chg">--</span><span class="p-val" id="wp-eur">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇬🇧 جنيه</span><span><span class="p-change" id="wp-gbp-chg">--</span><span class="p-val" id="wp-gbp">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇯🇵 ين</span><span><span class="p-change" id="wp-jpy-chg">--</span><span class="p-val" id="wp-jpy">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇨🇭 فرنك</span><span><span class="p-change" id="wp-chf-chg">--</span><span class="p-val" id="wp-chf">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇹🇷 ليرة</span><span><span class="p-change" id="wp-try-chg">--</span><span class="p-val" id="wp-try">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇪🇬 جنيه مصري</span><span><span class="p-change" id="wp-egp-chg">--</span><span class="p-val" id="wp-egp">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🇸🇦 ريال</span><span><span class="p-change" id="wp-sar-chg">--</span><span class="p-val" id="wp-sar">--</span></span></div>
-                    <div class="price-section-title">🪙 عملات رقمية</div>
+                    <div class="price-section-title">عملات عالمية</div>
+                    <div class="price-row"><span class="p-name">يورو</span><span><span class="p-change" id="wp-eur-chg">--</span><span class="p-val" id="wp-eur">--</span></span></div>
+                    <div class="price-row"><span class="p-name">جنيه</span><span><span class="p-change" id="wp-gbp-chg">--</span><span class="p-val" id="wp-gbp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">ين</span><span><span class="p-change" id="wp-jpy-chg">--</span><span class="p-val" id="wp-jpy">--</span></span></div>
+                    <div class="price-row"><span class="p-name">فرنك</span><span><span class="p-change" id="wp-chf-chg">--</span><span class="p-val" id="wp-chf">--</span></span></div>
+                    <div class="price-row"><span class="p-name">ليرة</span><span><span class="p-change" id="wp-try-chg">--</span><span class="p-val" id="wp-try">--</span></span></div>
+                    <div class="price-row"><span class="p-name">جنيه مصري</span><span><span class="p-change" id="wp-egp-chg">--</span><span class="p-val" id="wp-egp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">ريال</span><span><span class="p-change" id="wp-sar-chg">--</span><span class="p-val" id="wp-sar">--</span></span></div>
+                    <div class="price-section-title">عملات رقمية</div>
                     <div class="price-row"><span class="p-name">₿ بيتكوين</span><span><span class="p-change" id="wp-btc-chg">--</span><span class="p-val" id="wp-btc">--</span></span></div>
                     <div class="price-row"><span class="p-name">Ξ إيثيريوم</span><span><span class="p-change" id="wp-eth-chg">--</span><span class="p-val" id="wp-eth">--</span></span></div>
-                    <div class="price-row"><span class="p-name">💲 تيثر</span><span><span class="p-change" id="wp-usdt-chg">--</span><span class="p-val" id="wp-usdt">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🔵 ريبل</span><span><span class="p-change" id="wp-xrp-chg">--</span><span class="p-val" id="wp-xrp">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🟡 سولانا</span><span><span class="p-change" id="wp-sol-chg">--</span><span class="p-val" id="wp-sol">--</span></span></div>
-                    <div class="price-row"><span class="p-name">🟠 دوجكوين</span><span><span class="p-change" id="wp-doge-chg">--</span><span class="p-val" id="wp-doge">--</span></span></div>
+                    <div class="price-row"><span class="p-name">تيثر</span><span><span class="p-change" id="wp-usdt-chg">--</span><span class="p-val" id="wp-usdt">--</span></span></div>
+                    <div class="price-row"><span class="p-name">ريبل</span><span><span class="p-change" id="wp-xrp-chg">--</span><span class="p-val" id="wp-xrp">--</span></span></div>
+                    <div class="price-row"><span class="p-name">سولانا</span><span><span class="p-change" id="wp-sol-chg">--</span><span class="p-val" id="wp-sol">--</span></span></div>
+                    <div class="price-row"><span class="p-name">دوجكوين</span><span><span class="p-change" id="wp-doge-chg">--</span><span class="p-val" id="wp-doge">--</span></span></div>
                 </div>
             </div>
             <!-- قائمة أزواج العملات الإضافية -->
             <div class="extra-pairs-dropdown">
-                <div class="extra-pairs-header" onclick="toggleExtraPairs()"><span>➕ أزواج عملات إضافية</span><span class="arrow" id="epArrow">▼</span></div>
+                <div class="extra-pairs-header" onclick="toggleExtraPairs()"><span>أزواج عملات إضافية</span><span class="arrow" id="epArrow">▼</span></div>
                 <div class="extra-pairs-body" id="epBody">
                     <div class="extra-pair-item" id="ep-USD-EUR"><div class="extra-pair-info"><span class="extra-pair-flags">🇺🇸⇌🇪🇺</span><span>دولار / يورو</span><span style="color:var(--text-muted);font-size:10px">USD/EUR</span></div><button class="btn-add-pair" onclick="addExtraPair('USD','EUR','🇺🇸','🇪🇺','دولار / يورو',this)">+ إضافة</button></div>
                     <div class="extra-pair-item" id="ep-USD-GBP"><div class="extra-pair-info"><span class="extra-pair-flags">🇺🇸⇌🇬🇧</span><span>دولار / جنيه</span><span style="color:var(--text-muted);font-size:10px">USD/GBP</span></div><button class="btn-add-pair" onclick="addExtraPair('USD','GBP','🇺🇸','🇬🇧','دولار / جنيه',this)">+ إضافة</button></div>
@@ -222,7 +222,7 @@
             <!-- هيدر -->
             <div class="ex-header">
                 <div class="ex-header-right">
-                    <div class="ex-header-icon">💱</div>
+                    <div class="ex-header-icon"></div>
                     <span class="ex-header-title">عملية صرافة</span>
                     <span class="badge ex-mode-badge" id="modeLabel">شراء</span>
                 </div>
@@ -235,20 +235,20 @@
 
             <!-- شراء / بيع -->
             <div class="buysell-toggle">
-                <button class="bs-btn buy-btn active" onclick="setExMode('buy')">📈 شراء</button>
-                <button class="bs-btn sell-btn" onclick="setExMode('sell')">📉 بيع</button>
+                <button class="bs-btn buy-btn active" onclick="setExMode('buy')">شراء</button>
+                <button class="bs-btn sell-btn" onclick="setExMode('sell')">بيع</button>
             </div>
 
             <!-- سعر مميز -->
             <div id="specialPriceBox" style="display:none;background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:12px;padding:12px;margin-bottom:10px">
-                <div style="font-size:11px;font-weight:800;color:#92400E;margin-bottom:8px">⭐ السعر المميز للعملية</div>
+                <div style="font-size:11px;font-weight:800;color:#92400E;margin-bottom:8px">السعر المميز للعملية</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
                     <div>
-                        <div class="sp-section-title">📨 طلب موافقة المشرف</div>
+                        <div class="sp-section-title">طلب موافقة المشرف</div>
                         <div class="sp-request-box" id="spRequestBox">
                             <input type="number" class="field-input" id="spRequestedRate" placeholder="السعر المطلوب" dir="ltr" style="text-align:center;font-weight:700;font-size:13px;margin-bottom:6px">
                             <input type="text" class="field-input" id="spRequestReason" placeholder="سبب الطلب (اختياري)" style="margin-bottom:6px;font-size:12px">
-                            <button class="btn-sp-request" id="spSendBtn" onclick="requestSpecialPrice()">📨 إرسال للمشرف</button>
+                            <button class="btn-sp-request" id="spSendBtn" onclick="requestSpecialPrice()">إرسال للمشرف</button>
                             <div class="sp-status" id="spStatus" style="display:none">
                                 <div class="sp-status-icon" id="spStatusIcon">⏳</div>
                                 <div class="sp-status-text" id="spStatusText">في انتظار موافقة المشرف...</div>
@@ -256,11 +256,11 @@
                         </div>
                     </div>
                     <div>
-                        <div class="sp-section-title">✏️ السعر المعتمد</div>
+                        <div class="sp-section-title">السعر المعتمد</div>
                         <div class="sp-input-box">
                             <input type="number" class="field-input" id="specialRateInput" placeholder="أدخل السعر" dir="ltr" style="text-align:center;font-weight:800;font-size:15px" oninput="applySpecialRate()" disabled>
-                            <div class="sp-lock-msg" id="spLockMsg">🔒 يتطلب موافقة المشرف</div>
-                            <div class="sp-approved-msg" id="spApprovedMsg" style="display:none">✅ تم الاعتماد</div>
+                            <div class="sp-lock-msg" id="spLockMsg">يتطلب موافقة المشرف</div>
+                            <div class="sp-approved-msg" id="spApprovedMsg" style="display:none">تم الاعتماد</div>
                         </div>
                     </div>
                 </div>
@@ -272,9 +272,9 @@
                 <div class="atm-row atm-row-from">
                     <div class="atm-cur-bar">
                         <select class="field-input ex-cur-select atm-select" id="exFromCur" onchange="calcExchange()">
-                            <option value="USD">🇺🇸 USD — دولار</option>
-                            <option value="JOD">🇯🇴 JOD — دينار</option>
-                            <option value="ILS">🇵🇸 ILS — شيكل</option>
+                            <option value="USD">USD — دولار</option>
+                            <option value="JOD">JOD — دينار</option>
+                            <option value="ILS">ILS — شيكل</option>
                         </select>
                         <span class="atm-label" id="fromLabel">يدفع</span>
                     </div>
@@ -293,9 +293,9 @@
                 <div class="atm-row atm-row-to">
                     <div class="atm-cur-bar">
                         <select class="field-input ex-cur-select ex-cur-result atm-select" id="exToCur" onchange="calcExchange()">
-                            <option value="JOD">🇯🇴 JOD — دينار</option>
-                            <option value="USD">🇺🇸 USD — دولار</option>
-                            <option value="ILS">🇵🇸 ILS — شيكل</option>
+                            <option value="JOD">JOD — دينار</option>
+                            <option value="USD">USD — دولار</option>
+                            <option value="ILS">ILS — شيكل</option>
                         </select>
                         <span class="atm-label atm-label-to" id="toLabel">يستلم</span>
                     </div>
@@ -305,7 +305,7 @@
 
             <!-- تسليم مزدوج -->
             <div class="double-delivery-toggle" onclick="toggleDoubleDelivery('ex')">
-                <div class="dd-icon">📋</div>
+                <div class="dd-icon"></div>
                 <div class="dd-info">
                     <div class="dd-label">تسليم مزدوج</div>
                     <div class="dd-desc">كاش + بنكي بسعرين مختلفين</div>
@@ -314,34 +314,34 @@
             </div>
             <div class="dd-fields" id="exDdFields">
                 <div class="dd-source-info" id="exDdSourceInfo">
-                    <span>💱 المبلغ المراد تصريفه:</span>
+                    <span>المبلغ المراد تصريفه:</span>
                     <span class="dd-source-val" id="exDdSourceAmt">$0.00</span>
                 </div>
                 <div class="dd-split-container">
                     <div class="dd-split-card dd-cash-card">
-                        <div class="dd-card-header dd-cash-header"><span>💵</span> كاش</div>
+                        <div class="dd-card-header dd-cash-header"><span></span> كاش</div>
                         <div class="dd-rate-display">
                             <span class="dd-rate-label">سعر الكاش</span>
                             <span class="dd-rate-val" id="exDdCashRateDisplay">0.000</span>
-                            <span class="dd-rate-badge">🔒 المشرف</span>
+                            <span class="dd-rate-badge">المشرف</span>
                         </div>
                         <div class="field-group" style="margin-bottom:6px"><label>المبلغ</label><input type="number" class="field-input" id="exDdCashAmt" placeholder="0.00" dir="ltr" style="text-align:center;font-weight:700" oninput="calcDdExchange()"></div>
                         <input type="hidden" id="exDdCashRate" value="0">
                         <div class="dd-result-row"><span>يستلم</span><span class="dd-result-val" id="exDdCashResult">₪0.00</span></div>
                     </div>
                     <div class="dd-split-card dd-bank-card">
-                        <div class="dd-card-header dd-bank-header"><span>🏦</span> بنكي</div>
+                        <div class="dd-card-header dd-bank-header"><span></span> بنكي</div>
                         <div class="dd-rate-display dd-rate-bank">
                             <span class="dd-rate-label">سعر البنكي</span>
                             <span class="dd-rate-val" id="exDdBankRateDisplay">0.000</span>
-                            <span class="dd-rate-badge">🔒 المشرف</span>
+                            <span class="dd-rate-badge">المشرف</span>
                         </div>
                         <div class="field-group" style="margin-bottom:6px"><label>المبلغ</label><input type="number" class="field-input" id="exDdBankAmt" placeholder="0.00" dir="ltr" style="text-align:center;font-weight:700" oninput="calcDdExchange()"></div>
                         <input type="hidden" id="exDdBankRate" value="0">
                         <div class="dd-result-row"><span>يستلم</span><span class="dd-result-val" id="exDdBankResult">₪0.00</span></div>
                         <label class="dd-upload-label" id="exBankUploadLabel">
                             <input type="file" accept="image/*,.pdf" id="exBankNotice" onchange="handleBankNotice(this,'ex')" style="display:none">
-                            <span class="dd-upload-btn">📎 إشعار البنك</span>
+                            <span class="dd-upload-btn">إشعار البنك</span>
                             <span class="dd-upload-name" id="exBankFileName"></span>
                         </label>
                     </div>
@@ -349,13 +349,13 @@
                 <div class="dd-summary-bar">
                     <div class="dd-sum-row"><span>المستخدم</span><span class="dd-sum-val" id="exDdUsedAmt">$0.00</span></div>
                     <div class="dd-sum-row"><span>المتبقي</span><span class="dd-sum-val dd-sum-remain" id="exDdRemain">$0.00</span></div>
-                    <div class="dd-sum-row dd-sum-total"><span>💰 الإجمالي</span><span class="dd-sum-val" id="exDdTotalResult">₪0.00</span></div>
+                    <div class="dd-sum-row dd-sum-total"><span>الإجمالي</span><span class="dd-sum-val" id="exDdTotalResult">₪0.00</span></div>
                 </div>
             </div>
 
             <!-- بيانات العميل -->
             <div class="client-toggle" id="exClientToggle" onclick="toggleClientFields()">
-                <span class="client-toggle-icon">👤</span>
+                <span class="client-toggle-icon"></span>
                 <span class="client-toggle-text">بيانات العميل</span>
                 <span class="client-toggle-arrow" id="clientArrow">▼</span>
             </div>
@@ -367,7 +367,7 @@
 
             <!-- أزرار التنفيذ -->
             <div class="ex-actions-bar">
-                <button class="ex-btn-submit" id="exSubmitBtn" onclick="submitExchange()">تنفيذ الشراء 📈</button>
+                <button class="ex-btn-submit" id="exSubmitBtn" onclick="submitExchange()">تنفيذ الشراء</button>
                 <button class="ex-btn-print"  onclick="printExchangeReceipt()">🖨️</button>
                 <button class="ex-btn-clear"  onclick="clearExchange()">✕</button>
             </div>
@@ -375,15 +375,15 @@
         </div>
         <!-- صندوق التلر -->
         <div class="teller-box" id="tellerBoxExchange">
-            <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+            <div class="teller-box-title"><div class="tb-icon"></div> صندوق التلر</div>
             <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val" id="tellerTotal">$0.00</div></div>
-            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val" id="tellerUSD">$0.00</div></div>
-            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val" id="tellerILS">₪0.00</div></div>
-            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val" id="tellerJOD">JD 0.00</div></div>
-            <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 ملخص اليوم</div><div class="ts-row"><span class="ts-label">عمليات شراء</span><span class="ts-val" style="color:var(--success)" id="tsBuyCount">0</span></div><div class="ts-row"><span class="ts-label">عمليات بيع</span><span class="ts-val" style="color:var(--danger)" id="tsSellCount">0</span></div><div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsTotalOps">0</span></div><div class="ts-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="ts-label" style="font-weight:700">الأرباح</span><span class="ts-val" style="color:var(--accent);font-size:14px" id="tsProfit">$0.00</span></div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دولار</div><div class="tcr-val" id="tellerUSD">$0.00</div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> شيكل</div><div class="tcr-val" id="tellerILS">₪0.00</div></div>
+            <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دينار</div><div class="tcr-val" id="tellerJOD">JD 0.00</div></div>
+            <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">ملخص اليوم</div><div class="ts-row"><span class="ts-label">عمليات شراء</span><span class="ts-val" style="color:var(--success)" id="tsBuyCount">0</span></div><div class="ts-row"><span class="ts-label">عمليات بيع</span><span class="ts-val" style="color:var(--danger)" id="tsSellCount">0</span></div><div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsTotalOps">0</span></div><div class="ts-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="ts-label" style="font-weight:700">الأرباح</span><span class="ts-val" style="color:var(--accent);font-size:14px" id="tsProfit">$0.00</span></div></div>
         </div>
     </div>
-    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل الصرافة</div><span class="badge badge-count" id="exLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterExLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterExLogs(this,'buy')">📈 شراء</span><span class="filter-chip" onclick="filterExLogs(this,'sell')">📉 بيع</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>النوع</th><th>العميل</th><th>المدفوع</th><th>المستلم</th><th>السعر</th><th>الوقت</th></tr></thead><tbody id="exLogBody"></tbody></table></div></div>
+    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon"></div> سجل الصرافة</div><span class="badge badge-count" id="exLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterExLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterExLogs(this,'buy')">شراء</span><span class="filter-chip" onclick="filterExLogs(this,'sell')">بيع</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>النوع</th><th>العميل</th><th>المدفوع</th><th>المستلم</th><th>السعر</th><th>الوقت</th></tr></thead><tbody id="exLogBody"></tbody></table></div></div>
 </div>
 
 <!-- ══ 3. الحوالات الدولية ══ -->
@@ -414,17 +414,17 @@
     <div class="vb-result-bar" id="vbResult-international" style="display:none">
         <div class="vb-result-fields" id="vbResultFields-international"></div>
         <div class="vb-result-actions">
-            <button class="vb-btn-apply" onclick="vtInlineApply('international')">✅ تطبيق مملوء الحقول</button>
-            <button class="vb-btn-cancel" onclick="vtInlineClear('international')">✗ إلغاء</button>
+            <button class="vb-btn-apply" onclick="vtInlineApply('international')">تطبيق مملوء الحقول</button>
+            <button class="vb-btn-cancel" onclick="vtInlineClear('international')">إلغاء</button>
         </div>
     </div>
 
     <!-- تبديل إرسال / استقبال -->
     <div class="intl-mode-switch">
-        <div class="intl-mode-btn intl-mode-active" id="intlModeOut" onclick="switchIntlMode('out')"><span class="intl-mode-icon">📤</span><span>إرسال حوالة</span></div>
-        <div class="intl-mode-btn" id="intlModeIn" onclick="switchIntlMode('in')"><span class="intl-mode-icon">📥</span><span>استقبال حوالة</span></div>
+        <div class="intl-mode-btn intl-mode-active" id="intlModeOut" onclick="switchIntlMode('out')"><span class="intl-mode-icon"></span><span>إرسال حوالة</span></div>
+        <div class="intl-mode-btn" id="intlModeIn" onclick="switchIntlMode('in')"><span class="intl-mode-icon"></span><span>استقبال حوالة</span></div>
         <div class="intl-mode-btn" id="intlModeBankBtn" onclick="openBankTransferModal()" style="background:linear-gradient(135deg,rgba(59,130,246,0.18),rgba(37,99,235,0.10));border:1.5px solid rgba(59,130,246,0.45);color:#60a5fa;font-weight:800;gap:7px;transition:all .22s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(59,130,246,0.32),rgba(37,99,235,0.22))';this.style.borderColor='rgba(59,130,246,0.75)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(59,130,246,0.18),rgba(37,99,235,0.10))';this.style.borderColor='rgba(59,130,246,0.45)'">
-            <span class="intl-mode-icon" style="font-size:17px">🏦</span>
+            <span class="intl-mode-icon" style="font-size:17px"></span>
             <span>حوالة بنكية</span>
         </div>
     </div>
@@ -434,14 +434,14 @@
         <div class="intl-three-col">
             <!-- القارات والدول - يمين -->
             <div class="intl-sidebar">
-                <div class="col-title">🌍 اختر الوجهة</div>
-                <div class="continent-card" onclick="selectContinentNew('asia','out')" id="cont-asia"><div class="cont-icon">🌏</div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
+                <div class="col-title">اختر الوجهة</div>
+                <div class="continent-card" onclick="selectContinentNew('asia','out')" id="cont-asia"><div class="cont-icon"></div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
                 <div id="countries-asia" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('europe','out')" id="cont-europe"><div class="cont-icon">🌍</div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
+                <div class="continent-card" onclick="selectContinentNew('europe','out')" id="cont-europe"><div class="cont-icon"></div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
                 <div id="countries-europe" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('africa','out')" id="cont-africa"><div class="cont-icon">🌍</div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
+                <div class="continent-card" onclick="selectContinentNew('africa','out')" id="cont-africa"><div class="cont-icon"></div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
                 <div id="countries-africa" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('americas','out')" id="cont-americas"><div class="cont-icon">🌎</div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
+                <div class="continent-card" onclick="selectContinentNew('americas','out')" id="cont-americas"><div class="cont-icon"></div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
                 <div id="countries-americas" class="countries-list"></div>
             </div>
 
@@ -450,14 +450,14 @@
                 <div class="intl-selected-dest" id="sendSelectedDest" style="display:none">
                     <div class="dest-flag" id="sendDestFlag">🌍</div>
                     <div class="dest-info"><div class="dest-country" id="sendDestCountry">—</div><div class="dest-hint">الوجهة المختارة</div></div>
-                    <button class="dest-change" onclick="clearSendDest()">تغيير ✗</button>
+                    <button class="dest-change" onclick="clearSendDest()">تغيير</button>
                 </div>
                 <div class="intl-send-methods" id="sendMethodsArea" style="display:none">
-                    <div class="sec-title">📦 طرق الإرسال المتاحة</div>
+                    <div class="sec-title">طرق الإرسال المتاحة</div>
                     <div class="send-methods-grid" id="sendMethodsGrid"></div>
                 </div>
                 <div class="tool-card mode-purple" id="sendFormCard">
-                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon">📤</div> بيانات الإرسال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)" id="sendBadge">📤 إرسال</span><button onclick="captureSection('sendFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button></div></div>
+                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon"></div> بيانات الإرسال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)" id="sendBadge">إرسال</span><button onclick="captureSection('sendFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'"><span style="font-size:11px">التقاط</span></button></div></div>
                     <div class="form-grid">
                         <div class="field-group"><label>اسم المرسل <span style="font-size:10px;color:var(--text-muted)">(اختياري)</span></label><input type="text" class="field-input" id="itSenderName" placeholder="الاسم الكامل"></div>
                         <div class="field-group"><label>الوجهة <span class="req">*</span></label><select class="field-input" id="itRecvCountry" onchange="onSendCountryChange(this.value)"><option value="">اختر الدولة</option></select></div>
@@ -468,9 +468,9 @@
                     </div>
                     <div class="fee-box"><div class="fee-row"><span class="fee-label">المبلغ</span><span class="fee-val" id="itAmtDisp">$0.00</span></div><div class="fee-row"><span class="fee-label">رسوم (2%)</span><span class="fee-val" id="itFeeDisp">$0.00</span></div><div class="fee-row fee-total"><span class="fee-label" style="font-weight:700;color:var(--text-primary)">الإجمالي</span><span class="fee-val fee-hl" id="itTotalDisp">$0.00</span></div></div>
                     <div class="btn-row">
-                        <button class="btn-purple" onclick="submitIntlSend()" style="flex:2">إرسال الحوالة 📤</button>
+                        <button class="btn-purple" onclick="submitIntlSend()" style="flex:2">إرسال الحوالة</button>
                         <button class="btn-whatsapp" onclick="sendIntlWhatsApp()"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg> واتساب</button>
-                        <button class="btn-secondary" onclick="clearIntlSend()">مسح ✗</button>
+                        <button class="btn-secondary" onclick="clearIntlSend()">مسح</button>
                     </div>
                 </div>
             </div>
@@ -478,13 +478,13 @@
             <!-- صندوق التلر - يسار -->
             <div class="intl-teller-box">
                 <div class="teller-box">
-                    <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                    <div class="teller-box-title"><div class="tb-icon"></div> صندوق التلر</div>
                     <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
                     <div class="teller-summary">
-                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 حوالات اليوم</div>
+                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">حوالات اليوم</div>
                         <div class="ts-row"><span class="ts-label">صادرة</span><span class="ts-val" style="color:var(--danger)" id="tsItOut">0</span></div>
                         <div class="ts-row"><span class="ts-label">واردة</span><span class="ts-val" style="color:var(--success)" id="tsItIn">0</span></div>
                         <div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsItTotal">0</span></div>
@@ -499,14 +499,14 @@
         <div class="intl-three-col">
             <!-- القارات - يمين -->
             <div class="intl-sidebar">
-                <div class="col-title">🌍 اختر دولة المصدر</div>
-                <div class="continent-card" onclick="selectContinentNew('asia','in')" id="cont-recv-asia"><div class="cont-icon">🌏</div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
+                <div class="col-title">اختر دولة المصدر</div>
+                <div class="continent-card" onclick="selectContinentNew('asia','in')" id="cont-recv-asia"><div class="cont-icon"></div><div class="cont-name">آسيا</div><div class="cont-sub">الشرق الأوسط وشرق آسيا</div></div>
                 <div id="countries-recv-asia" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('europe','in')" id="cont-recv-europe"><div class="cont-icon">🌍</div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
+                <div class="continent-card" onclick="selectContinentNew('europe','in')" id="cont-recv-europe"><div class="cont-icon"></div><div class="cont-name">أوروبا</div><div class="cont-sub">الاتحاد الأوروبي وأكثر</div></div>
                 <div id="countries-recv-europe" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('africa','in')" id="cont-recv-africa"><div class="cont-icon">🌍</div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
+                <div class="continent-card" onclick="selectContinentNew('africa','in')" id="cont-recv-africa"><div class="cont-icon"></div><div class="cont-name">أفريقيا</div><div class="cont-sub">شمال وجنوب أفريقيا</div></div>
                 <div id="countries-recv-africa" class="countries-list"></div>
-                <div class="continent-card" onclick="selectContinentNew('americas','in')" id="cont-recv-americas"><div class="cont-icon">🌎</div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
+                <div class="continent-card" onclick="selectContinentNew('americas','in')" id="cont-recv-americas"><div class="cont-icon"></div><div class="cont-name">الأمريكتين</div><div class="cont-sub">شمال وجنوب أمريكا</div></div>
                 <div id="countries-recv-americas" class="countries-list"></div>
             </div>
 
@@ -515,14 +515,14 @@
                 <div class="intl-selected-dest" id="recvSelectedDest" style="display:none">
                     <div class="dest-flag" id="recvDestFlag">🌍</div>
                     <div class="dest-info"><div class="dest-country" id="recvDestCountry">—</div><div class="dest-hint">دولة المصدر</div></div>
-                    <button class="dest-change" onclick="clearRecvDest()">تغيير ✗</button>
+                    <button class="dest-change" onclick="clearRecvDest()">تغيير</button>
                 </div>
                 <div class="intl-recv-methods" id="recvMethodsArea" style="display:none">
-                    <div class="sec-title">📦 طرق الاستقبال المتاحة</div>
+                    <div class="sec-title">طرق الاستقبال المتاحة</div>
                     <div class="recv-methods-grid" id="recvMethodsGrid"></div>
                 </div>
                 <div class="tool-card mode-purple" id="recvFormCard">
-                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon">📥</div> بيانات الاستقبال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)">📥 استقبال</span><button onclick="captureSection('recvFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button></div></div>
+                    <div class="card-head" style="margin-bottom:14px"><div class="card-title"><div class="ct-icon"></div> بيانات الاستقبال</div><div style="display:flex;gap:6px;align-items:center"><span class="badge" style="background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)">استقبال</span><button onclick="captureSection('recvFormCard')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'"><span style="font-size:11px">التقاط</span></button></div></div>
                     <div class="form-grid">
                         <div class="field-group"><label>اسم المستلم <span class="req">*</span></label><input type="text" class="field-input" id="itRecvName" placeholder="الاسم الكامل"></div>
                         <div class="field-group"><label>رقم التواصل <span class="req">*</span></label><input type="tel" class="field-input" id="itRecvPhone" placeholder="رقم الهاتف" dir="ltr" style="text-align:right"></div>
@@ -533,9 +533,9 @@
                     </div>
                     <div class="fee-box"><div class="fee-row"><span class="fee-label">المبلغ</span><span class="fee-val" id="itRecvAmtDisp">$0.00</span></div><div class="fee-row"><span class="fee-label">رسوم (2%)</span><span class="fee-val" id="itRecvFeeDisp">$0.00</span></div><div class="fee-row fee-total"><span class="fee-label" style="font-weight:700;color:var(--text-primary)">الإجمالي</span><span class="fee-val fee-hl" id="itRecvTotalDisp">$0.00</span></div></div>
                     <div class="btn-row">
-                        <button class="btn-primary" onclick="submitIntlRecv()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">استقبال الحوالة 📥</button>
+                        <button class="btn-primary" onclick="submitIntlRecv()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">استقبال الحوالة</button>
                         <button class="btn-whatsapp" onclick="sendRecvWhatsApp()"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg> واتساب</button>
-                        <button class="btn-secondary" onclick="clearIntlRecv()">مسح ✗</button>
+                        <button class="btn-secondary" onclick="clearIntlRecv()">مسح</button>
                     </div>
                 </div>
             </div>
@@ -543,13 +543,13 @@
             <!-- صندوق التلر - يسار -->
             <div class="intl-teller-box">
                 <div class="teller-box">
-                    <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                    <div class="teller-box-title"><div class="tb-icon"></div> صندوق التلر</div>
                     <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
-                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                    <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
                     <div class="teller-summary">
-                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 حوالات اليوم</div>
+                        <div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">حوالات اليوم</div>
                         <div class="ts-row"><span class="ts-label">صادرة</span><span class="ts-val" style="color:var(--danger)" id="tsItOut2">0</span></div>
                         <div class="ts-row"><span class="ts-label">واردة</span><span class="ts-val" style="color:var(--success)" id="tsItIn2">0</span></div>
                         <div class="ts-row"><span class="ts-label">الإجمالي</span><span class="ts-val" style="color:var(--primary)" id="tsItTotal2">0</span></div>
@@ -562,7 +562,7 @@
     <!-- سجل الحوالات — عرض الصفحات -->
     <div class="card">
         <div class="card-head">
-            <div class="card-title"><div class="ct-icon">📋</div> سجل الحوالات</div>
+            <div class="card-title"><div class="ct-icon"></div> سجل الحوالات</div>
             <div style="display:flex;gap:8px;align-items:center">
                 <span class="badge badge-count" id="itLogCount">0</span>
                 <span style="font-size:10px;color:var(--text-muted);background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);padding:3px 9px;border-radius:20px;font-weight:700">10 لكل صفحة</span>
@@ -570,16 +570,16 @@
         </div>
         <div class="filter-bar">
             <span class="filter-chip fc-on" onclick="filterItLogs(this,'all')">الكل</span>
-            <span class="filter-chip" onclick="filterItLogs(this,'completed')">✅ مكتملة</span>
-            <span class="filter-chip" onclick="filterItLogs(this,'pending')">⏳ معلقة</span>
-            <span class="filter-chip" onclick="filterItLogs(this,'out')">📤 صادرة</span>
-            <span class="filter-chip" onclick="filterItLogs(this,'in')">📥 واردة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'completed')">مكتملة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'pending')">معلقة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'out')">صادرة</span>
+            <span class="filter-chip" onclick="filterItLogs(this,'in')">واردة</span>
         </div>
         <!-- شبكة كرت الصفحات -->
         <div id="itPageCardsGrid" class="it-page-cards-grid"></div>
         <!-- حالة فارغة -->
         <div id="itPageEmpty" style="display:none" class="it-page-empty">
-            <div class="it-page-empty-icon">📭</div>
+            <div class="it-page-empty-icon"></div>
             <div class="it-page-empty-text">لا توجد حوالات مسجلة</div>
         </div>
     </div>
@@ -596,8 +596,8 @@
                 </div>
                 <div style="display:flex;gap:10px;align-items:center">
                     <div class="it-pm-badges">
-                        <span class="it-pm-badge in" id="itPmBadgeIn">📥 0 واردة</span>
-                        <span class="it-pm-badge out" id="itPmBadgeOut">📤 0 صادرة</span>
+                        <span class="it-pm-badge in" id="itPmBadgeIn">0 واردة</span>
+                        <span class="it-pm-badge out" id="itPmBadgeOut">0 صادرة</span>
                     </div>
                     <button class="it-pm-close" onclick="closeItPageModal()">✗</button>
                 </div>
@@ -643,10 +643,10 @@
     <div class="tri-layout">
         <!-- المنصات -->
         <div class="right-column">
-            <div class="col-title">⚡ المنصات</div>
-            <div class="platform-card" onclick="selectPlatform('USDT')" id="plat-usdt"><div class="plat-icon">🪙</div><div class="plat-name">USDT</div><div class="plat-sub">عملة مستقرة — Tether</div></div>
-            <div class="platform-card" onclick="selectPlatform('TikTok')" id="plat-tiktok"><div class="plat-icon">🎵</div><div class="plat-name">TikTok</div><div class="plat-sub">شحن عملات تيك توك</div></div>
-            <div class="platform-card" onclick="selectPlatform('PayPal')" id="plat-paypal"><div class="plat-icon">💳</div><div class="plat-name">PayPal</div><div class="plat-sub">تحويل عالمي</div></div>
+            <div class="col-title">المنصات</div>
+            <div class="platform-card" onclick="selectPlatform('USDT')" id="plat-usdt"><div class="plat-icon"></div><div class="plat-name">USDT</div><div class="plat-sub">عملة مستقرة — Tether</div></div>
+            <div class="platform-card" onclick="selectPlatform('TikTok')" id="plat-tiktok"><div class="plat-icon"></div><div class="plat-name">TikTok</div><div class="plat-sub">شحن عملات تيك توك</div></div>
+            <div class="platform-card" onclick="selectPlatform('PayPal')" id="plat-paypal"><div class="plat-icon"></div><div class="plat-name">PayPal</div><div class="plat-sub">تحويل عالمي</div></div>
         </div>
         <!-- ══ أداة المعاملة — تصميم جديد ══ -->
         <div class="el-tool-card">
@@ -664,7 +664,7 @@
                 </div>
                 <div class="el-tool-badges">
                     <span class="el-plat-badge" id="elPlatLabel">اختر منصة</span>
-                    <span id="elVerifyBadge" class="el-verify-badge" style="display:none">✅ موثق USDT</span>
+                    <span id="elVerifyBadge" class="el-verify-badge" style="display:none">موثق USDT</span>
                     <button onclick="captureSection('dept-electronic')" class="el-capture-btn" title="التقاط صورة">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                         التقاط
@@ -696,10 +696,10 @@
                                 <div class="el-input-wrap">
                                     <svg class="el-input-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12m-4-6h8"/></svg>
                                     <select class="el-input el-select" id="elCurrency" onchange="calcElecFee()">
-                                        <option value="USD">🇺🇸 دولار USD</option>
-                                        <option value="USDT">🪙 تيثر USDT</option>
-                                        <option value="EUR">🇪🇺 يورو EUR</option>
-                                        <option value="ILS">🇵🇸 شيكل ILS</option>
+                                        <option value="USD">دولار USD</option>
+                                        <option value="USDT">تيثر USDT</option>
+                                        <option value="EUR">يورو EUR</option>
+                                        <option value="ILS">شيكل ILS</option>
                                 </select>
                                 </div>
                             </div>
@@ -728,21 +728,21 @@
                         <!-- منطقة التسليم المزدوج -->
                         <div id="elDdZone" style="display:none;flex:1;min-width:0">
                             <div class="el-dd-toggle" onclick="toggleDoubleDelivery('el')" id="elDdToggle">
-                                <span>📋</span>
+                                <span></span>
                                 <span>تسليم مزدوج</span>
                                 <div class="dd-switch" id="elDdSwitch" style="transform:scale(.6);margin-right:auto"></div>
                             </div>
                             <div class="dd-fields" id="elDdFields" style="margin-top:0">
                                 <div class="dd-source-info" id="elDdSourceInfo" style="padding:4px 10px;font-size:10px;border-radius:6px;margin-bottom:6px">
-                                    <span>🪙 المبلغ</span>
+                                    <span>المبلغ</span>
                                 </div>
                                 <div class="dd-split-container" style="gap:6px">
                                     <div class="dd-split-card dd-cash-card" style="padding:7px 9px;border-radius:8px">
-                                        <div class="dd-card-header dd-cash-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span>💵</span> كاش</div>
+                                        <div class="dd-card-header dd-cash-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span></span> كاش</div>
                                         <div class="dd-rate-display" style="margin-bottom:5px;padding:3px 6px;border-radius:5px">
                                             <span class="dd-rate-label" style="font-size:9px">السعر</span>
                                             <span class="dd-rate-val" id="elDdCashRateDisplay" style="font-size:11px">0.000</span>
-                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px">🔒</span>
+                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px"></span>
                                         </div>
                                         <input type="number" class="field-input" id="elDdCashAmt" placeholder="المبلغ" dir="ltr" style="text-align:center;font-weight:700;padding:4px 6px;font-size:11px;height:26px" oninput="calcDdElec()">
                                         <input type="hidden" id="elDdCashRate" value="0">
@@ -751,11 +751,11 @@
                                         </div>
                                     </div>
                                     <div class="dd-split-card dd-bank-card" style="padding:7px 9px;border-radius:8px">
-                                        <div class="dd-card-header dd-bank-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span>🏦</span> بنكي</div>
+                                        <div class="dd-card-header dd-bank-header" style="font-size:10px;margin-bottom:5px;padding-bottom:4px"><span></span> بنكي</div>
                                         <div class="dd-rate-display dd-rate-bank" style="margin-bottom:5px;padding:3px 6px;border-radius:5px">
                                             <span class="dd-rate-label" style="font-size:9px">السعر</span>
                                             <span class="dd-rate-val" id="elDdBankRateDisplay" style="font-size:11px">0.000</span>
-                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px">🔒</span>
+                                            <span class="dd-rate-badge" style="font-size:8px;padding:1px 4px"></span>
                                         </div>
                                         <input type="number" class="field-input" id="elDdBankAmt" placeholder="المبلغ" dir="ltr" style="text-align:center;font-weight:700;padding:4px 6px;font-size:11px;height:26px" oninput="calcDdElec()">
                                         <input type="hidden" id="elDdBankRate" value="0">
@@ -764,7 +764,7 @@
                                         </div>
                                         <label class="dd-upload-label" id="elBankUploadLabel" style="margin-top:5px">
                                             <input type="file" accept="image/*,.pdf" id="elBankNotice" onchange="handleBankNotice(this,'el')" style="display:none">
-                                            <span class="dd-upload-btn" style="font-size:9px;padding:3px 7px">📎 إشعار</span>
+                                            <span class="dd-upload-btn" style="font-size:9px;padding:3px 7px">إشعار</span>
                                             <span class="dd-upload-name" id="elBankFileName" style="font-size:9px"></span>
                                         </label>
                                     </div>
@@ -772,7 +772,7 @@
                                 <div class="dd-summary-bar" style="padding:5px 10px;border-radius:6px;margin-top:6px">
                                     <span style="display:none" id="elDdUsedAmt">$0.00</span>
                                     <span style="display:none" id="elDdRemain">$0.00</span>
-                                    <div class="dd-sum-row dd-sum-total" style="font-size:11px;margin:0"><span>💰 الإجمالي</span><span class="dd-sum-val" id="elDdTotalResult">₪0.00</span></div>
+                                    <div class="dd-sum-row dd-sum-total" style="font-size:11px;margin:0"><span>الإجمالي</span><span class="dd-sum-val" id="elDdTotalResult">₪0.00</span></div>
                                 </div>
                             </div>
                         </div>
@@ -818,18 +818,18 @@
         <!-- صندوق التلر + QR Code لـUSDT -->
         <div style="display:flex;flex-direction:column;gap:12px">
             <div class="teller-box">
-                <div class="teller-box-title"><div class="tb-icon">🏦</div> صندوق التلر</div>
+                <div class="teller-box-title"><div class="tb-icon"></div> صندوق التلر</div>
                 <div class="teller-balance"><div class="teller-balance-label">إجمالي الرصيد</div><div class="teller-balance-val teller-total-sync">$0.00</div></div>
-                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇺🇸</span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
-                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇵🇸</span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
-                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag">🇯🇴</span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
-                <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">📊 معاملات اليوم</div><div class="ts-row"><span class="ts-label">عدد المعاملات</span><span class="ts-val" style="color:var(--blue)" id="tsElCount">0</span></div><div class="ts-row"><span class="ts-label">إجمالي المبالغ</span><span class="ts-val" style="color:var(--primary)" id="tsElVol">$0</span></div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دولار</div><div class="tcr-val teller-usd-sync">$0.00</div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> شيكل</div><div class="tcr-val teller-ils-sync">₪0.00</div></div>
+                <div class="teller-currency-row"><div class="tcr-name"><span class="tcr-flag"></span> دينار</div><div class="tcr-val teller-jod-sync">JD 0.00</div></div>
+                <div class="teller-summary"><div class="sec-title" style="margin-bottom:8px;padding-bottom:6px;font-size:12px">معاملات اليوم</div><div class="ts-row"><span class="ts-label">عدد المعاملات</span><span class="ts-val" style="color:var(--blue)" id="tsElCount">0</span></div><div class="ts-row"><span class="ts-label">إجمالي المبالغ</span><span class="ts-val" style="color:var(--primary)" id="tsElVol">$0</span></div></div>
             </div>
             <!-- QR Code + عنوان الشركة — يظهر أسفل صندوق التلر عند اختيار USDT -->
             <div class="elec-qr-side" id="elecQrSide" style="display:none">
                 <div class="qr-company-box">
                     <div class="qr-header-bar">
-                    <div class="qr-title">📱 عنوان استقبال USDT</div>
+                    <div class="qr-title">عنوان استقبال USDT</div>
                         <div class="qr-live-price" id="usdtLivePrice">
                             <span class="qr-price-dot"></span>
                             <span>1 USDT = </span>
@@ -839,25 +839,25 @@
                     <div class="qr-network-badge" id="usdtNetBadge">TRON (TRC-20)</div>
                     <div class="qr-code-wrap" id="qrCodeWrap">
                         <canvas id="qrCanvas" width="180" height="180"></canvas>
-                        <div class="qr-logo-overlay">🪙</div>
+                        <div class="qr-logo-overlay"></div>
                     </div>
                     <div class="qr-address-box">
                         <div class="qr-address-label">عنوان المحفظة — <span id="usdtNetLabel">TRC-20</span></div>
                         <div class="qr-address-val" id="companyTrcAddress">TJYk9nGd5L...</div>
                         <div class="qr-address-actions">
-                            <button class="qr-copy-btn" onclick="copyTrcAddress()">📋 نسخ</button>
-                            <button class="qr-share-btn" onclick="shareUsdtAddress()">📤 مشاركة</button>
+                            <button class="qr-copy-btn" onclick="copyTrcAddress()">نسخ</button>
+                            <button class="qr-share-btn" onclick="shareUsdtAddress()">مشاركة</button>
                         </div>
                     </div>
                     <div class="qr-tx-checker">
-                        <div class="qr-tx-title">🔍 تتبع المعاملة</div>
+                        <div class="qr-tx-title">تتبع المعاملة</div>
                         <div class="qr-tx-input-row">
                             <input type="text" class="field-input qr-tx-input" id="usdtTxHash" placeholder="أدخل TX Hash للتحقق" dir="ltr">
-                            <button class="qr-verify-btn" onclick="verifyUsdtTx()">تحقق ✓</button>
+                            <button class="qr-verify-btn" onclick="verifyUsdtTx()">تحقق</button>
                         </div>
                         <div class="qr-tx-status" id="usdtTxStatus" style="display:none"></div>
                     </div>
-                    <div class="qr-warning">⚠️ أرسل فقط USDT عبر الشبكة المحددة — الإرسال لشبكة خاطئة يعني خسارة الأموال</div>
+                    <div class="qr-warning">أرسل فقط USDT عبر الشبكة المحددة — الإرسال لشبكة خاطئة يعني خسارة الأموال</div>
                     <div class="qr-stats-mini">
                         <div class="qr-stat"><span class="qr-stat-val" id="usdtTodayCount">0</span><span class="qr-stat-lbl">معاملات اليوم</span></div>
                         <div class="qr-stat"><span class="qr-stat-val" id="usdtTodayVol">$0</span><span class="qr-stat-lbl">حجم التداول</span></div>
@@ -866,7 +866,7 @@
             </div>
         </div>
     </div>
-    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon">📋</div> سجل المعاملات</div><span class="badge badge-count" id="elLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterElLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterElLogs(this,'completed')">✅ مكتملة</span><span class="filter-chip" onclick="filterElLogs(this,'pending')">⏳ معلقة</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>العميل</th><th>المنصة</th><th>المبلغ</th><th>الرسوم</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody id="elLogBody"></tbody></table></div></div>
+    <div class="card"><div class="card-head"><div class="card-title"><div class="ct-icon"></div> سجل المعاملات</div><span class="badge badge-count" id="elLogCount">0</span></div><div class="filter-bar"><span class="filter-chip fc-on" onclick="filterElLogs(this,'all')">الكل</span><span class="filter-chip" onclick="filterElLogs(this,'completed')">مكتملة</span><span class="filter-chip" onclick="filterElLogs(this,'pending')">معلقة</span></div><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>العميل</th><th>المنصة</th><th>المبلغ</th><th>الرسوم</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody id="elLogBody"></tbody></table></div></div>
 </div>
 <!-- ══ 5. سحب وإيداع ══ -->
 <div class="dept-section" id="dept-cashdesk">
@@ -895,8 +895,8 @@
     <div class="vb-result-bar" id="vbResult-cashdesk" style="display:none">
         <div class="vb-result-fields" id="vbResultFields-cashdesk"></div>
         <div class="vb-result-actions">
-            <button class="vb-btn-apply" onclick="vtInlineApply('cashdesk')">✅ تطبيق مملوء الحقول</button>
-            <button class="vb-btn-cancel" onclick="vtInlineClear('cashdesk')">✗ إلغاء</button>
+            <button class="vb-btn-apply" onclick="vtInlineApply('cashdesk')">تطبيق مملوء الحقول</button>
+            <button class="vb-btn-cancel" onclick="vtInlineClear('cashdesk')">إلغاء</button>
         </div>
     </div>
 
@@ -905,7 +905,7 @@
     <div class="cd2-hbg"></div>
     <div class="cd2-hcontent">
       <div class="cd2-htitle-block">
-        <div class="cd2-hicon">🏦</div>
+        <div class="cd2-hicon"></div>
         <div>
           <div class="cd2-htitle">السحب والإيداع</div>
           <div class="cd2-hsub">إدارة حركات الصندوق — Cash &amp; Bank Operations</div>
@@ -913,10 +913,10 @@
       </div>
       <div class="cd2-mode-toggle">
         <button class="cd2-mode-btn cd2-deposit cd2-active" id="cd2ModeDeposit" onclick="switchCd2Mode('deposit')">
-          <span class="cd2-micon">📥</span><span class="cd2-mlabel">إيداع</span></button>
+          <span class="cd2-micon"></span><span class="cd2-mlabel">إيداع</span></button>
         </button>
         <button class="cd2-mode-btn cd2-withdraw" id="cd2ModeWithdraw" onclick="switchCd2Mode('withdraw')">
-          <span class="cd2-micon">📤</span><span class="cd2-mlabel">سحب</span>
+          <span class="cd2-micon"></span><span class="cd2-mlabel">سحب</span>
         </button>
       </div>
     </div>
@@ -927,12 +927,12 @@
     <div class="cd2-tc cd2-tc-cash cd2-tc-active" id="cd2TypeCash" onclick="selectCd2Type('cash')">
       <div class="cd2-tc-glow cash"></div>
       <div class="cd2-tc-top">
-        <div class="cd2-tc-icon cash">💵</div>
+        <div class="cd2-tc-icon cash"></div>
         <div class="cd2-tc-info">
           <div class="cd2-tc-name">كاش</div>
           <div class="cd2-tc-sub">Cash Payment</div>
         </div>
-      <div class="cd2-tc-badge cash" id="cd2CashBadge">✓ محدد</div>
+      <div class="cd2-tc-badge cash" id="cd2CashBadge">محدد</div>
       </div>
       <div class="cd2-tc-rate-wrap">
         <span class="cd2-tc-rlabel">السعر بالشيكل</span>
@@ -945,12 +945,12 @@
     <div class="cd2-tc cd2-tc-bank" id="cd2TypeBank" onclick="selectCd2Type('bank')">
       <div class="cd2-tc-glow bank"></div>
       <div class="cd2-tc-top">
-        <div class="cd2-tc-icon bank">🏦</div>
+        <div class="cd2-tc-icon bank"></div>
         <div class="cd2-tc-info">
           <div class="cd2-tc-name">بنكي</div>
           <div class="cd2-tc-sub">Bank Transfer</div>
         </div>
-      <div class="cd2-tc-badge bank hidden" id="cd2BankBadge">✓ محدد</div>
+      <div class="cd2-tc-badge bank hidden" id="cd2BankBadge">محدد</div>
       </div>
       <div class="cd2-tc-rate-wrap">
         <span class="cd2-tc-rlabel">السعر بالشيكل</span>
@@ -966,31 +966,31 @@
   <div class="card cd2-main">
     <div class="card-head">
       <div class="card-title">
-        <div class="ct-icon" id="cd2CardIcon">📥</div>
+        <div class="ct-icon" id="cd2CardIcon"></div>
         <span id="cd2CardTitle">تفاصيل الإيداع</span>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <span class="badge cd2-op-badge" id="cd2OpBadge" style="background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.25)">💵 كاش · إيداع</span>
-        <button onclick="captureSection('dept-cashdesk')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'">📸 <span style="font-size:11px">التقاط</span></button>
+        <span class="badge cd2-op-badge" id="cd2OpBadge" style="background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.25)">كاش · إيداع</span>
+        <button onclick="captureSection('dept-cashdesk')" title="التقاط صورة" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08));border:1px solid rgba(50,184,198,0.3);border-radius:8px;color:#32b8c6;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.18))';this.style.borderColor='rgba(50,184,198,0.55)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(50,184,198,0.12),rgba(99,102,241,0.08))';this.style.borderColor='rgba(50,184,198,0.3)'"><span style="font-size:11px">التقاط</span></button>
       </div>
     </div>
 
     <!-- Currency Selector -->
     <div class="cd2-cur-row">
       <div class="cd2-cur-card cd2-cc-active" data-cur="USD" onclick="selectCd2Cur(this,'USD')">
-        <div class="cd2-cc-flag">🇺🇸</div>
+        <div class="cd2-cc-flag"></div>
         <div class="cd2-cc-info"><span class="cd2-cc-code">USD</span><span class="cd2-cc-name">دولار أمريكي</span></div>
         <span class="cd2-cc-bal" id="cd2BalUSD">$0.00</span>
         <div class="cd2-cc-bar"></div>
       </div>
       <div class="cd2-cur-card" data-cur="JOD" onclick="selectCd2Cur(this,'JOD')">
-        <div class="cd2-cc-flag">🇯🇴</div>
+        <div class="cd2-cc-flag"></div>
         <div class="cd2-cc-info"><span class="cd2-cc-code">JOD</span><span class="cd2-cc-name">دينار أردني</span></div>
         <span class="cd2-cc-bal" id="cd2BalJOD">JD 0.00</span>
         <div class="cd2-cc-bar"></div>
       </div>
       <div class="cd2-cur-card" data-cur="ILS" onclick="selectCd2Cur(this,'ILS')">
-        <div class="cd2-cc-flag">🇵🇸</div>
+        <div class="cd2-cc-flag"></div>
         <div class="cd2-cc-info"><span class="cd2-cc-code">ILS</span><span class="cd2-cc-name">شيكل إسرائيلي</span></div>
         <span class="cd2-cc-bal" id="cd2BalILS">₪0.00</span>
         <div class="cd2-cc-bar"></div>
@@ -1029,7 +1029,7 @@
       <!-- Live Calc Panel -->
       <div class="cd2-calc-panel">
         <div class="cd2-calc-header">
-          <span class="cd2-calc-icon" id="cd2CalcIcon">💵</span>
+          <span class="cd2-calc-icon" id="cd2CalcIcon"></span>
           <span class="cd2-calc-title">الحساب الآلي</span>
         </div>
         <div class="cd2-calc-body">
@@ -1038,7 +1038,7 @@
           <div class="cd2-calc-divider"></div>
           <div class="cd2-calc-equiv-label">المعادل بالشيكل</div>
           <div class="cd2-calc-equiv" id="cd2CalcEquiv">—</div>
-          <div class="cd2-calc-type" id="cd2CalcType">💵 كاش · إيداع</div>
+          <div class="cd2-calc-type" id="cd2CalcType">كاش · إيداع</div>
         </div>
         <div class="cd2-calc-bal-row">
           <span class="cd2-calc-label">رصيد الصندوق</span>
@@ -1048,23 +1048,23 @@
     </div>
 
     <div class="btn-row" style="margin-top:18px">
-      <button class="btn-primary" id="cd2SubmitBtn" onclick="submitCd2()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">تنفيذ الإيداع 📥</button>
-      <button class="btn-secondary" onclick="clearCd2()">مسح ✗</button>
+      <button class="btn-primary" id="cd2SubmitBtn" onclick="submitCd2()" style="flex:2;background:linear-gradient(135deg,var(--success),#16a34a)">تنفيذ الإيداع</button>
+      <button class="btn-secondary" onclick="clearCd2()">مسح</button>
     </div>
   </div>
 
   <!-- LOG -->
   <div class="card">
     <div class="card-head">
-      <div class="card-title"><div class="ct-icon">📋</div> سجل السحب والإيداع</div>
+      <div class="card-title"><div class="ct-icon"></div> سجل السحب والإيداع</div>
       <span class="badge badge-count" id="cdLogCount">0 عملية</span>
     </div>
     <div class="filter-bar">
       <span class="filter-chip fc-on" onclick="filterCdLogs(this,'all')">الكل</span>
-      <span class="filter-chip" onclick="filterCdLogs(this,'deposit')">📥 إيداع</span>
-      <span class="filter-chip" onclick="filterCdLogs(this,'withdraw')">📤 سحب</span>
-      <span class="filter-chip" onclick="filterCdLogs(this,'cash')">💵 كاش</span>
-      <span class="filter-chip" onclick="filterCdLogs(this,'bank')">🏦 بنكي</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'deposit')">إيداع</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'withdraw')">سحب</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'cash')">كاش</span>
+      <span class="filter-chip" onclick="filterCdLogs(this,'bank')">بنكي</span>
     </div>
     <div class="table-wrap">
       <table>
@@ -1082,7 +1082,7 @@
 <!-- ══ إدارة الحسابات ══ -->
 <div class="dept-section" id="dept-acctmgr">
   <div style="padding:18px 20px 10px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:12px;">
-    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏦</div>
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;"></div>
     <div>
       <div style="font-size:14px;font-weight:800;color:var(--text-main,#e9edef);">إدارة الحسابات والصناديق</div>
       <div style="font-size:11px;color:var(--text-sub,#4a6280);margin-top:2px;">القيود · الحوالات · التسوية · كشف الحساب</div>
@@ -1178,8 +1178,8 @@
 </div>
 
 <!-- Modals -->
-<div class="modal-overlay" id="confirmModal"><div class="modal-box"><div class="modal-icon" id="cmIcon">🔔</div><div class="modal-title" id="cmTitle">تأكيد</div><div class="modal-desc">يرجى مراجعة التفاصيل</div><div class="confirm-details" id="cmDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="confirmAction()">✅ تأكيد</button><button class="btn-secondary" onclick="closeModal('confirmModal')">إلغاء</button></div></div></div>
-<div class="modal-overlay" id="successModal"><div class="modal-box"><div class="modal-icon">✅</div><div class="modal-title" id="smTitle">تمت بنجاح</div><div class="modal-desc" id="smDesc"></div><div class="confirm-details" id="smDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="closeModal('successModal')">حسناً 👍</button></div></div></div>
+<div class="modal-overlay" id="confirmModal"><div class="modal-box"><div class="modal-icon" id="cmIcon">🔔</div><div class="modal-title" id="cmTitle">تأكيد</div><div class="modal-desc">يرجى مراجعة التفاصيل</div><div class="confirm-details" id="cmDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="confirmAction()">تأكيد</button><button class="btn-secondary" onclick="closeModal('confirmModal')">إلغاء</button></div></div></div>
+<div class="modal-overlay" id="successModal"><div class="modal-box"><div class="modal-icon">✅</div><div class="modal-title" id="smTitle">تمت بنجاح</div><div class="modal-desc" id="smDesc"></div><div class="confirm-details" id="smDetails"></div><div class="modal-btns"><button class="btn-primary" onclick="closeModal('successModal')">حسناً</button></div></div></div>
 <!-- Modal طلب للمشرف -->
 <div class="modal-overlay" id="generalRequestModal">
     <div class="modal-box" style="text-align:right;max-width:400px">
@@ -1196,7 +1196,7 @@
             </div>
         </div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="sendGeneralRequest()">📨 إرسال للمشرف</button>
+            <button class="btn-primary" onclick="sendGeneralRequest()">إرسال للمشرف</button>
             <button class="btn-secondary" onclick="closeModal('generalRequestModal')">إلغاء</button>
         </div>
     </div>
@@ -1214,7 +1214,7 @@
         <!-- Header -->
         <div style="padding:20px 24px 16px;border-bottom:1px solid rgba(59,130,246,0.14);background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(37,99,235,0.05));border-radius:22px 22px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1;">
             <div style="display:flex;align-items:center;gap:13px;">
-                <div style="width:44px;height:44px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 6px 18px rgba(59,130,246,0.45);flex-shrink:0;">🏦</div>
+                <div style="width:44px;height:44px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 6px 18px rgba(59,130,246,0.45);flex-shrink:0;"></div>
                 <div>
                     <div style="font-size:15px;font-weight:900;color:#e2e8f0;letter-spacing:.3px;">حوالة بنكية جديدة</div>
                     <div style="font-size:10px;color:#60a5fa;font-weight:700;margin-top:2px;display:flex;align-items:center;gap:5px;">
@@ -1392,7 +1392,7 @@
   <div style="background:linear-gradient(160deg,#12101f,#0f0d1e);border:1px solid rgba(139,92,246,0.22);border-radius:22px;padding:30px 28px;width:500px;max-width:94vw;box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(139,92,246,0.07);direction:rtl;max-height:90vh;overflow-y:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
       <div style="display:flex;align-items:center;gap:14px;">
-        <div style="width:48px;height:48px;border-radius:14px;background:rgba(139,92,246,0.12);border:1.5px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 22px rgba(139,92,246,0.14);">📤</div>
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(139,92,246,0.12);border:1.5px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 22px rgba(139,92,246,0.14);"></div>
         <div>
           <div style="font-size:16px;font-weight:900;color:#e9edef;letter-spacing:-0.2px;">رفع تقرير للإدارة</div>
           <div style="font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:3px;font-weight:600;">يصل مباشرة إلى صفحة الإدارة العامة</div>
@@ -1409,7 +1409,6 @@
         <label style="font-size:11.5px;font-weight:800;color:rgba(255,255,255,0.42);margin-bottom:7px;display:block;letter-spacing:0.3px;">الملف المرفق <span style="color:#f87171;">*</span></label>
         <input type="file" id="tdRptFileInput" accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="tdRptFileChosen(this)">
         <div id="tdRptDropZone" onclick="document.getElementById('tdRptFileInput').click()" ondragover="event.preventDefault();this.style.borderColor='rgba(139,92,246,0.6)';this.style.background='rgba(139,92,246,0.06)'" ondragleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)'" ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.02)';tdRptFileDrop(event)" style="border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.22s;background:rgba(255,255,255,0.02);">
-          <div style="font-size:30px;margin-bottom:8px;opacity:0.4;">📁</div>
           <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.38);">انقر لاختيار ملف أو اسحبه هنا</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.18);margin-top:5px;font-weight:600;">PDF · Excel · Word · صورة — حتى 10 MB</div>
         </div>
@@ -1419,7 +1418,7 @@
             <div id="tdRptFileNameDisplay" style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
             <div id="tdRptFileSizeDisplay" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;"></div>
           </div>
-          <button onclick="tdRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">✗ إزالة</button>
+          <button onclick="tdRptClearFile()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;">إزالة</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -1434,7 +1433,7 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:24px;">
-      <button onclick="tdSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(167,139,250,0.8));border:none;color:#fff;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(139,92,246,0.25);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="tdSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(167,139,250,0.8));border:none;color:#fff;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(139,92,246,0.25);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">إرسال للإدارة</button>
       <button onclick="tdCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
     </div>
   </div>
@@ -1448,7 +1447,7 @@
     <div class="pt-modal-hd">
       <div class="pt-modal-hd-left">
         <div class="pt-modal-icon-wrap">
-          <span class="pt-modal-icon">🔄</span>
+          <span class="pt-modal-icon"></span>
         </div>
         <div>
           <div class="pt-modal-title">باص تلر</div>
@@ -1508,7 +1507,7 @@
     <!-- Buttons -->
     <div class="btn-row" style="margin-top:0">
       <button class="btn-primary pt-confirm-btn" onclick="confirmPassTeller()" style="flex:2;background:linear-gradient(135deg,#7c3aed,#6d28d9)">
-        <span>🔄</span> تأكيد التحويل
+        <span></span> تأكيد التحويل
       </button>
       <button class="btn-secondary" onclick="closeModal('passTellerModal')">إلغاء</button>
     </div>
@@ -1530,7 +1529,7 @@
     <!-- Header -->
     <div style="background:linear-gradient(135deg,rgba(50,184,198,0.18),rgba(99,102,241,0.12));padding:24px 28px 20px;border-bottom:1px solid rgba(50,184,198,0.15);position:relative">
       <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.2));border:2px solid rgba(50,184,198,0.4);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🏦</div>
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(50,184,198,0.25),rgba(99,102,241,0.2));border:2px solid rgba(50,184,198,0.4);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0"></div>
         <div>
           <div style="font-size:17px;font-weight:800;color:#e2e8f0;margin-bottom:3px">صندوق افتتاحي جديد</div>
           <div style="font-size:12px;color:rgba(50,184,198,0.85);font-weight:600">تم تعيين رصيد الصندوق من المشرف</div>
@@ -1548,18 +1547,18 @@
 
       <!-- أرصدة العملات الثلاث -->
       <div style="background:linear-gradient(135deg,rgba(50,184,198,0.08),rgba(99,102,241,0.05));border:1px solid rgba(50,184,198,0.2);border-radius:16px;padding:16px;margin-bottom:16px">
-        <div style="font-size:11px;color:rgba(200,210,220,0.6);font-weight:700;margin-bottom:12px;letter-spacing:.5px;text-align:center">💰 الصندوق الافتتاحي</div>
+        <div style="font-size:11px;color:rgba(200,210,220,0.6);font-weight:700;margin-bottom:12px;letter-spacing:.5px;text-align:center">الصندوق الافتتاحي</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
           <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
-            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇺🇸 دولار</div>
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">دولار</div>
             <div id="boxOpenUSD" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">$0</div>
           </div>
           <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
-            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇵🇸 شيكل</div>
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">شيكل</div>
             <div id="boxOpenILS" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">₪0</div>
           </div>
           <div style="background:rgba(50,184,198,0.08);border:1px solid rgba(50,184,198,0.2);border-radius:12px;padding:12px;text-align:center">
-            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">🇯🇴 دينار</div>
+            <div style="font-size:10px;color:rgba(200,210,220,0.5);margin-bottom:5px">دينار</div>
             <div id="boxOpenJOD" style="font-size:20px;font-weight:900;color:#32b8c6;direction:ltr">JD 0</div>
           </div>
         </div>
@@ -1579,7 +1578,6 @@
 
       <!-- ملاحظة -->
       <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px 14px;margin-bottom:18px;display:flex;gap:8px;align-items:flex-start">
-        <span style="font-size:14px;flex-shrink:0">ℹ️</span>
         <span style="font-size:11px;color:rgba(200,210,220,0.75);line-height:1.6">تم تحديث رصيد صندوقك تلقائياً. يمكنك البدأ بالعمل فور الضغط على "تأكيد الاستلام".</span>
       </div>
 
@@ -1599,7 +1597,7 @@
         transition:all .2s;
         box-shadow:0 6px 20px rgba(50,184,198,0.3);
       " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(50,184,198,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(50,184,198,0.3)'">
-        ✅ تأكيد الاستلام — ابدأ العمل
+        تأكيد الاستلام — ابدأ العمل
       </button>
     </div>
   </div>
@@ -1623,7 +1621,7 @@
     <!-- Header -->
     <div style="background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(99,102,241,0.1));padding:22px 26px 18px;border-bottom:1px solid rgba(167,139,250,0.15);display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,rgba(167,139,250,0.25),rgba(99,102,241,0.2));border:2px solid rgba(167,139,250,0.4);display:flex;align-items:center;justify-content:center;font-size:20px">⚖️</div>
+        <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,rgba(167,139,250,0.25),rgba(99,102,241,0.2));border:2px solid rgba(167,139,250,0.4);display:flex;align-items:center;justify-content:center;font-size:20px"></div>
         <div>
           <div style="font-size:16px;font-weight:800;color:#e2e8f0">مطابقة الصندوق</div>
           <div style="font-size:11px;color:rgba(167,139,250,0.8);font-weight:600;margin-top:2px">مقارنة الرصيد الافتتاحي مع الحالي</div>
@@ -1650,7 +1648,7 @@
 
       <!-- أزرار -->
       <div style="display:flex;gap:10px">
-        <button onclick="submitReconcile()" style="flex:1;padding:12px;background:linear-gradient(135deg,#a78bfa,#6366f1);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">✅ تأكيد المطابقة</button>
+        <button onclick="submitReconcile()" style="flex:1;padding:12px;background:linear-gradient(135deg,#a78bfa,#6366f1);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">تأكيد المطابقة</button>
         <button onclick="closeReconcileModal()" style="padding:12px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
       </div>
     </div>
@@ -1661,7 +1659,7 @@
 <div id="sessionOpenModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center">
   <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(34,197,94,0.3);border-radius:24px;width:min(420px,92vw);overflow:hidden;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
     <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(16,185,129,0.1));padding:22px 26px 18px;border-bottom:1px solid rgba(34,197,94,0.15);display:flex;align-items:center;gap:12px">
-      <div style="width:46px;height:46px;border-radius:50%;background:rgba(34,197,94,0.2);border:2px solid rgba(34,197,94,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔓</div>
+      <div style="width:46px;height:46px;border-radius:50%;background:rgba(34,197,94,0.2);border:2px solid rgba(34,197,94,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"></div>
       <div>
         <div style="font-size:16px;font-weight:800;color:#e2e8f0">فتح الصندوق</div>
         <div style="font-size:11px;color:rgba(34,197,94,0.85);font-weight:600;margin-top:2px" id="sessionOpenNum">SES-2026-001</div>
@@ -1684,10 +1682,10 @@
         </div>
       </div>
       <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:11px;color:rgba(200,210,220,0.7);line-height:1.6">
-        ℹ️ بفتح الصندوق تتحمل مسؤولية الصندوق وجميع العمليات المنجزة خلال الجلسة حتى الإغلاق.
+        بفتح الصندوق تتحمل مسؤولية الصندوق وجميع العمليات المنجزة خلال الجلسة حتى الإغلاق.
       </div>
       <div style="display:flex;gap:10px">
-        <button onclick="confirmOpenSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✅ فتح الصندوق والبدأ</button>
+        <button onclick="confirmOpenSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">فتح الصندوق والبدأ</button>
         <button onclick="document.getElementById('sessionOpenModal').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
       </div>
     </div>
@@ -1698,7 +1696,7 @@
 <div id="closeSessionModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center">
   <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(248,113,113,0.3);border-radius:24px;width:min(520px,94vw);max-height:90vh;overflow-y:auto;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
     <div style="background:linear-gradient(135deg,rgba(248,113,113,0.12),rgba(239,68,68,0.08));padding:22px 26px 18px;border-bottom:1px solid rgba(248,113,113,0.15);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:1">
-      <div style="width:46px;height:46px;border-radius:50%;background:rgba(248,113,113,0.2);border:2px solid rgba(248,113,113,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔒</div>
+      <div style="width:46px;height:46px;border-radius:50%;background:rgba(248,113,113,0.2);border:2px solid rgba(248,113,113,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"></div>
       <div>
         <div style="font-size:16px;font-weight:800;color:#e2e8f0">إغلاق الصندوق — مطابقة نهائية</div>
         <div style="font-size:11px;color:rgba(248,113,113,0.85);font-weight:600;margin-top:2px">أدخل الأرصدة الفعلية بعد العد</div>
@@ -1712,19 +1710,19 @@
       <!-- صفوف العملات -->
       <div style="border:1px solid rgba(50,184,198,0.13);border-radius:0 0 12px 12px;overflow:hidden">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px;border-bottom:1px solid rgba(50,184,198,0.09)">
-          <div style="display:flex;align-items:center;gap:6px"><span>🇺🇸</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">USD</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span></span><span style="font-size:12px;font-weight:700;color:#cbd5e1">USD</span></div>
           <div id="csExpUSD" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">$0</div>
           <input id="csActUSD" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
           <div id="csDiffUSD" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px;border-bottom:1px solid rgba(50,184,198,0.09)">
-          <div style="display:flex;align-items:center;gap:6px"><span>🇵🇸</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">ILS</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span></span><span style="font-size:12px;font-weight:700;color:#cbd5e1">ILS</span></div>
           <div id="csExpILS" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">₪0</div>
           <input id="csActILS" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
           <div id="csDiffILS" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center;padding:12px">
-          <div style="display:flex;align-items:center;gap:6px"><span>🇯🇴</span><span style="font-size:12px;font-weight:700;color:#cbd5e1">JOD</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span></span><span style="font-size:12px;font-weight:700;color:#cbd5e1">JOD</span></div>
           <div id="csExpJOD" style="text-align:center;font-size:12px;font-weight:700;color:#94a3b8;direction:ltr">JD 0</div>
           <input id="csActJOD" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcSessionDiff()" style="width:90%;margin:0 auto;display:block;background:rgba(255,255,255,0.06);border:1px solid rgba(50,184,198,0.20);border-radius:8px;padding:7px;color:#e2e8f0;font-size:12px;font-weight:700;text-align:center;outline:none;font-family:inherit" dir="ltr">
           <div id="csDiffJOD" style="text-align:center;font-size:13px;font-weight:800;color:#94a3b8">—</div>
@@ -1738,7 +1736,7 @@
         <textarea id="csNote" rows="2" placeholder="أي ملاحظة عن الفارق أو سبب الاختلاف..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(50,184,198,0.18);border-radius:10px;padding:10px;color:#e2e8f0;font-size:12px;font-family:inherit;resize:none;box-sizing:border-box;outline:none"></textarea>
       </div>
       <div style="display:flex;gap:10px">
-        <button onclick="confirmCloseSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#f87171,#ef4444);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🔒 إغلاق الصندوق نهائياً</button>
+        <button onclick="confirmCloseSession()" style="flex:1;padding:12px;background:linear-gradient(135deg,#f87171,#ef4444);border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">إغلاق الصندوق نهائياً</button>
         <button onclick="document.getElementById('closeSessionModal').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);border-radius:12px;color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>
       </div>
     </div>
@@ -1750,7 +1748,6 @@
   <div style="background:linear-gradient(145deg,#0f1923,#131f2e);border:1px solid rgba(99,102,241,0.3);border-radius:24px;width:min(580px,95vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;animation:boxOpenIn .4s cubic-bezier(.34,1.56,.64,1) both">
     <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(79,70,229,0.1));padding:18px 24px;border-bottom:1px solid rgba(99,102,241,0.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px">📒</span>
         <div>
           <div style="font-size:15px;font-weight:800;color:#e2e8f0">دفتر القيود</div>
           <div style="font-size:11px;color:rgba(99,102,241,0.85);font-weight:600" id="journalSessionId">الجلسة الحالية</div>
@@ -1807,7 +1804,7 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
 <div class="modal-overlay" id="devRequestModal" style="display:none;z-index:9500" onclick="if(event.target===this)closeDevRequestModal()">
   <div class="dr-modal-box">
     <div class="dr-hdr">
-      <div class="dr-hdr-icon">🛠️</div>
+      <div class="dr-hdr-icon"></div>
       <div>
         <div class="dr-hdr-title">طلب تعديل برمجي</div>
         <div class="dr-hdr-sub">سيتم إرسال الطلب مباشرة إلى الإدارة</div>
@@ -1820,9 +1817,9 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     <div class="dr-field">
       <label class="dr-label">نوع الطلب</label>
       <div class="dr-type-btns">
-        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
-        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
-        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تقاجدية</button>
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">مشكلة تقاجدية</button>
       </div>
     </div>
     <div class="dr-field">
@@ -1831,12 +1828,12 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     </div>
     <div class="dr-field">
       <label class="dr-label">مرفقات (اختياري)</label>
-      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <label class="dr-attach-lbl" for="drAttach">اضغط لإرفاق ملفات أو صور</label>
       <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
       <div class="dr-attach-files" id="drAttachFiles"></div>
     </div>
     <div class="dr-footer">
-      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-send" onclick="submitDevRequest()">إرسال للإدارة</button>
       <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
     </div>
   </div>
@@ -1873,7 +1870,7 @@ async function submitDevRequest(){
   try{
     var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'teller-departments'})});
     var data=await res.json();
-    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح','success');else alert('تم إرسال طلبك للإدارة بنجاح');}
     else{alert(data.error||'حدث خطأ أثناء الإرسال');}
   }catch(e){alert('تعذر الاتصال بالخادم');}
 }
@@ -1890,7 +1887,7 @@ async function submitDevRequest(){
 .voice-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(15,22,35,0.96);border:1px solid rgba(50,184,198,0.3);border-radius:12px;padding:10px 18px;color:#e9edef;font-size:13px;font-weight:700;direction:rtl;z-index:99999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:8px;}
 .voice-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
-<div class="voice-toast" id="voiceToast">🎤 <span id="voiceToastMsg">جاري الاستماع...</span></div>
+<div class="voice-toast" id="voiceToast"><span id="voiceToastMsg">جاري الاستماع...</span></div>
 <script>
 (function(){
   var VOICE_FIELDS=[
@@ -1959,7 +1956,7 @@ function startVoice(btn,fieldId,isNumber){
 
   var toast=document.getElementById('voiceToast');
   var toastMsg=document.getElementById('voiceToastMsg');
-  if(toast){toastMsg.textContent='🎤 جاري الاستماع... تكلم الآن';toast.classList.add('show');}
+  if(toast){toastMsg.textContent='جاري الاستماع... تكلم الآن';toast.classList.add('show');}
 
   rec.onresult=function(e){
     var text=e.results[0][0].transcript.trim();
@@ -1975,7 +1972,7 @@ function startVoice(btn,fieldId,isNumber){
       el.dispatchEvent(new Event('change',{bubbles:true}));
       el.focus();
     }
-    if(toast){toastMsg.textContent='✅ تم: "'+text+'"';setTimeout(function(){toast.classList.remove('show');},2000);}
+    if(toast){toastMsg.textContent='تم: "'+text+'"';setTimeout(function(){toast.classList.remove('show');},2000);}
   };
 
   rec.onerror=function(ev){
@@ -2033,7 +2030,6 @@ function startVoice(btn,fieldId,isNumber){
     direction:rtl;
 ">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-    <span style="font-size:22px;">🎙️</span>
     <span style="font-weight:700;color:var(--text-primary,#f1f5f9);font-size:15px;">أمر صوتي جديد</span>
     <button onclick="document.getElementById('voicePopup').style.display='none'"
             style="margin-right:auto;background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;line-height:1;">✗</button>
@@ -2065,12 +2061,12 @@ function startVoice(btn,fieldId,isNumber){
 
   function _label(r){
     var t=r.type||'';
-    return t==='exchange'?'🔁 صرافة':t==='hawala'?'📤 حوالة':t==='deposit'?'📥 إيداع نقدي':t==='withdrawal'?'📤 سحب نقدي':'⚙️ '+t;
+    return t==='exchange'?'صرافة':t==='hawala'?'حوالة':t==='deposit'?'إيداع نقدي':t==='withdrawal'?'سحب نقدي':t;
   }
 
   function _detail(r){
     var lines=[], t=r.type||'';
-    if(r.text) lines.push('📝 '+r.text);
+    if(r.text) lines.push(r.text);
     if(t==='exchange'){
       if(r.amount)      lines.push('المبلغ: <b>'+r.amount+' '+(r.from_currency||'')+'</b>');
       if(r.result)      lines.push('الناتج: <b>'+parseFloat(r.result).toFixed(2)+' '+(r.to_currency||'')+'</b>');
@@ -2093,7 +2089,7 @@ function startVoice(btn,fieldId,isNumber){
     document.getElementById('voicePopupLabel').textContent  = _label(result);
     document.getElementById('voicePopupDetail').innerHTML   = _detail(result);
     var stat = document.getElementById('voicePopupStatus');
-    stat.innerHTML   = result.success ? '✅ منفَّذ' : '❌ '+(result.message||'خطأ');
+    stat.innerHTML   = result.success ? 'منفَّذ' : (result.message||'خطأ');
     stat.style.color = result.success ? '#22c55e' : '#ef4444';
 
     var bar = document.getElementById('voicePopupBar');

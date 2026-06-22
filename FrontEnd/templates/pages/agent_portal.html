@@ -176,7 +176,7 @@ body{background:#080f1a;color:#e2e8f0;font-family:'Segoe UI',Tahoma,sans-serif;m
       <div class="stat-card green"><div class="stat-val" id="s-completed">—</div><div class="stat-lbl">منجز</div></div>
     </div>
 
-    <h3 style="color:#94a3b8;font-size:.85rem;margin-bottom:14px;font-weight:500">⚡ آخر الحوالات</h3>
+    <h3 style="color:#94a3b8;font-size:.85rem;margin-bottom:14px;font-weight:500">آخر الحوالات</h3>
     <div class="tf-list" id="recent-list">
       <div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات حديثة</div>
     </div>
@@ -186,9 +186,9 @@ body{background:#080f1a;color:#e2e8f0;font-family:'Segoe UI',Tahoma,sans-serif;m
   <div class="section" id="sec-transfers">
     <div class="filter-bar">
       <button class="f-btn active" onclick="filterTransfers('',this)">الكل</button>
-      <button class="f-btn" onclick="filterTransfers('pending',this)">🔴 معلّق</button>
-      <button class="f-btn" onclick="filterTransfers('processing',this)">🟡 قيد التنفيذ</button>
-      <button class="f-btn" onclick="filterTransfers('completed',this)">🟢 منجز</button>
+      <button class="f-btn" onclick="filterTransfers('pending',this)">معلّق</button>
+      <button class="f-btn" onclick="filterTransfers('processing',this)">قيد التنفيذ</button>
+      <button class="f-btn" onclick="filterTransfers('completed',this)">منجز</button>
     </div>
     <div class="tf-list" id="transfers-list">
       <div class="empty"><i class="fa-solid fa-inbox"></i>لا توجد حوالات</div>
@@ -474,7 +474,7 @@ async function acceptTransfer(id) {
       method: 'POST', headers: {'X-CSRFToken': getCsrf()}
     });
     const d = await r.json();
-    if (d.success) { toast('✅ تم قبول الحوالة', 'ok'); loadTransfers(); loadDashboard(); }
+    if (d.success) { toast('تم قبول الحوالة', 'ok'); loadTransfers(); loadDashboard(); }
     else toast(d.error || 'حدث خطأ', 'err');
   } catch(e) { toast('حدث خطأ في الاتصال', 'err'); }
 }
@@ -537,7 +537,7 @@ async function submitReceipt() {
       method: 'POST', headers: {'X-CSRFToken': getCsrf()}, body: fd,
     });
     const d = await r.json();
-    if (d.success) { toast('✅ ' + d.message, 'ok'); closeReceiptModal(); loadTransfers(); loadDashboard(); }
+    if (d.success) { toast(d.message, 'ok'); closeReceiptModal(); loadTransfers(); loadDashboard(); }
     else toast(d.error || 'حدث خطأ', 'err');
   } catch(e) { toast('حدث خطأ في الاتصال', 'err'); }
 }
@@ -597,7 +597,7 @@ async function changePin() {
     });
     const d = await r.json();
     if (d.success) {
-      toast('✅ تم تغيير رمز PIN', 'ok');
+      toast('تم تغيير رمز PIN', 'ok');
       document.getElementById('old-pin').value = '';
       document.getElementById('new-pin').value = '';
     } else toast(d.error || 'حدث خطأ', 'err');

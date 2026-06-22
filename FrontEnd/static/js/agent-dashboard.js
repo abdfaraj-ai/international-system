@@ -118,7 +118,7 @@ function renderDashboard(d) {
   document.getElementById('ag-dash').style.gap = '18px';
 
   // Title
-  document.getElementById('ag-title').textContent    = `📊 لوحة الوكيل — ${ag.name || ''}`;
+  document.getElementById('ag-title').textContent    = `لوحة الوكيل — ${ag.name || ''}`;
   document.getElementById('ag-subtitle').textContent = `${ag.country || ''} | عمولة 2.5%`;
 
   // Stat cards
@@ -445,7 +445,7 @@ function onFileSelect(input) {
   const zone  = document.getElementById('ag-file-zone');
   const label = document.getElementById('ag-file-label');
   zone.classList.add('has-file');
-  label.textContent = `✓ ${_selectedFile.name}`;
+  label.textContent = _selectedFile.name;
 }
 
 function submitConfirm() {
@@ -515,7 +515,7 @@ function submitVerify() {
   .then(r => r.json())
   .then(d => {
     if (d.success) {
-      agToast(`تم التحقق ✓ | خُصم: ${fmt4(d.deducted)} USDT | عمولة: ${fmt4(d.commission)} USDT`, 'success');
+      agToast(`تم التحقق | خُصم: ${fmt4(d.deducted)} USDT | عمولة: ${fmt4(d.commission)} USDT`, 'success');
       closeModal('ag-verify-overlay');
       loadDashboard(_agentId);
       loadTransfers(_agentId, _tfPage);

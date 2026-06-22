@@ -9,7 +9,6 @@ PATCH /api/am/transfers/<id>/receive/  ← تأكيد استلام حوالة
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.utils import timezone
 from django.db.models import Q, Sum, Count
@@ -74,7 +73,6 @@ def api_am_init(request):
 # GET + POST /api/am/transfers/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_transfers(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -225,7 +223,6 @@ def api_am_transfers(request):
 # PATCH /api/am/transfers/<id>/receive/   ← تأكيد الاستلام
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_transfer_receive(request, transfer_id):
     """يُغيِّر حالة الحوالة من pending إلى completed"""
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')

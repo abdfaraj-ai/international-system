@@ -22,8 +22,8 @@
         </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-        <span class="h-badge">⚙️ الإدارة العامة</span>
-        <span class="h-badge" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--success)" id="headerBadge">📋 0 مهمة نشطة</span>
+        <span class="h-badge">الإدارة العامة</span>
+        <span class="h-badge" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--success)" id="headerBadge">0 مهمة نشطة</span>
     </div>
     {% include 'layout/navbar.html' with page_name="tasks-admin" page_title="إدارة المهام" %}
 </header>
@@ -81,11 +81,11 @@
         <!-- فلاتر -->
         <div class="filter-bar">
             <button class="filter-btn active" onclick="filterByStatus('');setFilter(this)">الكل</button>
-            <button class="filter-btn" onclick="filterByStatus('new');setFilter(this)">🆕 جديدة</button>
-            <button class="filter-btn" onclick="filterByStatus('in_progress');setFilter(this)">⚙️ قيد التنفيذ</button>
-            <button class="filter-btn" onclick="filterByStatus('submitted');setFilter(this)">📥 مُسلَّمة</button>
-            <button class="filter-btn" onclick="filterByStatus('accepted');setFilter(this)">✅ مقبولة</button>
-            <button class="filter-btn" onclick="filterByStatus('rejected');setFilter(this)">❌ مرفوضة</button>
+            <button class="filter-btn" onclick="filterByStatus('new');setFilter(this)">جديدة</button>
+            <button class="filter-btn" onclick="filterByStatus('in_progress');setFilter(this)">قيد التنفيذ</button>
+            <button class="filter-btn" onclick="filterByStatus('submitted');setFilter(this)">مُسلَّمة</button>
+            <button class="filter-btn" onclick="filterByStatus('accepted');setFilter(this)">مقبولة</button>
+            <button class="filter-btn" onclick="filterByStatus('rejected');setFilter(this)">مرفوضة</button>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="ابحث في المهام..." oninput="filterSearch(this.value)">
             </div>
@@ -123,10 +123,10 @@
                 <div class="form-group">
                     <label class="form-label">الأولوية</label>
                     <select class="form-control" id="fPriority">
-                        <option value="low">⚪ عادية</option>
-                        <option value="medium" selected>🔵 مهمة</option>
-                        <option value="high">🟡 عالية</option>
-                        <option value="urgent">🔴 عاجلة</option>
+                        <option value="low">عادية</option>
+                        <option value="medium" selected>مهمة</option>
+                        <option value="high">عالية</option>
+                        <option value="urgent">عاجلة</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -168,7 +168,7 @@
             <div style="display:flex;gap:10px;align-items:center">
                 <span id="devCount" style="font-size:12px;color:var(--text-muted)">0 مبرمج</span>
                 <button class="btn btn-primary btn-sm" onclick="switchPage('add-developer');setNav('add-developer')">
-                    ➕ إضافة مبرمج
+                    إضافة مبرمج
                 </button>
             </div>
         </div>
@@ -234,20 +234,20 @@
 <div class="modal-overlay hidden" id="taskModal">
     <div class="task-modal">
         <div class="modal-header">
-            <div class="modal-title" id="modalTaskTitle">📋 تفاصيل المهمة</div>
+            <div class="modal-title" id="modalTaskTitle">تفاصيل المهمة</div>
             <button class="modal-close" onclick="closeModal()">✕</button>
         </div>
         <div class="modal-body">
             <!-- البيانات الأساسية -->
             <div class="task-detail-grid" id="modalDetails"></div>
             <!-- الوصف -->
-            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📝 الوصف</div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">الوصف</div>
             <div class="task-desc-box" id="modalDesc"></div>
             <!-- التسليم -->
             <div id="modalSubmission"></div>
             <!-- التعليقات -->
             <div class="comments-section">
-                <div class="comments-title">💬 التعليقات والمراسلات</div>
+                <div class="comments-title">التعليقات والمراسلات</div>
                 <div class="comment-list" id="commentList"></div>
                 <div class="comment-input-row">
                     <textarea id="commentInput" placeholder="اكتب تعليقاً أو توضيحاً..."></textarea>
@@ -324,7 +324,7 @@ async function loadStats() {
         document.getElementById('statRejected').textContent = s.rejected;
         document.getElementById('badgeAll').textContent      = s.total;
         document.getElementById('badgeSubmitted').textContent= s.submitted;
-        document.getElementById('headerBadge').textContent   = `📋 ${s.new + s.inProgress} مهمة نشطة`;
+        document.getElementById('headerBadge').textContent   = `${s.new + s.inProgress} مهمة نشطة`;
         if (s.submitted > 0) {
             document.getElementById('badgeSubmitted').style.display = 'block';
         }
@@ -413,7 +413,7 @@ async function loadDevelopers() {
                     <button class="btn btn-secondary btn-sm" style="flex:1"
                         onclick="filterByAssignee('${u.username}');setNav('tasks');switchPage('tasks')">عرض مهامه</button>
                     <button class="btn btn-primary btn-sm" style="flex:1"
-                        onclick="resetDevPassword('${u.username}','${u.name||u.username}')">🔑 كلمة المرور</button>
+                        onclick="resetDevPassword('${u.username}','${u.name||u.username}')">كلمة المرور</button>
                 </div>
             </div>`;
         });
@@ -444,7 +444,7 @@ async function submitAddDeveloper(e) {
         });
         const d = await r.json();
         if (d.success) {
-            showToast('تم الإضافة', `تم إضافة المبرمج @${payload.username} بنجاح ✓`, 'success');
+            showToast('تم الإضافة', `تم إضافة المبرمج @${payload.username} بنجاح`, 'success');
             document.getElementById('addDevForm').reset();
             switchPage('developers'); setNav('developers');
             loadDevelopers();
@@ -514,7 +514,7 @@ async function resetDevPassword(username, name) {
 }
 
 /* ══════════ عرض المهام ══════════ */
-const priorityLabel = {urgent:'🔴 عاجلة',high:'🟡 عالية',medium:'🔵 مهمة',low:'⚪ عادية'};
+const priorityLabel = {urgent:'عاجلة',high:'عالية',medium:'مهمة',low:'عادية'};
 const statusLabel   = {new:'جديدة',in_progress:'قيد التنفيذ',submitted:'مُسلَّمة',accepted:'مقبولة',rejected:'مرفوضة'};
 
 function renderTasks(tasks, containerId) {
@@ -529,15 +529,15 @@ function renderTasks(tasks, containerId) {
         const dl = t.deadline ? new Date(t.deadline) : null;
         const now = new Date();
         const dlStr = dl ? (dl < now && t.status !== 'accepted'
-            ? `<span class="deadline-warn">⚠️ ${dl.toLocaleDateString('ar')}</span>`
-            : `<span class="deadline-ok">📅 ${dl.toLocaleDateString('ar')}</span>`) : '';
+            ? `<span class="deadline-warn">${dl.toLocaleDateString('ar')}</span>`
+            : `<span class="deadline-ok">${dl.toLocaleDateString('ar')}</span>`) : '';
         return `
         <div class="task-row ${t.priority}" onclick="openTask(${t.id})">
             <div class="task-priority-dot ${t.priority}"></div>
             <div class="task-main">
                 <div class="task-title-row">${t.title}</div>
                 <div class="task-meta">
-                    <span>👨‍💻 ${t.assignedToName}</span>
+                    <span>${t.assignedToName}</span>
                     <span>${priorityLabel[t.priority]||t.priority}</span>
                     ${dlStr}
                 </div>
@@ -595,7 +595,7 @@ async function submitCreateTask(e) {
         });
         const d = await r.json();
         if (d.success) {
-            showToast('تم الإرسال', 'تم إرسال المهمة بنجاح ✓', 'success');
+            showToast('تم الإرسال', 'تم إرسال المهمة بنجاح', 'success');
             document.getElementById('createTaskForm').reset();
             switchPage('tasks'); setNav('tasks');
             loadTasks(); loadStats();
@@ -618,13 +618,13 @@ async function openTask(id) {
         const t = d.task;
 
         document.getElementById('modalTaskTitle').innerHTML =
-            `📋 ${t.title} <span class="task-badge ${t.status}" style="font-size:12px">${statusLabel[t.status]||t.status}</span>`;
+            `${t.title} <span class="task-badge ${t.status}" style="font-size:12px">${statusLabel[t.status]||t.status}</span>`;
 
         // تفاصيل
         const dl = t.deadline ? new Date(t.deadline).toLocaleString('ar') : '—';
         document.getElementById('modalDetails').innerHTML = `
             <div class="detail-item"><div class="detail-label">المُكلَّف به</div>
-                <div class="detail-value">👨‍💻 ${t.assignedToName} (@${t.assignedTo})</div></div>
+                <div class="detail-value">${t.assignedToName} (@${t.assignedTo})</div></div>
             <div class="detail-item"><div class="detail-label">الأولوية</div>
                 <div class="detail-value"><span class="priority-badge ${t.priority}">${priorityLabel[t.priority]}</span></div></div>
             <div class="detail-item"><div class="detail-label">الموعد النهائي</div>
@@ -639,14 +639,14 @@ async function openTask(id) {
         if (t.submission) {
             const sub = t.submission;
             subBox.innerHTML = `
-            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">📦 التسليم</div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px">التسليم</div>
             <div class="submission-done">
                 <div class="submission-done-icon">📦</div>
                 <div>
                     <div class="submission-done-text">تم التسليم بواسطة ${sub.submittedByName}</div>
                     <div class="submission-done-note">${new Date(sub.submittedAt).toLocaleString('ar')}
                         ${sub.note ? ' — ' + sub.note : ''}
-                        ${sub.file ? ` — <a href="${sub.file}" target="_blank" style="color:var(--primary-light)">📎 تحميل الملف</a>` : ''}</div>
+                        ${sub.file ? ` — <a href="${sub.file}" target="_blank" style="color:var(--primary-light)">تحميل الملف</a>` : ''}</div>
                 </div>
             </div>`;
         } else subBox.innerHTML = '';
@@ -658,8 +658,8 @@ async function openTask(id) {
         const footer = document.getElementById('modalFooter');
         if (t.status === 'submitted') {
             footer.innerHTML = `
-                <button class="btn btn-danger" onclick="reviewTask('rejected')">❌ رفض التسليم</button>
-                <button class="btn btn-success" onclick="reviewTask('accepted')">✅ قبول التسليم</button>`;
+                <button class="btn btn-danger" onclick="reviewTask('rejected')">رفض التسليم</button>
+                <button class="btn btn-success" onclick="reviewTask('accepted')">قبول التسليم</button>`;
         } else if (t.status !== 'accepted') {
             footer.innerHTML = `
                 <button class="btn btn-secondary btn-sm" onclick="closeModal()">إغلاق</button>`;
@@ -736,7 +736,7 @@ async function reviewTask(status) {
         const d = await r.json();
         if (d.success) {
             showToast(status === 'accepted' ? 'تم القبول' : 'تم الرفض',
-                status === 'accepted' ? 'تم قبول التسليم ✓' : 'تم رفض التسليم',
+                status === 'accepted' ? 'تم قبول التسليم' : 'تم رفض التسليم',
                 status === 'accepted' ? 'success' : 'warning');
             closeModal();
             loadTasks(); loadStats();

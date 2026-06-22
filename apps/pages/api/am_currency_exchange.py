@@ -9,7 +9,6 @@ DELETE /api/am/currency-exchange/<id>/   ← حذف
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.utils import timezone
@@ -39,7 +38,6 @@ def _today():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-@csrf_exempt
 def api_am_currency_exchange(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -140,7 +138,6 @@ def api_am_currency_exchange(request):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-@csrf_exempt
 def api_am_currency_exchange_detail(request, record_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

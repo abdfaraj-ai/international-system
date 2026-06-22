@@ -171,8 +171,8 @@ async function svSaveFees() {
     const st = document.getElementById('sv-fee-status');
     if (data.success) {
       inputs.forEach(inp => inp.style.borderColor = 'rgba(52,211,153,0.5)');
-      if (st) { st.textContent = '✅ تم حفظ عمولات البوابة'; st.style.display = 'block'; setTimeout(() => st.style.display = 'none', 4000); }
-      svToast('تم حفظ العمولات بنجاح ✅', 'success');
+      if (st) { st.textContent = 'تم حفظ عمولات البوابة'; st.style.display = 'block'; setTimeout(() => st.style.display = 'none', 4000); }
+      svToast('تم حفظ العمولات بنجاح', 'success');
     } else {
       svToast('فشل الحفظ', 'error');
     }
@@ -223,9 +223,9 @@ async function svSaveRates() {
     const st = document.getElementById('sv-rates-status');
     const lu = document.getElementById('sv-rates-last-updated');
     if (data.success) {
-      if (st) { st.textContent = '✅ تم نشر الأسعار على النظام — ' + new Date().toLocaleTimeString('ar'); st.style.display = 'block'; setTimeout(() => st.style.display = 'none', 5000); }
+      if (st) { st.textContent = 'تم نشر الأسعار على النظام — ' + new Date().toLocaleTimeString('ar'); st.style.display = 'block'; setTimeout(() => st.style.display = 'none', 5000); }
       if (lu) lu.textContent = 'Last updated: ' + new Date().toLocaleString('ar');
-      svToast('تم نشر الأسعار بنجاح ✅', 'success');
+      svToast('تم نشر الأسعار بنجاح', 'success');
       setTimeout(closeRatesModal, 1200);
     } else {
       svToast(data.message || 'فشل الحفظ', 'error');
@@ -254,7 +254,7 @@ let _svMigFormat = 'json';
 
 function svOpenMigrationModal() {
   const history = JSON.parse(localStorage.getItem('transferHistory') || '[]');
-  if (history.length === 0) { svToast('⚠️ السجل فارغ — لا توجد حوالات للترحيل', 'warn'); return; }
+  if (history.length === 0) { svToast('السجل فارغ — لا توجد حوالات للترحيل', 'warn'); return; }
   _svMigFormat = 'json';
   _svRefreshMigFormatUI();
   const total = history.length;
@@ -336,10 +336,10 @@ function svExecuteMigration() {
   svCloseMigrationModal();
   if (clearAfter) {
     localStorage.removeItem('transferHistory');
-    svToast(`✅ تم ترحيل ${count} حوالة وتفريغ السجل`, 'success');
+    svToast(`تم ترحيل ${count} حوالة وتفريغ السجل`, 'success');
     _svLoadLiveData();
   } else {
-    svToast(`📦 تم ترحيل ${count} حوالة — السجل محفوظ`, 'success');
+    svToast(`تم ترحيل ${count} حوالة — السجل محفوظ`, 'success');
   }
 }
 function svClock(){const now=new Date();const ts=now.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});const ds=now.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long',year:'numeric',month:'long',day:'numeric'});const _ck=document.getElementById('sv-clock');const _dt=document.getElementById('sv-date');if(_ck)_ck.textContent=ts;if(_dt)_dt.textContent=ds;const badge=document.getElementById('sv-date-badge');if(badge)badge.textContent=now.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
@@ -1281,7 +1281,7 @@ function agtPinMove(el, idx) {
   const boxes=document.querySelectorAll('#sv-agt-pin-boxes .agt-pin-box');
   const filled=Array.from(boxes).filter(b=>b.value).length;
   const s=document.getElementById('sv-agt-pin-status');
-  if(s) s.textContent = filled===6 ? '✅ PIN مكتمل (6 أرقام)' : filled>0 ? filled+' من 6' : '';
+  if(s) s.textContent = filled===6 ? 'PIN مكتمل (6 أرقام)' : filled>0 ? filled+' من 6' : '';
 }
 
 function agtPinBack(el, idx, e) {
@@ -1353,7 +1353,7 @@ function openEditAgent(id) {
   const activeToggle=document.getElementById('sv-agt-portal-active'); if(activeToggle) activeToggle.checked=!!a.portalActive;
   _agtClearPinBoxes();
   const pinStatus=document.getElementById('sv-agt-pin-status');
-  if(pinStatus) pinStatus.textContent = a.portalActive ? '🔒 PIN محفوظ — اتركه فارغاً للإبقاء عليه' : 'اختياري — أدخل PIN لتفعيل البوابة';
+  if(pinStatus) pinStatus.textContent = a.portalActive ? 'PIN محفوظ — اتركه فارغاً للإبقاء عليه' : 'اختياري — أدخل PIN لتفعيل البوابة';
   // تحميل مناطق العمل
   const locWrap = document.getElementById('sv-agt-locations');
   if(locWrap) { locWrap.innerHTML=''; }
@@ -1631,7 +1631,7 @@ async function sarSaveRate() {
     });
     const d=await r.json();
     if(d.success){
-      svToast('✅ تم حفظ السعر — '+country,'success');
+      svToast('تم حفظ السعر — '+country,'success');
       ['sar-country','sar-rate','sar-fee-pct','sar-fee-flat','sar-min','sar-max','sar-notes'].forEach(id=>{
         const el=document.getElementById(id); if(el){el.value=''; delete el.dataset.editId;}
       });
@@ -1640,7 +1640,7 @@ async function sarSaveRate() {
       svToast(d.message||'حدث خطأ','error');
     }
   } catch(e){ svToast('تعذّر الاتصال','error'); }
-  finally{ if(btn){btn.disabled=false;btn.textContent='💾 حفظ السعر';} }
+  finally{ if(btn){btn.disabled=false;btn.textContent='حفظ السعر';} }
 }
 
 async function sarDeleteRate(rateId) {
@@ -1689,7 +1689,7 @@ async function openPortalSetup(agentName) {
         if (activeToggle)       activeToggle.checked = !!match.portalActive;
         const badge = document.getElementById('sp-portal-badge');
         if (badge) {
-          badge.textContent = match.portalActive ? '✅ مفعّل' : '⛔ غير مفعّل';
+          badge.textContent = match.portalActive ? 'مفعّل' : 'غير مفعّل';
           badge.style.color = match.portalActive ? '#34d399' : '#f87171';
         }
       }
@@ -1733,10 +1733,10 @@ async function savePortalSetup() {
     });
     const d = await r.json();
     if (d.success) {
-      svToast('✅ ' + (d.message || 'تم تفعيل بوابة الوكيل'), 'success');
+      svToast(d.message || 'تم تفعيل بوابة الوكيل', 'success');
       const msg = document.getElementById('sp-status-msg');
       if (msg) {
-        msg.textContent = '🔗 رابط البوابة: ' + window.location.origin + '/agent/login/';
+        msg.textContent = 'رابط البوابة: ' + window.location.origin + '/agent/login/';
         msg.style.display = 'block';
         msg.style.color = '#34d399';
       }

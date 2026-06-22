@@ -8,7 +8,6 @@ DELETE /api/am/new-credit/<id>/   ← حذف
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.utils import timezone
 
@@ -36,7 +35,6 @@ def _today():
     return timezone.localdate().strftime('%Y-%m-%d')
 
 
-@csrf_exempt
 def api_am_new_credit(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -109,7 +107,6 @@ def api_am_new_credit(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
-@csrf_exempt
 def api_am_new_credit_detail(request, record_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

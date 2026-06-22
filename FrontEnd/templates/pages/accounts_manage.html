@@ -34,7 +34,6 @@
     </div>
   </div>
   <div id="header-section-name">
-    <span class="sec-icon">🏦</span>
     <span id="header-sec-text">إدارة الحسابات</span>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
@@ -73,7 +72,7 @@
   <!-- ── Page Header ── -->
   <div class="am-header">
     <div class="am-header-left">
-      <div class="am-icon-wrap">🏦</div>
+      <div class="am-icon-wrap"></div>
       <div>
         <div class="am-title">إدارة الحسابات</div>
         <div class="am-sub">اختر أداة من الشريط أدناه للبدء</div>
@@ -198,7 +197,7 @@
 
     <!-- placeholder -->
     <div class="am-placeholder" id="pane-none">
-      <div class="am-placeholder-icon">🏦</div>
+      <div class="am-placeholder-icon"></div>
       <div class="am-placeholder-text">اختر أداة من الشريط أعلاه</div>
       <div class="am-placeholder-sub">اضغط على أي أيقونة لعرض أداة العمل هنا</div>
     </div>
@@ -229,8 +228,8 @@
           <div class="am-field">
             <label>العملة</label>
             <select id="entr-from-cur" onchange="entr_calc()">
-              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
-              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+              <option value="USD">USD</option><option value="JOD">JOD</option>
+              <option value="ILS">ILS</option><option value="TRY">TRY</option>
             </select>
           </div>
         </div>
@@ -251,8 +250,8 @@
           <div class="am-field">
             <label>العملة</label>
             <select id="entr-to-cur" onchange="entr_calc()">
-              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
-              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
+              <option value="USD">USD</option><option value="JOD">JOD</option>
+              <option value="ILS">ILS</option><option value="TRY">TRY</option>
             </select>
           </div>
         </div>
@@ -281,8 +280,8 @@
       </div>
       <div class="am-actions">
         <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
-        <button class="am-btn-cancel" onclick="entr_saveTemplate()" style="color:#818cf8;">💾 حفظ قالب</button>
-        <button class="am-btn-submit" onclick="entr_save()" style="background:linear-gradient(135deg,#ef4444,#dc2626);">✅ تنفيذ القيد</button>
+        <button class="am-btn-cancel" onclick="entr_saveTemplate()" style="color:#818cf8;">حفظ قالب</button>
+        <button class="am-btn-submit" onclick="entr_save()" style="background:linear-gradient(135deg,#ef4444,#dc2626);">تنفيذ القيد</button>
       </div>
     </div>
 
@@ -341,9 +340,9 @@
           <div class="am-field">
             <label>العملة</label>
             <select id="adv-from-cur" onchange="adv_calc()">
-              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
-              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
-              <option value="SYP">🇸🇾 SYP</option>
+              <option value="USD">USD</option><option value="JOD">JOD</option>
+              <option value="ILS">ILS</option><option value="TRY">TRY</option>
+              <option value="SYP">SYP</option>
             </select>
           </div>
           <div class="am-field">
@@ -399,9 +398,9 @@
           <div class="am-field">
             <label>العملة</label>
             <select id="adv-to-cur" onchange="adv_calc()">
-              <option value="USD">🇺🇸 USD</option><option value="JOD">🇯🇴 JOD</option>
-              <option value="ILS">🇵🇸 ILS</option><option value="TRY">🇹🇷 TRY</option>
-              <option value="SYP">🇸🇾 SYP</option>
+              <option value="USD">USD</option><option value="JOD">JOD</option>
+              <option value="ILS">ILS</option><option value="TRY">TRY</option>
+              <option value="SYP">SYP</option>
             </select>
           </div>
           <div class="am-field">
@@ -434,8 +433,8 @@
       </div>
       <div class="am-actions">
         <button class="am-btn-cancel" onclick="amSwitch(null)">إلغاء</button>
-        <button class="am-btn-cancel" onclick="adv_reset()" style="color:#6366f1;">🔄 إعادة تعيين</button>
-        <button class="am-btn-submit" onclick="adv_save()" style="background:linear-gradient(135deg,#ec4899,#db2777);">✅ تنفيذ القيد المتقدم</button>
+        <button class="am-btn-cancel" onclick="adv_reset()" style="color:#6366f1;">إعادة تعيين</button>
+        <button class="am-btn-submit" onclick="adv_save()" style="background:linear-gradient(135deg,#ec4899,#db2777);">تنفيذ القيد المتقدم</button>
       </div>
     </div>
 
@@ -443,7 +442,7 @@
     <div id="pane-transfers" style="display:none;">
       <!-- فلتر -->
       <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <input id="tr-search" type="text" placeholder="🔍 بحث..." oninput="trFilter()"
+        <input id="tr-search" type="text" placeholder="بحث..." oninput="trFilter()"
           style="flex:1;min-width:180px;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
         <input id="tr-date-from" type="date" onchange="trFilter()"
           style="padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
@@ -489,7 +488,7 @@
         <div style="flex:2;min-width:200px;position:relative;">
           <div style="font-size:10px;color:#5a7090;margin-bottom:5px;font-weight:600;">المركز / الوكيل</div>
           <div style="position:relative;">
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#4a6280;font-size:12px;pointer-events:none;">🔍</span>
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#4a6280;font-size:12px;pointer-events:none;"></span>
             <input id="stm-search" type="text" placeholder="ابحث عن مركز..." oninput="stmSearch(this.value)"
               style="width:100%;box-sizing:border-box;padding:8px 12px 8px 32px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;">
             <div id="stm-dd" style="display:none;position:absolute;top:calc(100% + 4px);right:0;left:0;background:#0d1f35;border:1px solid rgba(255,255,255,0.12);border-radius:10px;z-index:200;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.5);"></div>
@@ -532,12 +531,12 @@
           <select id="stm-currency"
             style="width:100%;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e9edef;font-size:12px;outline:none;font-family:inherit;cursor:pointer;">
             <option value="">الكل</option>
-            <option value="USD">🇺🇸 USD</option>
-            <option value="JOD">🇯🇴 JOD</option>
-            <option value="ILS">🇵🇸 ILS</option>
-            <option value="EUR">🇪🇺 EUR</option>
-            <option value="TRY">🇹🇷 TRY</option>
-            <option value="SYP">🇸🇾 SYP</option>
+            <option value="USD">USD</option>
+            <option value="JOD">JOD</option>
+            <option value="ILS">ILS</option>
+            <option value="EUR">EUR</option>
+            <option value="TRY">TRY</option>
+            <option value="SYP">SYP</option>
           </select>
         </div>
 
@@ -550,7 +549,7 @@
         <!-- زر كشف -->
         <button onclick="stmGenerate()"
           style="padding:9px 22px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#1e3a8a);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
-          📋 كشف حساب
+          كشف حساب
         </button>
         <button onclick="stmPrint()"
           style="padding:9px 16px;border-radius:9px;background:rgba(255,255,255,0.05);color:#60a5fa;border:1px solid rgba(96,165,250,0.2);font-size:12px;cursor:pointer;font-family:inherit;">
@@ -662,11 +661,11 @@
           <span class="nm-lbl">عملة الإرسال</span>
           <select id="nm-send-cur" class="nm-input" onchange="nm_calc()" style="cursor:pointer;">
             <option value="">اختر العملة</option>
-            <option value="USD">🇺🇸 USD</option>
-            <option value="JOD">🇯🇴 JOD</option>
-            <option value="ILS">🇵🇸 ILS</option>
-            <option value="TRY">🇹🇷 TRY</option>
-            <option value="SYP">🇸🇾 SYP</option>
+            <option value="USD">USD</option>
+            <option value="JOD">JOD</option>
+            <option value="ILS">ILS</option>
+            <option value="TRY">TRY</option>
+            <option value="SYP">SYP</option>
           </select>
           <span class="nm-lbl" style="text-align:center;">مبلغ الإرسال</span>
           <input id="nm-send-amt" type="number" placeholder="0" class="nm-input" oninput="nm_calc()" style="color:#4ade80;font-weight:800;">
@@ -677,11 +676,11 @@
           <span class="nm-lbl">عملة التسليم</span>
           <select id="nm-recv-cur" class="nm-input" onchange="nm_calc()" style="cursor:pointer;">
             <option value="">اختر العملة</option>
-            <option value="USD">🇺🇸 USD</option>
-            <option value="JOD">🇯🇴 JOD</option>
-            <option value="ILS">🇵🇸 ILS</option>
-            <option value="TRY">🇹🇷 TRY</option>
-            <option value="SYP">🇸🇾 SYP</option>
+            <option value="USD">USD</option>
+            <option value="JOD">JOD</option>
+            <option value="ILS">ILS</option>
+            <option value="TRY">TRY</option>
+            <option value="SYP">SYP</option>
           </select>
           <span class="nm-lbl" style="text-align:center;">مبلغ التسليم</span>
           <input id="nm-recv-amt" type="number" placeholder="0" class="nm-input" oninput="nm_calc()" style="color:#f87171;font-weight:800;">
@@ -1120,7 +1119,7 @@
     <!-- ══ placeholder للأدوات قيد التطوير ══ -->
     <div id="pane-wip" style="display:none;">
       <div class="am-placeholder">
-        <div class="am-placeholder-icon">🔧</div>
+        <div class="am-placeholder-icon"></div>
         <div class="am-placeholder-text">قيد التطوير</div>
         <div class="am-placeholder-sub">هذه الأداة ستكون متاحة قريباً</div>
       </div>

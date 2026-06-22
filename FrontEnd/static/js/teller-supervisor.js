@@ -103,7 +103,7 @@ window.addEventListener('storage',function(e){
             const t=tellers.find(x=>(x.username||x.name)===n.tellerUsername);
             const name=t?t.name:n.tellerUsername;
             const icon=n.diffTotal<0.01?'✅':'⚠️';
-            showToast(`${icon} ${name} أغلق الصندوق — ${n.status}`,'success','🔒');
+            showToast(`${name} أغلق الصندوق — ${n.status}`,'success','🔒');
             renderTellers();
         }catch(err){}
     }
@@ -168,11 +168,11 @@ function _renderClosingReportCard(report, tellerUsername){
     const matched=diffTotal<0.01;
     const btnCls=matched?'':'has-diff';
     const badgeCls=matched?'matched':'diff';
-    const badgeTxt=matched?'✅ متطابق':`⚠️ فارق $${diffTotal.toFixed(2)}`;
+    const badgeTxt=matched?'متطابق':`فارق $${diffTotal.toFixed(2)}`;
     return `<div class="cr-btn-wrap">
         <button class="cr-open-btn ${btnCls}" onclick="openClosingReportModal('${tellerUsername}')">
             <div class="cr-open-btn-left">
-                <div class="cr-open-btn-icon">📋</div>
+                <div class="cr-open-btn-icon"></div>
                 <span>تقرير الصندوق الختامي</span>
                 <span class="cr-open-btn-badge ${badgeCls}">${badgeTxt}</span>
             </div>
@@ -197,7 +197,7 @@ function openClosingReportModal(tellerUsername){
     document.getElementById('crModalTellerName').textContent=tellerName;
     document.getElementById('crModalSessionId').textContent=report.id+' — '+new Date(report.closedAt||0).toLocaleDateString('ar-EG');
     const st=document.getElementById('crModalStatus');
-    st.textContent=matched?'✅ صندوق متطابق':'⚠️ يوجد فارق';
+    st.textContent=matched?'صندوق متطابق':'يوجد فارق';
     st.className='cr-modal-status '+(matched?'matched':'diff');
     // الوقت
     document.getElementById('crModalStart').textContent=report.startTime||'—';
@@ -211,7 +211,7 @@ function openClosingReportModal(tellerUsername){
         const a=act[code]||0, e=exp[code]||0, o=op[code]||0, d=diff[code]||0;
         const hasDiff=Math.abs(d)>0.01;
         const diffCls=hasDiff?(d>0?'diff-pos':'diff-neg'):'diff-zero';
-        const diffTxt=hasDiff?((d>0?'+':'')+sym+Math.abs(d).toFixed(2)):'✓ مطابق';
+        const diffTxt=hasDiff?((d>0?'+':'')+sym+Math.abs(d).toFixed(2)):'مطابق';
         return `<div class="cr-modal-cur-row${hasDiff?' has-diff':''}">
             <span class="cr-modal-cur-flag">${flag}</span>
             <div class="cr-modal-cur-cell">
@@ -228,8 +228,8 @@ function openClosingReportModal(tellerUsername){
     const dr=document.getElementById('crModalDiffRow');
     dr.className='cr-modal-diff-row '+(matched?'matched':'diff');
     dr.innerHTML=matched
-        ?`<span class="cr-modal-diff-text matched">✅ الصندوق متطابق — لا يوجد أي فوارق</span><span class="cr-modal-diff-sub">عمل ممتاز</span>`
-        :`<span class="cr-modal-diff-text diff">⚠️ إجمالي الفارق ≈ $${diffTotal.toFixed(2)}</span><span class="cr-modal-diff-sub">يستلزم المراجعة</span>`;
+        ?`<span class="cr-modal-diff-text matched">الصندوق متطابق — لا يوجد أي فوارق</span><span class="cr-modal-diff-sub">عمل ممتاز</span>`
+        :`<span class="cr-modal-diff-text diff">إجمالي الفارق ≈ $${diffTotal.toFixed(2)}</span><span class="cr-modal-diff-sub">يستلزم المراجعة</span>`;
     // الملاحظة
     const noteWrap=document.getElementById('crModalNote');
     const noteTxt=report.note||'';
@@ -258,7 +258,7 @@ function renderTellers(){
                     <div class="tc2-name">${t.name}</div>
                     <div class="tc2-tid">${t.id}</div>
                 </div>
-                <div class="tc2-badge ${t.status}">${isOnline?'🟢 متصل':'🔴 غير متصل'}</div>
+                <div class="tc2-badge ${t.status}">${isOnline?'متصل':'غير متصل'}</div>
             </div>
             <!-- Main stats -->
             <div class="tc2-main-stats">
@@ -283,11 +283,11 @@ function renderTellers(){
             <!-- Meta -->
             <div class="tc2-meta">
                 <div class="tc2-meta-cell">
-                    <span class="tc2-meta-lbl">🕐 وقت الدخول</span>
+                    <span class="tc2-meta-lbl">وقت الدخول</span>
                     <span class="tc2-meta-val">${t.loginTime}</span>
                 </div>
                 <div class="tc2-meta-cell">
-                    <span class="tc2-meta-lbl">⚡ آخر عملية</span>
+                    <span class="tc2-meta-lbl">آخر عملية</span>
                     <span class="tc2-meta-val">${t.lastOp}</span>
                 </div>
             </div>
@@ -305,14 +305,14 @@ function renderTellers(){
             <div class="tc2-actions">
                 ${isOnline?`
                     <div class="tc2-row">
-                        <button class="tc2-btn tc2-btn-bal" onclick="openBalanceForTeller('${t.name}')">💰 رصيد</button>
-                        <button class="tc2-btn tc2-btn-log" onclick="viewTellerOps('${t.name}')">📜 عمليات</button>
-                        <button class="tc2-btn tc2-btn-perm" onclick="openPermissions('${t.id||t.username||t.name}')">🔐 صلاحيات</button>
+                        <button class="tc2-btn tc2-btn-bal" onclick="openBalanceForTeller('${t.name}')">رصيد</button>
+                        <button class="tc2-btn tc2-btn-log" onclick="viewTellerOps('${t.name}')">عمليات</button>
+                        <button class="tc2-btn tc2-btn-perm" onclick="openPermissions('${t.id||t.username||t.name}')">صلاحيات</button>
                     </div>
-                    <button class="tc2-btn-exit" onclick="toggleTeller('${t.id||t.username||t.name}')">🚫 إخراج التلر من النظام</button>
+                    <button class="tc2-btn-exit" onclick="toggleTeller('${t.id||t.username||t.name}')">إخراج التلر من النظام</button>
                 `:`
                     <div class="tc2-row">
-                        <button class="tc2-btn-enter" onclick="toggleTeller('${t.id||t.username||t.name}')">✅ إدخال التلر للنظام</button>
+                        <button class="tc2-btn-enter" onclick="toggleTeller('${t.id||t.username||t.name}')">إدخال التلر للنظام</button>
                         <button class="tc2-btn-perm-sm" onclick="openPermissions('${t.id||t.username||t.name}')">🔐</button>
                         <button class="tc2-btn-perm-sm" onclick="openChangePwd('${t.username||t.name}','${t.name}')" title="تغيير كلمة المرور">🔑</button>
                         <button class="tc2-btn-perm-sm" onclick="deleteTeller('${t.username||t.name}')" style="background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.3);color:#f87171" title="حذف التلر">🗑️</button>
@@ -371,7 +371,7 @@ function updateStats(){
     document.getElementById('sTotalOps').textContent=online.reduce((s,t)=>s+t.ops,0);
     const pendingCount=requests.filter(r=>r.status==='pending').length;
     document.getElementById('sPending').textContent=pendingCount;
-    document.getElementById('headerOnline').textContent=`🟢 ${online.length} تلر متصل`;
+    document.getElementById('headerOnline').textContent=`${online.length} تلر متصل`;
     document.getElementById('reqBadge').textContent=pendingCount;
 }
 
@@ -448,7 +448,7 @@ function confirmBalance(){
     .then(d=>{
         if(!d.success){showToast('فشل تعيين الرصيد: '+(d.message||''),'error','❌');return;}
         ['balAmtUSD','balAmtILS','balAmtJOD'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-        showToast(`تم فتح الصندوق لـ ${displayName||username} ✅`,'success','🔓');
+        showToast(`تم فتح الصندوق لـ ${displayName||username}`,'success','🔓');
         _loadTellers();
         loadBalanceLog();
     })
@@ -478,7 +478,7 @@ function _renderBalLogTable(balances){
         <td style="font-weight:700;direction:ltr;text-align:right;color:var(--primary-light)">${b.usd?'$'+Number(b.usd).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):''} ${b.ils?'₪'+Number(b.ils).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):''} ${b.jod?'JD '+Number(b.jod).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):''}</td>
         <td>متعدد</td>
         <td style="direction:ltr;text-align:right;font-size:12px">${b.setAt?new Date(b.setAt).toLocaleString('ar-EG'):''}</td>
-        <td><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(34,197,94,0.1);color:var(--success)">✅ معيّن</span></td>
+        <td><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(34,197,94,0.1);color:var(--success)">معيّن</span></td>
     </tr>`).join('');
     document.getElementById('balLogCount').textContent=balances.length+' سجل';
 }
@@ -576,13 +576,13 @@ function renderRequests(){
         list.innerHTML=`<div class="rqs-empty"><div class="rqs-empty-icon">📭</div><div class="rqs-empty-title">لا توجد طلبات هنا</div><div class="rqs-empty-sub">سيظهر هنا أي طلب جديد من التلرات فور إرساله</div></div>`;
         return;
     }
-    const typeLabel={urgent:'🔴 عاجل',normal:'🟡 عادي',general:'🟡 عادي',special_price:'⭐ سعر مميز',reconcile:'⚖️ مطابقة صندوق',balance:'💰 رصيد'};
-    const statusLabel={approved:'✅ موافقة',rejected:'❌ مرفوض',resolved:'✅ تم الرد'};
+    const typeLabel={urgent:'عاجل',normal:'عادي',general:'عادي',special_price:'سعر مميز',reconcile:'مطابقة صندوق',balance:'رصيد'};
+    const statusLabel={approved:'موافقة',rejected:'مرفوض',resolved:'تم الرد'};
     list.innerHTML=filtered.map((r,i)=>{
         const name=r.from||r.tellerName||'—';
         const done=isDone(r);
         const cardType=done?r.status:r.type;
-        const tagText=done?statusLabel[r.status]:(typeLabel[r.type]||'🟡 عادي');
+        const tagText=done?statusLabel[r.status]:(typeLabel[r.type]||'عادي');
         const tagCls=done?r.status:r.type;
         return`<div class="rq-card rq-${cardType}" style="animation-delay:${i*0.05}s">
             <div class="rq-top">
@@ -595,7 +595,7 @@ function renderRequests(){
                 </div>
                 <div class="rq-right-meta">
                     <span class="rq-type-tag rq-${tagCls}">${tagText}</span>
-                    <span class="rq-time">🕐 ${r.time}</span>
+                    <span class="rq-time">${r.time}</span>
                 </div>
             </div>
             <div class="rq-body">
@@ -610,10 +610,10 @@ function renderRequests(){
             </div>`:''}
             <div class="rq-footer">
                 ${!done?`
-                    <button class="rq-btn rq-btn-reply" onclick="openReply('${r.id}')">💬 رد على الطلب</button>
-                    <button class="rq-btn rq-btn-approve" onclick="approveRequest('${r.id}')">✅ موافقة</button>
-                    <button class="rq-btn rq-btn-reject" onclick="rejectRequest('${r.id}')">❌ رفض</button>
-                `:`<span class="rq-done-label">✅ تم الرد على هذا الطلب</span>`}
+                    <button class="rq-btn rq-btn-reply" onclick="openReply('${r.id}')">رد على الطلب</button>
+                    <button class="rq-btn rq-btn-approve" onclick="approveRequest('${r.id}')">موافقة</button>
+                    <button class="rq-btn rq-btn-reject" onclick="rejectRequest('${r.id}')">رفض</button>
+                `:`<span class="rq-done-label">تم الرد على هذا الطلب</span>`}
             </div>
         </div>`;
     }).join('');
@@ -657,12 +657,12 @@ function sendReply(){
 }
 function approveRequest(id){
     const r=requests.find(x=>String(x.id)===String(id));
-    if(r){r.status='approved';r.reply='تمت الموافقة على طلبك ✅';r.resolvedAt=new Date().toISOString();}
+    if(r){r.status='approved';r.reply='تمت الموافقة على طلبك';r.resolvedAt=new Date().toISOString();}
     _patchRequest(id,{status:'approved'},()=>showToast('تمت الموافقة على الطلب','success','✅'));
 }
 function rejectRequest(id){
     const r=requests.find(x=>String(x.id)===String(id));
-    if(r){r.status='rejected';r.reply='عذراً، تم رفض الطلب ❌';r.resolvedAt=new Date().toISOString();}
+    if(r){r.status='rejected';r.reply='عذراً، تم رفض الطلب';r.resolvedAt=new Date().toISOString();}
     _patchRequest(id,{status:'rejected'},()=>showToast('تم رفض الطلب','warning','❌'));
 }
 
@@ -734,10 +734,10 @@ function savePermissions(){
     })
     .then(r=>r.json())
     .then(d=>{
-        if(!d.success) showToast('⚠️ خطأ في حفظ الصلاحيات: '+(d.message||'خطأ غير معروف'),'error','❌');
-        else showToast('✅ تم حفظ صلاحيات '+t.name+' في قاعدة البيانات','success','💾');
+        if(!d.success) showToast('خطأ في حفظ الصلاحيات: '+(d.message||'خطأ غير معروف'),'error','❌');
+        else showToast('تم حفظ صلاحيات '+t.name+' في قاعدة البيانات','success','💾');
     })
-    .catch(()=>showToast('⚠️ لا اتصال بالخادم — تم الحفظ محلياً فقط','warning','📴'));
+    .catch(()=>showToast('لا اتصال بالخادم — تم الحفظ محلياً فقط','warning','📴'));
 }
 
 function closePermOverlay(){
@@ -764,10 +764,10 @@ function renderPermOverlay(serverPerms){
         return`<div class="perm-teller-card ${t.status}" onclick="openPermissions('${tid}');closePermOverlay()">
             <div class="ptc-top">
                 <div class="ptc-avatar ${t.status}">${t.name[0]}</div>
-                <div><div class="ptc-name">${t.name}</div><div class="ptc-id">${t.id||''} · ${t.status==='online'?'🟢 متصل':'🔴 غير متصل'}</div></div>
+                <div><div class="ptc-name">${t.name}</div><div class="ptc-id">${t.id||''} · ${t.status==='online'?'متصل':'غير متصل'}</div></div>
             </div>
             <div class="ptc-perms">${tags}</div>
-            <button class="ptc-edit-btn" onclick="event.stopPropagation();openPermissions('${tid}')">✏️ تعديل الصلاحيات</button>
+            <button class="ptc-edit-btn" onclick="event.stopPropagation();openPermissions('${tid}')">تعديل الصلاحيات</button>
         </div>`;
     }).join('');
 }
@@ -855,7 +855,7 @@ function saveAllRates(){
         window._intlCache.sv_rates = ratesData;
         // إظهار النتيجة فوراً بدون انتظار الخادم
         const st=g('svPublishStatus');
-        if(st){st.style.display='block';st.textContent='✅ تم نشر الأسعار لجميع التلرات — '+ratesData.time;setTimeout(()=>{st.style.display='none'},6000);}
+        if(st){st.style.display='block';st.textContent='تم نشر الأسعار لجميع التلرات — '+ratesData.time;setTimeout(()=>{st.style.display='none'},6000);}
         showToast('تم نشر جميع الأسعار لأقسام التلر','success','🚀');
         // حفظ في قاعدة البيانات في الخلفية
         const csrf=(document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))||'').split('=')[1]||'';
@@ -889,7 +889,7 @@ function resetAllRates(){
     renderPricing();
     showToast('تم إعادة جميع الأسعار للقيم الافتراضية','info','♻️');
 }
-document.addEventListener('input',function(e){if(e.target.id==='svDdCash'||e.target.id==='svDdBank'){const c=parseFloat(document.getElementById('svDdCash').value)||0,b=parseFloat(document.getElementById('svDdBank').value)||0;const diff=(c-b);const d=document.getElementById('svDdDiff');if(d)d.textContent=diff.toFixed(3);const db=document.querySelector('.prc-diff-badge');if(db)db.textContent=diff>=0?'لصالح الكاش ✓':'لصالح البنكي ✓';}});
+document.addEventListener('input',function(e){if(e.target.id==='svDdCash'||e.target.id==='svDdBank'){const c=parseFloat(document.getElementById('svDdCash').value)||0,b=parseFloat(document.getElementById('svDdBank').value)||0;const diff=(c-b);const d=document.getElementById('svDdDiff');if(d)d.textContent=diff.toFixed(3);const db=document.querySelector('.prc-diff-badge');if(db)db.textContent=diff>=0?'لصالح الكاش':'لصالح البنكي';}});
 
 // ═══════════════════════════════════════════
 // أدوات
@@ -1248,7 +1248,7 @@ function _showCredsModal(username, password, smsSent, smsError, siteUrl){
     document.getElementById('credsSiteUrl').textContent=siteUrl;
     document.getElementById('tellerCredsSmsSent').style.display=smsSent?'block':'none';
     document.getElementById('tellerCredsSmsFail').style.display=smsSent?'none':'block';
-    if(!smsSent&&smsError) document.getElementById('tellerCredsSmsFail').textContent='⚠️ '+smsError+' — شارك بيانات الدخول يدوياً';
+    if(!smsSent&&smsError) document.getElementById('tellerCredsSmsFail').textContent=smsError+' — شارك بيانات الدخول يدوياً';
     document.getElementById('tellerCredsModal').classList.add('visible');
 }
 
@@ -1281,7 +1281,7 @@ function confirmChangePwd(){
     .then(resp=>{
         if(resp.success){
             closeModal('changePwdModal');
-            showToast('تم تغيير كلمة المرور بنجاح 🔑','success','🔑');
+            showToast('تم تغيير كلمة المرور بنجاح','success','🔑');
         } else {
             showToast(resp.message||'فشل تغيير كلمة المرور','error','❌');
         }
@@ -1384,9 +1384,9 @@ setInterval(_pollNewRequests, 10000);
                 var isReconcile = r.request_type === 'reconcile';
                 if (typeof showToast === 'function') {
                     if (isReconcile)
-                        showToast('⚖️ ' + (r.teller_name||'تلر') + ' أجرى مطابقة الصندوق', 'success', '⚖️');
+                        showToast((r.teller_name||'تلر') + ' أجرى مطابقة الصندوق', 'success', '⚖️');
                     else
-                        showToast('طلب جديد من ' + (r.teller_name||'تلر') + ' — ' + typeLabel + ' ⚡', 'warning', '📨');
+                        showToast('طلب جديد من ' + (r.teller_name||'تلر') + ' — ' + typeLabel, 'warning', '📨');
                 }
                 // صوت تنبيه
                 try { new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAA').play().catch(()=>{}); } catch(x){}
@@ -1419,12 +1419,12 @@ setInterval(_pollNewRequests, 10000);
         if (dot) dot.style.display = online ? '' : 'none';
         if (badge) {
             badge.className = 'tc2-badge ' + (online ? 'online' : 'offline');
-            badge.textContent = online ? '🟢 متصل' : '🔴 غير متصل';
+            badge.textContent = online ? 'متصل' : 'غير متصل';
         }
         // حدّث عداد المتصلين
         if (typeof updateStats === 'function') updateStats();
         if (typeof showToast === 'function')
-            showToast((online ? '🟢 ' : '🔴 ') + username + (online ? ' اتصل بالنظام' : ' غادر النظام'), 'info', '👤');
+            showToast(username + (online ? ' اتصل بالنظام' : ' غادر النظام'), 'info', '👤');
     }
 
     function scheduleReconnect() {
@@ -1554,8 +1554,8 @@ setInterval(_pollNewRequests, 10000);
     var teller   = document.getElementById('mybox-dist-teller').value;
     var currency = document.getElementById('mybox-dist-currency').value;
     var amount   = parseFloat(document.getElementById('mybox-dist-amount').value);
-    if (!teller)         { if (typeof showToast === 'function') showToast('⚠️ اختر التلر', 'warn'); return; }
-    if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('⚠️ أدخل مبلغاً صحيحاً', 'warn'); return; }
+    if (!teller)         { if (typeof showToast === 'function') showToast('اختر التلر', 'warn'); return; }
+    if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('أدخل مبلغاً صحيحاً', 'warn'); return; }
     fetch('/api/sv2/my-box/distribute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRFToken': _csrf() },
@@ -1564,20 +1564,20 @@ setInterval(_pollNewRequests, 10000);
       .then(function(r) { return r.json(); })
       .then(function(data) {
         if (data.success || data.ok) {
-          if (typeof showToast === 'function') showToast('✓ تم التوزيع بنجاح', 'ok');
+          if (typeof showToast === 'function') showToast('تم التوزيع بنجاح', 'ok');
           document.getElementById('mybox-dist-amount').value = '';
           myboxLoadAll();
         } else {
-          if (typeof showToast === 'function') showToast('✗ ' + (data.message || data.error || 'فشل التوزيع'), 'error');
+          if (typeof showToast === 'function') showToast(data.message || data.error || 'فشل التوزيع', 'error');
         }
       })
-      .catch(function() { if (typeof showToast === 'function') showToast('✗ خطأ في الاتصال', 'error'); });
+      .catch(function() { if (typeof showToast === 'function') showToast('خطأ في الاتصال', 'error'); });
   };
 
   window.myboxReclaim = function() {
     var teller   = document.getElementById('mybox-reclaim-teller').value;
     var currency = document.getElementById('mybox-reclaim-currency').value;
-    if (!teller) { if (typeof showToast === 'function') showToast('⚠️ اختر التلر', 'warn'); return; }
+    if (!teller) { if (typeof showToast === 'function') showToast('اختر التلر', 'warn'); return; }
     if (!confirm('هل تريد استرداد رصيد ' + teller + ' بعملة ' + currency + ' إلى صندوقك؟')) return;
     fetch('/api/sv2/my-box/reclaim', {
       method: 'POST',
@@ -1587,13 +1587,13 @@ setInterval(_pollNewRequests, 10000);
       .then(function(r) { return r.json(); })
       .then(function(data) {
         if (data.success || data.ok) {
-          if (typeof showToast === 'function') showToast('✓ تم الاسترداد بنجاح', 'ok');
+          if (typeof showToast === 'function') showToast('تم الاسترداد بنجاح', 'ok');
           myboxLoadAll();
         } else {
-          if (typeof showToast === 'function') showToast('✗ ' + (data.message || data.error || 'فشل الاسترداد'), 'error');
+          if (typeof showToast === 'function') showToast(data.message || data.error || 'فشل الاسترداد', 'error');
         }
       })
-      .catch(function() { if (typeof showToast === 'function') showToast('✗ خطأ في الاتصال', 'error'); });
+      .catch(function() { if (typeof showToast === 'function') showToast('خطأ في الاتصال', 'error'); });
   };
 
 })();
@@ -1608,9 +1608,9 @@ function svLoadMyBox() {
       if (!data.success && !data.ok) return;
       var b = data.box;
       var items = [
-        { label: '🇺🇸 USD', val: b.balanceUSD },
-        { label: '🇵🇸 ILS', val: b.balanceILS },
-        { label: '🇯🇴 JOD', val: b.balanceJOD }
+        { label: 'USD', val: b.balanceUSD },
+        { label: 'ILS', val: b.balanceILS },
+        { label: 'JOD', val: b.balanceJOD }
       ];
       el.innerHTML = items.map(function(i) {
         var color = i.val > 0 ? '#10b981' : 'rgba(200,210,220,0.4)';

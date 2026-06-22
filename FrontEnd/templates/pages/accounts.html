@@ -132,7 +132,7 @@
       <!-- Page Header -->
       <div class="iq-page-hdr">
         <div>
-          <div class="iq-page-title">📨 الحوالات الواردة</div>
+          <div class="iq-page-title">الحوالات الواردة</div>
           <div class="iq-page-sub">من التلرات — في انتظار التنفيذ</div>
         </div>
         <button class="iq-refresh-btn" onclick="renderQueue()" title="تحديث القائمة">
@@ -173,9 +173,9 @@
       <div class="iq-toolbar">
         <div class="iq-ftabs">
           <button class="iq-ftab iq-ftab-active" id="iqft-all"        onclick="filterQueue('all')">الكل</button>
-          <button class="iq-ftab"                 id="iqft-pending"    onclick="filterQueue('pending')">⏰ بانتظار</button>
-          <button class="iq-ftab"                 id="iqft-processing" onclick="filterQueue('processing')">⚡ قيد التنفيذ</button>
-          <button class="iq-ftab iq-ftab-urg"     id="iqft-urgent"     onclick="filterQueue('urgent')">🔴 مستعجل</button>
+          <button class="iq-ftab"                 id="iqft-pending"    onclick="filterQueue('pending')">بانتظار</button>
+          <button class="iq-ftab"                 id="iqft-processing" onclick="filterQueue('processing')">قيد التنفيذ</button>
+          <button class="iq-ftab iq-ftab-urg"     id="iqft-urgent"     onclick="filterQueue('urgent')">مستعجل</button>
         </div>
         <div class="iq-search-wrap">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -284,9 +284,9 @@
             <div class="ntf-field ntf-field-sm">
               <label class="ntf-label">العملة <span class="ntf-req">*</span></label>
               <select class="ntf-input ntf-select" id="nf-currency">
-                <option value="USD">🇺🇸 USD</option>
-                <option value="ILS">🇵🇸 ILS</option>
-                <option value="JOD">🇯🇴 JOD</option>
+                <option value="USD">USD</option>
+                <option value="ILS">ILS</option>
+                <option value="JOD">JOD</option>
               </select>
             </div>
           </div>
@@ -300,8 +300,8 @@
             <div class="ntf-field ntf-field-sm">
               <label class="ntf-label">الأولوية</label>
               <select class="ntf-input ntf-select" id="nf-priority">
-                <option value="normal">⚪ عادي</option>
-                <option value="urgent">🔴 مستعجل</option>
+                <option value="normal">عادي</option>
+                <option value="urgent">مستعجل</option>
               </select>
             </div>
             <div class="ntf-field ntf-field-lg">
@@ -370,7 +370,7 @@
     <div class="tab-pane" id="pane-5">
       <div class="iq-page-hdr">
         <div>
-          <div class="iq-page-title">📬 إشعارات البوابة الخارجية</div>
+          <div class="iq-page-title">إشعارات البوابة الخارجية</div>
           <div class="iq-page-sub">إيصالات موجَّهة إليك من الإدارة لتنفيذ تحويل بنكي</div>
         </div>
         <button class="iq-refresh-btn" onclick="loadMyPortalReceipts()" title="تحديث">
@@ -399,7 +399,7 @@
 <!-- ═══ Quick Transfer Modal ═══ -->
 <div class="modal-bg" id="quick-transfer-modal" onclick="closeModalOut(event,'quick-transfer-modal')">
   <div class="modal">
-    <div class="modal-title">⚡ تحويل سريع</div>
+    <div class="modal-title">تحويل سريع</div>
     <div class="modal-sub">لإرسال تحويل بنكي سريع بأقل بيانات</div>
     <div class="form-group">
       <div class="form-row">
@@ -414,11 +414,11 @@
         </div>
         <div><label class="field-label">المبلغ</label><input class="field-input" id="qf-amt" type="number" placeholder="0" style="direction:ltr;text-align:left"/></div>
         <div><label class="field-label">العملة</label>
-          <select class="field-input" id="qf-cur"><option value="USD">🇺🇸 دولار</option><option value="ILS">🇵🇸 شيكل</option><option value="JOD">🇯🇴 دينار</option></select>
+          <select class="field-input" id="qf-cur"><option value="USD">دولار</option><option value="ILS">شيكل</option><option value="JOD">دينار</option></select>
         </div>
       </div>
       <div class="form-btn-row">
-        <button class="btn btn-gold" onclick="doQuickTransfer()">⚡ إرسال</button>
+        <button class="btn btn-gold" onclick="doQuickTransfer()">إرسال</button>
         <button class="btn btn-gray" onclick="closeModal('quick-transfer-modal')">إلغاء</button>
       </div>
     </div>
@@ -428,15 +428,15 @@
 <!-- ═══ Buy/Sell Modal ═══ -->
 <div class="modal-bg" id="buysell-modal" onclick="closeModalOut(event,'buysell-modal')">
   <div class="modal">
-    <div class="modal-title">🔄 عملية بيع / شراء عبر البنك</div>
+    <div class="modal-title">عملية بيع / شراء عبر البنك</div>
     <div class="modal-sub">تسجيل عملية بيع أو شراء عملات عبر الحساب البنكي</div>
     <div class="form-group">
       <div class="form-row">
         <div><label class="field-label">نوع العملية *</label>
-          <select class="field-input" id="bs-type"><option value="buy">🟢 شراء (إيداع في البنك)</option><option value="sell">🔴 بيع (سحب من البنك)</option></select>
+          <select class="field-input" id="bs-type"><option value="buy">شراء (إيداع في البنك)</option><option value="sell">بيع (سحب من البنك)</option></select>
         </div>
         <div><label class="field-label">العملة *</label>
-          <select class="field-input" id="bs-cur"><option value="USD">🇺🇸 دولار</option><option value="ILS">🇵🇸 شيكل</option><option value="JOD">🇯🇴 دينار</option></select>
+          <select class="field-input" id="bs-cur"><option value="USD">دولار</option><option value="ILS">شيكل</option><option value="JOD">دينار</option></select>
         </div>
       </div>
       <div class="form-row">
@@ -513,7 +513,7 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:24px;">
-      <button onclick="acntSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(212,175,55,0.92),rgba(251,191,36,0.82));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(212,175,55,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">📤 إرسال للإدارة</button>
+      <button onclick="acntSubmitReport()" style="flex:1;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(212,175,55,0.92),rgba(251,191,36,0.82));border:none;color:#0d1117;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity 0.2s;box-shadow:0 4px 18px rgba(212,175,55,0.22);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">إرسال للإدارة</button>
       <button onclick="acntCloseReportModal()" style="padding:12px 20px;border-radius:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">إلغاء</button>
     </div>
   </div>
@@ -575,9 +575,9 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     <div class="dr-field">
       <label class="dr-label">نوع الطلب</label>
       <div class="dr-type-btns">
-        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
-        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
-        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">مشكلة تواجهني</button>
       </div>
     </div>
     <div class="dr-field">
@@ -586,12 +586,12 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     </div>
     <div class="dr-field">
       <label class="dr-label">مرفقات (اختياري)</label>
-      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <label class="dr-attach-lbl" for="drAttach">اضغط لإرفاق ملفات أو صور</label>
       <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
       <div class="dr-attach-files" id="drAttachFiles"></div>
     </div>
     <div class="dr-footer">
-      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-send" onclick="submitDevRequest()">إرسال للإدارة</button>
       <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
     </div>
   </div>
@@ -628,7 +628,7 @@ async function submitDevRequest(){
   try{
     var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'accounts'})});
     var data=await res.json();
-    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح','success');else alert('تم إرسال طلبك للإدارة بنجاح');}
     else{alert(data.error||'حدث خطأ أثناء الإرسال');}
   }catch(e){alert('تعذّر الاتصال بالخادم');}
 }
@@ -637,7 +637,7 @@ async function submitDevRequest(){
 <!-- ═══ Portal Notifications (إشعارات البوابة) ═══ -->
 <script>
 (function(){
-  var PR_STATUS_LABEL = { new:'🔵 جديد', reviewing:'⚡ قيد المراجعة', done:'✅ منفّذ', rejected:'🚫 مرفوض' };
+  var PR_STATUS_LABEL = { new:'جديد', reviewing:'قيد المراجعة', done:'منفّذ', rejected:'مرفوض' };
 
   window.loadMyPortalReceipts = function() {
     var listEl  = document.getElementById('portal-notif-list');
@@ -672,14 +672,14 @@ async function submitDevRequest(){
 
           var statusTag = '<span style="font-size:11px;padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);color:#8696a0;border:1px solid #2a3942;">' + (PR_STATUS_LABEL[r.status] || r.status) + '</span>';
 
-          var noteRow = r.forwardedNote ? '<div style="font-size:12px;color:#8696a0;margin-top:4px;">📝 ' + r.forwardedNote + '</div>' : '';
+          var noteRow = r.forwardedNote ? '<div style="font-size:12px;color:#8696a0;margin-top:4px;">' + r.forwardedNote + '</div>' : '';
 
           // Pre-fill button: opens new transfer form with client name pre-filled
           var safeName    = (r.clientName  || '').replace(/"/g,'&quot;');
           var safeCountry = (r.countryName || '').replace(/"/g,'&quot;');
           var preFillBtn = '<button onclick="preFillFromPortal(\'' + r.id + '\',\'' + safeName + '\',\'' + (r.currency||'USD') + '\',\'' + safeCountry + '\')" '
             + 'style="background:linear-gradient(135deg,#48c78e,#3aad76);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">'
-            + '📋 إنشاء حوالة من هذا الإشعار</button>';
+            + 'إنشاء حوالة من هذا الإشعار</button>';
 
           return '<div style="display:flex;gap:14px;align-items:flex-start;background:#0d1825;border:1px solid #1e2d3d;border-radius:12px;padding:16px;margin-bottom:12px;">'
             + imgHtml
@@ -689,7 +689,7 @@ async function submitDevRequest(){
             +     statusTag
             +   '</div>'
             +   '<div style="font-size:12px;color:#8696a0;margin-bottom:4px;">'
-            +     '🌍 ' + (r.countryName || '—') + ' &nbsp;|&nbsp; 💰 ' + (r.currency || '—') + ' &nbsp;|&nbsp; 🔑 ' + (r.trackingCode || '—')
+            +     (r.countryName || '—') + ' &nbsp;|&nbsp; ' + (r.currency || '—') + ' &nbsp;|&nbsp; ' + (r.trackingCode || '—')
             +   '</div>'
             +   noteRow
             +   '<div style="margin-top:10px">' + preFillBtn + '</div>'

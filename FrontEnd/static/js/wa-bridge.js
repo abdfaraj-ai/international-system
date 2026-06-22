@@ -17,7 +17,7 @@
     _connected = connected;
     const badge = document.getElementById('wa-bridge-status');
     if (!badge) return;
-    badge.textContent   = connected ? '🟢 واتساب متصل' : '🔴 واتساب غير متصل';
+    badge.textContent   = connected ? 'واتساب متصل' : 'واتساب غير متصل';
     badge.style.color   = connected ? '#25d366' : '#f87171';
   }
 
@@ -44,7 +44,7 @@
       const btn = document.createElement('button');
       btn.className       = 'wa-src-tab';
       btn.dataset.jid     = jid;
-      btn.textContent     = '💬 ' + name;
+      btn.textContent     = name;
       btn.onclick         = () => _filterByJid(jid, btn);
       container.appendChild(btn);
     });
@@ -467,14 +467,14 @@
           <div style="padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.07);
                       display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
             <div>
-              <div style="font-weight:700;font-size:15px;color:#e2e8f0">💬 سياق المحادثة</div>
+              <div style="font-weight:700;font-size:15px;color:#e2e8f0">سياق المحادثة</div>
               <div id="wa-ctx-subtitle" style="font-size:11px;color:#9aa3b8;margin-top:2px">ساعتان قبل الحوالة</div>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
               <button onclick="waBridgeFillFromContext()" id="wa-ctx-fill-btn"
                 style="background:#2563eb;color:#fff;border:none;border-radius:8px;
                        padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">
-                ✏️ تعبئة الفورم
+                تعبئة الفورم
               </button>
               <button onclick="waBridgeCloseContext()"
                 style="background:rgba(255,255,255,.06);color:#9aa3b8;border:none;
@@ -483,7 +483,7 @@
           </div>
           <div id="wa-ctx-body" style="overflow-y:auto;padding:14px 16px;flex:1;
                                         display:flex;flex-direction:column;gap:6px">
-            <div style="text-align:center;color:#9aa3b8;padding:40px;font-size:13px">⏳ جاري التحميل...</div>
+            <div style="text-align:center;color:#9aa3b8;padding:40px;font-size:13px">جاري التحميل...</div>
           </div>
         </div>
       `;
@@ -495,7 +495,7 @@
     _contextModal.style.display = 'flex';
 
     const body = document.getElementById('wa-ctx-body');
-    body.innerHTML = '<div style="text-align:center;color:#9aa3b8;padding:40px;font-size:13px">⏳ جاري التحميل...</div>';
+    body.innerHTML = '<div style="text-align:center;color:#9aa3b8;padding:40px;font-size:13px">جاري التحميل...</div>';
 
     // جلب السياق من DB
     try {
@@ -530,7 +530,7 @@
           : (m.receivedAt ? m.receivedAt.slice(11,16) : '');
         const bgColor   = isHawala ? 'rgba(37,99,235,.15)' : 'rgba(255,255,255,.03)';
         const border    = isHawala ? '1px solid rgba(37,99,235,.4)' : '1px solid rgba(255,255,255,.06)';
-        const badge     = isHawala ? '<span style="background:#2563eb;color:#fff;font-size:9px;padding:1px 6px;border-radius:4px;margin-right:6px">💰 حوالة</span>' : '';
+        const badge     = isHawala ? '<span style="background:#2563eb;color:#fff;font-size:9px;padding:1px 6px;border-radius:4px;margin-right:6px">حوالة</span>' : '';
 
         return `
           <div style="background:${bgColor};border:${border};border-radius:10px;padding:10px 13px">
@@ -646,11 +646,11 @@
           <div style="display:flex;gap:8px">
             <button onclick="waBridgeConfirmPending(${idx})"
               style="flex:1;padding:7px;border-radius:8px;border:none;background:linear-gradient(135deg,#00c97a,#059669);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
-              ✓ قبول كحوالة
+              قبول كحوالة
             </button>
             <button onclick="waBridgeRejectPending(${idx})"
               style="flex:1;padding:7px;border-radius:8px;border:1px solid rgba(255,77,106,.3);background:transparent;color:#ff4d6a;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
-              ✗ تجاهل
+              تجاهل
             </button>
           </div>
         </div>`;

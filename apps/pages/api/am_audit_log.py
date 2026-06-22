@@ -3,13 +3,11 @@ am_audit_log.py — API سجل الأحداث
 GET /api/am/audit-log/  ← قائمة الأحداث مع فلاتر
 """
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from ..models import AuditLog
 from core.permissions import require_roles as _require_roles
 
 
-@csrf_exempt
 def api_am_audit_log(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

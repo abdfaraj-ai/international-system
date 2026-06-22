@@ -20,7 +20,7 @@ let state = {
 // ═══════════════════════════════════════
 function notify(msg, type='success') {
   const el=document.getElementById('notification');
-  el.textContent=(type==='error'?'⚠️ ':type==='warning'?'⏳ ':'✅ ')+msg;
+  el.textContent=msg;
   el.style.borderColor=type==='error'?'#FF6B7A':type==='warning'?'#FFC107':'#5CB85C';
   el.style.color=type==='error'?'#FF6B7A':type==='warning'?'#FFC107':'#5CB85C';
   el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
@@ -111,7 +111,7 @@ function processTransfer(id){
   const t=state.queue.find(x=>x.id===id);
   if(!t)return;
   document.getElementById('process-modal-content').innerHTML=`
-    <div class="modal-title">🏦 تنفيذ التحويل ${t.ref}</div>
+    <div class="modal-title">تنفيذ التحويل ${t.ref}</div>
     <div class="modal-sub">مراجعة وتأكيد إرسال الحوالة للبنك</div>
     <div style="background:#0A0F1C;border-radius:12px;padding:16px;margin-bottom:16px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
@@ -122,14 +122,14 @@ function processTransfer(id){
         <div><span class="text-muted">المبلغ:</span> <strong class="text-gold" style="font-size:16px">${fc(t.amount,t.currency)}</strong> ${cb(t.currency)}</div>
         <div><span class="text-muted">التلر:</span> <strong>${t.teller}</strong></div>
       </div>
-      ${t.notes?`<div style="margin-top:10px;padding:8px;background:rgba(50,184,198,0.05);border-radius:8px;font-size:11px;color:#7B8DB5">📝 ${t.notes}</div>`:''}
+      ${t.notes?`<div style="margin-top:10px;padding:8px;background:rgba(50,184,198,0.05);border-radius:8px;font-size:11px;color:#7B8DB5">${t.notes}</div>`:''}
     </div>
     <div class="form-group">
       <div><label class="field-label">رقم المرجع البنكي</label><input class="field-input" id="proc-ref" placeholder="رقم المرجع من البنك" style="direction:ltr;text-align:left"/></div>
       <div><label class="field-label">ملاحظات الموظف</label><textarea class="field-input" id="proc-notes" placeholder="ملاحظات..."></textarea></div>
       <div class="form-btn-row">
-        <button class="btn btn-gold" onclick="confirmProcess(${t.id})">✅ تأكيد التنفيذ</button>
-        <button class="btn btn-danger" onclick="rejectTransfer(${t.id})">❌ رفض</button>
+        <button class="btn btn-gold" onclick="confirmProcess(${t.id})">تأكيد التنفيذ</button>
+        <button class="btn btn-danger" onclick="rejectTransfer(${t.id})">رفض</button>
         <button class="btn btn-gray" onclick="closeModal('process-modal')">إلغاء</button>
       </div>
     </div>`;
@@ -273,10 +273,10 @@ function renderDashBuySell(){
   sells.forEach(x=>sellCur[x.currency]=(sellCur[x.currency]||0)+x.amount);
 
   document.getElementById('dash-buysell').innerHTML=`
-    <div class="card-title"><span class="cti">🔄</span> ملخص البيع والشراء عبر البنك</div>
+    <div class="card-title"><span class="cti"></span>ملخص البيع والشراء عبر البنك</div>
     <div class="bs-grid">
       <div class="bs-col bs-buy">
-        <div class="bs-title">📥 الشراء (إيداع)</div>
+        <div class="bs-title">الشراء (إيداع)</div>
         <div class="bs-amount">$${totalBuy.toLocaleString()}</div>
         <div class="bs-count">${buys.length} عملية</div>
         <div class="bs-sub">
@@ -286,7 +286,7 @@ function renderDashBuySell(){
         </div>
       </div>
       <div class="bs-col bs-sell">
-        <div class="bs-title">📤 البيع (سحب)</div>
+        <div class="bs-title">البيع (سحب)</div>
         <div class="bs-amount">$${totalSell.toLocaleString()}</div>
         <div class="bs-count">${sells.length} عملية</div>
         <div class="bs-sub">
@@ -304,9 +304,9 @@ function renderDashBuySell(){
 function renderDashRecent(){
   const all=[...state.completed.map(x=>({...x,_type:'transfer'})),...state.buySell.map(x=>({...x,_type:x.type}))].sort((a,b)=>b.id-a.id).slice(0,6);
   document.getElementById('dash-recent').innerHTML=`
-    <div class="card-title"><span class="cti">📋</span> آخر العمليات</div>
+    <div class="card-title"><span class="cti"></span>آخر العمليات</div>
     ${all.map(t=>{
-      const typeLabel=t._type==='transfer'?'🏦 تحويل بنكي':t._type==='buy'?'📥 شراء':'📤 بيع';
+      const typeLabel=t._type==='transfer'?'تحويل بنكي':t._type==='buy'?'شراء':'بيع';
       const typeCls=t._type==='transfer'?'text-blue':t._type==='buy'?'text-green':'text-red';
       return `<div class="flex-between" style="padding:10px 0;border-bottom:1px solid #141D32">
         <div>
@@ -353,7 +353,6 @@ function renderQueue(){
   if(items.length===0){
     list.innerHTML=`
       <div class="iq-empty">
-        <div class="iq-empty-icon">✅</div>
         <div class="iq-empty-title">لا توجد حوالات</div>
         <div class="iq-empty-sub">جميع الحوالات تمت معالجتها أو لا توجد نتائج للبحث</div>
       </div>`;
@@ -376,7 +375,7 @@ function renderQueue(){
       <!-- Header -->
       <div class="iq-hdr iq-hdr-${isUrgent?'urgent':'normal'}">
         <span class="iq-ref-chip">${t.ref}</span>
-        <span class="iq-timer ${tm.cls}">⏱ ${tm.text}</span>
+        <span class="iq-timer ${tm.cls}">${tm.text}</span>
       </div>
 
       <!-- Body -->
@@ -456,11 +455,11 @@ function renderBuySell(){
       <div class="flex-between mb12"><div class="card-title" style="margin-bottom:0">${CUR[c].f} ${CUR[c].n}</div>${cb(c)}</div>
       <div class="bs-grid" style="margin-top:0">
         <div class="bs-col bs-buy" style="padding:12px">
-          <div class="bs-title" style="font-size:10px">📥 شراء</div>
+          <div class="bs-title" style="font-size:10px">شراء</div>
           <div class="bs-amount" style="font-size:18px">${fc(bAmt,c)}</div>
         </div>
         <div class="bs-col bs-sell" style="padding:12px">
-          <div class="bs-title" style="font-size:10px">📤 بيع</div>
+          <div class="bs-title" style="font-size:10px">بيع</div>
           <div class="bs-amount" style="font-size:18px">${fc(sAmt,c)}</div>
         </div>
       </div>
@@ -471,14 +470,14 @@ function renderBuySell(){
   // Table
   const sorted=[...state.buySell].sort((a,b)=>b.id-a.id);
   document.getElementById('bs-table-wrap').innerHTML=`
-    <div class="card-title"><span class="cti">📊</span> سجل عمليات البيع والشراء</div>
+    <div class="card-title"><span class="cti"></span>سجل عمليات البيع والشراء</div>
     <div style="overflow-x:auto">
     <table class="tbl">
       <thead><tr><th>#</th><th>النوع</th><th>العملة</th><th>المبلغ</th><th>سعر الصرف</th><th>الطرف الآخر</th><th>المرجع</th><th>التاريخ</th><th>الحالة</th></tr></thead>
       <tbody>
         ${sorted.map(x=>`<tr>
           <td class="text-muted">${x.id}</td>
-          <td><span style="font-weight:700;color:${x.type==='buy'?'#5CB85C':'#FF6B7A'}">${x.type==='buy'?'📥 شراء':'📤 بيع'}</span></td>
+          <td><span style="font-weight:700;color:${x.type==='buy'?'#5CB85C':'#FF6B7A'}">${x.type==='buy'?'شراء':'بيع'}</span></td>
           <td>${cb(x.currency)}</td>
           <td class="amount-cell" style="color:${x.type==='buy'?'#5CB85C':'#FF6B7A'};font-size:13px">${x.type==='buy'?'+':'−'}${fc(x.amount,x.currency)}</td>
           <td class="text-muted">${x.rate||'—'}</td>
@@ -497,9 +496,9 @@ function renderOpsLog(){
   const fCur=document.getElementById('filter-cur')?.value||'all';
 
   let all=[
-    ...state.completed.map(x=>({...x,_t:'transfer',_tl:'🏦 تحويل بنكي'})),
-    ...state.buySell.map(x=>({...x,_t:x.type,_tl:x.type==='buy'?'📥 شراء عبر البنك':'📤 بيع عبر البنك',receiver:x.party})),
-    ...state.queue.filter(x=>x.status!=='completed').map(x=>({...x,_t:'transfer',_tl:'🏦 تحويل بنكي'}))
+    ...state.completed.map(x=>({...x,_t:'transfer',_tl:'تحويل بنكي'})),
+    ...state.buySell.map(x=>({...x,_t:x.type,_tl:x.type==='buy'?'شراء عبر البنك':'بيع عبر البنك',receiver:x.party})),
+    ...state.queue.filter(x=>x.status!=='completed').map(x=>({...x,_t:'transfer',_tl:'تحويل بنكي'}))
   ];
   if(fType!=='all') all=all.filter(x=>fType==='transfer'?x._t==='transfer':x._t===fType);
   if(fStatus!=='all') all=all.filter(x=>x.status===fStatus);
@@ -568,5 +567,5 @@ function acntRptFileChosen(i){if(i.files&&i.files[0])_acntRptRead(i.files[0]);}
 function acntRptFileDrop(e){const f=e.dataTransfer.files;if(f&&f[0])_acntRptRead(f[0]);}
 function acntOpenReportModal(){const overlay=document.getElementById('acntReportOverlay');if(!overlay)return;try{_acntRptFileData=null;_acntRptFileMeta=null;const t=document.getElementById('acntRptTitle');if(t)t.value='';acntRptClearFile();}catch(e){}try{const u=(window._currentUser||{});const el=document.getElementById('acntRptSenderDisplay');if(el&&u.username)el.textContent=u.username;}catch(e){}overlay.style.setProperty('display','flex','important');}
 function acntCloseReportModal(){const o=document.getElementById('acntReportOverlay');if(o)o.style.setProperty('display','none','important');}
-function acntSubmitReport(){const title=(document.getElementById('acntRptTitle').value||'').trim();if(!title){notify('يرجى إدخال عنوان التقرير','error');return;}if(!_acntRptFileData||!_acntRptFileMeta){notify('يرجى اختيار ملف للرفع','error');return;}let sender='موظف البنك';try{const u=(window._currentUser||{});if(u.username)sender=u.username;}catch(e){}const now=new Date();const p=n=>String(n).padStart(2,'0');const date=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());const obj={source:'bank',title,fileName:_acntRptFileMeta.name,fileType:_acntRptFileMeta.type,fileSize:_acntRptFmtSz(_acntRptFileMeta.size),fileData:_acntRptFileData,sender,department:'التحويل البنكي',branch:'الفرع الرئيسي',branchId:1,date};try{const ex=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex));}catch(err){try{obj.fileData=null;const ex2=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex2.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex2));}catch(e){}}acntCloseReportModal();notify('تم إرسال الملف "'+_acntRptFileMeta.name+'" للإدارة بنجاح ✅','success');}
+function acntSubmitReport(){const title=(document.getElementById('acntRptTitle').value||'').trim();if(!title){notify('يرجى إدخال عنوان التقرير','error');return;}if(!_acntRptFileData||!_acntRptFileMeta){notify('يرجى اختيار ملف للرفع','error');return;}let sender='موظف البنك';try{const u=(window._currentUser||{});if(u.username)sender=u.username;}catch(e){}const now=new Date();const p=n=>String(n).padStart(2,'0');const date=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());const obj={source:'bank',title,fileName:_acntRptFileMeta.name,fileType:_acntRptFileMeta.type,fileSize:_acntRptFmtSz(_acntRptFileMeta.size),fileData:_acntRptFileData,sender,department:'التحويل البنكي',branch:'الفرع الرئيسي',branchId:1,date};try{const ex=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex));}catch(err){try{obj.fileData=null;const ex2=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex2.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex2));}catch(e){}}acntCloseReportModal();notify('تم إرسال الملف "'+_acntRptFileMeta.name+'" للإدارة بنجاح','success');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('acntReportOverlay').style.display==='flex')acntCloseReportModal();});

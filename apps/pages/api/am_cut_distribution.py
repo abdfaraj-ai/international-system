@@ -8,7 +8,6 @@ DELETE /api/cut-distribution/<id>/      ← حذف تفريق
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from ..models import CutDistribution
 from core.permissions import require_roles as _require_roles, caller_name as _caller
@@ -30,7 +29,6 @@ def _parse(request):
         return None, JsonResponse({'success': False, 'message': 'JSON غير صالح'}, status=400)
 
 
-@csrf_exempt
 def api_cut_distribution(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -97,7 +95,6 @@ def api_cut_distribution(request):
     return JsonResponse({'success': False, 'message': 'طريقة غير مدعومة'}, status=405)
 
 
-@csrf_exempt
 def api_cut_distribution_detail(request, dist_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

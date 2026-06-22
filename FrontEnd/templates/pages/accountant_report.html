@@ -141,7 +141,7 @@ body { color: #1e293b; min-height: 100vh; }
         </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-        <span class="h-badge">🧮 محاسب</span>
+        <span class="h-badge">محاسب</span>
     </div>
     {% include 'layout/navbar.html' %}
 </header>
@@ -165,15 +165,15 @@ body { color: #1e293b; min-height: 100vh; }
       <div class="ar-label">ملاحظات</div>
       <textarea class="ar-textarea" id="notes" maxlength="2000"
         placeholder="أكتب ملاحظاتك بالتفصيل في هذه الخانة..."></textarea>
-      <div class="ar-hint">ⓘ أكتب ملاحظاتك بالكامل في هذه الخانة</div>
+      <div class="ar-hint">أكتب ملاحظاتك بالكامل في هذه الخانة</div>
     </div>
 
     <!-- مجموعات الإرسال -->
     <div class="ar-groups-head">
-      <div class="ar-groups-title">🧾 مجموعات الإرسال <span class="cnt" id="grpCount">0 مجموعة</span></div>
+      <div class="ar-groups-title">مجموعات الإرسال <span class="cnt" id="grpCount">0 مجموعة</span></div>
       <div class="ar-groups-actions">
-        <button class="ar-btn add" onclick="addGroup()">＋ إضافة مجموعة</button>
-        <button class="ar-btn del" onclick="clearGroups()">✕ حذف الكل</button>
+        <button class="ar-btn add" onclick="addGroup()">إضافة مجموعة</button>
+        <button class="ar-btn del" onclick="clearGroups()">حذف الكل</button>
       </div>
     </div>
     <div style="overflow-x:auto">
@@ -196,7 +196,7 @@ body { color: #1e293b; min-height: 100vh; }
 
   <!-- Upload + actions -->
   <div class="ar-panel">
-    <div class="ar-up-label">⬆ أختر طريقة لرفع الملفات</div>
+    <div class="ar-up-label">أختر طريقة لرفع الملفات</div>
     <div class="ar-tabs">
       <div class="ar-tab active" data-type="images" onclick="setUploadType(this)"><span class="ic">🖼️</span> صور</div>
       <div class="ar-tab" data-type="files" onclick="setUploadType(this)"><span class="ic">📎</span> ملفات</div>
@@ -213,14 +213,14 @@ body { color: #1e293b; min-height: 100vh; }
     <div class="ar-actions" style="margin-top:24px">
       <button class="ar-abtn primary" id="submitBtn" onclick="submitReport()">أرسل التقرير ←</button>
       <div class="ar-actions-left">
-        <button class="ar-abtn danger" onclick="clearAll()">✕ حذف المحتوى</button>
+        <button class="ar-abtn danger" onclick="clearAll()">حذف المحتوى</button>
       </div>
     </div>
   </div>
 
   <!-- سجل التقارير -->
   <div class="ar-panel">
-    <div class="ar-groups-title" style="margin-bottom:16px">📁 سجل التقارير <span class="cnt" id="repCount">0 تقارير</span></div>
+    <div class="ar-groups-title" style="margin-bottom:16px">سجل التقارير <span class="cnt" id="repCount">0 تقارير</span></div>
     <div style="overflow-x:auto">
       <table class="ar-rtable">
         <thead>
@@ -311,8 +311,8 @@ function setUploadType(tab) {
 function openPicker() { const i = document.getElementById('fileInput'); i.setAttribute('accept', TYPES[currentType].accept); i.click(); }
 function handleFiles(files) {
   for (const f of files) {
-    if (f.size > 25*1024*1024) { showToast('❌ '+f.name+' أكبر من 25MB'); continue; }
-    if (!TYPES[currentType].test(f)) { showToast('❌ '+f.name+' نوع غير مطابق'); continue; }
+    if (f.size > 25*1024*1024) { showToast(f.name+' أكبر من 25MB'); continue; }
+    if (!TYPES[currentType].test(f)) { showToast(f.name+' نوع غير مطابق'); continue; }
     uploadedFiles.push(f);
   }
   renderFiles();
@@ -327,7 +327,7 @@ function clearAll() {
   document.getElementById('notes').value = '';
   clearGroups();
   uploadedFiles = []; renderFiles();
-  showToast('🗑️ تم حذف المحتوى');
+  showToast('تم حذف المحتوى');
 }
 
 async function submitReport() {
@@ -335,9 +335,9 @@ async function submitReport() {
   const groups = collectGroups();
   const btn = document.getElementById('submitBtn');
 
-  if (!notes && groups.length === 0) { showToast('❌ أضف مجموعات أو ملاحظات'); return; }
+  if (!notes && groups.length === 0) { showToast('أضف مجموعات أو ملاحظات'); return; }
 
-  btn.disabled = true; btn.textContent = '⏳ جاري الإرسال...';
+  btn.disabled = true; btn.textContent = 'جاري الإرسال...';
   try {
     const fd = new FormData();
     fd.append('notes', notes);
@@ -346,9 +346,9 @@ async function submitReport() {
     uploadedFiles.forEach(f => fd.append('attachments', f));
     const res = await fetch('/api/accountant-report/submit/', { method: 'POST', body: fd });
     const data = await res.json();
-    if (data.success) { showToast('✅ تم إرسال التقرير'); clearAll(); loadReports(); }
-    else showToast('❌ ' + (data.error || 'حدث خطأ'));
-  } catch { showToast('❌ تعذر الاتصال بالسيرفر'); }
+    if (data.success) { showToast('تم إرسال التقرير'); clearAll(); loadReports(); }
+    else showToast(data.error || 'حدث خطأ');
+  } catch { showToast('تعذر الاتصال بالسيرفر'); }
   finally { btn.disabled = false; btn.textContent = 'أرسل التقرير ←'; }
 }
 
@@ -360,7 +360,7 @@ async function loadReports() {
     const reports = data.reports || [];
     window._accReports = reports;
     document.getElementById('repCount').textContent = reports.length + ' تقارير';
-    if (reports.length === 0) { body.innerHTML = '<tr><td colspan="6" class="ar-empty-row">📭 لا توجد تقارير خلال آخر أسبوع</td></tr>'; return; }
+    if (reports.length === 0) { body.innerHTML = '<tr><td colspan="6" class="ar-empty-row">لا توجد تقارير خلال آخر أسبوع</td></tr>'; return; }
     body.innerHTML = reports.map((r,idx) => {
       const grpCount = (r.groups||[]).length;
       return `
@@ -370,7 +370,7 @@ async function loadReports() {
           <td>${grpCount} مجموعة</td>
           <td><span class="ar-status ${r.status}">${r.statusLabel}</span></td>
           <td>${r.managerNote || '—'}</td>
-          <td><button class="ar-abtn download" style="padding:7px 14px;font-size:0.78rem" onclick="downloadPdf(${idx})">⬇ PDF</button></td>
+          <td><button class="ar-abtn download" style="padding:7px 14px;font-size:0.78rem" onclick="downloadPdf(${idx})">PDF</button></td>
         </tr>`;
     }).join('');
   } catch {
@@ -380,7 +380,7 @@ async function loadReports() {
 
 async function downloadPdf(idx) {
   const r = (window._accReports || [])[idx]; if (!r) return;
-  showToast('⏳ جاري تجهيز PDF...');
+  showToast('جاري تجهيز PDF...');
   const wrap = document.createElement('div');
   wrap.style.cssText = `position:fixed;left:-9999px;top:0;width:794px;padding:48px 56px;background:#fff;color:#1e293b;font-family:'Cairo',sans-serif;direction:rtl;text-align:right;`;
   const grpRows = (r.groups||[]).map(g =>
@@ -413,8 +413,8 @@ async function downloadPdf(idx) {
     pdf.addImage(img,'PNG',0,pos,pw,ih); left -= ph;
     while (left > 0) { pos = left - ih; pdf.addPage(); pdf.addImage(img,'PNG',0,pos,pw,ih); left -= ph; }
     pdf.save(`تقرير-محاسب-${r.accountant}-${r.date}.pdf`);
-    showToast('✅ تم تنزيل التقرير');
-  } catch { showToast('❌ تعذر إنشاء الملف'); }
+    showToast('تم تنزيل التقرير');
+  } catch { showToast('تعذر إنشاء الملف'); }
   finally { document.body.removeChild(wrap); }
 }
 

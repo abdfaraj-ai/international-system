@@ -9,7 +9,6 @@ DELETE /api/am/receipt-voucher/<id>/   ← حذف سند
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.utils import timezone
@@ -64,7 +63,6 @@ def _calc_profit(from_amt, from_fee, to_amt, to_fee, from_cur, to_cur, cut_rate,
 # GET + POST  /api/am/receipt-voucher/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_receipt_voucher(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -199,7 +197,6 @@ def api_am_receipt_voucher(request):
 # GET + DELETE  /api/am/receipt-voucher/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_receipt_voucher_detail(request, voucher_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

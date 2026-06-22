@@ -109,7 +109,7 @@
       display: flex; align-items: center; gap: 7px;
     }
     .sidebar-label.sys::before {
-      content: '⚙';
+      content: '';
       font-size: 11px;
     }
 
@@ -481,7 +481,7 @@
     .tree-node.node-bank-transfer::before{ background: linear-gradient(90deg, var(--orange), var(--accent)); }
     .tree-node.node-disabled { opacity: 0.5; pointer-events: none; }
     .tree-node.node-disabled::after {
-      content: '🔒'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
       font-size: 40px; opacity: 0.3; z-index: 5;
     }
     .node-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }

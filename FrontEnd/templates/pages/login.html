@@ -49,39 +49,39 @@
             <div class="roles-label">اختر صلاحيتك في النظام</div>
             <div class="roles-grid">
                 <button class="role-btn" onclick="setRole(this, 'M01')">
-                    <span class="role-icon">👔</span>
+                    <span class="role-icon"></span>
                     M01
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'M02')">
-                    <span class="role-icon">📋</span>
+                    <span class="role-icon"></span>
                     M02
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'M03')">
-                    <span class="role-icon">🌐</span>
+                    <span class="role-icon"></span>
                     M03
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'T01')">
-                    <span class="role-icon">💰</span>
+                    <span class="role-icon"></span>
                     T01
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'T02')">
-                    <span class="role-icon">🏦</span>
+                    <span class="role-icon"></span>
                     T02
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'T03')">
-                    <span class="role-icon">🌍</span>
+                    <span class="role-icon"></span>
                     T03
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'IM01')">
-                    <span class="role-icon">⚙️</span>
+                    <span class="role-icon"></span>
                     IM01
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'P01')">
-                    <span class="role-icon">👨‍💻</span>
+                    <span class="role-icon"></span>
                     P01
                 </button>
                 <button class="role-btn" onclick="setRole(this, 'E01')">
-                    <span class="role-icon">🧑‍💼</span>
+                    <span class="role-icon"></span>
                     E01
                 </button>
             </div>
@@ -90,13 +90,13 @@
         <!-- اسم المستخدم -->
         <div class="input-group">
             <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username">
-            <span class="input-icon">🆔</span>
+            <span class="input-icon"></span>
         </div>
         
         <!-- كلمة المرور -->
         <div class="input-group">
             <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password">
-            <span class="input-icon">🔑</span>
+            <span class="input-icon"></span>
             <button class="toggle-pass" onclick="togglePassword()" type="button" aria-label="إظهار كلمة المرور">👁️</button>
         </div>
 
@@ -135,11 +135,11 @@
 <!-- ─── نافذة استعادة كلمة المرور ─── -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
-        <h3>🔓 استعادة كلمة المرور</h3>
+        <h3>استعادة كلمة المرور</h3>
         <p>أدخل اسم المستخدم الخاص بك وسيتم إرسال رابط إعادة التعيين إلى بريدك المسجل في النظام</p>
         <div class="input-group">
             <input type="text" id="forgotUsername" placeholder="اسم المستخدم">
-            <span class="input-icon">🆔</span>
+            <span class="input-icon"></span>
         </div>
         <button class="btn-primary" style="margin-top:8px;background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#1e40af 100%) !important;box-shadow:0 4px 20px rgba(37,99,235,0.45) !important;color:#ffffff !important;" onclick="handleForgot()">
             <span class="btn-content">
@@ -168,7 +168,6 @@
 
         <!-- خطوة مسح QR (أول مرة) -->
         <div id="qrSetupStep" style="display:none">
-            <div style="font-size:52px;margin-bottom:14px">📲</div>
             <h3 style="font-size:20px;font-weight:800;margin-bottom:8px">إعداد Google Authenticator</h3>
             <p style="font-size:13px;color:#8b9bb4;margin-bottom:22px;line-height:1.7">
                 افتح تطبيق <strong>Google Authenticator</strong> على هاتفك<br>
@@ -180,13 +179,12 @@
             <p style="font-size:11px;color:#8b9bb4;margin-bottom:6px">أو أدخل الكود يدوياً في التطبيق:</p>
             <div id="manualSecretBox" style="font-family:monospace;font-size:13px;background:#0d1421;padding:10px 14px;border-radius:10px;letter-spacing:3px;margin-bottom:22px;word-break:break-all;color:#32b8c6;border:1px solid rgba(50,184,198,0.3)"></div>
             <button class="btn-primary" onclick="confirmQRScanned()" style="width:100%;background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#1e40af 100%) !important;color:#ffffff !important;">
-                <span class="btn-content"><span class="btn-text">✅ تم المسح — أدخل رمز التحقق</span></span>
+                <span class="btn-content"><span class="btn-text">تم المسح — أدخل رمز التحقق</span></span>
             </button>
         </div>
 
         <!-- خطوة إدخال رمز التحقق -->
         <div id="codeInputStep" style="display:none">
-            <div style="font-size:52px;margin-bottom:14px">🔐</div>
             <h3 style="font-size:20px;font-weight:800;margin-bottom:8px">التحقق بخطوتين</h3>
             <p style="font-size:13px;color:#8b9bb4;margin-bottom:22px;line-height:1.7">
                 أدخل رمز التحقق المكوّن من <strong>6 أرقام</strong><br>

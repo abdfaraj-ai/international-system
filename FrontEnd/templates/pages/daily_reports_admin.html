@@ -142,7 +142,7 @@
   <div class="dra-container">
     <div class="dra-head">
       <div>
-        <h1>📋 التقارير اليومية</h1>
+        <h1>التقارير اليومية</h1>
         <p>مراجعة تقارير الموظفين</p>
       </div>
       <a href="/dashboard/" style="color:#60a5fa;text-decoration:none;font-size:0.9rem">← العودة للوحة التحكم</a>
@@ -160,7 +160,7 @@
     <!-- ── البحث ── -->
     <div class="dra-search-wrap">
       <input type="text" class="dra-search" id="searchInput"
-             placeholder="🔍 ابحث في التقارير (الاسم، المحتوى، الملاحظات)..."
+             placeholder="ابحث في التقارير (الاسم، المحتوى، الملاحظات)..."
              oninput="onSearch()">
     </div>
 
@@ -294,18 +294,18 @@ async function loadReports() {
             <div class="dra-avatar">${initial}</div>
             <div>
               <div class="dra-emp-name">${r.employee}</div>
-              <div class="dra-emp-date">📅 ${r.date} · ${r.createdAt}</div>
+              <div class="dra-emp-date">${r.date} · ${r.createdAt}</div>
             </div>
           </div>
           <span class="dra-badge ${r.status}">${r.statusLabel}</span>
         </div>
         <div class="dra-content">${r.content}</div>
-        ${r.notes ? `<div class="dra-notes">📝 ${r.notes}</div>` : ''}
-        ${r.managerNote ? `<div class="dra-manager-note">💬 ${r.managerNote}</div>` : ''}
+        ${r.notes ? `<div class="dra-notes">${r.notes}</div>` : ''}
+        ${r.managerNote ? `<div class="dra-manager-note">${r.managerNote}</div>` : ''}
         ${r.status === 'pending' ? `
           <div class="dra-actions">
-            <button class="dra-btn approve" onclick="openReview(${r.id},'reviewed')">✓ تمت المراجعة</button>
-            <button class="dra-btn reject" onclick="openReview(${r.id},'rejected')">✗ رفض</button>
+            <button class="dra-btn approve" onclick="openReview(${r.id},'reviewed')">تمت المراجعة</button>
+            <button class="dra-btn reject" onclick="openReview(${r.id},'rejected')">رفض</button>
           </div>` : ''}
       </div>`;
     }).join('');
@@ -340,15 +340,15 @@ async function confirmReview() {
     });
     const data = await res.json();
     if (data.success) {
-      showToast('✅ تم تحديث التقرير');
+      showToast('تم تحديث التقرير');
       closeModal();
       loadReports();
       loadStats();
     } else {
-      showToast('❌ ' + (data.error || 'حدث خطأ'));
+      showToast(data.error || 'حدث خطأ');
     }
   } catch {
-    showToast('❌ تعذر الاتصال بالسيرفر');
+    showToast('تعذر الاتصال بالسيرفر');
   } finally {
     btn.disabled = false;
   }

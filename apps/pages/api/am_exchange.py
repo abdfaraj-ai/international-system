@@ -7,7 +7,6 @@ GET  /api/am/exchange/      ← سجل عمليات التبديل
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count, Sum
 
 from ..models import CurrencySwap
@@ -30,7 +29,6 @@ def _parse(request):
         return None, JsonResponse({'success': False, 'message': 'JSON غير صالح'}, status=400)
 
 
-@csrf_exempt
 def api_am_exchange(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

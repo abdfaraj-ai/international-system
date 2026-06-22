@@ -10,7 +10,6 @@ DELETE /api/am/opening-entry/<id>/   ← حذف قيد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.utils import timezone
@@ -44,7 +43,6 @@ def _today():
 # GET + POST  /api/am/opening-entry/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_opening_entry(request):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:
@@ -154,7 +152,6 @@ def api_am_opening_entry(request):
 # GET + PUT + DELETE  /api/am/opening-entry/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_opening_entry_detail(request, entry_id):
     err = _require_roles(request, 'M01', 'M02', 'M03')
     if err:

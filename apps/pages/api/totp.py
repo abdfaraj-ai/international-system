@@ -9,13 +9,19 @@ GET  /api/2fa/status/   ← هل 2FA مفعّل؟
 """
 import io
 import base64
+import logging
 import pyotp
 import qrcode
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login
 
 from ..models import SystemUser
+from core.permissions import (
+    check_account_lockout, record_failed_login,
+    reset_failed_logins, get_client_ip,
+)
+
+security_log = logging.getLogger('intl.security')
 
 
 def _user(request):
@@ -27,7 +33,6 @@ def _user(request):
 # ═══════════════════════════════════════════════════════
 # 1. توليد مفتاح جديد + QR code
 # ═══════════════════════════════════════════════════════
-@csrf_exempt
 def api_2fa_setup(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
@@ -61,7 +66,6 @@ def api_2fa_setup(request):
 # ═══════════════════════════════════════════════════════
 # 2. تأكيد الكود وحفظ المفتاح
 # ═══════════════════════════════════════════════════════
-@csrf_exempt
 def api_2fa_confirm(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
@@ -97,7 +101,6 @@ def api_2fa_confirm(request):
 # ═══════════════════════════════════════════════════════
 # 3. التحقق عند تسجيل الدخول
 # ═══════════════════════════════════════════════════════
-@csrf_exempt
 def api_2fa_verify(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
@@ -114,6 +117,12 @@ def api_2fa_verify(request):
     if not username:
         return JsonResponse({'success': False, 'message': 'انتهت الجلسة'}, status=400)
 
+    # ── حماية من تخمين كود TOTP (brute-force على 6 أرقام) ──
+    lock_key = f'2fa:{username}'
+    lockout_err = check_account_lockout(lock_key)
+    if lockout_err:
+        return lockout_err
+
     try:
         user = SystemUser.objects.get(username=username)
     except SystemUser.DoesNotExist:
@@ -121,9 +130,13 @@ def api_2fa_verify(request):
 
     totp = pyotp.TOTP(user.totp_secret)
     if not totp.verify(code, valid_window=1):
+        record_failed_login(lock_key)
+        security_log.warning('2FA_FAILED ip=%s username=%s reason=wrong_code',
+                             get_client_ip(request), username)
         return JsonResponse({'success': False, 'message': 'الكود غير صحيح أو منتهي الصلاحية'})
 
-    # إتمام تسجيل الدخول
+    # ── نجاح — صفّر العداد وأتمّ تسجيل الدخول ──
+    reset_failed_logins(lock_key)
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     del request.session['pending_2fa_user']
 
@@ -139,7 +152,6 @@ def api_2fa_verify(request):
 # ═══════════════════════════════════════════════════════
 # 4. إلغاء تفعيل 2FA
 # ═══════════════════════════════════════════════════════
-@csrf_exempt
 def api_2fa_disable(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)

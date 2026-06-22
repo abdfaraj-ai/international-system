@@ -87,7 +87,7 @@ function closeBotControl() {
 function bcSaveAndClose() {
   _saveBotSettings();
   closeBotControl();
-  if (typeof showToast === 'function') showToast('✅ تم حفظ إعدادات البوت', 'success');
+  if (typeof showToast === 'function') showToast('تم حفظ إعدادات البوت', 'success');
 }
 
 function bcTab(name, btn) {
@@ -126,7 +126,7 @@ function bcToggleMaster() {
     dot.style.background = '#22c55e';
     dot.style.animationName = 'onlinePulse';
     lbl.textContent = 'البوت نشط • يراقب جميع المجموعات';
-    if (typeof showToast === 'function') showToast('🤖 البوت نشط', 'success');
+    if (typeof showToast === 'function') showToast('البوت نشط', 'success');
     _bcLog('[البوت] تم تفعيل البوت');
   } else {
     track.style.background = '#374151';
@@ -134,14 +134,14 @@ function bcToggleMaster() {
     dot.style.background = '#ef4444';
     dot.style.animationName = 'none';
     lbl.textContent = 'البوت متوقف';
-    if (typeof showToast === 'function') showToast('⛔ البوت موقوف', 'warning');
+    if (typeof showToast === 'function') showToast('البوت موقوف', 'warning');
     _bcLog('[البوت] تم إيقاف البوت');
     // stop smart mode if running
     if (typeof _botRunning !== 'undefined') window._botRunning = false;
     if (typeof smartMode !== 'undefined' && smartMode) {
       window.smartMode = false;
       const mb = document.getElementById('modeToggle');
-      if (mb) { mb.className = 'mode-badge mode-manual'; mb.innerHTML = '✋ وضع يدوي'; }
+      if (mb) { mb.className = 'mode-badge mode-manual'; mb.innerHTML = 'وضع يدوي'; }
     }
   }
 }
@@ -191,7 +191,7 @@ function bcSetDefaultCurrency(cur, btn) {
   const curEl = document.getElementById('currency');
   if (curEl) curEl.value = cur;
   _bcLog(`[عام] العملة الافتراضية → ${cur}`);
-  if (typeof showToast === 'function') showToast(`💱 العملة الافتراضية: ${cur}`, 'info');
+  if (typeof showToast === 'function') showToast(`العملة الافتراضية: ${cur}`, 'info');
   _saveBotSettings();
 }
 
@@ -384,7 +384,7 @@ function bcResetAll() {
   document.getElementById('bc-comm-abuhashim').value = 1.5;
   document.getElementById('bc-comm-random').value = 3;
   _bcLog('[البوت] تم إعادة تعيين جميع الإعدادات');
-  if (typeof showToast === 'function') showToast('↺ تم إعادة التعيين', 'info');
+  if (typeof showToast === 'function') showToast('تم إعادة التعيين', 'info');
 }
 
 // ── New settings functions ──
@@ -456,7 +456,7 @@ function bcClearExec() {
   if (typeof renderExecBubbles === 'function') renderExecBubbles();
   if (typeof computeStats === 'function') computeStats();
   _bcLog('[متقدم] تم مسح حوالات التنفيذ');
-  if (typeof showToast === 'function') showToast('⚡ تم مسح التنفيذ', 'info');
+  if (typeof showToast === 'function') showToast('تم مسح التنفيذ', 'info');
 }
 
 function bcExportLog() {

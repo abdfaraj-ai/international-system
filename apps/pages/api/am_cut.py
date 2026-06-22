@@ -8,7 +8,6 @@ GET  /api/am/cut/<id>/ ← تفاصيل سند واحد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import CutAndClose
 from core.permissions import require_roles as _require_roles, caller_name as _caller
@@ -42,7 +41,6 @@ def _parse(request):
 # GET + POST  /api/am/cut/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_cut(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

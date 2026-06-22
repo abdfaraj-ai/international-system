@@ -101,7 +101,7 @@
 <div id="sv-dash-content">
     <!-- Title -->
     <div class="sv-page-title">
-      <div><h1>🖥️ لوحة تحكم المشرف</h1><p>نظرة شاملة على النظام والعمليات الجارية</p></div>
+      <div><h1>لوحة تحكم المشرف</h1><p>نظرة شاملة على النظام والعمليات الجارية</p></div>
       <div class="sv-date-badge"><i class="fa-solid fa-calendar-days"></i><span id="sv-date-badge">—</span></div>
     </div>
 
@@ -145,7 +145,7 @@
       </div>
       <div class="sv-table-wrap">
         <div class="sv-table-toolbar">
-          <input class="sv-search" type="text" placeholder="🔍 بحث بالاسم أو رقم الحوالة..." oninput="svSearch(this.value)">
+          <input class="sv-search" type="text" placeholder="بحث بالاسم أو رقم الحوالة..." oninput="svSearch(this.value)">
           <span style="font-size:11px;color:#475569;" id="sv-table-count">عرض 10 من 67 حوالة</span>
         </div>
         <div class="sv-table-scroll">
@@ -399,7 +399,7 @@
         <button class="sv-emp-filter" onclick="empFilter('offline',this)">غير نشطين</button>
         <button class="sv-emp-filter" onclick="empFilter('suspended',this)">موقوفون</button>
       </div>
-      <input class="sv-search" placeholder="🔍  ابحث باسم الموظف أو اسم المستخدم..." oninput="empSearch(this.value)" style="width:280px;">
+      <input class="sv-search" placeholder="ابحث باسم الموظف أو اسم المستخدم..." oninput="empSearch(this.value)" style="width:280px;">
     </div>
 
     <div class="sv-table-scroll">
@@ -562,7 +562,7 @@
         <button class="sv-emp-filter" onclick="cltFilter('active',this)">نشطة</button>
         <button class="sv-emp-filter" onclick="cltFilter('paused',this)">موقوفة</button>
       </div>
-      <input class="sv-search" placeholder="🔍  ابحث باسم المجموعة..." oninput="cltSearch(this.value)" style="width:260px;">
+      <input class="sv-search" placeholder="ابحث باسم المجموعة..." oninput="cltSearch(this.value)" style="width:260px;">
     </div>
     <div class="sv-table-scroll">
       <table class="sv-table">
@@ -621,7 +621,7 @@
         <button class="sv-emp-filter" onclick="agtFilter('busy',this)">مشغولون</button>
         <button class="sv-emp-filter" onclick="agtFilter('offline',this)">غير متاحين</button>
       </div>
-      <input class="sv-search" placeholder="🔍  ابحث باسم الوكيل..." oninput="agtSearch(this.value)" style="width:260px;">
+      <input class="sv-search" placeholder="ابحث باسم الوكيل..." oninput="agtSearch(this.value)" style="width:260px;">
     </div>
     <div class="sv-table-scroll">
       <table class="sv-table">
@@ -729,7 +729,7 @@
           <input class="sv-form-input" id="sv-agt-phone" placeholder="+216xxxxxxxx" dir="ltr">
         </div>
         <div class="sv-form-group">
-          <label class="sv-form-label">📱 رقم واتساب <small style="color:#25D366;font-size:10px;">(للإرسال التلقائي)</small></label>
+          <label class="sv-form-label">رقم واتساب <small style="color:#25D366;font-size:10px;">(للإرسال التلقائي)</small></label>
           <input class="sv-form-input" id="sv-agt-whatsapp" placeholder="962791234567 بدون +" dir="ltr"
                  style="border-color:rgba(37,211,102,0.3);">
         </div>
@@ -756,7 +756,7 @@
       <!-- ─ مناطق العمل ─ -->
       <div style="margin-top:14px;margin-bottom:6px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <label class="sv-form-label" style="margin:0;">📍 مناطق العمل</label>
+          <label class="sv-form-label" style="margin:0;">مناطق العمل</label>
           <button type="button" onclick="agtAddLocationRow()" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">+ إضافة منطقة</button>
         </div>
         <div id="sv-agt-locations" style="display:flex;flex-direction:column;gap:8px;"></div>
@@ -864,7 +864,7 @@
     </div>
 
     <button onclick="document.getElementById('sv-agt-creds-overlay').style.display='none'" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:10px 28px;cursor:pointer;font-family:inherit;width:100%;">
-      ✅ تم الحفظ — إغلاق
+      تم الحفظ — إغلاق
     </button>
   </div>
 </div>
@@ -887,7 +887,7 @@
 
     <!-- Add rate row -->
     <div style="background:rgba(50,184,198,0.05);border:1px solid rgba(50,184,198,0.15);border-radius:14px;padding:16px;margin-bottom:18px;">
-      <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">➕ إضافة / تحديث سعر لدولة</div>
+      <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">إضافة / تحديث سعر لدولة</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
         <div>
           <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;">البلد *</label>
@@ -927,12 +927,12 @@
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <input id="sar-notes" type="text" placeholder="ملاحظة اختيارية..." style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(50,184,198,0.2);border-radius:9px;padding:8px 10px;color:#e2e8f0;font-size:12px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='rgba(50,184,198,.5)'" onblur="this.style.borderColor='rgba(50,184,198,.2)'">
-        <button onclick="sarSaveRate()" style="padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;">💾 حفظ السعر</button>
+        <button onclick="sarSaveRate()" style="padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,#32b8c6,#0891b2);border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;">حفظ السعر</button>
       </div>
     </div>
 
     <!-- Rates table -->
-    <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">📋 الأسعار المحفوظة</div>
+    <div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.5px;margin-bottom:10px;">الأسعار المحفوظة</div>
     <div id="sar-rates-list" style="display:flex;flex-direction:column;gap:8px;min-height:60px;">
       <div style="text-align:center;color:#475569;padding:20px;font-size:12px;">جارٍ التحميل...</div>
     </div>
@@ -995,12 +995,12 @@
 
   <!-- ── Tabs ── -->
   <div style="display:flex;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(96,165,250,0.1);flex-shrink:0;overflow-x:auto;">
-    <button class="bc-tab active" id="bc-tab-general"  onclick="bcTab('general',this)">⚙️ عام</button>
-    <button class="bc-tab"        id="bc-tab-tasks"    onclick="bcTab('tasks',this)">🤖 مهام</button>
-    <button class="bc-tab"        id="bc-tab-security" onclick="bcTab('security',this)">🛡️ أمان</button>
-    <button class="bc-tab"        id="bc-tab-groups"   onclick="bcTab('groups',this)">💬 مجموعات</button>
-    <button class="bc-tab"        id="bc-tab-agents"   onclick="bcTab('agents',this)">👷 منفذون</button>
-    <button class="bc-tab"        id="bc-tab-advanced" onclick="bcTab('advanced',this)">🔧 متقدم</button>
+    <button class="bc-tab active" id="bc-tab-general"  onclick="bcTab('general',this)">عام</button>
+    <button class="bc-tab"        id="bc-tab-tasks"    onclick="bcTab('tasks',this)">مهام</button>
+    <button class="bc-tab"        id="bc-tab-security" onclick="bcTab('security',this)">أمان</button>
+    <button class="bc-tab"        id="bc-tab-groups"   onclick="bcTab('groups',this)">مجموعات</button>
+    <button class="bc-tab"        id="bc-tab-agents"   onclick="bcTab('agents',this)">منفذون</button>
+    <button class="bc-tab"        id="bc-tab-advanced" onclick="bcTab('advanced',this)">متقدم</button>
   </div>
 
   <!-- ── Body ── -->
@@ -1015,7 +1015,7 @@
 
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔔 إشعار عند وصول رسالة جديدة</div>
+            <div class="bc-row-name">إشعار عند وصول رسالة جديدة</div>
             <div class="bc-row-desc">يظهر تنبيه في أسفل الشاشة بمجرد وصول حوالة جديدة من أي مجموعة — مفيد لمتابعة النشاط بدون مراقبة مستمرة للقائمة</div>
           </div>
           <div id="bc-t-notify" class="bc-toggle on" onclick="bcToggle(this,'notify')"><div class="bc-tog-thumb"></div></div>
@@ -1023,7 +1023,7 @@
 
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔐 توليد كود الأمان تلقائياً</div>
+            <div class="bc-row-name">توليد كود الأمان تلقائياً</div>
             <div class="bc-row-desc">يُنشئ البوت كوداً فريداً لكل حوالة عند إنشائها، ويُرسل ضمن وصل التأكيد — يُستخدم للمراجعة والتحقق لاحقاً</div>
           </div>
           <div id="bc-t-seccode" class="bc-toggle on" onclick="bcToggle(this,'seccode')"><div class="bc-tog-thumb"></div></div>
@@ -1031,7 +1031,7 @@
 
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">📸 حفظ لقطة شاشة لكل رسالة</div>
+            <div class="bc-row-name">حفظ لقطة شاشة لكل رسالة</div>
             <div class="bc-row-desc">يحتفظ البوت بصورة من كل رسالة واردة داخل سجل الحوالات — مفيد عند الرجوع لأي حوالة قديمة أو التحقق منها</div>
           </div>
           <div id="bc-t-screenshot" class="bc-toggle on" onclick="bcToggle(this,'screenshot')"><div class="bc-tog-thumb"></div></div>
@@ -1046,41 +1046,41 @@
         <!-- المنفذ الافتراضي -->
         <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
           <div class="bc-row-info" style="width:100%;">
-            <div class="bc-row-name">👷 المنفذ الافتراضي</div>
+            <div class="bc-row-name">المنفذ الافتراضي</div>
             <div class="bc-row-desc">المنفذ الذي يتم اختياره تلقائياً عند إرسال حوالة جديدة للتنفيذ — يمكن تغييره يدوياً في كل حوالة على حدة</div>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button class="bc-speed-btn active" id="bc-agent-auto" onclick="bcSetDefaultAgent('auto',this)">🔀 تلقائي (الأخف)</button>
-            <button class="bc-speed-btn" id="bc-agent-barhoum" onclick="bcSetDefaultAgent('barhoum',this)">🔵 برهوم</button>
-            <button class="bc-speed-btn" id="bc-agent-agent2"  onclick="bcSetDefaultAgent('agent2',this)">🟢 وكيل 2</button>
-            <button class="bc-speed-btn" id="bc-agent-agent3"  onclick="bcSetDefaultAgent('agent3',this)">🟡 وكيل 3</button>
+            <button class="bc-speed-btn active" id="bc-agent-auto" onclick="bcSetDefaultAgent('auto',this)">تلقائي (الأخف)</button>
+            <button class="bc-speed-btn" id="bc-agent-barhoum" onclick="bcSetDefaultAgent('barhoum',this)">برهوم</button>
+            <button class="bc-speed-btn" id="bc-agent-agent2"  onclick="bcSetDefaultAgent('agent2',this)">وكيل 2</button>
+            <button class="bc-speed-btn" id="bc-agent-agent3"  onclick="bcSetDefaultAgent('agent3',this)">وكيل 3</button>
           </div>
         </div>
 
         <!-- العملة الافتراضية -->
         <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
           <div class="bc-row-info" style="width:100%;">
-            <div class="bc-row-name">💱 العملة الافتراضية</div>
+            <div class="bc-row-name">العملة الافتراضية</div>
             <div class="bc-row-desc">العملة التي تُختار مسبقاً في حقل النموذج عند فتح حوالة جديدة — يوفر وقت التعديل اليدوي في حال كانت معظم الحوالات بعملة واحدة</div>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button class="bc-speed-btn active" id="bc-cur-def-USD" onclick="bcSetDefaultCurrency('USD',this)">💵 USD</button>
-            <button class="bc-speed-btn" id="bc-cur-def-EUR" onclick="bcSetDefaultCurrency('EUR',this)">💶 EUR</button>
-            <button class="bc-speed-btn" id="bc-cur-def-TRY" onclick="bcSetDefaultCurrency('TRY',this)">🇹🇷 TRY</button>
-            <button class="bc-speed-btn" id="bc-cur-def-IQD" onclick="bcSetDefaultCurrency('IQD',this)">🇮🇶 IQD</button>
+            <button class="bc-speed-btn active" id="bc-cur-def-USD" onclick="bcSetDefaultCurrency('USD',this)">USD</button>
+            <button class="bc-speed-btn" id="bc-cur-def-EUR" onclick="bcSetDefaultCurrency('EUR',this)">EUR</button>
+            <button class="bc-speed-btn" id="bc-cur-def-TRY" onclick="bcSetDefaultCurrency('TRY',this)">TRY</button>
+            <button class="bc-speed-btn" id="bc-cur-def-IQD" onclick="bcSetDefaultCurrency('IQD',this)">IQD</button>
           </div>
         </div>
 
         <!-- الأولوية الافتراضية -->
         <div class="bc-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
           <div class="bc-row-info" style="width:100%;">
-            <div class="bc-row-name">🎯 الأولوية الافتراضية للحوالات</div>
+            <div class="bc-row-name">الأولوية الافتراضية للحوالات</div>
             <div class="bc-row-desc">مستوى الأولوية الذي يُعيَّن لكل حوالة جديدة تدخل قائمة التنفيذ — الأولوية العالية تُعالَج أولاً عند وجود ازدحام</div>
           </div>
           <div style="display:flex;gap:6px;">
-            <button class="bc-speed-btn" id="bc-pri-high"   onclick="bcSetDefaultPriority('high',this)">🔴 عالية</button>
-            <button class="bc-speed-btn active" id="bc-pri-normal" onclick="bcSetDefaultPriority('normal',this)">🟡 عادية</button>
-            <button class="bc-speed-btn" id="bc-pri-low"    onclick="bcSetDefaultPriority('low',this)">🟢 منخفضة</button>
+            <button class="bc-speed-btn" id="bc-pri-high"   onclick="bcSetDefaultPriority('high',this)">عالية</button>
+            <button class="bc-speed-btn active" id="bc-pri-normal" onclick="bcSetDefaultPriority('normal',this)">عادية</button>
+            <button class="bc-speed-btn" id="bc-pri-low"    onclick="bcSetDefaultPriority('low',this)">منخفضة</button>
           </div>
         </div>
 
@@ -1109,7 +1109,7 @@
       <div class="bc-settings-list" style="margin-bottom:18px;">
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">⏱ الفاصل الزمني بين الرسائل</div>
+            <div class="bc-row-name">الفاصل الزمني بين الرسائل</div>
             <div class="bc-row-desc">يحدد كم يتأخر البوت بين استقبال كل رسالة والتالية — الوضع البطيء يُخفف الضغط على الموظف، والسريع يناسب أوقات الذروة</div>
           </div>
           <div style="display:flex;gap:4px;">
@@ -1138,70 +1138,70 @@
       <div class="bc-settings-list">
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔍 التحقق التلقائي من البيانات</div>
+            <div class="bc-row-name">التحقق التلقائي من البيانات</div>
             <div class="bc-row-desc">يتحقق البوت من صحة الاسم والمبلغ والعملة قبل التنفيذ</div>
           </div>
           <div id="bc-t-autovalidate" class="bc-toggle on" onclick="bcToggle(this,'autovalidate')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">⚡ التنفيذ التلقائي (وضع ذكي)</div>
+            <div class="bc-row-name">التنفيذ التلقائي (وضع ذكي)</div>
             <div class="bc-row-desc">تنفيذ الحوالات أوتوماتيكياً عند تفعيل الوضع الذكي</div>
           </div>
           <div id="bc-t-autoexec" class="bc-toggle on" onclick="bcToggle(this,'autoexec')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔀 التوزيع الذكي على المنفذين</div>
+            <div class="bc-row-name">التوزيع الذكي على المنفذين</div>
             <div class="bc-row-desc">اختيار المنفذ الأقل حملاً تلقائياً</div>
           </div>
           <div id="bc-t-loadbalance" class="bc-toggle on" onclick="bcToggle(this,'loadbalance')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">⚠️ كشف الحوالات المكررة</div>
+            <div class="bc-row-name">كشف الحوالات المكررة</div>
             <div class="bc-row-desc">تحذير عند رصد نفس الحوالة خلال 10 دقائق</div>
           </div>
           <div id="bc-t-dedup" class="bc-toggle on" onclick="bcToggle(this,'dedup')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">📨 إرسال وصل للمصدر تلقائياً</div>
+            <div class="bc-row-name">إرسال وصل للمصدر تلقائياً</div>
             <div class="bc-row-desc">إرسال رسالة تأكيد للمجموعة بعد التنفيذ</div>
           </div>
           <div id="bc-t-autoreceipt" class="bc-toggle on" onclick="bcToggle(this,'autoreceipt')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🕐 مؤقت SLA (تنبيه التأخير)</div>
+            <div class="bc-row-name">مؤقت SLA (تنبيه التأخير)</div>
             <div class="bc-row-desc">تلوين الحوالات حسب مدة الانتظار: أخضر/أصفر/أحمر</div>
           </div>
           <div id="bc-t-sla" class="bc-toggle on" onclick="bcToggle(this,'sla')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔼 أولوية تلقائية للمبالغ الكبيرة</div>
+            <div class="bc-row-name">أولوية تلقائية للمبالغ الكبيرة</div>
             <div class="bc-row-desc">الحوالات التي تتجاوز حد المبلغ تُعطى أولوية عالية تلقائياً</div>
           </div>
           <div id="bc-t-autopriority" class="bc-toggle on" onclick="bcToggle(this,'autopriority')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔁 إعادة توزيع عند انتهاء SLA</div>
+            <div class="bc-row-name">إعادة توزيع عند انتهاء SLA</div>
             <div class="bc-row-desc">بدلاً من الإلغاء — يُعاد توزيع الحوالة على منفذ آخر</div>
           </div>
           <div id="bc-t-slareassign" class="bc-toggle off" onclick="bcToggle(this,'slareassign')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">📦 أرشفة تلقائية بعد التنفيذ</div>
+            <div class="bc-row-name">أرشفة تلقائية بعد التنفيذ</div>
             <div class="bc-row-desc">نقل الحوالات المكتملة للأرشيف بعد فترة محددة</div>
           </div>
           <div id="bc-t-autoarchive" class="bc-toggle on" onclick="bcToggle(this,'autoarchive')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🧠 التحقق الذكي من العملة</div>
+            <div class="bc-row-name">التحقق الذكي من العملة</div>
             <div class="bc-row-desc">كشف العملة من نص الرسالة تلقائياً وتصحيحها</div>
           </div>
           <div id="bc-t-currencydetect" class="bc-toggle on" onclick="bcToggle(this,'currencydetect')"><div class="bc-tog-thumb"></div></div>
@@ -1309,28 +1309,28 @@
       <div class="bc-settings-list" style="margin-bottom:18px;">
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔐 موافقة مشرف للمبالغ الكبيرة</div>
+            <div class="bc-row-name">موافقة مشرف للمبالغ الكبيرة</div>
             <div class="bc-row-desc">إيقاف التنفيذ التلقائي وطلب موافقة يدوية لمبالغ تتجاوز الحد</div>
           </div>
           <div id="bc-t-supervisorapprove" class="bc-toggle on" onclick="bcToggle(this,'supervisorapprove')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">⛔ رفض تلقائي للمبالغ الخطرة</div>
+            <div class="bc-row-name">رفض تلقائي للمبالغ الخطرة</div>
             <div class="bc-row-desc">رفض أي حوالة تتجاوز حد الخطر الأقصى مباشرة</div>
           </div>
           <div id="bc-t-autoreject" class="bc-toggle off" onclick="bcToggle(this,'autoreject')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">⚠️ تنبيه الوصول للحد اليومي</div>
+            <div class="bc-row-name">تنبيه الوصول للحد اليومي</div>
             <div class="bc-row-desc">تحذير عند بلوغ 80% من الحد اليومي المسموح</div>
           </div>
           <div id="bc-t-dailywarn" class="bc-toggle on" onclick="bcToggle(this,'dailywarn')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔒 تجميد عند تجاوز الحد اليومي</div>
+            <div class="bc-row-name">تجميد عند تجاوز الحد اليومي</div>
             <div class="bc-row-desc">إيقاف البوت تلقائياً عند الوصول للحد اليومي</div>
           </div>
           <div id="bc-t-dailyfreeze" class="bc-toggle on" onclick="bcToggle(this,'dailyfreeze')"><div class="bc-tog-thumb"></div></div>
@@ -1342,21 +1342,21 @@
       <div class="bc-settings-list" style="margin-bottom:18px;">
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🕵️ تحليل نمط الرسائل</div>
+            <div class="bc-row-name">تحليل نمط الرسائل</div>
             <div class="bc-row-desc">كشف رسائل مشبوهة بناءً على التكرار غير الطبيعي</div>
           </div>
           <div id="bc-t-patterndetect" class="bc-toggle on" onclick="bcToggle(this,'patterndetect')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🚨 تنبيه تسلسل مشبوه</div>
+            <div class="bc-row-name">تنبيه تسلسل مشبوه</div>
             <div class="bc-row-desc">تنبيه عند وصول 3+ حوالات لنفس الشخص خلال 5 دقائق</div>
           </div>
           <div id="bc-t-rapidfire" class="bc-toggle on" onclick="bcToggle(this,'rapidfire')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔍 التحقق من تطابق الاسم والمبلغ</div>
+            <div class="bc-row-name">التحقق من تطابق الاسم والمبلغ</div>
             <div class="bc-row-desc">رصد إذا أُرسلت نفس البيانات من مجموعات مختلفة</div>
           </div>
           <div id="bc-t-crossgroupcheck" class="bc-toggle on" onclick="bcToggle(this,'crossgroupcheck')"><div class="bc-tog-thumb"></div></div>
@@ -1369,27 +1369,27 @@
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           <label class="bc-currency-chip" id="bc-cur-USD">
             <input type="checkbox" checked onchange="bcToggleCurrency('USD',this.checked)" style="display:none;">
-            <span>💵 USD</span>
+            <span>USD</span>
           </label>
           <label class="bc-currency-chip" id="bc-cur-EUR">
             <input type="checkbox" checked onchange="bcToggleCurrency('EUR',this.checked)" style="display:none;">
-            <span>💶 EUR</span>
+            <span>EUR</span>
           </label>
           <label class="bc-currency-chip" id="bc-cur-TRY">
             <input type="checkbox" checked onchange="bcToggleCurrency('TRY',this.checked)" style="display:none;">
-            <span>🇹🇷 TRY</span>
+            <span>TRY</span>
           </label>
           <label class="bc-currency-chip" id="bc-cur-IQD">
             <input type="checkbox" checked onchange="bcToggleCurrency('IQD',this.checked)" style="display:none;">
-            <span>🇮🇶 IQD</span>
+            <span>IQD</span>
           </label>
           <label class="bc-currency-chip" id="bc-cur-SAR">
             <input type="checkbox" onchange="bcToggleCurrency('SAR',this.checked)" style="display:none;">
-            <span>🇸🇦 SAR</span>
+            <span>SAR</span>
           </label>
           <label class="bc-currency-chip" id="bc-cur-AED">
             <input type="checkbox" onchange="bcToggleCurrency('AED',this.checked)" style="display:none;">
-            <span>🇦🇪 AED</span>
+            <span>AED</span>
           </label>
         </div>
       </div>
@@ -1476,42 +1476,42 @@
       <div class="bc-settings-list" style="margin-bottom:18px;">
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">📝 تسجيل كامل للأحداث</div>
+            <div class="bc-row-name">تسجيل كامل للأحداث</div>
             <div class="bc-row-desc">حفظ كل عملية البوت في سجل تفصيلي</div>
           </div>
           <div id="bc-t-verboselog" class="bc-toggle on" onclick="bcToggle(this,'verboselog')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔄 إعادة محاولة تلقائية عند الفشل</div>
+            <div class="bc-row-name">إعادة محاولة تلقائية عند الفشل</div>
             <div class="bc-row-desc">إعادة معالجة الرسائل الفاشلة مرة واحدة تلقائياً</div>
           </div>
           <div id="bc-t-autoretry" class="bc-toggle on" onclick="bcToggle(this,'autoretry')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">💾 حفظ تلقائي للإعدادات</div>
+            <div class="bc-row-name">حفظ تلقائي للإعدادات</div>
             <div class="bc-row-desc">حفظ جميع التغييرات في الذاكرة المحلية فور تطبيقها</div>
           </div>
           <div id="bc-t-autosave" class="bc-toggle on" onclick="bcToggle(this,'autosave')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🔔 صوت التنبيهات</div>
+            <div class="bc-row-name">صوت التنبيهات</div>
             <div class="bc-row-desc">تشغيل صوت عند وصول رسائل جديدة أو تنبيهات أمان</div>
           </div>
           <div id="bc-t-soundalert" class="bc-toggle off" onclick="bcToggle(this,'soundalert')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">📡 وضع الاستعداد (Standby)</div>
+            <div class="bc-row-name">وضع الاستعداد (Standby)</div>
             <div class="bc-row-desc">إبقاء البوت في وضع المراقبة فقط بدون تنفيذ تلقائي</div>
           </div>
           <div id="bc-t-standby" class="bc-toggle off" onclick="bcToggle(this,'standby')"><div class="bc-tog-thumb"></div></div>
         </div>
         <div class="bc-row">
           <div class="bc-row-info">
-            <div class="bc-row-name">🌐 وضع متعدد العملاء</div>
+            <div class="bc-row-name">وضع متعدد العملاء</div>
             <div class="bc-row-desc">السماح لأكثر من موظف بالعمل على نفس قائمة الحوالات</div>
           </div>
           <div id="bc-t-multiuser" class="bc-toggle off" onclick="bcToggle(this,'multiuser')"><div class="bc-tog-thumb"></div></div>
@@ -1551,7 +1551,7 @@
       </div>
 
       <!-- Danger Zone -->
-      <div class="bc-section-title" style="color:#f87171;">⚠️ منطقة الخطر</div>
+      <div class="bc-section-title" style="color:#f87171;">منطقة الخطر</div>
       <div style="padding:14px;background:rgba(239,68,68,0.04);border-radius:12px;border:1px solid rgba(239,68,68,0.15);">
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button onclick="bcClearHistory()" style="
@@ -1559,19 +1559,19 @@
             background:rgba(239,68,68,0.08);color:#f87171;font-size:10px;font-weight:700;
             cursor:pointer;font-family:inherit;transition:all .2s;
           " onmouseover="this.style.background='rgba(239,68,68,0.18)'"
-             onmouseout="this.style.background='rgba(239,68,68,0.08)'">🗑️ مسح السجل</button>
+             onmouseout="this.style.background='rgba(239,68,68,0.08)'">مسح السجل</button>
           <button onclick="bcClearExec()" style="
             padding:7px 14px;border-radius:8px;border:1px solid rgba(251,191,36,0.3);
             background:rgba(251,191,36,0.08);color:#fbbf24;font-size:10px;font-weight:700;
             cursor:pointer;font-family:inherit;transition:all .2s;
           " onmouseover="this.style.background='rgba(251,191,36,0.18)'"
-             onmouseout="this.style.background='rgba(251,191,36,0.08)'">⚡ مسح التنفيذ</button>
+             onmouseout="this.style.background='rgba(251,191,36,0.08)'">مسح التنفيذ</button>
           <button onclick="bcExportLog()" style="
             padding:7px 14px;border-radius:8px;border:1px solid rgba(96,165,250,0.3);
             background:rgba(96,165,250,0.08);color:#60a5fa;font-size:10px;font-weight:700;
             cursor:pointer;font-family:inherit;transition:all .2s;
           " onmouseover="this.style.background='rgba(96,165,250,0.18)'"
-             onmouseout="this.style.background='rgba(96,165,250,0.08)'">📤 تصدير السجل</button>
+             onmouseout="this.style.background='rgba(96,165,250,0.08)'">تصدير السجل</button>
         </div>
       </div>
     </div>
@@ -1759,8 +1759,8 @@
 
 <div id="sv-admin-msgs-section" class="sv-mgmt-section" style="padding:24px">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-    <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">📋 تعليمات الإدارة العامة</h2>
-    <button onclick="svSendMessageToAdmin()" style="padding:8px 16px;border-radius:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);color:#32b8c6;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">📤 إرسال رسالة للإدارة</button>
+    <h2 style="margin:0;font-size:18px;font-weight:900;color:#e9edef">تعليمات الإدارة العامة</h2>
+    <button onclick="svSendMessageToAdmin()" style="padding:8px 16px;border-radius:10px;background:rgba(50,184,198,0.15);border:1px solid rgba(50,184,198,0.3);color:#32b8c6;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">إرسال رسالة للإدارة</button>
   </div>
   <div id="sv-instr-list-tr"></div>
 </div>
@@ -1771,7 +1771,7 @@
 <!-- Modal -->
 <div class="sv-modal-overlay" id="sv-modal">
   <div class="sv-modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;"><h2 style="margin:0;">📋 تفاصيل الحوالة</h2><button class="sv-btn sv-btn-danger" onclick="closeSvModal()">✕ إغلاق</button></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;"><h2 style="margin:0;">تفاصيل الحوالة</h2><button class="sv-btn sv-btn-danger" onclick="closeSvModal()">✕ إغلاق</button></div>
     <div id="sv-modal-body"></div>
   </div>
 </div>
@@ -1843,7 +1843,7 @@
     </div>
     <div style="display:flex;gap:10px;">
       <button onclick="svExecuteMigration()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#b8860b,#e8c04a);border:none;color:#000;font-size:13px;font-weight:800;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-        📦 تنفيذ الترحيل
+        تنفيذ الترحيل
       </button>
       <button onclick="svCloseMigrationModal()" style="padding:12px 20px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(50,184,198,0.18);color:#8696a0;font-size:13px;font-weight:700;cursor:pointer;">إلغاء</button>
     </div>
@@ -2076,9 +2076,9 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     <div class="dr-field">
       <label class="dr-label">نوع الطلب</label>
       <div class="dr-type-btns">
-        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">✨ تحسين</button>
-        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">🚀 ميزة جديدة</button>
-        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">🐛 مشكلة تواجهني</button>
+        <button class="dr-type-btn" id="drType-improve" onclick="selectDrType('improve')">تحسين</button>
+        <button class="dr-type-btn" id="drType-feature" onclick="selectDrType('feature')">ميزة جديدة</button>
+        <button class="dr-type-btn" id="drType-bug"     onclick="selectDrType('bug')">مشكلة تواجهني</button>
       </div>
     </div>
     <div class="dr-field">
@@ -2087,12 +2087,12 @@ html:not([data-theme="dark"]) body .dr-btn-cancel{background:#f1f5f9;border-colo
     </div>
     <div class="dr-field">
       <label class="dr-label">مرفقات (اختياري)</label>
-      <label class="dr-attach-lbl" for="drAttach">📎 اضغط لإرفاق ملفات أو صور</label>
+      <label class="dr-attach-lbl" for="drAttach">اضغط لإرفاق ملفات أو صور</label>
       <input type="file" id="drAttach" multiple accept="image/*,.pdf,.doc,.docx,.xlsx" style="display:none" onchange="updateDrAttachLabel()">
       <div class="dr-attach-files" id="drAttachFiles"></div>
     </div>
     <div class="dr-footer">
-      <button class="dr-btn-send" onclick="submitDevRequest()">📨 إرسال للإدارة</button>
+      <button class="dr-btn-send" onclick="submitDevRequest()">إرسال للإدارة</button>
       <button class="dr-btn-cancel" onclick="closeDevRequestModal()">إلغاء</button>
     </div>
   </div>
@@ -2129,7 +2129,7 @@ async function submitDevRequest(){
   try{
     var res=await fetch('/api/dev-requests/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({title:title,type:_drType,description:desc,senderPage:'transactions-supervisor'})});
     var data=await res.json();
-    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح ✅','success');else alert('تم إرسال طلبك للإدارة بنجاح ✅');}
+    if(data.success){closeDevRequestModal();if(typeof showToast==='function')showToast('تم إرسال طلبك للإدارة بنجاح','success');else alert('تم إرسال طلبك للإدارة بنجاح');}
     else{alert(data.error||'حدث خطأ أثناء الإرسال');}
   }catch(e){alert('تعذّر الاتصال بالخادم');}
 }
@@ -2153,9 +2153,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (changed.length) {
       // افتح النافذة المنبثقة تلقائياً عند ورود أسعار جديدة
       openRatesModal();
-      if (window.WsNotif) WsNotif.showToast('📱 تحديث أسعار بالصوت', changed.join(' | '), 'success');
+      if (window.WsNotif) WsNotif.showToast('تحديث أسعار بالصوت', changed.join(' | '), 'success');
       var st = document.getElementById('sv-rates-status');
-      if (st) { st.textContent = '✅ وصلت أسعار جديدة بالصوت — ' + new Date().toLocaleTimeString('ar'); st.style.display='block'; setTimeout(function(){st.style.display='none';},6000); }
+      if (st) { st.textContent = 'وصلت أسعار جديدة بالصوت — ' + new Date().toLocaleTimeString('ar'); st.style.display='block'; setTimeout(function(){st.style.display='none';},6000); }
       var lu = document.getElementById('sv-rates-last-updated');
       if (lu) lu.textContent = 'Last updated: ' + new Date().toLocaleString('ar');
     }

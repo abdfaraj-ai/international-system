@@ -8,7 +8,6 @@ GET  /api/am/adv-entry/<id>/   ← تفاصيل قيد واحد
 import json
 from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Sum
 
@@ -53,7 +52,6 @@ def _to_amount(from_amt: Decimal, rate: Decimal, direction: str) -> Decimal:
 # GET + POST  /api/am/adv-entry/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_adv_entry(request):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:
@@ -218,7 +216,6 @@ def api_am_adv_entry(request):
 # GET + DELETE /api/am/adv-entry/<id>/
 # ══════════════════════════════════════════════════════════════════════════════
 
-@csrf_exempt
 def api_am_adv_entry_detail(request, entry_id):
     err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
     if err:

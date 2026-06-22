@@ -11,7 +11,6 @@ DELETE /api/cost-centers/<id>/force-delete/ ← حذف نهائي
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import CostCenter
 from core.permissions import require_roles as _require_roles
@@ -28,7 +27,6 @@ def _serialize(c):
     return c.to_dict()
 
 
-@csrf_exempt
 def api_cost_centers(request):
     err = _require_roles(request, 'M01')
     if err:
@@ -62,7 +60,6 @@ def api_cost_centers(request):
     return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
 
 
-@csrf_exempt
 def api_cost_center_detail(request, center_id):
     err = _require_roles(request, 'M01')
     if err:
@@ -103,7 +100,6 @@ def api_cost_center_detail(request, center_id):
     return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
 
 
-@csrf_exempt
 def api_cost_center_restore(request, center_id):
     err = _require_roles(request, 'M01')
     if err:
@@ -119,7 +115,6 @@ def api_cost_center_restore(request, center_id):
     return JsonResponse({'success': True})
 
 
-@csrf_exempt
 def api_cost_center_force_delete(request, center_id):
     err = _require_roles(request, 'M01')
     if err:

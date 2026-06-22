@@ -53,10 +53,16 @@ git push -u origin main
 
 ```
 DJANGO_SETTINGS_MODULE = core.settings.prod
-DJANGO_SECRET_KEY      = OsT7N9z2otY9NWwVPv0gx7437r0MzpT_ombiX2pFPrEEhbhHp_Ww8EWeZuwdE5hpW6I
+DJANGO_SECRET_KEY      = <ضع هنا مفتاحاً جديداً — أنشئه بالأمر أدناه>
 ALLOWED_HOSTS          = your-app.up.railway.app
 CSRF_TRUSTED_ORIGINS   = https://your-app.up.railway.app
 ```
+
+> ⚠️ **لا تضع مفتاحاً حقيقياً في هذا الملف أبداً** (يُرفع إلى المستودع). أنشئ المفتاح وقت النشر فقط:
+> ```powershell
+> python -c "import secrets; print(secrets.token_urlsafe(50))"
+> ```
+> وألصِقه مباشرةً في Railway → Variables.
 
 > بعد معرفة رابط التطبيق من Railway، عدّل ALLOWED_HOSTS و CSRF_TRUSTED_ORIGINS
 
@@ -85,8 +91,10 @@ CSRF_TRUSTED_ORIGINS = https://your-app.up.railway.app,https://yourdomain.com
 ---
 
 ## ملاحظة عن SECRET_KEY
-المفتاح الموجود في `.env.prod` للاستخدام المحلي فقط.
-**استخدم مفتاحاً مختلفاً على Railway** — أنشئ واحداً جديداً:
+⚠️ **مهم:** أي مفتاح كان مكتوباً سابقاً في هذا الملف يُعتبر الآن **مكشوفاً ويجب عدم استخدامه**.
+احتفظ بالمفتاح في `.env.prod` المحلي فقط (وهو مستثنى من Git)، ولا تكتبه في أي ملف يُرفع للمستودع.
+
+**استخدم مفتاحاً جديداً وفريداً على Railway** — أنشئ واحداً:
 ```powershell
 python -c "import secrets; print(secrets.token_urlsafe(50))"
 ```

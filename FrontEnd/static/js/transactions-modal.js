@@ -92,7 +92,7 @@ let _selectedExecAgentWhatsapp = '';
 let _execMsgType = 'instruction';
 let _execPriority = 'normal';
 let _execSentCount = 0;
-const _execTypeLabels  = { instruction:'📋 تعليمات', urgent:'🚨 عاجل', confirm:'✅ تأكيد', cancel:'❌ إلغاء', query:'❓ استفسار' };
+const _execTypeLabels  = { instruction:'تعليمات', urgent:'عاجل', confirm:'تأكيد', cancel:'إلغاء', query:'استفسار' };
 
 function openExecMsgModal() {
   const m = document.getElementById('execMsgModal');
@@ -210,7 +210,7 @@ function sendExecMsg() {
     lbl.textContent='إرسال التعليمات';
     btn.style.background='linear-gradient(135deg,#32b8c6,#0e6b7a)';
     if (typeof showToast==='function')
-      showToast(`⚡ تم إرسال التعليمات إلى ${_selectedExecAgentLabel}`, 'success');
+      showToast(`تم إرسال التعليمات إلى ${_selectedExecAgentLabel}`, 'success');
   }, 1400);
 }
 
@@ -245,7 +245,7 @@ function openMsgModal() {
       _selectedMsgGroupLabel    = srcName;
       _selectedMsgGroupWhatsapp = srcPhone;
       const lbl = document.getElementById('selectedGroupLabel');
-      if (lbl) lbl.textContent = srcName + (srcPhone ? ` (${srcPhone})` : ' ⚠️ لا يوجد رقم');
+      if (lbl) lbl.textContent = srcName + (srcPhone ? ` (${srcPhone})` : ' لا يوجد رقم');
       console.log('mraslat almasdar: id=' + t.id + ' phone=' + srcPhone + ' name=' + srcName + ' sender=' + t.sender + ' jid=' + t.jid + ' senderJid=' + t.senderJid);
     } else {
       console.warn('⚠️ openMsgModal: لم يُعثر على transfer للـ id:', _selectedId);
@@ -328,7 +328,7 @@ async function sendMsgToGroup() {
   }
   console.log('sendMsgToGroup state: group=' + _selectedMsgGroup + ' | label=' + _selectedMsgGroupLabel + ' | phone=' + _selectedMsgGroupWhatsapp);
   if (!_selectedMsgGroupWhatsapp) {
-    if (typeof showToast==='function') showToast('⚠️ لا يوجد رقم واتساب للمصدر — اختر حوالة أولاً أو تحقق من بيانات المرسل', 'error');
+    if (typeof showToast==='function') showToast('لا يوجد رقم واتساب للمصدر — اختر حوالة أولاً أو تحقق من بيانات المرسل', 'error');
     return;
   }
   const btn = document.getElementById('sendMsgBtn');
@@ -353,7 +353,7 @@ async function sendMsgToGroup() {
     item.className='mc-history-item'; item.style.animation='mcFadeIn .4s ease';
     const statusHtml = result.ok
       ? '<div class="mc-hi-status"><span class="mc-ticks sent">✓✓</span> مُرسل عبر واتساب</div>'
-      : `<div class="mc-hi-status" style="color:#ef4444;">⚠️ فشل: ${result.error||'خطأ'}</div>`;
+      : `<div class="mc-hi-status" style="color:#ef4444;">فشل: ${result.error||'خطأ'}</div>`;
     item.innerHTML=`<div class="mc-hi-meta"><span class="mc-hi-group">${_selectedMsgGroupLabel}</span><span class="mc-hi-time">${timeStr}</span></div><div class="mc-hi-bubble" style="background:rgba(37,211,102,0.1);border-right:3px solid #25D366;">${txt}</div>${statusHtml}`;
     hl.insertBefore(item, hl.firstChild);
     _srcSentCount++;
@@ -365,14 +365,14 @@ async function sendMsgToGroup() {
     lbl.textContent='إرسال'; btn.style.background='linear-gradient(135deg,#25D366,#075E54)';
     if (result.ok) {
       mcShowSuccess('rgb(37,211,102)', `إلى: ${_selectedMsgGroupLabel}`);
-      if (typeof showToast==='function') showToast(`✅ تم إرسال الرسالة إلى ${_selectedMsgGroupLabel}`, 'success');
+      if (typeof showToast==='function') showToast(`تم إرسال الرسالة إلى ${_selectedMsgGroupLabel}`, 'success');
     } else {
-      if (typeof showToast==='function') showToast(`⚠️ فشل الإرسال: ${result.error||'خطأ'}`, 'error');
+      if (typeof showToast==='function') showToast(`فشل الإرسال: ${result.error||'خطأ'}`, 'error');
     }
   } catch(e) {
     btn.disabled=false; dot.style.display='none';
     lbl.textContent='إرسال'; btn.style.background='linear-gradient(135deg,#25D366,#075E54)';
-    if (typeof showToast==='function') showToast('⚠️ خطأ في الإرسال', 'error');
+    if (typeof showToast==='function') showToast('خطأ في الإرسال', 'error');
   }
 }
 
@@ -398,22 +398,22 @@ function updateExecCharCount(el){ mcTextInput('exec',el); }
 async function debugCheckSrcNumber() {
   const phone = _selectedMsgGroupWhatsapp;
   if (!phone) {
-    if (typeof showToast==='function') showToast('⚠️ لا يوجد رقم — اختر حوالة أولاً', 'error');
+    if (typeof showToast==='function') showToast('لا يوجد رقم — اختر حوالة أولاً', 'error');
     return;
   }
-  if (typeof showToast==='function') showToast('🔍 جاري فحص الرقم ' + phone + ' ...', 'info');
+  if (typeof showToast==='function') showToast('جاري فحص الرقم ' + phone + ' ...', 'info');
   try {
     const r = await waBridgeCheckNumber(phone);
     if (r.ok && r.exists) {
-      if (typeof showToast==='function') showToast('✅ الرقم ' + r.cleaned + ' مسجّل على واتساب', 'success');
+      if (typeof showToast==='function') showToast('الرقم ' + r.cleaned + ' مسجّل على واتساب', 'success');
     } else if (r.ok && r.exists === false) {
-      if (typeof showToast==='function') showToast('❌ الرقم ' + r.cleaned + ' غير موجود على واتساب', 'error');
+      if (typeof showToast==='function') showToast('الرقم ' + r.cleaned + ' غير موجود على واتساب', 'error');
     } else {
-      if (typeof showToast==='function') showToast('⚠️ ' + (r.error || 'خطأ في الفحص'), 'error');
+      if (typeof showToast==='function') showToast((r.error || 'خطأ في الفحص'), 'error');
     }
     console.log('debugCheckSrcNumber result:', JSON.stringify(r));
   } catch(e) {
-    if (typeof showToast==='function') showToast('⚠️ خطأ: ' + e.message, 'error');
+    if (typeof showToast==='function') showToast('خطأ: ' + e.message, 'error');
   }
 }
 
@@ -441,7 +441,7 @@ function mcShowSuccess(color, label) {
         <svg width="36" height="36" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
       </div>
       <div style="font-size:15px;font-weight:800;color:#e9edef;letter-spacing:.3px;">${label}</div>
-      <div style="font-size:11px;color:#8696a0;margin-top:6px;">تم الإرسال بنجاح ✓</div>
+      <div style="font-size:11px;color:#8696a0;margin-top:6px;">تم الإرسال بنجاح</div>
     </div>`;
   document.body.appendChild(overlay);
   setTimeout(()=>{ overlay.style.opacity='0'; overlay.style.transition='opacity .2s'; setTimeout(()=>overlay.remove(),200); }, 1200);
@@ -493,7 +493,7 @@ window.sendExecMsg = async function() {
   const txt = (document.getElementById('execMsgText')||{}).value||'';
   if (!txt.trim()) { _origSendExecMsg(); return; }
   if (!_selectedExecAgentWhatsapp) {
-    if (typeof showToast==='function') showToast('⚠️ اختر وكيلاً أولاً', 'error');
+    if (typeof showToast==='function') showToast('اختر وكيلاً أولاً', 'error');
     return;
   }
   const btn = document.getElementById('sendExecMsgBtn');
@@ -517,7 +517,7 @@ window.sendExecMsg = async function() {
     item.className='mc-history-item'; item.style.animation='mcFadeIn .4s ease';
     const statusHtml = result.ok
       ? '<div class="mc-hi-status"><span class="mc-ticks sent">✓✓</span> مُرسل عبر واتساب</div>'
-      : `<div class="mc-hi-status" style="color:#ef4444;">⚠️ فشل: ${result.error||'خطأ'}</div>`;
+      : `<div class="mc-hi-status" style="color:#ef4444;">فشل: ${result.error||'خطأ'}</div>`;
     item.innerHTML=`<div class="mc-hi-meta"><span class="mc-hi-group">${_selectedExecAgentLabel}</span><span class="mc-hi-time">${timeStr}</span></div><div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">${txt}</div>${statusHtml}`;
     hl.insertBefore(item, hl.firstChild);
     _execSentCount++;
@@ -529,13 +529,13 @@ window.sendExecMsg = async function() {
     btn.style.background='linear-gradient(135deg,#32b8c6,#0e6b7a)';
     if (result.ok) {
       mcShowSuccess('rgb(50,184,198)', `إلى: ${_selectedExecAgentLabel}`);
-      if (typeof showToast==='function') showToast(`⚡ تم إرسال التعليمات إلى ${_selectedExecAgentLabel}`, 'success');
+      if (typeof showToast==='function') showToast(`تم إرسال التعليمات إلى ${_selectedExecAgentLabel}`, 'success');
     } else {
-      if (typeof showToast==='function') showToast(`⚠️ فشل الإرسال: ${result.error||'خطأ'}`, 'error');
+      if (typeof showToast==='function') showToast(`فشل الإرسال: ${result.error||'خطأ'}`, 'error');
     }
   } catch(e) {
     btn.disabled=false; dot.style.display='none'; lbl.textContent='إرسال التعليمات';
     btn.style.background='linear-gradient(135deg,#32b8c6,#0e6b7a)';
-    if (typeof showToast==='function') showToast('⚠️ خطأ في الإرسال', 'error');
+    if (typeof showToast==='function') showToast('خطأ في الإرسال', 'error');
   }
 };

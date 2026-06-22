@@ -133,7 +133,7 @@ const WA = {
     if (msgs.length === 0) {
       box.innerHTML = `<div style="text-align:center;color:#4a5568;font-size:12px;padding:40px 20px">
         لا توجد رسائل بعد في هذا الجروب.<br>
-        اضغط <b style="color:#25D366">⚡ رسالة عشوائية</b> لمحاكاة رسالة واردة.
+        اضغط <b style="color:#25D366">رسالة عشوائية</b> لمحاكاة رسالة واردة.
       </div>`;
       return;
     }
@@ -191,7 +191,7 @@ const WA = {
           <div style="font-size:13px;color:#e9edef;white-space:pre-wrap;direction:rtl;text-align:right">${m.text}</div>
           <div style="font-size:10px;color:#8696a0;margin-top:3px;text-align:left">${timeStr} ${isOut ? '✓✓' : ''}</div>
         </div>
-        ${m.injected ? `<div style="font-size:10px;color:#25D366;margin-top:3px;text-align:right">⚡ تم تحليلها وملء الفورم تلقائياً</div>` : ''}
+        ${m.injected ? `<div style="font-size:10px;color:#25D366;margin-top:3px;text-align:right">تم تحليلها وملء الفورم تلقائياً</div>` : ''}
       </div>
     </div>`;
   },
@@ -230,11 +230,11 @@ const WA = {
 
     // Step 2 — show "AI processing" indicator
     this.showTyping(true);
-    this.setStatus('🔄 جاري تحليل الرسالة...');
+    this.setStatus('جاري تحليل الرسالة...');
 
     setTimeout(() => {
       this.showTyping(false);
-      this.setStatus('🟢 البوت نشط — يراقب الجروبات');
+      this.setStatus('البوت نشط — يراقب الجروبات');
 
       // Step 3 — bot sends extracted summary back to group
       const secCode = this.generateSecCode(data.name, data.amount, group);
@@ -262,7 +262,7 @@ const WA = {
 
       // Step 5 — notify user
       if (typeof showToast === 'function')
-        showToast('📥 حوالة جديدة وردت من واتساب! تم ملء الفورم تلقائياً ✅', 'success');
+        showToast('حوالة جديدة وردت من واتساب! تم ملء الفورم تلقائياً', 'success');
 
       // Step 6 — flash the form
       const form = document.querySelector('.form-card');
@@ -305,7 +305,7 @@ const WA = {
     const ai = document.getElementById('aiStatus');
     if (ai) {
       ai.style.display = 'flex';
-      ai.innerHTML = '<span class="ai-dot"></span><span style="color:#25D366;font-size:12px">🤖 تم التحليل بالذكاء الاصطناعي من واتساب</span>';
+      ai.innerHTML = '<span class="ai-dot"></span><span style="color:#25D366;font-size:12px">تم التحليل بالذكاء الاصطناعي من واتساب</span>';
     }
   },
 
@@ -319,11 +319,11 @@ const WA = {
     this.addMsg(group, { direction: 'in', type: 'image', sender, image: imgSrc, caption: 'إيصال الحوالة' });
 
     this.showTyping(true);
-    this.setStatus('📷 جاري تحليل صورة الإيصال بـ OCR...');
+    this.setStatus('جاري تحليل صورة الإيصال بـ OCR...');
 
     setTimeout(() => {
       this.showTyping(false);
-      this.setStatus('🟢 البوت نشط — يراقب الجروبات');
+      this.setStatus('البوت نشط — يراقب الجروبات');
 
       // Show receipt preview on the page
       this.showReceiptPreview(imgSrc);
@@ -348,7 +348,7 @@ const WA = {
     }
     container.innerHTML = `
       <div style="font-size:11px;color:#25D366;padding:6px 12px;background:rgba(37,211,102,0.08);display:flex;align-items:center;gap:6px">
-        <span>📷</span><span>صورة الإيصال الواردة من واتساب — اضغط للتكبير</span>
+        <span>صورة الإيصال الواردة من واتساب — اضغط للتكبير</span>
       </div>
       <img src="${imgSrc}" style="width:100%;display:block" onclick="WA.openReceiptModal('${imgSrc}')">`;
   },
@@ -404,7 +404,7 @@ const WA = {
       setTimeout(() => {
         this.showTyping(false);
         this.addMsg(group, { direction: 'out', type: 'bot_reply', text: '✅ تم تسجيل التأكيد. ستُنفَّذ الحوالة قريباً!' });
-        showToast && showToast('✅ تم تأكيد الحوالة من الجروب!', 'success');
+        showToast && showToast('تم تأكيد الحوالة من الجروب!', 'success');
       }, 1000);
       return;
     }
@@ -449,7 +449,7 @@ const WA = {
       text: `⚠️ تصحيح من موظف التلر:\n${note}`
     });
 
-    showToast && showToast('✅ تم إرسال التصحيح للجروب الأصلي', 'success');
+    showToast && showToast('تم إرسال التصحيح للجروب الأصلي', 'success');
 
     // After correction — send final to agent group
     setTimeout(() => {
@@ -465,7 +465,7 @@ const WA = {
 
       this.addMsg('agent', { direction: 'out', type: 'text', text: finalMsg });
       this.switchGroup('agent', document.getElementById('wgt-agent'));
-      showToast && showToast('📤 تم إرسال الحوالة المُصحّحة إلى برهوم', 'success');
+      showToast && showToast('تم إرسال الحوالة المُصحّحة إلى برهوم', 'success');
     }, 800);
   },
 
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const corrBtn = document.createElement('button');
     corrBtn.className = 'btn';
     corrBtn.style.cssText = 'background:rgba(37,211,102,0.12);color:#25D366;border:1px solid rgba(37,211,102,0.3);width:100%;margin-top:8px;';
-    corrBtn.innerHTML = '📤 إرسال تصحيح للجروب';
+    corrBtn.innerHTML = 'إرسال تصحيح للجروب';
     corrBtn.onclick = () => {
       const note = prompt('أدخل ملاحظة التصحيح:');
       if (note) WA.sendCorrection(note);

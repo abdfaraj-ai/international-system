@@ -10,7 +10,6 @@ DELETE /api/customers/<id>/force-delete/ ← حذف نهائي
 """
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Customer
 from core.permissions import require_roles as _require_roles
@@ -27,7 +26,6 @@ def _serialize(c):
     return c.to_dict()
 
 
-@csrf_exempt
 def api_customers(request):
     err = _require_roles(request, 'M01')
     if err:
@@ -61,7 +59,6 @@ def api_customers(request):
     return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
 
 
-@csrf_exempt
 def api_customer_detail(request, customer_id):
     err = _require_roles(request, 'M01')
     if err:
@@ -102,7 +99,6 @@ def api_customer_detail(request, customer_id):
     return JsonResponse({'success': False, 'message': 'Method Not Allowed'}, status=405)
 
 
-@csrf_exempt
 def api_customer_restore(request, customer_id):
     err = _require_roles(request, 'M01')
     if err:
@@ -118,7 +114,6 @@ def api_customer_restore(request, customer_id):
     return JsonResponse({'success': True})
 
 
-@csrf_exempt
 def api_customer_force_delete(request, customer_id):
     err = _require_roles(request, 'M01')
     if err:
