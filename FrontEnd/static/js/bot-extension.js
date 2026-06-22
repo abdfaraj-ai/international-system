@@ -193,7 +193,7 @@ function sendMessageToGroup(groupId, text) {
     logEl.style.display = 'flex';
 
     const now = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
-    const groupLabels = { aswar: '🟣 الأساور', abuhashim: '🔵 أبو هاشم', random: '🟡 عشوائية', agent: '📤 برهوم' };
+    const groupLabels = { aswar: '🟣 الأساور', abuhashim: '🔵 أبو هاشم', random: '🟡 عشوائية', agent: '📤 الوكيل' };
 
     const bubble = document.createElement('div');
     bubble.style.cssText = 'margin-bottom:10px;';
@@ -617,6 +617,9 @@ const whatsappBotSimulator = {
 
     // ── Main: simulate one incoming message ──────────────────────────
     async simulateIncoming() {
+        // محاكاة استقبال رسائل واتساب وهمية — معطّلة نهائياً.
+        // الحوالات الحقيقية تصل عبر wa-bridge من واتساب الفعلي، فلا تُولَّد أي بيانات وهمية.
+        return;
         // Respect manual pause from form mode
         if (this._paused) return;
 
@@ -768,7 +771,8 @@ const waChat = {
     },
 
     inboxLabels: { aswar: '🟣 الأساور', abuhashim: '🔵 أبو هاشم', random: '🟡 عشوائية' },
-    agentLabels: { barhoum: 'برهوم تونس', agent2: 'وكيل 2', agent3: 'وكيل 3' },
+    // تُملأ من الوكلاء الحقيقيين عبر _agentNames (لا أسماء وهمية)
+    agentLabels: {},
 
     _now() {
         return new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -801,7 +805,7 @@ const waChat = {
 
     _updateTitle() {
         const el = document.getElementById('waChatTitle');
-        if (el) el.textContent = (this.agentLabels[this.activeAgent] || 'جهة التنفيذ');
+        if (el) el.textContent = ((typeof _agentNames !== 'undefined' && _agentNames[this.activeAgent]) || this.agentLabels[this.activeAgent] || 'جهة التنفيذ');
     },
 
     // ── Add incoming message — stored only; center column is updated by selectTransfer() ──
@@ -819,12 +823,12 @@ const waChat = {
     addOutgoing(agentId, text) {
         if (!this.messages.agent[agentId]) return;
         this.messages.agent[agentId].push({
-            seq: ++this._seq, text, agent: this.agentLabels[agentId] || agentId, time: this._now()
+            seq: ++this._seq, text, agent: ((typeof _agentNames !== 'undefined' && _agentNames[agentId]) || this.agentLabels[agentId] || agentId), time: this._now()
         });
         if (agentId === this.activeAgent) this._render();
 
         const strip = document.getElementById('exec-strip');
-        if (strip) strip.textContent = 'تم الإرسال لـ ' + (this.agentLabels[agentId] || agentId) + ' — ' + this._now();
+        if (strip) strip.textContent = 'تم الإرسال لـ ' + ((typeof _agentNames !== 'undefined' && _agentNames[agentId]) || this.agentLabels[agentId] || agentId) + ' — ' + this._now();
     },
 
     // ── Switch incoming group tab ──

@@ -336,9 +336,6 @@
     <!-- Agent tabs -->
     <div style="background:#1f2c34;display:flex;flex-shrink:0;border-bottom:1px solid rgba(50,184,198,0.11);">
       <button class="wa-src-tab active" id="etab-all"     onclick="filterExec('all',this)"    >الكل</button>
-      <button class="wa-src-tab"        id="etab-barhoum" onclick="filterExec('barhoum',this)" >برهوم <span id="load-barhoum" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
-      <button class="wa-src-tab"        id="etab-agent2"  onclick="filterExec('agent2',this)"  >2 <span id="load-agent2" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
-      <button class="wa-src-tab"        id="etab-agent3"  onclick="filterExec('agent3',this)"  >3 <span id="load-agent3" style="display:inline-block;min-width:14px;padding:0 4px;background:#065f46;color:#34d399;border-radius:8px;font-size:8px;font-weight:700;margin-right:2px">0</span></button>
     </div>
 
     <!-- Stats bar -->
@@ -529,7 +526,7 @@
 <div class="modal-overlay" id="confirmModal">
   <div class="modal">
     <h3>تأكيد التنفيذ الفوري</h3>
-    <p id="confirmText">هل تريد إرسال الحوالة إلى <b>برهوم تونس</b> للتنفيذ؟</p>
+    <p id="confirmText">هل تريد إرسال الحوالة إلى الوكيل المحدَّد للتنفيذ؟</p>
     <div class="modal-btns">
       <button class="btn btn-execute" onclick="confirmExecution()">نعم، نفّذ</button>
       <button class="btn" style="background:var(--bg-input);border:1px solid var(--border);" onclick="closeModal()">إلغاء</button>
@@ -1224,23 +1221,7 @@
           <span style="font-size:11px;font-weight:700;color:#8696a0;letter-spacing:.5px;">آخر الرسائل المُرسلة</span>
           <button onclick="clearExecHistory()" style="font-size:10px;color:#8696a0;background:none;border:1px solid rgba(50,184,198,0.15);border-radius:8px;cursor:pointer;padding:3px 9px;transition:all .2s;" onmouseover="this.style.color='#ef4444';this.style.borderColor='rgba(239,68,68,0.3)'" onmouseout="this.style.color='#8696a0';this.style.borderColor='rgba(255,255,255,0.08)'">مسح الكل</button>
         </div>
-        <div id="execHistoryList">
-          <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">برهوم</span><span class="mc-hi-time">10:24</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">نفّذ الحوالة فوراً</div>
-            <div class="mc-hi-status"><span class="mc-ticks read">✓✓</span> تمت القراءة</div>
-          </div>
-          <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">الكل</span><span class="mc-hi-time">09:58</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">تم التأكيد، أكمل التنفيذ</div>
-            <div class="mc-hi-status"><span class="mc-ticks delivered">✓✓</span> تم التسليم</div>
-          </div>
-          <div class="mc-history-item">
-            <div class="mc-hi-meta"><span class="mc-hi-group">وكيل 2</span><span class="mc-hi-time">09:30</span></div>
-            <div class="mc-hi-bubble" style="background:rgba(50,184,198,0.1);border-right:3px solid #32b8c6;">انتبه، الحوالة حساسة</div>
-            <div class="mc-hi-status"><span class="mc-ticks sent">✓</span> مُرسل</div>
-          </div>
-        </div>
+        <div id="execHistoryList"></div>
       </div><!-- end history panel -->
 
       <!-- ── PANEL: جدولة ── -->

@@ -1189,25 +1189,7 @@ function verifyUsdtTx(){
     const status=document.getElementById('usdtTxStatus');
     status.style.display='block';
     status.className='qr-tx-status tx-pending';
-    status.innerHTML='جاري التحقق من المعاملة...';
-    // محاكاة التحقق
-    setTimeout(()=>{
-        const rand=Math.random();
-        if(rand>0.3){
-            const amt=(Math.random()*500+50).toFixed(2);
-            status.className='qr-tx-status tx-confirmed';
-            status.innerHTML=`<strong>مؤكدة</strong> — المبلغ: <span dir="ltr">${amt} USDT</span> — التأكيدات: ${Math.floor(Math.random()*20+5)}/20`;
-            showToast('المعاملة مؤكدة!','success','✅');
-        }else if(rand>0.1){
-            status.className='qr-tx-status tx-pending';
-            status.innerHTML='<strong>قيد الانتظار</strong> — لم تتم التأكيدات الكافية بعد';
-            showToast('المعاملة قيد الانتظار','warning','⏳');
-        }else{
-            status.className='qr-tx-status tx-failed';
-            status.innerHTML='<strong>لم يتم العثور</strong> — تأكد من TX Hash والشبكة الصحيحة';
-            showToast('لم يتم العثور على المعاملة','error','❌');
-        }
-    },2000);
+    status.innerHTML='<strong>التحقق اليدوي مطلوب</strong> — تحقّق من المعاملة عبر مستكشف الشبكة (Tronscan / Etherscan) باستخدام الـ TX Hash أعلاه';
 }
 
 function calcElecFee(){const amt=parseFloat(document.getElementById('elAmount').value)||0;const cur=document.getElementById('elCurrency').value;const fee=amt*0.03;document.getElementById('elAmtDisp').textContent=(SYMBOLS[cur]||'$')+amt.toFixed(2);document.getElementById('elFeeDisp').textContent=(SYMBOLS[cur]||'$')+fee.toFixed(2);document.getElementById('elTotalDisp').textContent=(SYMBOLS[cur]||'$')+(amt+fee).toFixed(2);if(ddActive.el)calcDdElec()}

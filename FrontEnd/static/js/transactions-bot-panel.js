@@ -41,7 +41,7 @@ const _bcState = {
   allowedCurrencies:     ['USD','EUR','TRY','IQD'],
   receiptFields:         { name:true, amount:true, code:true, agent:true, time:true, comm:false },
   commRates:         { aswar: 2, abuhashim: 1.5, random: 3 },
-  agentCaps:         { barhoum: 5, agent2: 5, agent3: 5 },
+  agentCaps:         {},
   maxMsgsPerGroup:   { aswar: 9, abuhashim: 9, random: 9 },
   defaultAgent:      'auto',
   defaultCurrency:   'USD',
@@ -219,14 +219,25 @@ function bcUpdateMaxMsgs(group, val) {
 }
 
 function _bcRenderAgents() {
-  const agents = [
-    { id:'barhoum', name:'برهوم تونس', icon:'🔵', color:'#60a5fa' },
-    { id:'agent2',  name:'وكيل 2',     icon:'🟢', color:'#4ade80' },
-    { id:'agent3',  name:'وكيل 3',     icon:'🟡', color:'#fde047' },
-  ];
+  // الوكلاء الحقيقيون من الخادم (يملؤهم _syncClientsAgents عبر /api/ts/agents)
+  const agents = (typeof _agentNames !== 'undefined')
+    ? Object.keys(_agentNames).map(id => ({
+        id,
+        name:  _agentNames[id],
+        icon:  (typeof _agentIcons  !== 'undefined' && _agentIcons[id])  || '🤝',
+        color: (typeof _agentColors !== 'undefined' && _agentColors[id]) || '#34d399',
+      }))
+    : [];
   const loads = (typeof _getAgentLoad === 'function') ? _getAgentLoad() : {};
   const list  = document.getElementById('bc-agents-list');
   const caps  = document.getElementById('bc-agent-caps');
+  if (!list || !caps) return;
+
+  if (!agents.length) {
+    list.innerHTML = '<div style="font-size:11px;color:#475569;text-align:center;padding:14px;">لا يوجد وكلاء — أضِفهم من لوحة المشرف</div>';
+    caps.innerHTML = '';
+    return;
+  }
 
   list.innerHTML = agents.map(a => {
     const load = loads[a.id] || 0;
@@ -340,7 +351,7 @@ function bcResetAll() {
     allowedCurrencies:['USD','EUR','TRY','IQD'],
     receiptFields:{name:true,amount:true,code:true,agent:true,time:true,comm:false},
     commRates:{ aswar:2, abuhashim:1.5, random:3 },
-    agentCaps:{ barhoum:5, agent2:5, agent3:5 },
+    agentCaps:{},
     maxMsgsPerGroup:{ aswar:9, abuhashim:9, random:9 },
     defaultAgent:'auto', defaultCurrency:'USD',
     defaultPriority:'normal', minTransferAmount:10,

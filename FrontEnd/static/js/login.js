@@ -11,17 +11,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // تحديث الأرقام عشوائياً
-    setInterval(() => {
-        const online = 20 + Math.floor(Math.random() * 10);
-        const elOnline = document.getElementById('onlineUsers');
-        const elText   = document.getElementById('onlineText');
-        const elTx     = document.getElementById('todayTx');
-        if (elOnline) elOnline.textContent = online;
-        if (elText)   elText.textContent   = `${online} مستخدم نشط حالياً في النظام`;
-        if (elTx)     elTx.textContent     = 180 + Math.floor(Math.random() * 20);
-    }, 8000);
-
     // ═══════════════════════════════════════
     // الجزيئات المتحركة
     // ═══════════════════════════════════════

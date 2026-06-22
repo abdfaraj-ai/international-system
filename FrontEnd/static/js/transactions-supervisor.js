@@ -614,7 +614,7 @@ function openSendTransfer() {
     const el = document.getElementById(id); if(el) el.value = '';
   });
   document.getElementById('sv-f-currency').value = 'USD';
-  document.getElementById('sv-f-agent').value    = 'برهوم';
+  document.getElementById('sv-f-agent').value    = '';
   document.getElementById('sv-f-priority').value = 'عادية';
   document.getElementById('sv-f-source').value   = 'إدخال مشرف';
   document.getElementById('sv-f-status').value   = 'pending';
@@ -632,7 +632,7 @@ function openEditTransfer(id) {
   document.getElementById('sv-f-receiver').value = t.receiver;
   document.getElementById('sv-f-amount').value   = t.amount;
   document.getElementById('sv-f-currency').value = t.currency;
-  document.getElementById('sv-f-agent').value    = t.agent || 'برهوم';
+  document.getElementById('sv-f-agent').value    = t.agent || '';
   document.getElementById('sv-f-priority').value = t.priority || 'عادية';
   document.getElementById('sv-f-source').value   = t.source || 'إدخال مشرف';
   const sMap = { pending:'pending', completed:'completed', failed:'failed', cancelled:'pending' };

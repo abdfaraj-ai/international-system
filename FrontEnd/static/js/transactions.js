@@ -17,9 +17,10 @@ let _execSearchQuery   = '';
 let transferHistory    = [];   // completed transfers log
 let _historySearch     = '';
 
-const _agentColors = { barhoum: '#60a5fa', agent2: '#4ade80', agent3: '#fde047' };
-const _agentIcons  = { barhoum: '🔵', agent2: '🟢', agent3: '🟡' };
-const _agentNames  = { barhoum: 'برهوم تونس', agent2: 'وكيل 2', agent3: 'وكيل 3' };
+// تُملأ من الوكلاء الحقيقيين عبر _syncClientsAgents() (GET /api/ts/agents)
+const _agentColors = {};
+const _agentIcons  = {};
+const _agentNames  = {};
 
 const walletConfig = {
   instapay: { label: 'InstaPay',     icon: '💳', color: '#32b8c6' },
@@ -917,7 +918,7 @@ const searchTransfers = debounce((q) => {
 function executeTransfer() {
   const name = document.getElementById('clientName')?.value?.trim();
   const agentEl = document.getElementById('execAgent');
-  const agent = agentEl ? agentEl.selectedOptions[0]?.text : 'برهوم تونس';
+  const agent = agentEl ? agentEl.selectedOptions[0]?.text : '';
   if (!name) { showToast('اختر حوالة من القائمة أولاً', 'warning'); return; }
   const confirmText = document.getElementById('confirmText');
   if (confirmText) confirmText.innerHTML = `هل تريد إرسال حوالة <b>${escapeHtml(name)}</b> إلى <b>${escapeHtml(agent)}</b> للتنفيذ الفوري؟`;
@@ -941,7 +942,7 @@ function confirmExecution() {
   closeModal();
   const code     = document.getElementById('secCode')?.textContent?.trim() || generateCode();
   const agentEl  = document.getElementById('execAgent');
-  const agentId  = agentEl?.value || 'barhoum';
+  const agentId  = agentEl?.value || '';
   const source   = document.getElementById('sourceGroup')?.selectedOptions[0]?.text || '—';
 
   // Deduplication check — block same transfer within 10 minutes
@@ -2109,6 +2110,10 @@ function execManualAction(id, action) {
 
   } else if (action === 'reassigned') {
     const best = _suggestBestAgent();
+    if (!best) {
+      showToast('لا يوجد وكلاء متاحون', 'warning');
+      return;
+    }
     if (best === execBubble.agent) {
       showToast(`المنفذ الحالي (${_agentNames[best] || best}) هو الأقل حملاً`, 'info');
       return;
@@ -2175,14 +2180,15 @@ function _getAgentLoad() {
 }
 
 function _suggestBestAgent() {
-  const agents = ['barhoum', 'agent2', 'agent3'];
+  const agents = Object.keys(_agentNames);
+  if (!agents.length) return null;
   const loads  = _getAgentLoad();
   return agents.reduce((a, b) => (loads[a] || 0) <= (loads[b] || 0) ? a : b);
 }
 
 function _renderAgentLoadBadges() {
   const loads = _getAgentLoad();
-  ['barhoum','agent2','agent3'].forEach(id => {
+  Object.keys(_agentNames).forEach(id => {
     const badge = document.getElementById('load-' + id);
     if (!badge) return;
     const n = loads[id] || 0;
@@ -2479,7 +2485,8 @@ function filterExec(agent, el) {
   _execSearchQuery  = '';
   const si = document.getElementById('execSearch');
   if (si) si.value = '';
-  ['etab-all','etab-barhoum','etab-agent2','etab-agent3'].forEach(id => {
+  document.querySelectorAll('.wa-src-tab').forEach(b => b.classList.remove('active'));
+  ['etab-all'].forEach(id => {
     const b = document.getElementById(id);
     if (b) b.classList.remove('active');
   });
