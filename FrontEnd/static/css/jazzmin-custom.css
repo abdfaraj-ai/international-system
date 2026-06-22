@@ -188,4 +188,24 @@ body.sidebar-collapse .main-footer {
 .nav-sidebar .nav-link > .right {
   left: 1rem; right: auto;
 }
-.brand-link .brand-image { margin-right: 0; margin-left: .8rem; float: right; }
+/* ── توسيط الشعار والاسم في رأس القائمة الجانبية ── */
+.brand-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px;
+  text-align: center !important;
+  padding: 14px 8px !important;
+}
+.brand-link .brand-image {
+  float: none !important;
+  margin: 0 !important;
+  max-height: 42px !important;
+  width: auto !important;
+  opacity: 1 !important;
+}
+.brand-link .brand-text {
+  margin: 0 !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+}

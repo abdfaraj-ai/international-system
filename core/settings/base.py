@@ -275,7 +275,11 @@ JAZZMIN_SETTINGS = {
     'site_brand':   'انترناشونال',
     'welcome_sign': 'مرحباً بك في لوحة إدارة النظام',
     'copyright':    'International Financial Services',
-    'site_logo_classes': 'img-circle',
+    # شعار الكرة الأرضية في القائمة الجانبية وصفحة الدخول
+    'site_logo':       'images/globe-logo.png',
+    'login_logo':      'images/globe-logo.png',
+    'site_logo_classes': '',
+    'site_icon':       'images/globe-logo.png',
 
     # بحث سريع في الشريط العلوي
     'search_model': ['pages.SystemUser'],
