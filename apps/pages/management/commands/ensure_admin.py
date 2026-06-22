@@ -33,8 +33,18 @@ class Command(BaseCommand):
             self.stdout.write('ensure_admin: ADMIN_PASSWORD غير مضبوط — تم التخطّي.')
             return
 
-        if SystemUser.objects.filter(username=username).exists():
-            self.stdout.write(f'ensure_admin: المستخدم "{username}" موجود مسبقاً — تم التخطّي.')
+        user = SystemUser.objects.filter(username=username).first()
+        if user:
+            # الحساب موجود — أعِد ضبط كلمة المرور والدور والحالة لضمان الدخول
+            user.set_password(password)
+            user.role         = 'M01'
+            user.is_staff     = True
+            user.is_superuser = True
+            user.is_active    = True
+            if email:
+                user.email = email
+            user.save()
+            self.stdout.write(f'ensure_admin: تم تحديث المدير "{username}" (كلمة المرور + M01).')
             return
 
         SystemUser.objects.create_user(
