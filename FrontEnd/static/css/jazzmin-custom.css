@@ -105,3 +105,61 @@
   border-radius: 9px;
   border: 1px solid #e2e8f0;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   وضع القائمة الجانبية على اليمين (RTL)
+   ════════════════════════════════════════════════════════════════════ */
+.main-sidebar {
+  right: 0 !important;
+  left: auto !important;
+}
+.content-wrapper,
+.main-header.navbar,
+.main-footer {
+  margin-right: 250px !important;
+  margin-left: 0 !important;
+}
+
+/* حالة الطيّ (الإخفاء الكامل) */
+body.sidebar-collapse .main-sidebar {
+  margin-right: -250px !important;
+  margin-left: 0 !important;
+}
+body.sidebar-collapse .content-wrapper,
+body.sidebar-collapse .main-header.navbar,
+body.sidebar-collapse .main-footer {
+  margin-right: 0 !important;
+}
+
+/* الوضع المصغّر (sidebar-mini) على الشاشات الكبيرة */
+@media (min-width: 992px) {
+  body.sidebar-mini.sidebar-collapse .main-sidebar {
+    margin-right: 0 !important;
+  }
+  body.sidebar-mini.sidebar-collapse .content-wrapper,
+  body.sidebar-mini.sidebar-collapse .main-header.navbar,
+  body.sidebar-mini.sidebar-collapse .main-footer {
+    margin-right: 4.6rem !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* الموبايل: القائمة تنزلق من اليمين */
+@media (max-width: 991.98px) {
+  .main-sidebar { margin-right: -250px !important; }
+  body.sidebar-open .main-sidebar { margin-right: 0 !important; }
+  .content-wrapper,
+  .main-header.navbar,
+  .main-footer { margin-right: 0 !important; }
+}
+
+/* محاذاة النصوص والأيقونات داخل القائمة لليمين */
+.nav-sidebar .nav-link { text-align: right; }
+.nav-sidebar .nav-icon { margin-left: 8px; margin-right: 0; }
+.nav-sidebar .nav-link > p { margin-right: 0; }
+/* سهم القوائم الفرعية على اليسار */
+.nav-sidebar .nav-link > p > .right,
+.nav-sidebar .nav-link > .right {
+  left: 1rem; right: auto;
+}
+.brand-link .brand-image { margin-right: 0; margin-left: .8rem; float: right; }
