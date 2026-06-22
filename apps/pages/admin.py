@@ -769,3 +769,33 @@ class DevRequestAdmin(admin.ModelAdmin):
         ('بيانات الطلب', {'fields': ('title', 'type', 'description', 'sender', 'sender_role', 'sender_page', 'created_at', 'updated_at')}),
         ('إدارة الطلب', {'fields': ('status', 'admin_notes')}),
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  لوحة الإدارة — حقن إحصائيات حيّة في الصفحة الرئيسية (index)
+# ═══════════════════════════════════════════════════════════════════════════════
+_orig_admin_index = admin.site.index
+
+
+def _intl_admin_index(request, extra_context=None):
+    extra_context = extra_context or {}
+    today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    try:
+        ops_today = (
+            ExchangeOperation.objects.filter(created_at__gte=today).count()
+            + HawalaOperation.objects.filter(created_at__gte=today).count()
+            + CashTransaction.objects.filter(created_at__gte=today).count()
+        )
+        extra_context['intl_stats'] = {
+            'users':     SystemUser.objects.filter(is_active=True).count(),
+            'ops_today': ops_today,
+            'pending':   TellerRequest.objects.filter(status='pending').count(),
+            'portal':    PortalTransferRequest.objects.count(),
+            'audit':     AuditLog.objects.count(),
+        }
+    except Exception:
+        extra_context['intl_stats'] = None
+    return _orig_admin_index(request, extra_context)
+
+
+admin.site.index = _intl_admin_index

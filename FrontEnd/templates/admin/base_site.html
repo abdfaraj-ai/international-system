@@ -52,6 +52,37 @@
   --shadow-sm: 0 1px 3px rgba(15,23,42,0.06);
 }
 
+/* ── فرض ثيم فاتح على متغيّرات Django Admin (حتى مع وضع النظام الداكن) ──── */
+:root {
+  --primary: #1d4ed8; --secondary: #1d4ed8;
+  --accent-fg: #fff;
+  --body-fg: #0f172a; --body-bg: #f4f6fb;
+  --body-quiet-color: #64748b; --body-loud-color: #0f172a;
+  --header-color: #0f172a; --header-branding-color: #1d4ed8;
+  --header-bg: #ffffff; --header-link-color: #0f172a;
+  --breadcrumbs-fg: #64748b; --breadcrumbs-link-fg: #1d4ed8; --breadcrumbs-bg: #ffffff;
+  --link-fg: #1d4ed8; --link-hover-color: #1e40af; --link-selected-fg: #1e40af;
+  --hairline-color: #e2e8f0; --border-color: #e2e8f0;
+  --darkened-bg: #f1f5f9; --selected-bg: #eef2fb; --selected-row: #fef9e7;
+  --button-bg: #1d4ed8; --button-fg: #ffffff; --button-hover-bg: #1e40af;
+  --default-button-bg: #ca8a04; --default-button-hover-bg: #a16207;
+  --close-button-bg: #64748b; --close-button-hover-bg: #475569;
+  --delete-button-bg: #dc2626; --delete-button-hover-bg: #991b1b;
+  --object-tools-fg: #ffffff; --object-tools-bg: #1d4ed8; --object-tools-hover-bg: #1e40af;
+  --message-success-bg: #ecfdf5; --message-warning-bg: #fffbeb; --message-error-bg: #fef2f2;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --body-fg: #0f172a; --body-bg: #f4f6fb;
+    --body-quiet-color: #64748b; --body-loud-color: #0f172a;
+    --header-bg: #ffffff; --header-link-color: #0f172a;
+    --breadcrumbs-bg: #ffffff; --breadcrumbs-fg: #64748b;
+    --hairline-color: #e2e8f0; --border-color: #e2e8f0;
+    --darkened-bg: #f1f5f9; --selected-bg: #eef2fb; --selected-row: #fef9e7;
+    --link-fg: #1d4ed8; --primary: #1d4ed8;
+  }
+}
+
 /* ── Reset & Base ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html { direction: rtl; }
@@ -768,14 +799,39 @@ a:hover { color: var(--primary-d) !important; }
   border-left: 1px solid var(--border) !important;
   border-radius: 0 !important;
 }
-#nav-sidebar .module th { background: transparent !important; }
-#nav-sidebar a { color: var(--text2) !important; }
-#nav-sidebar a:hover { color: var(--primary) !important; }
+#nav-sidebar .module,
+#nav-sidebar table,
+#nav-sidebar tr,
+#nav-sidebar th,
+#nav-sidebar td,
+#nav-sidebar caption { background: transparent !important; border-color: var(--border2) !important; }
+#nav-sidebar .module caption,
+#nav-sidebar caption a {
+  background: var(--card2) !important;
+  color: var(--primary) !important;
+  font-weight: 900 !important;
+}
+#nav-sidebar a, #nav-sidebar th a, #nav-sidebar td a { color: var(--text2) !important; }
+#nav-sidebar tr:hover, #nav-sidebar tr:hover th, #nav-sidebar tr:hover td { background: rgba(var(--accent),0.07) !important; }
+#nav-sidebar tr:hover a { color: var(--primary) !important; }
+#nav-sidebar .current-model, #nav-sidebar tr.selected { background: rgba(var(--accent),0.10) !important; }
+#nav-sidebar .current-model a, #nav-sidebar tr.selected a { color: var(--primary) !important; font-weight: 700 !important; }
+#nav-filter {
+  background: #fff !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+}
+#nav-filter::placeholder { color: var(--text3) !important; }
+#nav-filter:focus { border-color: rgba(var(--accent),0.5) !important; box-shadow: 0 0 0 3px rgba(var(--accent),0.10) !important; }
+#nav-filter.no-results { background: #fef2f2 !important; }
 #toggle-nav-sidebar {
   color: var(--primary) !important;
   background: rgba(var(--accent),0.06) !important;
   border: none !important;
 }
+.main > .content { background: var(--bg) !important; }
 
 /* ── Popup windows ────────────────────────────────────────────────── */
 .popup .module { margin: 10px !important; }
