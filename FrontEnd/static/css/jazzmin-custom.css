@@ -1,6 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+
 /* ════════════════════════════════════════════════════════════════════
-   نظام انترناشونال — تحسينات لوحة Jazzmin (القائمة الجانبية + لمسات)
+   نظام انترناشونال — تحسينات لوحة Jazzmin (الخط + القائمة الجانبية + لمسات)
    ════════════════════════════════════════════════════════════════════ */
+
+/* ── الخط الموحّد للوحة بالكامل ─────────────────────────────────────── */
+body,
+.wrapper,
+.main-header,
+.main-sidebar,
+.content-wrapper,
+.content,
+.card, .card-title, .card-header,
+.btn, .nav, .nav-link, .nav-sidebar,
+.breadcrumb, .breadcrumb-item,
+.form-control, input, select, textarea, button,
+table, th, td, .table,
+.modal, .dropdown-menu, .badge, .alert, .info-box,
+.brand-link, .brand-text,
+h1, h2, h3, h4, h5, h6, p, span, a, label, div {
+  font-family: 'Cairo', 'Tajawal', 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* ضبط أوزان وأحجام مريحة */
+body { font-size: 14px; letter-spacing: 0; }
+h1, h2, h3, .card-title, .content-header h1 { font-weight: 800 !important; letter-spacing: -.2px; }
+.nav-sidebar .nav-link { font-weight: 600 !important; }
+.btn { font-weight: 700 !important; }
 
 /* ── الحاوية الجانبية ──────────────────────────────────────────────── */
 .main-sidebar {
