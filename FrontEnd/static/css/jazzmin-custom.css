@@ -209,3 +209,58 @@ body.sidebar-collapse .main-footer {
   font-weight: 800 !important;
   font-size: 18px !important;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   ألوان النصوص — داكنة ومقروءة على الخلفية البيضاء
+   ════════════════════════════════════════════════════════════════════ */
+body,
+.content-wrapper,
+.content, .content p, .content li, .content dd, .content dt,
+p, label, span, td, th, dt, dd,
+.card, .card-body, .card-text,
+.table, .table td, .table th,
+.form-group label, .control-label,
+.info-box-text, .info-box-number,
+.modal-body, .dropdown-item {
+  color: #1e293b;
+}
+
+/* النصوص الثانوية (الباهتة) — أغمق لتصبح مقروءة */
+.text-muted, small, .small, .help-block, .form-text,
+.text-secondary, .description, .breadcrumb-item,
+.text-sm, .text-gray, .text-gray-dark {
+  color: #475569 !important;
+}
+
+/* العناوين */
+h1, h2, h3, h4, h5, h6,
+.card-title, .content-header h1, .modal-title, .info-box-text {
+  color: #0f172a !important;
+}
+
+/* رؤوس الجداول */
+.table thead th, table thead th {
+  color: #0f172a !important;
+  font-weight: 800;
+}
+
+/* روابط القائمة الجانبية — داكنة، عدا العنصر النشط (أبيض على أزرق) */
+.nav-sidebar .nav-link p,
+.nav-sidebar .nav-link {
+  color: #1e293b !important;
+}
+.nav-sidebar > .nav-item > .nav-link.active,
+.nav-sidebar > .nav-item > .nav-link.active p {
+  color: #ffffff !important;
+}
+.nav-header { color: #475569 !important; }
+
+/* الروابط تبقى زرقاء */
+a, .content a { color: #1d4ed8; }
+a:hover { color: #1e40af; }
+
+/* تأكيد بقاء نص الأزرار الملوّنة أبيض */
+.btn-primary, .btn-success, .btn-danger, .btn-info, .btn-warning,
+.btn-primary *, .btn-success *, .btn-danger * {
+  color: #ffffff !important;
+}
