@@ -43,14 +43,14 @@ def _currency_badge(currency):
 
 def _status_badge(status):
     MAP = {
-        'pending':   ('#78350f', '#fcd34d', '⏳ بانتظار'),
-        'approved':  ('#14532d', '#4ade80', '✓ موافق'),
-        'rejected':  ('#7f1d1d', '#f87171', '✗ مرفوض'),
-        'resolved':  ('#0c4a6e', '#38bdf8', '✔ تم الرد'),
-        'online':    ('#14532d', '#4ade80', '● متصل'),
-        'offline':   ('#1e293b', '#64748b', '○ غير متصل'),
-        'completed': ('#14532d', '#4ade80', '✓ مكتمل'),
-        'cancelled': ('#7f1d1d', '#f87171', '✗ ملغى'),
+        'pending':   ('#78350f', '#fcd34d', 'بانتظار'),
+        'approved':  ('#14532d', '#4ade80', 'موافق'),
+        'rejected':  ('#7f1d1d', '#f87171', 'مرفوض'),
+        'resolved':  ('#0c4a6e', '#38bdf8', 'تم الرد'),
+        'online':    ('#14532d', '#4ade80', 'متصل'),
+        'offline':   ('#1e293b', '#64748b', 'غير متصل'),
+        'completed': ('#14532d', '#4ade80', 'مكتمل'),
+        'cancelled': ('#7f1d1d', '#f87171', 'ملغى'),
     }
     bg, fg, label = MAP.get(status, ('#1e293b', '#94a3b8', status))
     return _badge(label, bg, fg)
@@ -64,7 +64,7 @@ def _bool_col(val, true_label='نعم', false_label='لا'):
         '<span style="color:#f87171;font-weight:800;font-size:13px">✗</span> '
         '<span style="color:#f87171;font-size:11px">{}</span>', false_label)
 
-def _money(val, symbol='', color='#e2e8f0'):
+def _money(val, symbol='', color='#0f172a'):
     try:
         v = float(val)
         s = f'{v:,.2f}' if v != int(v) else f'{int(v):,}'
@@ -88,7 +88,7 @@ def _muted(text, size=12):
     if not text:
         return format_html('<span style="color:#475569">—</span>')
     return format_html(
-        '<span style="color:#94a3b8;font-size:{}px">{}</span>', size, text)
+        '<span style="color:#475569;font-size:{}px">{}</span>', size, text)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -675,15 +675,15 @@ class AuditLogAdmin(admin.ModelAdmin):
 
     def action_col(self, obj):
         MAP = {
-            'login':        ('#14532d', '#4ade80', '🔑 دخول'),
-            'login_failed': ('#7f1d1d', '#f87171', '✗ فشل الدخول'),
-            'logout':       ('#164e63', '#67e8f9', '↩ خروج'),
-            'bk_create':    ('#312e81', '#a5b4fc', '+ تحويل'),
-            'bk_complete':  ('#14532d', '#4ade80', '✓ تحويل'),
-            'bk_reject':    ('#7f1d1d', '#f87171', '✗ رفض'),
-            'tl_exchange':  ('#78350f', '#fcd34d', '⇄ صرافة'),
-            'tl_hawala':    ('#4a1d96', '#d8b4fe', '🌍 حوالة'),
-            'tl_cash':      ('#164e63', '#67e8f9', '💵 نقدي'),
+            'login':        ('#14532d', '#4ade80', 'دخول'),
+            'login_failed': ('#7f1d1d', '#f87171', 'فشل الدخول'),
+            'logout':       ('#164e63', '#67e8f9', 'خروج'),
+            'bk_create':    ('#312e81', '#a5b4fc', 'تحويل جديد'),
+            'bk_complete':  ('#14532d', '#4ade80', 'إتمام تحويل'),
+            'bk_reject':    ('#7f1d1d', '#f87171', 'رفض'),
+            'tl_exchange':  ('#78350f', '#fcd34d', 'صرافة'),
+            'tl_hawala':    ('#4a1d96', '#d8b4fe', 'حوالة'),
+            'tl_cash':      ('#164e63', '#67e8f9', 'نقدي'),
         }
         bg, fg, lbl = MAP.get(obj.action, ('#1e293b', '#94a3b8', obj.action))
         return _badge(lbl, bg, fg)
@@ -693,8 +693,8 @@ class AuditLogAdmin(admin.ModelAdmin):
     def actor_col(self, obj):
         role = f' [{obj.actor_role}]' if obj.actor_role else ''
         return format_html(
-            '<span style="font-weight:700;color:#e2e8f0">{}</span>'
-            '<span style="color:#475569;font-size:11px">{}</span>',
+            '<span style="font-weight:700;color:#0f172a">{}</span>'
+            '<span style="color:#64748b;font-size:11px">{}</span>',
             obj.actor, role)
     actor_col.short_description = 'المنفِّذ'
     actor_col.admin_order_field = 'actor'
