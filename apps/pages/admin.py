@@ -58,11 +58,9 @@ def _status_badge(status):
 def _bool_col(val, true_label='نعم', false_label='لا'):
     if val:
         return format_html(
-            '<span style="color:#4ade80;font-weight:800;font-size:13px">✓</span> '
-            '<span style="color:#4ade80;font-size:11px">{}</span>', true_label)
+            '<span style="color:#16a34a;font-weight:800;font-size:12px">{}</span>', true_label)
     return format_html(
-        '<span style="color:#f87171;font-weight:800;font-size:13px">✗</span> '
-        '<span style="color:#f87171;font-size:11px">{}</span>', false_label)
+        '<span style="color:#dc2626;font-weight:800;font-size:12px">{}</span>', false_label)
 
 def _money(val, symbol='', color='#0f172a'):
     try:
@@ -234,7 +232,7 @@ class HawalaOperationAdmin(admin.ModelAdmin):
 
     def destination_col(self, obj):
         return format_html(
-            '<span style="color:#a5b4fc;font-size:12px">🌍 {}</span>',
+            '<span style="color:#475569;font-size:12px">{}</span>',
             obj.destination or '—')
     destination_col.short_description = 'الوجهة'
 
@@ -361,9 +359,9 @@ class TellerRequestAdmin(admin.ModelAdmin):
     def type_col(self, obj):
         M = {
             'special_price': ('#713f12', '#fde68a', '💰 سعر مميز'),
-            'urgent':        ('#7f1d1d', '#f87171', '🚨 عاجل'),
-            'general':       ('#164e63', '#67e8f9', '📋 عام'),
-            'balance':       ('#14532d', '#4ade80', '💵 رصيد'),
+            'urgent':        ('#7f1d1d', '#f87171', 'عاجل'),
+            'general':       ('#164e63', '#67e8f9', 'عام'),
+            'balance':       ('#14532d', '#4ade80', 'رصيد'),
         }
         bg, fg, lbl = M.get(obj.request_type, ('#1e293b', '#94a3b8', obj.request_type))
         return _badge(lbl, bg, fg)
@@ -387,7 +385,7 @@ class TellerRequestAdmin(admin.ModelAdmin):
     def resolved_by_col(self, obj):
         if obj.resolved_by:
             return format_html(
-                '<span style="color:#38bdf8;font-size:12px">✔ {}</span>', obj.resolved_by)
+                '<span style="color:#475569;font-size:12px">{}</span>', obj.resolved_by)
         return format_html('<span style="color:#475569">—</span>')
     resolved_by_col.short_description = 'أُغلق بواسطة'
 
