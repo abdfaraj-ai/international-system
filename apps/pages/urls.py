@@ -46,6 +46,7 @@ from .api import am_cut_distribution   as am_cdist_api
 from .api import am_currencies         as am_currencies_api
 from .api import am_audit_log          as am_audit_log_api
 from .api import am_center_ledger      as am_cl_api
+from .api import gl_api                as gl_api
 
 urlpatterns = [
     # ── Client Portal — بوابة العملاء ───────────────────────────────────────────
@@ -238,6 +239,13 @@ urlpatterns = [
     # ── إحصائيات وهيكل ─────────────────────────────────────────────────────
     path('api/dash/stats',              dashboard_api.api_dash_stats,          name='api-dash-stats'),
     path('api/dash/org-tree',           dashboard_api.api_org_tree,            name='api-org-tree'),
+
+    # ── دفتر الأستاذ العام الموحّد (المحاسبة) ────────────────────────────────
+    path('api/gl/accounts/',            gl_api.api_gl_accounts,          name='api-gl-accounts'),
+    path('api/gl/journal/',             gl_api.api_gl_journal,           name='api-gl-journal'),
+    path('api/gl/journal/<int:txn_id>/', gl_api.api_gl_journal_detail,   name='api-gl-journal-detail'),
+    path('api/gl/trial-balance/',       gl_api.api_gl_trial_balance,     name='api-gl-trial-balance'),
+    path('api/gl/account/<str:code>/',  gl_api.api_gl_account_statement, name='api-gl-account-statement'),
 
     # ── الفروع ──────────────────────────────────────────────────────────────
     path('api/branches',                    dashboard_api.api_branches,            name='api-branches'),
