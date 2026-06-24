@@ -3227,3 +3227,49 @@ class ManagedCurrency(models.Model):
             'createdAt':  self.created_at.strftime('%Y-%m-%d %H:%M'),
             'updatedAt':  self.updated_at.strftime('%Y-%m-%d %H:%M'),
         }
+
+
+class SystemModule(models.Model):
+    """
+    وحدة/برنامج داخل النظام — يُشغّل ويُطفأ ويُضبط من لوحة الإدارة.
+    كل قسم رئيسي (الحوالات، التلر، التحويل البنكي، الحضور، المحفظة...) = وحدة.
+    """
+    key         = models.SlugField(max_length=40, unique=True, verbose_name='المعرّف')
+    name        = models.CharField(max_length=100, verbose_name='اسم الوحدة')
+    description = models.CharField(max_length=255, blank=True, verbose_name='الوصف')
+    icon        = models.CharField(max_length=20, default='📦', verbose_name='الأيقونة')
+    color       = models.CharField(max_length=20, default='#2563eb', verbose_name='اللون')
+    url         = models.CharField(max_length=200, blank=True, verbose_name='الرابط')
+    roles       = models.CharField(max_length=200, blank=True, verbose_name='الأدوار المسموحة',
+                                   help_text='أكواد الأدوار مفصولة بفواصل، مثل: M03,T03')
+    is_enabled  = models.BooleanField(default=True, verbose_name='مفعّلة')
+    order       = models.PositiveIntegerField(default=0, verbose_name='الترتيب')
+    settings    = models.JSONField(default=dict, blank=True, verbose_name='إعدادات الوحدة')
+    created_at  = models.DateTimeField(default=timezone.now)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'وحدة النظام'
+        verbose_name_plural = 'وحدات النظام (البرامج)'
+
+    def __str__(self):
+        return f'{self.name} ({"مفعّلة" if self.is_enabled else "معطّلة"})'
+
+    def allowed_roles(self):
+        return [r.strip() for r in (self.roles or '').split(',') if r.strip()]
+
+    def to_dict(self):
+        return {
+            'id':        self.id,
+            'key':       self.key,
+            'name':      self.name,
+            'description': self.description,
+            'icon':      self.icon,
+            'color':     self.color,
+            'url':       self.url,
+            'roles':     self.allowed_roles(),
+            'isEnabled': self.is_enabled,
+            'order':     self.order,
+            'settings':  self.settings,
+        }

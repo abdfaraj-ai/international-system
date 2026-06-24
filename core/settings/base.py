@@ -297,6 +297,7 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth':                          'fas fa-users-cog',
         'auth.Group':                    'fas fa-users-cog',
+        'pages.SystemModule':            'fas fa-cubes',
         'pages.SystemUser':              'fas fa-users',
         'pages.HawalaOperation':         'fas fa-globe',
         'pages.ExchangeOperation':       'fas fa-exchange-alt',

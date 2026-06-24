@@ -7,7 +7,7 @@ from .models import (
     UploadedImage, ExchangeRate, TellerRequest, TellerBalance,
     TellerProfile, TellerPermission, AuditLog,
     PortalTransferRequest, PortalCountry, PortalReceivingMethod,
-    DevRequest,
+    DevRequest, SystemModule,
 )
 
 # ─── Admin Site Branding ──────────────────────────────────────────────────────
@@ -769,3 +769,38 @@ class DevRequestAdmin(admin.ModelAdmin):
         ('بيانات الطلب', {'fields': ('title', 'type', 'description', 'sender', 'sender_role', 'sender_page', 'created_at', 'updated_at')}),
         ('إدارة الطلب', {'fields': ('status', 'admin_notes')}),
     )
+
+
+@admin.register(SystemModule)
+class SystemModuleAdmin(admin.ModelAdmin):
+    """التحكّم بوحدات/برامج النظام — تشغيل/إيقاف/ترتيب من لوحة الإدارة."""
+    list_display   = ('icon_badge', 'name', 'key', 'url', 'roles', 'is_enabled', 'order')
+    list_editable  = ('is_enabled', 'order')
+    list_filter    = ('is_enabled',)
+    search_fields  = ('name', 'key', 'description', 'roles')
+    ordering       = ('order', 'name')
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        ('بيانات الوحدة', {'fields': ('key', 'name', 'description', 'icon', 'color', 'url')}),
+        ('التحكّم والصلاحيات', {'fields': ('is_enabled', 'roles', 'order')}),
+        ('إعدادات متقدّمة', {'fields': ('settings', 'created_at', 'updated_at')}),
+    )
+    actions = ['enable_modules', 'disable_modules']
+
+    @admin.display(description='الوحدة')
+    def icon_badge(self, obj):
+        return format_html(
+            '<span style="font-size:18px;background:{}1a;border:1px solid {}40;'
+            'border-radius:8px;padding:3px 9px">{}</span>',
+            obj.color, obj.color, obj.icon,
+        )
+
+    @admin.action(description='تفعيل الوحدات المحدّدة')
+    def enable_modules(self, request, queryset):
+        n = queryset.update(is_enabled=True)
+        self.message_user(request, f'تم تفعيل {n} وحدة.', messages.SUCCESS)
+
+    @admin.action(description='إيقاف الوحدات المحدّدة')
+    def disable_modules(self, request, queryset):
+        n = queryset.update(is_enabled=False)
+        self.message_user(request, f'تم إيقاف {n} وحدة.', messages.WARNING)
