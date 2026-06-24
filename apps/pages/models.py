@@ -3273,3 +3273,89 @@ class SystemModule(models.Model):
             'order':     self.order,
             'settings':  self.settings,
         }
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  النواة المحاسبية الموحّدة — دليل الحسابات + دفتر الأستاذ العام (قيد مزدوج)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class Account(models.Model):
+    """دليل الحسابات الهرمي — شجرة حسابات بأنواع محاسبية معيارية."""
+    ACCOUNT_TYPES = [
+        ('asset',     'أصول'),
+        ('liability', 'خصوم'),
+        ('equity',    'حقوق ملكية'),
+        ('revenue',   'إيرادات'),
+        ('expense',   'مصروفات'),
+    ]
+    code      = models.CharField(max_length=20, unique=True, verbose_name='رقم الحساب')
+    name      = models.CharField(max_length=200, verbose_name='اسم الحساب')
+    type      = models.CharField(max_length=15, choices=ACCOUNT_TYPES, verbose_name='النوع')
+    parent    = models.ForeignKey('self', null=True, blank=True, on_delete=models.PROTECT,
+                                  related_name='children', verbose_name='الحساب الأب')
+    currency  = models.CharField(max_length=10, default='USD', verbose_name='العملة')
+    is_group  = models.BooleanField(default=False, verbose_name='حساب رئيسي (مجموعة)')
+    is_active = models.BooleanField(default=True, verbose_name='نشط')
+    notes     = models.TextField(blank=True, verbose_name='ملاحظات')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['code']
+        verbose_name = 'حساب'
+        verbose_name_plural = 'دليل الحسابات'
+
+    def __str__(self):
+        return f'{self.code} — {self.name}'
+
+    @property
+    def is_postable(self):
+        """الحسابات الرئيسية (المجموعات) لا يُرحَّل إليها مباشرةً."""
+        return not self.is_group and self.is_active
+
+
+class GLTransaction(models.Model):
+    """رأس قيد دفتر الأستاذ العام — يجمع سطور القيد المتوازنة (مدين=دائن)."""
+    ref_number  = models.CharField(max_length=40, unique=True, verbose_name='رقم القيد')
+    date        = models.DateField(default=timezone.now, verbose_name='التاريخ')
+    description = models.CharField(max_length=300, blank=True, verbose_name='البيان')
+    source      = models.CharField(max_length=40, default='manual', verbose_name='المصدر')
+    source_id   = models.IntegerField(null=True, blank=True, verbose_name='معرّف المصدر')
+    is_posted   = models.BooleanField(default=True, verbose_name='مُرحَّل')
+    created_by  = models.CharField(max_length=150, blank=True, verbose_name='بواسطة')
+    created_at  = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-date', '-id']
+        verbose_name = 'قيد دفتر الأستاذ'
+        verbose_name_plural = 'دفتر الأستاذ العام'
+        indexes = [
+            models.Index(fields=['source', 'source_id'], name='gl_source_idx'),
+            models.Index(fields=['date'], name='gl_date_idx'),
+        ]
+
+    def __str__(self):
+        return f'{self.ref_number} | {self.date} | {self.description[:40]}'
+
+
+class GLLine(models.Model):
+    """سطر قيد — يمسّ حساباً واحداً بمبلغ مدين أو دائن بعملة محدّدة."""
+    transaction = models.ForeignKey(GLTransaction, on_delete=models.CASCADE,
+                                    related_name='lines', verbose_name='القيد')
+    account     = models.ForeignKey(Account, on_delete=models.PROTECT,
+                                    related_name='lines', verbose_name='الحساب')
+    currency    = models.CharField(max_length=10, default='USD', verbose_name='العملة')
+    debit       = models.DecimalField(max_digits=18, decimal_places=4, default=0, verbose_name='مدين')
+    credit      = models.DecimalField(max_digits=18, decimal_places=4, default=0, verbose_name='دائن')
+    center      = models.CharField(max_length=200, blank=True, verbose_name='المركز')
+    note        = models.CharField(max_length=300, blank=True, verbose_name='ملاحظة')
+
+    class Meta:
+        verbose_name = 'سطر قيد'
+        verbose_name_plural = 'سطور القيود'
+        indexes = [
+            models.Index(fields=['account', 'currency'], name='gl_line_acc_cur_idx'),
+        ]
+
+    def __str__(self):
+        side = f'مدين {self.debit}' if self.debit else f'دائن {self.credit}'
+        return f'{self.account.code} | {side} {self.currency}'

@@ -7,7 +7,7 @@ from .models import (
     UploadedImage, ExchangeRate, TellerRequest, TellerBalance,
     TellerProfile, TellerPermission, AuditLog,
     PortalTransferRequest, PortalCountry, PortalReceivingMethod,
-    DevRequest, SystemModule,
+    DevRequest, SystemModule, Account, GLTransaction, GLLine,
 )
 
 # ─── Admin Site Branding ──────────────────────────────────────────────────────
@@ -805,6 +805,43 @@ class SystemModuleAdmin(admin.ModelAdmin):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  النواة المحاسبية الموحّدة — دليل الحسابات ودفتر الأستاذ العام
+# ═══════════════════════════════════════════════════════════════════════════════
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display  = ('code', 'name', 'type', 'currency', 'is_group', 'is_active')
+    list_filter   = ('type', 'is_group', 'is_active', 'currency')
+    search_fields = ('code', 'name')
+    ordering      = ('code',)
+    list_editable = ('is_active',)
+    autocomplete_fields = ('parent',)
+
+
+class GLLineInline(admin.TabularInline):
+    model = GLLine
+    extra = 0
+    can_delete = False
+    readonly_fields = ('account', 'currency', 'debit', 'credit', 'center', 'note')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(GLTransaction)
+class GLTransactionAdmin(admin.ModelAdmin):
+    list_display    = ('ref_number', 'date', 'description', 'source', 'is_posted', 'created_by')
+    list_filter     = ('source', 'is_posted', 'date')
+    search_fields   = ('ref_number', 'description', 'created_by')
+    ordering        = ('-date', '-id')
+    date_hierarchy  = 'date'
+    inlines         = [GLLineInline]
+    readonly_fields = ('ref_number', 'source', 'source_id', 'created_at')
+
+    def has_add_permission(self, request):
+        return False   # القيود تُنشأ عبر العمليات لا يدوياً
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  تجميع قوائم الإدارة في مجموعات مسمّاة (قوائم منسدلة)
 # ═══════════════════════════════════════════════════════════════════════════════
 # كل مجموعة = (الاسم، [أسماء النماذج بحروف صغيرة])
@@ -813,7 +850,7 @@ _ADMIN_GROUPS = [
     ('الصرافة',      ['exchangeoperation', 'exchangerate', 'cashtransaction',
                       'tellerprofile', 'tellerbalance', 'tellerpermission', 'tellerrequest']),
     ('الحوالات',     ['hawalaoperation', 'portaltransferrequest', 'portalcountry', 'portalreceivingmethod']),
-    ('المحاسبة',     []),  # تُملأ لاحقاً عند تسجيل نماذج المحاسبة
+    ('المحاسبة',     ['account', 'gltransaction']),
 ]
 
 _orig_get_app_list = admin.site.get_app_list
