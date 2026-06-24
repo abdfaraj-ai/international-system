@@ -264,3 +264,25 @@ a:hover { color: #1e40af; }
 .btn-primary *, .btn-success *, .btn-danger * {
   color: #ffffff !important;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   إزالة جميع أيقونات لوحة الإدارة (القائمة الجانبية والقوائم)
+   ════════════════════════════════════════════════════════════════════ */
+.nav-sidebar .nav-icon,
+.main-sidebar .nav-icon,
+.nav-sidebar .nav-link > .nav-icon,
+.nav-treeview .nav-icon,
+.user-menu .nav-icon,
+.dropdown-item > i.fa,
+.dropdown-item > i.fas,
+.dropdown-item > i.far {
+  display: none !important;
+}
+
+/* محاذاة النص بعد إزالة الأيقونة */
+.nav-sidebar .nav-link {
+  padding-right: 16px !important;
+}
+.nav-sidebar .nav-link p {
+  margin-right: 0 !important;
+}
