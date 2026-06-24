@@ -290,8 +290,32 @@ JAZZMIN_SETTINGS = {
         {'name': 'الموقع', 'url': '/', 'new_window': True},
     ],
 
-    # ترتيب التطبيقات والنماذج في القائمة الجانبية
-    'order_with_respect_to': ['pages', 'auth'],
+    # ترتيب التطبيقات والنماذج في القائمة الجانبية (منطقي بمجموعات)
+    'order_with_respect_to': [
+        'pages', 'auth',
+        # ── النظام والمستخدمون ──
+        'pages.SystemModule',
+        'pages.SystemUser',
+        'pages.AuditLog',
+        'pages.DevRequest',
+        # ── العمليات المالية ──
+        'pages.HawalaOperation',
+        'pages.ExchangeOperation',
+        'pages.CashTransaction',
+        'pages.ExchangeRate',
+        # ── التلر ──
+        'pages.TellerProfile',
+        'pages.TellerBalance',
+        'pages.TellerPermission',
+        'pages.TellerRequest',
+        # ── البوابة ──
+        'pages.PortalCountry',
+        'pages.PortalReceivingMethod',
+        'pages.PortalTransferRequest',
+        # ── أخرى ──
+        'pages.UploadedImage',
+        'auth.Group',
+    ],
 
     # أيقونات FontAwesome لكل نموذج
     'icons': {
