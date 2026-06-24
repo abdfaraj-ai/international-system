@@ -802,3 +802,55 @@ class SystemModuleAdmin(admin.ModelAdmin):
     def disable_modules(self, request, queryset):
         n = queryset.update(is_enabled=False)
         self.message_user(request, f'تم إيقاف {n} وحدة.', messages.WARNING)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  تجميع قوائم الإدارة في مجموعات مسمّاة (قوائم منسدلة)
+# ═══════════════════════════════════════════════════════════════════════════════
+# كل مجموعة = (الاسم، [أسماء النماذج بحروف صغيرة])
+_ADMIN_GROUPS = [
+    ('إدارة النظام', ['systemmodule', 'systemuser', 'auditlog', 'devrequest', 'uploadedimage', 'group']),
+    ('الصرافة',      ['exchangeoperation', 'exchangerate', 'cashtransaction',
+                      'tellerprofile', 'tellerbalance', 'tellerpermission', 'tellerrequest']),
+    ('الحوالات',     ['hawalaoperation', 'portaltransferrequest', 'portalcountry', 'portalreceivingmethod']),
+    ('المحاسبة',     []),  # تُملأ لاحقاً عند تسجيل نماذج المحاسبة
+]
+
+_orig_get_app_list = admin.site.get_app_list
+
+
+def _grouped_get_app_list(request, app_label=None):
+    """يعيد تنظيم نماذج الإدارة في مجموعات مسمّاة بدل التجميع حسب التطبيق."""
+    try:
+        original = (_orig_get_app_list(request, app_label) if app_label
+                    else _orig_get_app_list(request))
+        # فهرسة كل النماذج بالاسم البرمجي
+        index = {}
+        for app in original:
+            for m in app.get('models', []):
+                index[(m.get('object_name') or '').lower()] = m
+
+        used, grouped = set(), []
+        for gname, keys in _ADMIN_GROUPS:
+            models = [index[k] for k in keys if k in index]
+            used.update(keys)
+            if models:
+                grouped.append({
+                    'name': gname,
+                    'app_label': 'grp_' + gname,
+                    'app_url': '',
+                    'has_module_perms': True,
+                    'models': models,
+                })
+        # النماذج غير المصنّفة → "أخرى"
+        others = [m for k, m in index.items() if k not in used]
+        if others:
+            grouped.append({'name': 'أخرى', 'app_label': 'grp_other',
+                            'app_url': '', 'has_module_perms': True, 'models': others})
+        return grouped or original
+    except Exception:
+        return (_orig_get_app_list(request, app_label) if app_label
+                else _orig_get_app_list(request))
+
+
+admin.site.get_app_list = _grouped_get_app_list
