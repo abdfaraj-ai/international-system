@@ -14,6 +14,7 @@ from ..models import (
     HawalaTransfer, CurrencySwap, CutAndClose,
     AdvancedEntry, JournalEntry, SettlementVoucher,
     OutgoingTransfer, OpeningEntry, ReceiptVoucher, PaymentVoucher,
+    EntryFromTo,
 )
 from core.permissions import require_roles as _require_roles
 
@@ -131,6 +132,30 @@ def api_am_trial_balance(request):
                 'currency': fc,
                 'amount': float(j.profit),
             })
+
+    # ── 8. القيد المتقدّم (AdvancedEntry) ────────────────────────────────────
+    # كان مفقوداً من ميزان المراجعة رغم استيراده — يُسجَّل كالقيد العادي
+    ae_qs = _apply_dates(AdvancedEntry.objects.all(), 'created_at__date', df, dt)
+    for e in ae_qs:
+        fc = e.from_currency or 'USD'
+        tc = e.to_currency or 'USD'
+        tb[fc]['credit'] += e.from_amount     # خرج من المُرسِل
+        tb[tc]['debit']  += e.to_amount       # دخل للمستلم
+        if e.net_profit:
+            profit_items.append({'label': f'ربح قيد متقدّم {e.ref_number}',
+                                 'currency': fc, 'amount': float(e.net_profit)})
+
+    # ── 9. القيد من/إلى (EntryFromTo) ────────────────────────────────────────
+    # كان مفقوداً من ميزان المراجعة — يُسجَّل كالقيد العادي
+    eft_qs = _apply_dates(EntryFromTo.objects.all(), 'created_at__date', df, dt)
+    for e in eft_qs:
+        fc = e.from_currency or 'USD'
+        tc = e.to_currency or 'USD'
+        tb[fc]['credit'] += e.from_amount
+        tb[tc]['debit']  += e.to_amount
+        if e.net_profit:
+            profit_items.append({'label': f'ربح قيد من/إلى {e.ref_number}',
+                                 'currency': fc, 'amount': float(e.net_profit)})
 
     # ── بناء النتيجة ──────────────────────────────────────────────────────────
     def to_rows(d):

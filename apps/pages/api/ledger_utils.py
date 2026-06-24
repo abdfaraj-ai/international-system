@@ -71,10 +71,12 @@ def reverse_ledger(source, source_id):
     يُنشئ حركات معاكسة بدلاً من حذف الأصلية (للحفاظ على سجل المراجعة).
     يجب استدعاؤها داخل transaction.atomic().
     """
-    rows = CenterLedger.objects.filter(source=source, source_id=source_id)
+    rows = list(CenterLedger.objects.filter(source=source, source_id=source_id))
+    # حماية من العكس المزدوج: إن وُجدت أي حركة عكسية مسبقاً فالعملية مُعكوسة — لا تُعكس ثانيةً
+    if any(r.note.startswith('عكس ') for r in rows):
+        return 0
     reversed_count = 0
     for r in rows:
-        # تجاهل الحركات المعكوسة مسبقاً (note يبدأ بـ "عكس")
         if r.note.startswith('عكس '):
             continue
         CenterLedger.objects.create(
