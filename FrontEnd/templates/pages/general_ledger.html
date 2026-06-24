@@ -1,0 +1,202 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}القيد اليومي — دفتر الأستاذ العام{% endblock %}
+
+{% block theme_init %}
+<script>document.documentElement.setAttribute('data-theme', 'corporate');</script>
+{% endblock %}
+
+{% block content %}
+<style>
+  .gl-wrap { max-width: 1200px; margin: 0 auto; padding: 18px; direction: rtl; font-family: 'Cairo','Tajawal',sans-serif; }
+  .gl-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .gl-title { font-size:22px; font-weight:900; color:#0f172a; }
+  .gl-sub { font-size:12px; color:#64748b; }
+  .gl-card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; box-shadow:0 1px 3px rgba(15,23,42,.06); padding:18px; margin-bottom:18px; }
+  .gl-row { display:grid; grid-template-columns: 1fr 110px 140px 140px 1fr 36px; gap:8px; align-items:center; margin-bottom:8px; }
+  .gl-row-head { font-size:11px; font-weight:800; color:#64748b; }
+  .gl-inp, .gl-sel { width:100%; padding:8px 10px; border:1px solid #e2e8f0; border-radius:9px; font-family:inherit; font-size:13px; color:#0f172a; outline:none; background:#fff; }
+  .gl-inp:focus, .gl-sel:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+  .gl-del { border:none; background:rgba(239,68,68,.1); color:#dc2626; border-radius:8px; height:34px; cursor:pointer; font-size:16px; }
+  .gl-btn { border:none; border-radius:10px; padding:9px 18px; font-family:inherit; font-weight:700; font-size:13px; cursor:pointer; }
+  .gl-btn-add { background:rgba(37,99,235,.08); color:#1d4ed8; border:1px dashed rgba(37,99,235,.4); }
+  .gl-btn-save { background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; box-shadow:0 3px 12px rgba(37,99,235,.28); }
+  .gl-btn-save:disabled { opacity:.5; cursor:not-allowed; box-shadow:none; }
+  .gl-totals { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid #eef2f7; }
+  .gl-tot { font-size:13px; font-weight:800; }
+  .gl-bal-ok { color:#16a34a; } .gl-bal-no { color:#dc2626; }
+  .gl-msg { font-size:13px; font-weight:700; padding:10px 14px; border-radius:9px; margin-top:10px; display:none; }
+  .gl-msg-ok { background:rgba(34,197,94,.1); color:#15803d; border:1px solid rgba(22,163,74,.25); }
+  .gl-msg-err{ background:rgba(239,68,68,.1); color:#b91c1c; border:1px solid rgba(220,38,38,.25); }
+  .gl-list { width:100%; border-collapse:collapse; font-size:13px; }
+  .gl-list th { text-align:right; color:#64748b; font-size:11px; font-weight:800; padding:8px 10px; border-bottom:1px solid #e2e8f0; }
+  .gl-list td { padding:9px 10px; border-bottom:1px solid #eef2f7; color:#0f172a; }
+  .gl-link { color:#1d4ed8; text-decoration:none; font-weight:700; font-size:13px; }
+  @media(max-width:760px){ .gl-row{ grid-template-columns:1fr 90px 100px 100px; } .gl-row .gl-center,.gl-row .gl-del{ display:none; } }
+</style>
+
+<div class="gl-wrap">
+  <div class="gl-head">
+    <div>
+      <div class="gl-title">القيد اليومي — دفتر الأستاذ العام</div>
+      <div class="gl-sub">قيد مزدوج — يجب أن يتساوى المدين والدائن لكل عملة</div>
+    </div>
+    <a class="gl-link" href="/accounting/">← العودة للمحاسبة</a>
+  </div>
+
+  <!-- نموذج القيد -->
+  <div class="gl-card">
+    <div class="gl-row" style="grid-template-columns:1fr 1fr;">
+      <div>
+        <label class="gl-row-head">التاريخ</label>
+        <input type="date" id="gl-date" class="gl-inp">
+      </div>
+      <div>
+        <label class="gl-row-head">البيان</label>
+        <input type="text" id="gl-desc" class="gl-inp" placeholder="وصف القيد...">
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="gl-row gl-row-head">
+        <div>الحساب</div><div>العملة</div><div>مدين</div><div>دائن</div><div class="gl-center">المركز/ملاحظة</div><div></div>
+      </div>
+      <div id="gl-lines"></div>
+      <button class="gl-btn gl-btn-add" onclick="glAddLine()">+ إضافة سطر</button>
+    </div>
+
+    <div class="gl-totals">
+      <span class="gl-tot">إجمالي المدين: <span id="gl-tot-deb" style="color:#1d4ed8">0</span></span>
+      <span class="gl-tot">إجمالي الدائن: <span id="gl-tot-crd" style="color:#1d4ed8">0</span></span>
+      <span class="gl-tot" id="gl-bal-state">—</span>
+      <button class="gl-btn gl-btn-save" id="gl-save" onclick="glSave()" style="margin-right:auto;" disabled>حفظ القيد</button>
+    </div>
+    <div class="gl-msg" id="gl-msg"></div>
+  </div>
+
+  <!-- آخر القيود -->
+  <div class="gl-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="font-weight:800;color:#0f172a;">آخر القيود</div>
+      <a class="gl-link" href="#" onclick="glLoadList();return false;">تحديث ↻</a>
+    </div>
+    <table class="gl-list">
+      <thead><tr><th>الرقم</th><th>التاريخ</th><th>البيان</th><th>المصدر</th><th>بواسطة</th></tr></thead>
+      <tbody id="gl-list-body"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:18px;">جاري التحميل...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  function csrf(){ var m=document.cookie.match(/(^|;)\s*csrftoken=([^;]+)/); return m?m[2]:''; }
+  var CURRENCIES = ['USD','ILS','JOD','EUR','TRY','SYP','AED','SAR'];
+  var accounts = [];
+
+  function opt(v,t,sel){ return '<option value="'+v+'"'+(sel?' selected':'')+'>'+t+'</option>'; }
+
+  window.glAddLine = function(){
+    var box = document.getElementById('gl-lines');
+    var div = document.createElement('div');
+    div.className = 'gl-row';
+    var accOpts = '<option value="">— اختر الحساب —</option>' + accounts
+      .filter(function(a){return a.postable;})
+      .map(function(a){return opt(a.code, a.code+' — '+a.name);}).join('');
+    var curOpts = CURRENCIES.map(function(c){return opt(c,c,c==='USD');}).join('');
+    div.innerHTML =
+      '<select class="gl-sel gl-acc">'+accOpts+'</select>'+
+      '<select class="gl-sel gl-cur">'+curOpts+'</select>'+
+      '<input type="number" step="0.01" class="gl-inp gl-deb" placeholder="0" oninput="glRecalc()">'+
+      '<input type="number" step="0.01" class="gl-inp gl-crd" placeholder="0" oninput="glRecalc()">'+
+      '<input type="text" class="gl-inp gl-center" placeholder="مركز/ملاحظة">'+
+      '<button class="gl-del" onclick="this.parentNode.remove();glRecalc()">✕</button>';
+    box.appendChild(div);
+    glRecalc();
+  };
+
+  window.glRecalc = function(){
+    var rows = document.querySelectorAll('#gl-lines .gl-row');
+    var byCur = {};
+    rows.forEach(function(r){
+      var cur = r.querySelector('.gl-cur').value;
+      var deb = parseFloat(r.querySelector('.gl-deb').value)||0;
+      var crd = parseFloat(r.querySelector('.gl-crd').value)||0;
+      byCur[cur] = byCur[cur] || {d:0,c:0};
+      byCur[cur].d += deb; byCur[cur].c += crd;
+    });
+    var totD=0, totC=0, balanced=true, hasLines=false;
+    Object.keys(byCur).forEach(function(cur){
+      totD += byCur[cur].d; totC += byCur[cur].c;
+      if (byCur[cur].d>0 || byCur[cur].c>0) hasLines=true;
+      if (Math.abs(byCur[cur].d - byCur[cur].c) > 0.001) balanced=false;
+    });
+    document.getElementById('gl-tot-deb').textContent = totD.toFixed(2);
+    document.getElementById('gl-tot-crd').textContent = totC.toFixed(2);
+    var st = document.getElementById('gl-bal-state');
+    if (!hasLines){ st.textContent='—'; st.className='gl-tot'; }
+    else if (balanced){ st.textContent='✓ متوازن'; st.className='gl-tot gl-bal-ok'; }
+    else { st.textContent='✗ غير متوازن'; st.className='gl-tot gl-bal-no'; }
+    document.getElementById('gl-save').disabled = !(hasLines && balanced);
+  };
+
+  function showMsg(text, ok){
+    var m=document.getElementById('gl-msg');
+    m.textContent=text; m.className='gl-msg '+(ok?'gl-msg-ok':'gl-msg-err'); m.style.display='block';
+    setTimeout(function(){ m.style.display='none'; }, 5000);
+  }
+
+  window.glSave = function(){
+    var rows = document.querySelectorAll('#gl-lines .gl-row');
+    var lines = [];
+    rows.forEach(function(r){
+      var acc=r.querySelector('.gl-acc').value;
+      var deb=parseFloat(r.querySelector('.gl-deb').value)||0;
+      var crd=parseFloat(r.querySelector('.gl-crd').value)||0;
+      if (acc && (deb>0||crd>0))
+        lines.push({account:acc, currency:r.querySelector('.gl-cur').value,
+                    debit:deb, credit:crd, center:r.querySelector('.gl-center').value});
+    });
+    if (lines.length<2){ showMsg('القيد يحتاج سطرين على الأقل', false); return; }
+    var btn=document.getElementById('gl-save'); btn.disabled=true;
+    fetch('/api/gl/journal/', {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},
+      body: JSON.stringify({ date:document.getElementById('gl-date').value,
+                             description:document.getElementById('gl-desc').value, lines:lines })
+    }).then(function(r){return r.json();}).then(function(d){
+      if (d.success){
+        showMsg('تم حفظ القيد '+d.ref+' بنجاح', true);
+        document.getElementById('gl-lines').innerHTML=''; document.getElementById('gl-desc').value='';
+        glAddLine(); glAddLine(); glLoadList();
+      } else { showMsg(d.message||'فشل الحفظ', false); btn.disabled=false; }
+    }).catch(function(){ showMsg('خطأ في الاتصال', false); btn.disabled=false; });
+  };
+
+  window.glLoadList = function(){
+    fetch('/api/gl/journal/', {credentials:'same-origin'})
+      .then(function(r){return r.json();}).then(function(d){
+        var b=document.getElementById('gl-list-body');
+        if (!d.success || !d.transactions.length){
+          b.innerHTML='<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:18px;">لا توجد قيود بعد</td></tr>'; return;
+        }
+        b.innerHTML = d.transactions.map(function(t){
+          return '<tr><td style="font-weight:700;color:#1d4ed8">'+t.ref+'</td><td>'+t.date+'</td><td>'+
+                 (t.description||'—')+'</td><td>'+t.source+'</td><td>'+(t.createdBy||'—')+'</td></tr>';
+        }).join('');
+      }).catch(function(){});
+  };
+
+  // تهيئة
+  var today=new Date(); document.getElementById('gl-date').value =
+    today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  fetch('/api/gl/accounts/', {credentials:'same-origin'})
+    .then(function(r){return r.json();}).then(function(d){
+      if (d.success) accounts=d.accounts;
+      glAddLine(); glAddLine();
+    }).catch(function(){ glAddLine(); glAddLine(); });
+  glLoadList();
+})();
+</script>
+{% endblock %}

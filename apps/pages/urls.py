@@ -151,6 +151,7 @@ urlpatterns = [
     path('api/am/entry-from-to/',                    am_eft_api.api_am_entry_from_to,        name='api-am-entry-from-to'),
     path('api/am/entry-from-to/<int:entry_id>/',     am_eft_api.api_am_entry_from_to_detail, name='api-am-entry-from-to-detail'),
 
+    path('accounting/general-ledger/',               views.general_ledger_view,               name='general-ledger'),
     path('accounting/advanced-entry/',               views.am_advanced_entry_view,            name='am-advanced-entry'),
     path('accounting/settlement-move/',              views.am_settlement_move_view,           name='am-settlement-move'),
     path('accounting/opening-entry/',                views.am_opening_entry_view,             name='am-opening-entry'),

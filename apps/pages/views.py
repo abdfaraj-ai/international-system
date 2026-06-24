@@ -427,6 +427,13 @@ def accounting_launcher_view(request):
 
 @ensure_csrf_cookie
 @_role_required('M01')
+def general_ledger_view(request):
+    """القيد اليومي ودفتر الأستاذ العام الموحّد — M01 فقط"""
+    return render(request, 'pages/general_ledger.html')
+
+
+@ensure_csrf_cookie
+@_role_required('M01')
 def am_safes_view(request):
     """جميع الصناديق — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
