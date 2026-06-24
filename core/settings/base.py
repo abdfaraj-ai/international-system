@@ -349,7 +349,8 @@ JAZZMIN_SETTINGS = {
     'changeform_format': 'horizontal_tabs',
 
     # ── القائمة الجانبية ──
-    'navigation_expanded': True,
+    # False = المجموعات مطويّة افتراضياً، تنفتح بالنقر على عنوانها
+    'navigation_expanded': False,
     'hide_apps': [],
     'hide_models': [],
     'custom_links': {
