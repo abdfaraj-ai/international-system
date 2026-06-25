@@ -400,8 +400,8 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
 .sp-form-row { margin-bottom:12px; }
 .sp-form-row label { display:block; font-size:11px; font-weight:800; color:var(--al-text2); margin-bottom:4px; }
 .sp-form-row input, .sp-form-row select, .sp-form-row textarea {
-  width:100%; padding:7px 11px; border:1px solid var(--al-border);
-  border-radius:7px; font-family:inherit; font-size:12px; color:var(--al-text1);
+  width:100%; padding:9px 12px; border:1px solid var(--al-border);
+  border-radius:7px; font-family:inherit; font-size:15px; font-weight:600; color:var(--al-text1);
   background:var(--al-bg); outline:none; transition:border-color .15s;
 }
 .sp-form-row input:focus, .sp-form-row select:focus, .sp-form-row textarea:focus {
