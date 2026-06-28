@@ -191,11 +191,16 @@
   // تهيئة
   var today=new Date(); document.getElementById('gl-date').value =
     today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
-  fetch('/api/gl/accounts/', {credentials:'same-origin'})
+  // حمّل العملات المُدارة أولاً (تظهر فقط العملات المُضافة من أداة إدارة العملات)
+  fetch('/api/currencies/?active=1', {credentials:'same-origin'})
     .then(function(r){return r.json();}).then(function(d){
-      if (d.success) accounts=d.accounts;
-      glAddLine(); glAddLine();
-    }).catch(function(){ glAddLine(); glAddLine(); });
+      var cur=(d.currencies||[]).filter(function(c){return c.isActive!==false && c.symbol;})
+                .map(function(c){return (c.symbol||'').toUpperCase();});
+      if (cur.length) CURRENCIES = cur;
+    }).catch(function(){}).then(function(){
+      return fetch('/api/gl/accounts/', {credentials:'same-origin'})
+        .then(function(r){return r.json();}).then(function(d){ if (d.success) accounts=d.accounts; });
+    }).catch(function(){}).then(function(){ glAddLine(); glAddLine(); });
   glLoadList();
 })();
 </script>

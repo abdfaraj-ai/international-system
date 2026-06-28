@@ -1416,32 +1416,48 @@ const _CUR_AR = {
   SAR:'ريال سعودي', AED:'درهم', GBP:'جنيه', SYP:'ليرة سورية', EGP:'جنيه مصري',
 };
 
+// مصفوفات عامة للعملات المُدارة (تُملأ من /api/currencies/)
+let _MANAGED_CUR = [];
+let _MANAGED_CUR_CODES = [];
+const _CUR_CODES_KNOWN = ['USD','EUR','TRY','ILS','JOD','SAR','AED','GBP','SYP','EGP','KWD','QAR','OMR','BHD','USDT'];
+
+// قائمة تُعتبر "قائمة عملة" إذا كانت كل خياراتها (غير الفارغة) رموز عملات معروفة
+function _looksLikeCurrencySelect(sel){
+  const opts = [...sel.options].map(o => (o.value||'').toUpperCase()).filter(v => v !== '');
+  if (!opts.length) return false;
+  return opts.every(v => _CUR_CODES_KNOWN.includes(v));
+}
+
 async function loadCurrencyOptions() {
-  let currencies = [];
   try {
     const r = await fetch('/api/currencies/?active=1', {credentials:'include'});
     const d = await r.json();
-    currencies = (d.currencies || []).filter(c => c.isActive !== false);
-  } catch { /* عند الفشل نُبقي العملات الافتراضية في HTML */ }
+    _MANAGED_CUR = (d.currencies || []).filter(c => c.isActive !== false && c.symbol);
+  } catch { _MANAGED_CUR = []; }
 
-  // إن لم توجد عملات مُدارة، لا نلمس القوائم الثابتة
-  if (!currencies.length) return;
+  // لا توجد عملات مُدارة → أبقِ القوائم الافتراضية كما هي
+  if (!_MANAGED_CUR.length) return;
+  _MANAGED_CUR_CODES = _MANAGED_CUR.map(c => (c.symbol||'').toUpperCase()).filter(Boolean);
 
-  _CURRENCY_SELECT_IDS.forEach(id => {
-    const sel = document.getElementById(id);
-    if (!sel) return;
-    const prev = sel.value;  // حافظ على الاختيار الحالي
-    sel.innerHTML = '';
-    currencies.forEach(c => {
-      const sym = (c.symbol || '').toUpperCase();
-      if (!sym) return;
-      const label = c.name ? `${_CUR_AR[sym] || c.name}` : (_CUR_AR[sym] || sym);
-      const opt = document.createElement('option');
-      opt.value = sym;
-      opt.textContent = label;
-      sel.appendChild(opt);
+  // حدّث المصفوفات الثابتة المستخدمة في القوائم المُولّدة بـ JS
+  try {
+    [SM2_CURRENCIES, PKG_CURRENCIES, CTP_CURRENCIES, BS_CURRENCIES].forEach(arr => {
+      if (Array.isArray(arr)) { arr.length = 0; _MANAGED_CUR_CODES.forEach(c => arr.push(c)); }
     });
-    // استعد الاختيار السابق إن كان لا يزال موجوداً، وإلا أول عملة
+  } catch (e) {}
+
+  const buildOpts = (prev) => _MANAGED_CUR.map(c => {
+    const sym = (c.symbol||'').toUpperCase();
+    const lbl = _CUR_AR[sym] || c.name || sym;
+    return `<option value="${sym}"${sym===prev?' selected':''}>${lbl}</option>`;
+  }).join('');
+
+  // املأ كل قوائم العملة في الصفحة (بالـID المعروف أو بالاكتشاف التلقائي)
+  document.querySelectorAll('select').forEach(sel => {
+    if (!(_CURRENCY_SELECT_IDS.includes(sel.id) || _looksLikeCurrencySelect(sel))) return;
+    const prev = sel.value;
+    const hadEmpty = [...sel.options].some(o => o.value === '');
+    sel.innerHTML = (hadEmpty ? '<option value="">اختر</option>' : '') + buildOpts(prev);
     if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   });
 }
