@@ -47,6 +47,7 @@ from .api import am_currencies         as am_currencies_api
 from .api import am_audit_log          as am_audit_log_api
 from .api import am_center_ledger      as am_cl_api
 from .api import gl_api                as gl_api
+from .api import adms                  as adms_api
 
 urlpatterns = [
     # ── Client Portal — بوابة العملاء ───────────────────────────────────────────
@@ -69,6 +70,13 @@ urlpatterns = [
 
     # ── Health Check ─────────────────────────────────────────────────────────────
     path('api/health/',                health_api.api_health,              name='api-health'),
+
+    # ── ZKTeco Push/ADMS — استقبال البصمات من الجهاز مباشرةً ─────────────────────
+    path('iclock/cdata',               adms_api.iclock_cdata,              name='iclock-cdata'),
+    path('iclock/getrequest',          adms_api.iclock_getrequest,         name='iclock-getrequest'),
+    path('iclock/devicecmd',           adms_api.iclock_generic,            name='iclock-devicecmd'),
+    path('iclock/ping',                adms_api.iclock_generic,            name='iclock-ping'),
+    path('iclock/fdata',               adms_api.iclock_generic,            name='iclock-fdata'),
 
     # ── FX Rates — شريط أسعار العملات ────────────────────────────────────────────
     path('api/fx-rates/',              fx_rates_api.api_fx_rates,          name='api-fx-rates'),
