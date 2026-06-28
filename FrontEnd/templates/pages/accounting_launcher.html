@@ -13,6 +13,35 @@
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260511e">
 <link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
 <link rel="stylesheet" href="{% static 'css/accounting_launcher.css' %}?v=6">
+<style>
+  /* ── تكبير معتدل لنموذجَي القيد (من/إلى + المتقدّم) ── */
+  #sp-entry-from-to > div > div[style*="max-width"],
+  #sp-advanced-entry > div > div[style*="max-width"] { max-width: 1040px !important; }
+
+  #sp-entry-from-to label,
+  #sp-advanced-entry label { font-size: 14px !important; }
+
+  #sp-entry-from-to input,
+  #sp-entry-from-to select,
+  #sp-advanced-entry input,
+  #sp-advanced-entry select {
+    font-size: 15px !important;
+    padding: 9px 11px !important;
+    font-weight: 600 !important;
+  }
+
+  /* عناوين اللوحات (من — لنا / الى — علينا — ربح) */
+  #sp-entry-from-to span[style*="font-weight:900"],
+  #sp-advanced-entry span[style*="font-weight:900"] { font-size: 14.5px !important; }
+
+  /* أزرار الحفظ/موافق */
+  #sp-entry-from-to button,
+  #sp-advanced-entry button { font-size: 15px !important; padding: 11px 14px !important; }
+
+  /* تباعد أريح بين الصفوف */
+  #sp-entry-from-to [style*="display:grid"],
+  #sp-advanced-entry [style*="display:grid"] { gap: 9px !important; }
+</style>
 {% endblock %}
 
 {% block content %}
