@@ -355,15 +355,15 @@ async function initTransactionsSupervisor() {
       apiGet('/api/ts/stats'),
     ]);
 
-    if (transfersResp.success && Array.isArray(transfersResp.items)) {
+    if (transfersResp.success && Array.isArray(transfersResp.transfers)) {
       if (typeof svTransfers !== 'undefined') {
         svTransfers.length = 0;
-        transfersResp.items.forEach(t => svTransfers.push(_mapHawala(t)));
+        transfersResp.transfers.forEach(t => svTransfers.push(_mapHawala(t)));
       }
     }
 
-    if (employeesResp.success && Array.isArray(employeesResp.users)) {
-      window._intlCache.employees = employeesResp.users.map(u => ({
+    if (employeesResp.success && Array.isArray(employeesResp.employees)) {
+      window._intlCache.employees = employeesResp.employees.map(u => ({
         name:           (u.firstName + ' ' + u.lastName).trim() || u.username,
         username:       u.username,
         status:         u.isActive ? 'online' : 'offline',
@@ -374,6 +374,12 @@ async function initTransactionsSupervisor() {
 
     if (agentsResp.success && Array.isArray(agentsResp.agents)) {
       window._svAgents = agentsResp.agents;
+      // ملء قائمة "المنفذ" بالوكلاء الحقيقيين
+      var _agSel = document.getElementById('sv-f-agent');
+      if (_agSel) {
+        _agSel.innerHTML = '<option value="">— اختر الوكيل —</option>' +
+          agentsResp.agents.map(function(a){ return '<option value="'+a.name+'">'+a.name+'</option>'; }).join('');
+      }
     }
 
     if (typeof svRenderTransfers === 'function') svRenderTransfers();

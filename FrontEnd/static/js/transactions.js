@@ -920,6 +920,7 @@ function executeTransfer() {
   const agentEl = document.getElementById('execAgent');
   const agent = agentEl ? agentEl.selectedOptions[0]?.text : '';
   if (!name) { showToast('اختر حوالة من القائمة أولاً', 'warning'); return; }
+  if (agentEl && !agentEl.value) { showToast('اختر وكيل التنفيذ أولاً', 'warning'); return; }
   const confirmText = document.getElementById('confirmText');
   if (confirmText) confirmText.innerHTML = `هل تريد إرسال حوالة <b>${escapeHtml(name)}</b> إلى <b>${escapeHtml(agent)}</b> للتنفيذ الفوري؟`;
   const modal = document.getElementById('confirmModal');
@@ -2977,3 +2978,26 @@ function trxOpenReportModal(){const overlay=document.getElementById('trxReportOv
 function trxCloseReportModal(){document.getElementById('trxReportOverlay').style.display='none';}
 function trxSubmitReport(){const title=(document.getElementById('trxRptTitle').value||'').trim();if(!title){showToast('يرجى إدخال عنوان التقرير','warning');return;}if(!_trxRptFileData||!_trxRptFileMeta){showToast('يرجى اختيار ملف للرفع','warning');return;}let sender='موظف الحوالات';try{const u=(window._currentUser||{});if(u.username)sender=u.username;}catch(e){}const now=new Date();const p=n=>String(n).padStart(2,'0');const date=now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());const obj={source:'transfers',title,fileName:_trxRptFileMeta.name,fileType:_trxRptFileMeta.type,fileSize:_trxRptFmtSz(_trxRptFileMeta.size),fileData:_trxRptFileData,sender,department:'قسم الحوالات',branch:'الفرع الرئيسي',branchId:1,date};try{const ex=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex));}catch(err){try{obj.fileData=null;const ex2=JSON.parse(localStorage.getItem('intl_admin_reports')||'[]');ex2.unshift(obj);localStorage.setItem('intl_admin_reports',JSON.stringify(ex2));}catch(e){}}trxCloseReportModal();showToast('تم إرسال الملف "'+_trxRptFileMeta.name+'" للإدارة بنجاح','success');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('trxReportOverlay').style.display==='flex')trxCloseReportModal();});
+
+// ── دوال المحفظة (كانت مفقودة) ──
+function copyWalletNumber(){
+  const el=document.getElementById('walletNumber');
+  if(!el||!(el.value||'').trim()){showToast('لا يوجد رقم للنسخ','warning');return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(el.value.trim()).then(
+      ()=>showToast('تم نسخ الرقم','success'),
+      ()=>showToast('تعذّر النسخ','error'));
+  }else{ try{el.select&&el.select();document.execCommand('copy');showToast('تم نسخ الرقم','success');}catch(_){showToast('تعذّر النسخ','error');} }
+}
+function validateWallet(){
+  const el=document.getElementById('walletNumber');
+  if(!el)return;
+  el.classList.toggle('valid',(el.value||'').trim().length>=6);
+}
+
+// ── stubs آمنة لمحاكي الواتساب المعطّل (كانت تُسبّب ReferenceError) ──
+function sendSimMsg(){ showToast('محاكي الواتساب معطّل','info'); }
+function triggerRandomMessage(){ showToast('محاكي الواتساب معطّل','info'); }
+function sendCustomWAMsg(){ showToast('محاكي الواتساب معطّل','info'); }
+function switchWAGroup(){ /* المحاكي معطّل */ }
+function toggleWAPanel(){ const p=document.getElementById('waSimPanel')||document.getElementById('waPanel'); if(p)p.classList.toggle('open'); }

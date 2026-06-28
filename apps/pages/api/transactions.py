@@ -34,7 +34,7 @@ from django.db.models   import Q, Count, Sum, F
 from ..models import (
     SystemUser, HawalaTransfer, ExecutionAgent, ClientGroup,
     AdminInstruction, SupervisorReport, ROLE_CHOICES, PortalCountry,
-    AgentLocation, AgentTransferRate,
+    AgentLocation, AgentTransferRate, AuditLog,
 )
 from core.permissions import require_roles as _require_roles, parse_json as _parse_json, caller_name as _caller
 
