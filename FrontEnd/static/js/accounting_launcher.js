@@ -1408,6 +1408,7 @@ const _CURRENCY_SELECT_IDS = [
   'rv-from-currency','rv-to-currency',
   'pv-from-currency','pv-to-currency',
   'ot-send-currency','ot-recv-currency',
+  'sp-b-currency',   // العملة الأساسية في نموذج المركز
 ];
 
 // أسماء عربية افتراضية للرموز الشائعة (للعرض)
