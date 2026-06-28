@@ -511,7 +511,7 @@ function renderBalanceLog(){ loadBalanceLog(); }
 // ═══════════════════════════════════════════
 // سجل العمليات
 // ═══════════════════════════════════════════
-const TYPE_AR={send:'إرسال',receive:'استقبال',convert:'تحويل عملات'};
+const TYPE_AR={send:'إرسال',receive:'استقبال',convert:'تحويل عملات',pass:'باص تلر',electronic:'إلكترونية',deposit:'إيداع',withdraw:'سحب'};
 const STATUS_AR2={completed:'مكتملة',pending:'معلقة',failed:'فاشلة'};
 
 function renderOps(){
@@ -889,7 +889,7 @@ function resetAllRates(){
     renderPricing();
     showToast('تم إعادة جميع الأسعار للقيم الافتراضية','info','♻️');
 }
-document.addEventListener('input',function(e){if(e.target.id==='svDdCash'||e.target.id==='svDdBank'){const c=parseFloat(document.getElementById('svDdCash').value)||0,b=parseFloat(document.getElementById('svDdBank').value)||0;const diff=(c-b);const d=document.getElementById('svDdDiff');if(d)d.textContent=diff.toFixed(3);const db=document.querySelector('.prc-diff-badge');if(db)db.textContent=diff>=0?'لصالح الكاش':'لصالح البنكي';}});
+document.addEventListener('input',function(e){if(e.target.id==='svDdCash'||e.target.id==='svDdBank'){const c=parseFloat(document.getElementById('svDdCash').value)||0,b=parseFloat(document.getElementById('svDdBank').value)||0;const diff=(c-b);const d=document.getElementById('svDdDiff');if(d)d.textContent=diff.toFixed(3);const db=document.getElementById('prc2SpreadBadge');if(db)db.textContent=diff>=0?'لصالح الكاش':'لصالح البنكي';}});
 
 // ═══════════════════════════════════════════
 // أدوات

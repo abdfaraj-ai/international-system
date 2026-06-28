@@ -569,7 +569,7 @@ function confirmPassTeller(){
     // Push notification to localStorage for target teller
     try{
         const ptQueue=JSON.parse(localStorage.getItem('intl_pt_queue')||'[]');
-        ptQueue.unshift({id,from:_getTellerUser()?.username||'تلر',to:select.value,toName:targetName,client:data.client,mode:data.mode,fromAmt:data.fromAmt,toAmt:data.toAmt,rate:data.rate,note,time:now,status:'pending'});
+        ptQueue.unshift({id,from:_getTellerUser()||'تلر',to:select.value,toName:targetName,client:data.client,mode:data.mode,fromAmt:data.fromAmt,toAmt:data.toAmt,rate:data.rate,note,time:now,status:'pending'});
         localStorage.setItem('intl_pt_queue',JSON.stringify(ptQueue.slice(0,50)));
     }catch(e){}
     closeModal('passTellerModal');
@@ -748,14 +748,14 @@ function submitExchange(){
     if(amt<=0){showToast('أدخل مبلغاً صحيحاً','error','❌');return}
     const from=document.getElementById('exFromCur').value,to=document.getElementById('exToCur').value,result=document.getElementById('exTo').textContent;
     let rate=RATES[to]/RATES[from];const sr=parseFloat(document.getElementById('specialRateInput').value);if(specialPriceActive&&sr>0)rate=sr;
-    pendingAction={type:'exchange',data:{client,from,to,fromAmt:amt,toAmt:parseFloat(result),rate:rate.toFixed(4),mode:exMode,special:specialPriceActive,dd:ddActive.ex,ddAmt2:ddActive.ex?parseFloat(document.getElementById('exDdAmount2').value)||0:0,ddCur2:ddActive.ex?document.getElementById('exDdCur2').value:''}};
+    pendingAction={type:'exchange',data:{client,from,to,fromAmt:amt,toAmt:parseFloat(result),rate:rate.toFixed(4),mode:exMode,special:specialPriceActive,dd:ddActive.ex,ddAmt2:ddActive.ex?parseFloat(document.getElementById('exDdAmount2')?.value)||0:0,ddCur2:ddActive.ex?(document.getElementById('exDdCur2')?.value||''):''}};
     document.getElementById('cmIcon').textContent=exMode==='buy'?'📈':'📉';document.getElementById('cmTitle').textContent=exMode==='buy'?'تأكيد شراء':'تأكيد بيع';
     let ddHtml='';
     if(ddActive.ex&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--primary)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
     document.getElementById('cmDetails').innerHTML=`<div class="confirm-row"><span class="c-l">النوع</span><span class="c-v" style="color:${exMode==='buy'?'var(--success)':'var(--danger)'}">${exMode==='buy'?'شراء':'بيع'}</span></div>${specialPriceActive?'<div class="confirm-row"><span class="c-l">سعر مميز</span><span class="c-v" style="color:var(--accent)">نعم</span></div>':''}<div class="confirm-row"><span class="c-l">العميل</span><span class="c-v">${client}</span></div><div class="confirm-row"><span class="c-l">يدفع</span><span class="c-v" dir="ltr">${SYMBOLS[from]}${amt.toFixed(2)}</span></div><div class="confirm-row"><span class="c-l">يستلم</span><span class="c-v" dir="ltr" style="color:var(--success)">${SYMBOLS[to]}${result}</span></div>${ddHtml}<div class="confirm-row"><span class="c-l">السعر</span><span class="c-v" dir="ltr">${rate.toFixed(4)}</span></div>`;
     document.getElementById('confirmModal').classList.add('visible');
 }
-function clearExchange(){['exFrom','exClient','exClientId','exNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('exTo').textContent='0.00';if(ddActive.ex){ddActive.ex=false;document.getElementById('exDdSwitch').closest('.double-delivery-toggle').classList.remove('dd-active');document.getElementById('exDdFields').classList.remove('open')};const dd2=document.getElementById('exDdAmount2');if(dd2)dd2.value='';document.getElementById('exDdResult2').textContent='0.00';showToast('تم مسح النموذج','info','♻️')}
+function clearExchange(){['exFrom','exClient','exClientId','exNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('exTo').textContent='0.00';if(ddActive.ex){ddActive.ex=false;document.getElementById('exDdSwitch').closest('.double-delivery-toggle').classList.remove('dd-active');document.getElementById('exDdFields').classList.remove('open')};const dd2=document.getElementById('exDdAmount2');if(dd2)dd2.value='';const ddr=document.getElementById('exDdResult2');if(ddr)ddr.textContent='0.00';showToast('تم مسح النموذج','info','♻️')}
 function filterExLogs(el,mode){exFilterMode=mode;el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('fc-on'));el.classList.add('fc-on');renderExLogs()}
 function renderExLogs(){let data=exLogs;if(exFilterMode==='buy')data=exLogs.filter(l=>l.mode==='buy');else if(exFilterMode==='sell')data=exLogs.filter(l=>l.mode==='sell');document.getElementById('exLogBody').innerHTML=data.map(l=>`<tr><td style="font-size:12px;color:var(--text-muted)">${l.id}</td><td><span class="tag ${l.mode==='buy'?'tag-buy':'tag-sell'}">${l.mode==='buy'?'شراء':'بيع'}</span></td><td style="font-weight:700">${l.client}</td><td class="amount-cell neg">-${SYMBOLS[l.from]}${l.fromAmt.toLocaleString()}</td><td class="amount-cell pos">+${SYMBOLS[l.to]}${l.toAmt.toLocaleString()}</td><td dir="ltr" style="text-align:right;font-weight:600">${l.rate}</td><td style="font-size:12px;color:var(--text-muted)">${l.time}</td></tr>`).join('')}
 
@@ -1199,7 +1199,7 @@ function submitElec(){
     const amt=parseFloat(document.getElementById('elAmount').value)||0;const cur=document.getElementById('elCurrency').value;
     if(!platform){showToast('اختر منصة أولاً','error','❌');return}if(amt<=0){showToast('أدخل مبلغاً','error','❌');return}
     const fee=amt*0.03;
-    pendingAction={type:'electronic',data:{client,platform,amt,cur,fee,dd:ddActive.el,ddAmt2:ddActive.el?parseFloat(document.getElementById('elDdAmount2').value)||0:0,ddCur2:ddActive.el?document.getElementById('elDdCur2').value:'',ddNote2:ddActive.el?document.getElementById('elDdNote2')?.value||'':''}};
+    pendingAction={type:'electronic',data:{client,platform,amt,cur,fee,dd:ddActive.el,ddAmt2:ddActive.el?parseFloat(document.getElementById('elDdAmount2')?.value)||0:0,ddCur2:ddActive.el?(document.getElementById('elDdCur2')?.value||''):'',ddNote2:ddActive.el?document.getElementById('elDdNote2')?.value||'':''}};
     document.getElementById('cmIcon').textContent='📲';document.getElementById('cmTitle').textContent='تأكيد المعاملة';
     let ddHtml='';
     if(ddActive.el&&pendingAction.data.ddAmt2>0){ddHtml=`<div class="confirm-row"><span class="c-l">تسليم ثاني</span><span class="c-v" dir="ltr" style="color:var(--blue)">${SYMBOLS[pendingAction.data.ddCur2]||''}${pendingAction.data.ddAmt2.toFixed(2)}</span></div>`}
