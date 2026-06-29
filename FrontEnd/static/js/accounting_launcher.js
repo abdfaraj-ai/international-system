@@ -8678,7 +8678,7 @@ function elRender() {
     return `<tr style="${i%2===1?'background:#F8FAFC':''}">
       <td class="el-idx">${(_elPage-1)*perPage+i+1}</td>
       <td class="el-time">${(r.createdAt||'').slice(0,16)}</td>
-      <td class="el-actor">${r.actor||'—'} <small style="color:#94A3B8">${r.actorRole||''}</small></td>
+      <td class="el-actor">${r.actor||'—'} <small style="color:#000">${r.actorRole||''}</small></td>
       <td class="el-target">${r.target||'—'}</td>
       <td><span class="el-action-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${r.actionLabel||r.action||'—'}</span></td>
       <td class="el-detail">${r.detail||'—'}</td>
