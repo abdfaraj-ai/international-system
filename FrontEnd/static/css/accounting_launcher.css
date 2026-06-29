@@ -2193,11 +2193,12 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
       .sp-section table tbody td,
       .sp-section table tbody td a,
       .sp-section table tbody td small,
-      .sp-section table tbody th { color: #000 !important; }
+      .sp-section table tbody th { color: #fff !important; }
 
-      /* خلفية بيضاء لكل صفوف السجلات (تتجاوز التظليل المتناوب والمضمّن)؛
-         رؤوس الجداول الداكنة تبقى كما هي */
+      /* خلفية زرقاء لكل صفوف السجلات + نصّ أبيض
+         (تتجاوز التظليل المتناوب والمضمّن)؛ الرؤوس الداكنة تبقى كما هي */
       .sp-section table tbody tr,
+      .sp-section table tbody td { background: #1d4ed8 !important; }
       .sp-section table tbody tr:hover,
-      .sp-section table tbody td { background: #fff !important; }
+      .sp-section table tbody tr:hover td { background: #1e40af !important; }
 
