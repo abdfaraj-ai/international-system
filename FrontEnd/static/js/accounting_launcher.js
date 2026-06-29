@@ -7582,11 +7582,11 @@ function cmRender() {
   const fmt = v => parseFloat(v||0).toLocaleString('en-US', {minimumFractionDigits:4, maximumFractionDigits:6});
   tbody.innerHTML = slice.map((c, i) => `
     <tr style="${i%2===1?'background:#F8FAFC':''}">
-      <td style="color:#94A3B8;font-size:11px">${start+i+1}</td>
-      <td style="font-weight:700;color:#1E293B;text-align:right;padding-right:16px">${c.name}</td>
+      <td style="color:#000;font-size:11px">${start+i+1}</td>
+      <td style="font-weight:700;color:#000;text-align:right;padding-right:16px">${c.name}</td>
       <td><span class="cm2-symbol">${c.symbol}</span></td>
-      <td style="font-variant-numeric:tabular-nums;font-weight:700">${fmt(c.multiplier)}</td>
-      <td style="font-variant-numeric:tabular-nums;font-weight:700;color:#1D4ED8">${fmt(c.evalRate)}</td>
+      <td style="font-variant-numeric:tabular-nums;font-weight:700;color:#000">${fmt(c.multiplier)}</td>
+      <td style="font-variant-numeric:tabular-nums;font-weight:700;color:#000">${fmt(c.evalRate)}</td>
       <td><span class="${c.isActive?'cm2-active':'cm2-inactive'}">${c.isActive?'نشطة':'معطلة'}</span></td>
       <td>
         <button class="sp-btn sp-btn-primary" style="padding:4px 12px;font-size:11.5px" onclick="cmOpenEdit(${c.id})">تعديل</button>

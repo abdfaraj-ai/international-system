@@ -1153,7 +1153,7 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
       .cm2-si { font-size: 9px; margin-right: 3px; opacity: .6; color: #fff; }
       .cm-table2 tbody tr { border-bottom: 1px solid #F1F5F9; }
       .cm-table2 tbody tr:hover { background: #F8FAFC; }
-      .cm-table2 tbody td { padding: 10px 12px; text-align: center; color: #334155; }
+      .cm-table2 tbody td { padding: 10px 12px; text-align: center; color: #000; }
 
       /* شارات */
       .cm2-symbol {
