@@ -68,25 +68,25 @@ def _money(val, symbol='', color='#0f172a'):
         s = f'{v:,.2f}' if v != int(v) else f'{int(v):,}'
         if symbol:
             return format_html(
-                '<span style="color:#64748b;font-size:11px">{} </span>'
+                '<span style="color:#0f172a;font-size:11px">{} </span>'
                 '<span style="color:{};font-weight:700;font-family:monospace">{}</span>',
                 symbol, color, s)
         return format_html('<span style="color:{};font-weight:700;font-family:monospace">{}</span>', color, s)
     except Exception:
-        return format_html('<span style="color:#64748b">—</span>')
+        return format_html('<span style="color:#0f172a">—</span>')
 
 def _ts(dt):
     if not dt:
-        return format_html('<span style="color:#475569">—</span>')
+        return format_html('<span style="color:#0f172a">—</span>')
     return format_html(
-        '<span style="color:#475569;font-size:11px;font-family:monospace">{}</span>',
+        '<span style="color:#0f172a;font-size:11px;font-family:monospace">{}</span>',
         dt.strftime('%Y-%m-%d %H:%M'))
 
 def _muted(text, size=12):
     if not text:
-        return format_html('<span style="color:#475569">—</span>')
+        return format_html('<span style="color:#0f172a">—</span>')
     return format_html(
-        '<span style="color:#475569;font-size:{}px">{}</span>', size, text)
+        '<span style="color:#0f172a;font-size:{}px">{}</span>', size, text)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -232,7 +232,7 @@ class HawalaOperationAdmin(admin.ModelAdmin):
 
     def destination_col(self, obj):
         return format_html(
-            '<span style="color:#475569;font-size:12px">{}</span>',
+            '<span style="color:#0f172a;font-size:12px">{}</span>',
             obj.destination or '—')
     destination_col.short_description = 'الوجهة'
 
@@ -311,11 +311,11 @@ class ExchangeRateAdmin(admin.ModelAdmin):
 
     def rates_preview(self, obj):
         if not obj.rates_json:
-            return format_html('<span style="color:#475569">—</span>')
+            return format_html('<span style="color:#0f172a">—</span>')
         parts = []
         for k, v in list(obj.rates_json.items())[:5]:
             parts.append(
-                f'<span style="color:#64748b;font-size:10px">{k}:</span> '
+                f'<span style="color:#475569;font-size:10px">{k}:</span> '
                 f'<span style="color:#D4AF37;font-weight:700;font-family:monospace;font-size:12px">{v}</span>'
             )
         return format_html('<span style="display:flex;gap:10px;flex-wrap:wrap">{}</span>', ' '.join(parts))
@@ -385,8 +385,8 @@ class TellerRequestAdmin(admin.ModelAdmin):
     def resolved_by_col(self, obj):
         if obj.resolved_by:
             return format_html(
-                '<span style="color:#475569;font-size:12px">{}</span>', obj.resolved_by)
-        return format_html('<span style="color:#475569">—</span>')
+                '<span style="color:#0f172a;font-size:12px">{}</span>', obj.resolved_by)
+        return format_html('<span style="color:#0f172a">—</span>')
     resolved_by_col.short_description = 'أُغلق بواسطة'
 
     def time_col(self, obj):
@@ -413,25 +413,25 @@ class TellerBalanceAdmin(admin.ModelAdmin):
         name = f' ({obj.teller_name})' if obj.teller_name else ''
         return format_html(
             '<span style="font-weight:700;color:#e2e8f0">🖥️ {}</span>'
-            '<span style="color:#475569;font-size:11px">{}</span>',
+            '<span style="color:#0f172a;font-size:11px">{}</span>',
             obj.teller_username, name)
     teller_col.short_description = 'التلر'
     teller_col.admin_order_field = 'teller_username'
 
     def usd_col(self, obj):
-        c = '#4ade80' if obj.usd > 0 else '#475569'
+        c = '#4ade80' if obj.usd > 0 else '#0f172a'
         return _money(obj.usd, '$', c)
     usd_col.short_description = 'دولار'
     usd_col.admin_order_field = 'usd'
 
     def ils_col(self, obj):
-        c = '#fcd34d' if obj.ils > 0 else '#475569'
+        c = '#fcd34d' if obj.ils > 0 else '#0f172a'
         return _money(obj.ils, '₪', c)
     ils_col.short_description = 'شيكل'
     ils_col.admin_order_field = 'ils'
 
     def jod_col(self, obj):
-        c = '#67e8f9' if obj.jod > 0 else '#475569'
+        c = '#67e8f9' if obj.jod > 0 else '#0f172a'
         return _money(obj.jod, 'JD', c)
     jod_col.short_description = 'دينار'
     jod_col.admin_order_field = 'jod'
@@ -499,13 +499,13 @@ class TellerProfileAdmin(admin.ModelAdmin):
     status_col.admin_order_field = 'status'
 
     def balance_col(self, obj):
-        c = '#4ade80' if obj.balance > 0 else '#475569'
+        c = '#4ade80' if obj.balance > 0 else '#0f172a'
         return _money(obj.balance, '$', c)
     balance_col.short_description = 'الرصيد'
     balance_col.admin_order_field = 'balance'
 
     def ops_col(self, obj):
-        c = '#67e8f9' if obj.ops > 0 else '#475569'
+        c = '#67e8f9' if obj.ops > 0 else '#0f172a'
         return format_html(
             '<span style="color:{};font-weight:700;font-family:monospace">{}</span>',
             c, obj.ops)
@@ -618,7 +618,7 @@ class UploadedImageAdmin(admin.ModelAdmin):
                 '<img src="{}" style="width:44px;height:44px;object-fit:cover;'
                 'border-radius:8px;border:1px solid rgba(50,184,198,0.25)">',
                 obj.image.url)
-        return format_html('<span style="color:#475569;font-size:11px">—</span>')
+        return format_html('<span style="color:#0f172a;font-size:11px">—</span>')
     thumb_col.short_description = 'الصورة'
 
     def description_col(self, obj):
@@ -692,7 +692,7 @@ class AuditLogAdmin(admin.ModelAdmin):
         role = f' [{obj.actor_role}]' if obj.actor_role else ''
         return format_html(
             '<span style="font-weight:700;color:#0f172a">{}</span>'
-            '<span style="color:#64748b;font-size:11px">{}</span>',
+            '<span style="color:#0f172a;font-size:11px">{}</span>',
             obj.actor, role)
     actor_col.short_description = 'المنفِّذ'
     actor_col.admin_order_field = 'actor'
@@ -704,13 +704,13 @@ class AuditLogAdmin(admin.ModelAdmin):
     def amount_col(self, obj):
         if obj.amount:
             return format_html('{} {}', _money(obj.amount), _currency_badge(obj.currency) if obj.currency else '')
-        return format_html('<span style="color:#475569">—</span>')
+        return format_html('<span style="color:#0f172a">—</span>')
     amount_col.short_description = 'المبلغ'
     amount_col.admin_order_field = 'amount'
 
     def ip_col(self, obj):
         return format_html(
-            '<span style="color:#475569;font-size:11px;font-family:monospace">{}</span>',
+            '<span style="color:#0f172a;font-size:11px;font-family:monospace">{}</span>',
             obj.ip_address or '—')
     ip_col.short_description = 'IP'
 
