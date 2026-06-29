@@ -2184,4 +2184,14 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
       .en-search-btn:hover { background: #15803D; }
       .en-sa { font-size: 9px; opacity: .55; margin-left: 2px; }
       table.sp-table thead th { white-space: nowrap; }
-    
+
+      /* ════════════════════════════════════════════════════════════════
+         تسويد نصوص جميع سجلات/جداول البرنامج المحاسبي
+         (يتجاوز الألوان الباهتة المضمّنة على الخلايا؛ يُبقي الشارات الملوّنة
+          لأنها <span> لها لونها الخاص، ولا يَطال خلفياتها)
+         ════════════════════════════════════════════════════════════════ */
+      .sp-section table tbody td,
+      .sp-section table tbody td a,
+      .sp-section table tbody td small,
+      .sp-section table tbody th { color: #000 !important; }
+
