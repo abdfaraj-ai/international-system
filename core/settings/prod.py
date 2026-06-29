@@ -106,7 +106,10 @@ SESSION_COOKIE_AGE              = 28800          # 8 ساعات
 
 # CSRF Cookie
 CSRF_COOKIE_SECURE              = _https
-CSRF_COOKIE_HTTPONLY            = True
+# يجب أن تقرأه واجهة JavaScript من الكوكي (_getCsrf) لإرساله في X-CSRFToken؛
+# تركه True يجعل كل طلبات POST عبر fetch تفشل بـ403 ("خطأ في الاتصال بالخادم").
+# حماية CSRF تبقى فعّالة (مطابقة التوكن + نفس الأصل)؛ HTTPONLY ليس حدّ الأمان هنا.
+CSRF_COOKIE_HTTPONLY            = False
 
 # قبول Proxy Headers من Nginx فقط
 SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')
