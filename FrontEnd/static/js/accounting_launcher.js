@@ -1397,6 +1397,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   // ملء قوائم العملات في كل القيود من العملات المُدارة
   loadCurrencyOptions();
+  // تحميل أسعار القص المحفوظة لربطها بحقل «القص» في القيود
+  loadCutPrices();
 });
 
 // ══ تحميل العملات وملء كل قوائم اختيار العملة في القيود ══
@@ -1461,6 +1463,86 @@ async function loadCurrencyOptions() {
     sel.innerHTML = (hadEmpty ? '<option value="">اختر</option>' : '') + buildOpts(prev);
     if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
   });
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  ربط «أسعار القص» المحفوظة بحقل «القص» في القيود
+//  يُملأ السعر تلقائياً عند اختيار العملة (غير متلِف: يملأ فقط إن كانت
+//  القيمة الافتراضية 1 أو فارغة، فلا يطمس سعراً أدخله المستخدم يدوياً)
+// ════════════════════════════════════════════════════════════════════
+let _CUT_PRICES = { screen: [], balance: [], movement: [] };
+
+async function loadCutPrices() {
+  try {
+    const r = await fetch('/api/cut-prices/', { credentials: 'include' });
+    const d = await r.json();
+    if (d.success && d.grouped) _CUT_PRICES = d.grouped;
+  } catch { /* تبقى القيم الافتراضية */ }
+}
+
+// يبحث عن سعر قص عملة (يفضّل سعر الحركات ← الشاشة ← الرصيد، النشِط فقط)
+function _cutFor(currency) {
+  if (!currency) return null;
+  const cur = String(currency).toUpperCase();
+  for (const t of ['movement', 'screen', 'balance']) {
+    const hit = (_CUT_PRICES[t] || []).find(
+      p => String(p.currency || '').toUpperCase() === cur && p.isActive !== false);
+    if (hit) return { rate: hit.rate, direction: hit.direction };
+  }
+  return null;
+}
+
+// العملة التي يُطبَّق عليها القص = غير الدولار من زوج (from, to)
+function _cutCurrency(fromCur, toCur) {
+  if (fromCur && String(fromCur).toUpperCase() !== 'USD') return fromCur;
+  if (toCur   && String(toCur).toUpperCase()   !== 'USD') return toCur;
+  return toCur || fromCur;
+}
+
+// هل يجوز الكتابة فوق حقل القص؟ (افتراضي 1 أو فارغ أو مملوء تلقائياً سابقاً)
+function _cutWritable(valEl) {
+  if (!valEl) return false;
+  const v = (valEl.value || '').trim();
+  return v === '' || v === '1' || valEl.dataset.autocut === '1';
+}
+
+// يطبّق السعر المحفوظ على حقلَي القيمة/الاتجاه — efType=true يعني multiply/divide
+function _applyCut(fromCur, toCur, valId, dirId, efType) {
+  const valEl = document.getElementById(valId);
+  const dirEl = document.getElementById(dirId);
+  if (!_cutWritable(valEl)) return;
+  const cut = _cutFor(_cutCurrency(fromCur, toCur));
+  if (!cut) return;
+  valEl.value = cut.rate;
+  valEl.dataset.autocut = '1';
+  if (dirEl) dirEl.value = efType
+    ? (cut.direction === 'div' ? 'divide' : 'multiply')
+    : (cut.direction === 'div' ? 'div' : 'mul');
+}
+
+function efAutoCut() {
+  const f = (document.getElementById('ef-from-currency') || {}).value;
+  const t = (document.getElementById('ef-to-currency')   || {}).value;
+  _applyCut(f, t, 'ef-from-cut-val', 'ef-from-cut-type', true);
+  efCalc();
+}
+function aeAutoCut() {
+  const f = (document.getElementById('ae-from-currency') || {}).value;
+  const t = (document.getElementById('ae-to-currency')   || {}).value;
+  _applyCut(f, t, 'ae-cut-rate', 'ae-cut-dir', false);
+  aeCalc();
+}
+function rvAutoCut() {
+  const f = (document.getElementById('rv-from-currency') || {}).value;
+  const t = (document.getElementById('rv-to-currency')   || {}).value;
+  _applyCut(f, t, 'rv-cut-val', 'rv-cut-dir', false);
+  rvCalc();
+}
+function pvAutoCut() {
+  const f = (document.getElementById('pv-from-currency') || {}).value;
+  const t = (document.getElementById('pv-to-currency')   || {}).value;
+  _applyCut(f, t, 'pv-cut-val', 'pv-cut-dir', false);
+  pvCalc();
 }
 
 // ══ حركة تسوية ══
@@ -7194,6 +7276,7 @@ async function ctpLoad() {
     const d = await r.json();
     if (!d.success) throw new Error(d.message || 'خطأ');
     _ctpData = d.grouped || { screen:[], balance:[], movement:[] };
+    _CUT_PRICES = _ctpData;   // مزامنة الكاش المستخدم لربط القص بالقيود
     ctpRenderAll();
   } catch(e) {
     document.querySelectorAll('.ctp-card-body').forEach(el => {

@@ -1253,7 +1253,7 @@
 
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0">العملة</label>
-                <select id="ef-from-currency" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                <select id="ef-from-currency" onchange="efAutoCut()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <option value="USD">دولار</option>
                   <option value="EUR">يورو</option>
                   <option value="TRY">ليرة تركية</option>
@@ -1288,7 +1288,7 @@
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0">القص</label>
                 <div style="display:flex;gap:5px;flex:1;min-width:0">
-                  <input type="number" id="ef-from-cut-val" value="1" oninput="efCalc()" style="width:56px;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff;flex-shrink:0">
+                  <input type="number" id="ef-from-cut-val" value="1" oninput="this.dataset.autocut='';efCalc()" style="width:56px;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff;flex-shrink:0">
                   <select id="ef-from-cut-type" onchange="efCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="multiply">ضرب</option>
                     <option value="divide">قسمة</option>
@@ -1315,7 +1315,7 @@
 
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:84px;text-align:right;flex-shrink:0">العملة</label>
-                <select id="ef-to-currency" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                <select id="ef-to-currency" onchange="efAutoCut()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <option value="USD">دولار</option>
                   <option value="EUR">يورو</option>
                   <option value="TRY">ليرة تركية</option>
@@ -1447,7 +1447,7 @@
 
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:88px;text-align:right;flex-shrink:0">العملة</label>
-                <select id="ae-from-currency" onchange="aeCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                <select id="ae-from-currency" onchange="aeAutoCut()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <option value="USD">دولار</option>
                   <option value="EUR">يورو</option>
                   <option value="TRY">ليرة تركية</option>
@@ -1466,7 +1466,7 @@
                     <option value="mul">ضرب</option>
                     <option value="div">قسمة</option>
                   </select>
-                  <input type="number" id="ae-cut-rate" value="1" step="0.000001" oninput="aeCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <input type="number" id="ae-cut-rate" value="1" step="0.000001" oninput="this.dataset.autocut='';aeCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #BBF7D0;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                 </div>
               </div>
 
@@ -1522,7 +1522,7 @@
 
               <div style="display:flex;align-items:center;gap:7px">
                 <label style="font-size:11px;font-weight:700;color:#555;white-space:nowrap;width:88px;text-align:right;flex-shrink:0">العملة</label>
-                <select id="ae-to-currency" onchange="aeCalc()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                <select id="ae-to-currency" onchange="aeAutoCut()" style="flex:1;min-width:0;padding:5px 8px;border:1px solid #FECACA;border-radius:6px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <option value="USD">دولار</option>
                   <option value="EUR">يورو</option>
                   <option value="TRY">ليرة تركية</option>
@@ -1947,7 +1947,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:11px;font-weight:700;color:#166534;width:90px;text-align:right;flex-shrink:0">العملة :</label>
-                  <select id="rv-from-currency" onchange="rvCalc()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <select id="rv-from-currency" onchange="rvAutoCut()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="USD">دولار</option>
                     <option value="EUR">يورو</option>
                     <option value="TRY">ليرة تركية</option>
@@ -1970,7 +1970,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:14px;font-weight:700;color:#166534;width:90px;text-align:right;flex-shrink:0">القص :</label>
-                  <input type="number" id="rv-cut-val" step="0.0001" value="1" oninput="rvCalc()"
+                  <input type="number" id="rv-cut-val" step="0.0001" value="1" oninput="this.dataset.autocut='';rvCalc()"
                     style="width:75px;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <select id="rv-cut-dir" onchange="rvCalc()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="mul">ضرب</option>
@@ -2010,7 +2010,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:11px;font-weight:700;color:#991B1B;width:90px;text-align:right;flex-shrink:0">العملة :</label>
-                  <select id="rv-to-currency" onchange="rvCalc()" style="flex:1;padding:5px 8px;border:1px solid #fecaca;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <select id="rv-to-currency" onchange="rvAutoCut()" style="flex:1;padding:5px 8px;border:1px solid #fecaca;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="USD">دولار</option>
                     <option value="EUR">يورو</option>
                     <option value="TRY">ليرة تركية</option>
@@ -2161,7 +2161,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:11px;font-weight:700;color:#166534;width:90px;text-align:right;flex-shrink:0">العملة :</label>
-                  <select id="pv-from-currency" onchange="pvCalc()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <select id="pv-from-currency" onchange="pvAutoCut()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="USD">دولار</option>
                     <option value="EUR">يورو</option>
                     <option value="TRY">ليرة تركية</option>
@@ -2184,7 +2184,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:14px;font-weight:700;color:#166534;width:90px;text-align:right;flex-shrink:0">القص :</label>
-                  <input type="number" id="pv-cut-val" step="0.0001" value="1" oninput="pvCalc()"
+                  <input type="number" id="pv-cut-val" step="0.0001" value="1" oninput="this.dataset.autocut='';pvCalc()"
                     style="width:75px;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                   <select id="pv-cut-dir" onchange="pvCalc()" style="flex:1;padding:5px 8px;border:1px solid #bbf7d0;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="mul">ضرب</option>
@@ -2224,7 +2224,7 @@
 
                 <div style="display:flex;align-items:center;gap:7px">
                   <label style="font-size:11px;font-weight:700;color:#5B21B6;width:90px;text-align:right;flex-shrink:0">العملة :</label>
-                  <select id="pv-to-currency" onchange="pvCalc()" style="flex:1;padding:5px 8px;border:1px solid #ddd6fe;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
+                  <select id="pv-to-currency" onchange="pvAutoCut()" style="flex:1;padding:5px 8px;border:1px solid #ddd6fe;border-radius:7px;font-size:11.5px;font-family:inherit;outline:none;background:#fff">
                     <option value="USD">دولار</option>
                     <option value="EUR">يورو</option>
                     <option value="TRY">ليرة تركية</option>
@@ -6037,5 +6037,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
-<script src="{% static 'js/accounting_launcher.js' %}?v=18"></script>
+<script src="{% static 'js/accounting_launcher.js' %}?v=19"></script>
 {% endblock %}
