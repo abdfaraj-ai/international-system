@@ -2246,10 +2246,12 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
         position: sticky; top: 0; z-index: 2;
         background: #162455 !important; color: #fff !important;
         font-size: 12px; font-weight: 800; white-space: nowrap; padding: 10px 12px;
+        text-align: center !important;
       }
       #as-table tbody td {
         padding: 9px 12px !important; font-size: 12.5px; vertical-align: middle;
         border-bottom: 1px solid rgba(255,255,255,.12) !important;
+        text-align: center !important;
       }
       /* تمييز الصفوف بالتناوب لسهولة التتبّع */
       #as-table tbody tr:nth-child(even) td { background: #1b45b0 !important; }
@@ -2262,11 +2264,11 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
         display: inline-block; background: rgba(255,255,255,.18); border-radius: 5px;
         padding: 2px 9px; font-size: 11px; font-weight: 700; white-space: nowrap;
       }
-      #as-table .as-from, #as-table .as-to { font-weight: 700; text-align: right; }
+      #as-table .as-from, #as-table .as-to { font-weight: 700; text-align: center; }
       /* مدين = مالٌ داخلٌ للمركز (أخضر فاتح) · دائن = مالٌ خارجٌ (أحمر فاتح) */
-      #as-table .as-debit  { color: #86efac !important; font-weight: 800; font-variant-numeric: tabular-nums; text-align: left; direction: ltr; }
-      #as-table .as-credit { color: #fca5a5 !important; font-weight: 800; font-variant-numeric: tabular-nums; text-align: left; direction: ltr; }
-      #as-table .as-bal    { font-weight: 800; font-variant-numeric: tabular-nums; text-align: left; direction: ltr; white-space: nowrap; }
+      #as-table .as-debit  { color: #86efac !important; font-weight: 800; font-variant-numeric: tabular-nums; text-align: center; direction: ltr; }
+      #as-table .as-credit { color: #fca5a5 !important; font-weight: 800; font-variant-numeric: tabular-nums; text-align: center; direction: ltr; }
+      #as-table .as-bal    { font-weight: 800; font-variant-numeric: tabular-nums; text-align: center; direction: ltr; white-space: nowrap; }
       #as-table .as-bal-tag {
         display: inline-block; font-size: 9.5px; font-weight: 700;
         background: rgba(255,255,255,.22); border-radius: 4px; padding: 1px 5px; margin-inline-start: 5px;
