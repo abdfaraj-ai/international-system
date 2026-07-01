@@ -5430,24 +5430,27 @@ function asRenderTable() {
   }
 
   let totalDebit = 0, totalCredit = 0, balance = 0;
+  let seq = 0;
 
-  tbody.innerHTML = _asData.map((row, i) => {
+  tbody.innerHTML = _asData.map((row) => {
     const debit  = parseFloat(row.debit  || row.us   || 0);
     const credit = parseFloat(row.credit || row.them || 0);
     balance += debit - credit;
     totalDebit  += debit;
     totalCredit += credit;
-    const balColor = balance >= 0 ? '#16A34A' : '#DC2626';
-    return `<tr>
-      <td style="font-size:11px">${i+1}</td>
-      <td>${row.date||row.created_at||'—'}</td>
-      <td><span style="display:inline-block;background:rgba(255,255,255,.18);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700">${row.type||row.entry_type||'—'}</span></td>
-      <td style="font-weight:700">${row.fromCenter||'—'}</td>
-      <td style="font-weight:700">${row.toCenter||'—'}</td>
-      <td style="font-weight:700;font-variant-numeric:tabular-nums">${debit?fmt(debit):'—'}</td>
-      <td style="font-weight:700;font-variant-numeric:tabular-nums">${credit?fmt(credit):'—'}</td>
-      <td style="font-weight:800;font-variant-numeric:tabular-nums">${fmt(Math.abs(balance))} ${balance<0?'(د)':''}</td>
-      <td style="font-size:11px">${row.remarks||row.description||row.memo||'—'}</td>
+    const isOpening = row.id === 0 || row.type === 'رصيد افتتاحي';
+    if (!isOpening) seq++;
+    const balTag = balance < 0 ? 'مدين' : 'دائن';
+    return `<tr class="${isOpening ? 'as-opening' : ''}">
+      <td class="as-idx">${isOpening ? '—' : seq}</td>
+      <td class="as-date">${row.date||row.created_at||'—'}</td>
+      <td class="as-type"><span class="as-type-badge">${row.type||row.entry_type||'—'}</span></td>
+      <td class="as-from">${row.fromCenter||'—'}</td>
+      <td class="as-to">${row.toCenter||'—'}</td>
+      <td class="as-debit">${debit?fmt(debit):'—'}</td>
+      <td class="as-credit">${credit?fmt(credit):'—'}</td>
+      <td class="as-bal">${fmt(Math.abs(balance))}<span class="as-bal-tag">${balTag}</span></td>
+      <td class="as-remarks">${row.remarks||row.description||row.memo||'—'}</td>
     </tr>`;
   }).join('');
 
