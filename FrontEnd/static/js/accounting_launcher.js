@@ -1411,6 +1411,7 @@ const _CURRENCY_SELECT_IDS = [
   'pv-from-currency','pv-to-currency',
   'ot-send-currency','ot-recv-currency',
   'sp-b-currency',   // العملة الأساسية في نموذج المركز
+  'as-currency',     // عملة كشف الحساب — عملات مُدارة فقط
 ];
 
 // أسماء عربية افتراضية للرموز الشائعة (للعرض)
@@ -5300,8 +5301,8 @@ async function asInit() {
   if (df && !df.value) df.value = fromStr;
   if (dt && !dt.value) dt.value = toStr;
 
-  // تحميل قائمة العملاء والمراكز
-  await Promise.all([asLoadClients(), asLoadCenters()]);
+  // تحميل قائمة العملاء والمراكز + تحديث عملة الكشف من العملات المُدارة فقط
+  await Promise.all([asLoadClients(), asLoadCenters(), loadCurrencyOptions()]);
 }
 
 async function asLoadClients() {
