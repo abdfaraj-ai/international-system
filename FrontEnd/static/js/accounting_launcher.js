@@ -5381,10 +5381,40 @@ async function asLoadStatement() {
     const r = await fetch(`/api/account-statement/?${params}`, {credentials:'include'});
     const d = await r.json();
     _asData = Array.isArray(d) ? d : (d.records || d.results || d.entries || d.data || []);
+    _asValuation = (d && d.valuation) ? d.valuation : null;
     asRenderTable();
+    asRenderValuation();
   } catch {
     if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
+}
+
+let _asValuation = null;
+
+// بطاقة «الرصيد المقوّم بالدولار» بجانب كشف الحساب
+function asRenderValuation() {
+  const box = document.getElementById('as-valuation');
+  if (!box) return;
+  const v = _asValuation;
+  if (!v || !Array.isArray(v.rows) || !v.rows.length) {
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+  const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const rows = v.rows.map(r => `
+    <div class="as-val-row">
+      <span class="as-val-cur">${r.currency}</span>
+      <span class="as-val-bal">${fmt(r.balance)}</span>
+      <span class="as-val-arrow">←</span>
+      <span class="as-val-usd">$${fmt(r.usd)}</span>
+    </div>`).join('');
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="as-val-title">الرصيد المقوّم بالدولار</div>
+    <div class="as-val-total">$${fmt(v.totalUsd)}</div>
+    <div class="as-val-list">${rows}</div>
+    <div class="as-val-note">التقييم عبر «سعر التقييم» لكل عملة</div>`;
 }
 
 function asRenderTable() {

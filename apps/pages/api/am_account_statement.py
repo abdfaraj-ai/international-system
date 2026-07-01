@@ -8,8 +8,9 @@ GET /api/account-statement/?center=<id|name>&currency=<key>&date_from=&date_to=&
 """
 from decimal import Decimal
 from django.http import JsonResponse
+from django.db.models import Sum
 
-from ..models import CostCenter, CenterLedger
+from ..models import CostCenter, CenterLedger, ManagedCurrency
 from core.permissions import require_roles as _require_roles
 
 
@@ -94,6 +95,33 @@ def api_account_statement(request):
             'remarks':     r.ref_number or '',
         })
 
+    # ── الرصيد المقوّم بالدولار: صافي كل عملات المركز مقوَّمة عبر «سعر التقييم» ──
+    #   الاصطلاح: سعر التقييم = عدد وحدات العملة مقابل دولار واحد ⇒ قيمة الدولار = الرصيد ÷ السعر
+    rates = {(c.symbol or '').upper(): (c.eval_rate or Decimal('1'))
+             for c in ManagedCurrency.objects.all()}
+    val_qs = CenterLedger.objects.filter(center=center_name)
+    if date_to:
+        val_qs = val_qs.filter(created_at__date__lte=date_to)
+
+    val_rows  = []
+    total_usd = Decimal('0')
+    for row in val_qs.values('currency').annotate(d=Sum('debit'), c=Sum('credit')).order_by('currency'):
+        bal = (row['d'] or Decimal('0')) - (row['c'] or Decimal('0'))
+        if bal == 0:
+            continue
+        cur  = row['currency']
+        rate = rates.get((cur or '').upper()) or Decimal('1')
+        if rate <= 0:
+            rate = Decimal('1')
+        usd = bal / rate
+        total_usd += usd
+        val_rows.append({
+            'currency': cur,
+            'balance':  float(bal),
+            'rate':     float(rate),
+            'usd':      float(usd),
+        })
+
     return JsonResponse({
         'success':      True,
         'center':       center_name,
@@ -104,4 +132,9 @@ def api_account_statement(request):
         'balance':      float(running),
         'count':        len(records),
         'records':      records,
+        'valuation':    {
+            'base':     'USD',
+            'totalUsd': float(total_usd),
+            'rows':     val_rows,
+        },
     })
