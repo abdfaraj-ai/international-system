@@ -2386,3 +2386,7 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
         .as-valuation-card { flex: 1 1 auto; width: 100%; position: static; }
       }
 
+      /* توسيط نصوص وأرقام جدول «القيود» */
+      #jrn-table thead th,
+      #jrn-table tbody td { text-align: center !important; vertical-align: middle; }
+
