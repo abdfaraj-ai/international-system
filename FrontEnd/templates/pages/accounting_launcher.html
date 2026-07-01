@@ -12,7 +12,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260511e">
 <link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
-<link rel="stylesheet" href="{% static 'css/accounting_launcher.css' %}?v=15">
+<link rel="stylesheet" href="{% static 'css/accounting_launcher.css' %}?v=16">
 <style>
   /* ── تكبير معتدل لنموذجَي القيد (من/إلى + المتقدّم) ── */
   #sp-entry-from-to > div > div[style*="max-width"],
@@ -3391,14 +3391,8 @@
         <div class="as-form-row as-btns-row">
           <label class="as-lbl"></label>
           <div class="as-field-wrap as-action-btns">
-            <button class="as-btn-main" onclick="asLoadStatement()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              كشف حساب
-            </button>
-            <button class="as-btn-print" onclick="window.print()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              طباعة
-            </button>
+            <button class="as-btn-main" onclick="asLoadStatement()">كشف حساب</button>
+            <button class="as-btn-print" onclick="window.print()">طباعة</button>
           </div>
         </div>
 
