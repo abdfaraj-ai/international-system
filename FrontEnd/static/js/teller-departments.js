@@ -42,12 +42,12 @@ const countryRecvMethods={
 function updateClock(){const n=new Date();const c=document.getElementById('clock');const d=document.getElementById('date');if(c)c.textContent=n.toLocaleTimeString('ar-EG-u-nu-latn',{hour12:false});if(d)d.textContent=n.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
 setInterval(updateClock,1000);updateClock();
 
-var deptNames={main:'القسم الرئيسي',exchange:'قسم الصرافة',international:'الحوالات الدولية',electronic:'المعاملات الإلكترونية',cashdesk:'السحب والإيداع',acctmgr:'إدارة الحسابات'};
-var deptIcons={main:'🏠',exchange:'💱',international:'🌍',electronic:'📲',cashdesk:'🏦',acctmgr:'📒'};
+var deptNames={main:'القسم الرئيسي',exchange:'قسم الصرافة',international:'الحوالات الدولية',electronic:'المعاملات الإلكترونية',cashdesk:'السحب والإيداع'};
+var deptIcons={main:'🏠',exchange:'💱',international:'🌍',electronic:'📲',cashdesk:'🏦'};
 
 function switchDept(dept){
     // التحقق من الصلاحية قبل الانتقال
-    const _permKey={exchange:'exchange',international:'international',electronic:'electronic',acctmgr:'accounts'};
+    const _permKey={exchange:'exchange',international:'international',electronic:'electronic'};
     const _pk=_permKey[dept];
     if(_pk){
         const _cachedPerms=(window._intlCache&&window._intlCache.teller_perms)||{};
@@ -55,17 +55,7 @@ function switchDept(dept){
         if(_perms&&_perms[_pk]===false) return; // الانتقال محظور
     }
 
-    // إزالة لون الخلفية الخاص عند مغادرة قسم إدارة الحسابات
     document.querySelector('.main-area').style.background = '';
-
-    // قسم إدارة الحسابات يفتح الواجهة مباشرة
-    if(dept==='acctmgr'){
-        document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-        document.querySelector('.nav-tab[data-dept="acctmgr"]').classList.add('active');
-        document.querySelector('.main-area').style.background = '#EFF6FF';
-        if(typeof apOpen === 'function') apOpen();
-        return;
-    }
     document.querySelectorAll('.dept-section').forEach(s=>s.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
     document.getElementById('dept-'+dept).classList.add('active');
@@ -307,7 +297,6 @@ function _applyPermsData(perms){
             exchange:     '.nav-tab[data-dept="exchange"]',
             international:'.nav-tab[data-dept="international"]',
             electronic:   '.nav-tab[data-dept="electronic"]',
-            accounts:     '.nav-tab[data-dept="acctmgr"]',
         };
 
         // إخفاء/إظهار التبويبات
@@ -321,7 +310,7 @@ function _applyPermsData(perms){
         if(activeDeptEl){
             const activeDept=activeDeptEl.id.replace('dept-','');
             // رسم الخريطة: مفتاح الصلاحية → id القسم
-            const deptKey={exchange:'exchange',international:'international',electronic:'electronic',acctmgr:'accounts'};
+            const deptKey={exchange:'exchange',international:'international',electronic:'electronic'};
             const keyForActive=deptKey[activeDept];
             if(keyForActive && perms[keyForActive]===false){
                 switchDept('main');
