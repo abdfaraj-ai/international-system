@@ -2224,10 +2224,10 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
         display: grid; grid-template-columns: auto 1fr auto auto; gap: 6px;
         align-items: center; font-size: 12px;
       }
-      .as-val-cur { font-weight: 800; background: rgba(255,255,255,.15); border-radius: 5px; padding: 1px 7px; }
-      .as-val-bal { text-align: left; opacity: .85; font-variant-numeric: tabular-nums; }
-      .as-val-arrow { opacity: .55; }
-      .as-val-usd { font-weight: 800; font-variant-numeric: tabular-nums; }
+      .as-val-cur { font-weight: 800; color: #fff; background: rgba(255,255,255,.15); border-radius: 5px; padding: 1px 7px; }
+      .as-val-bal { text-align: left; color: #fff; opacity: 1; font-variant-numeric: tabular-nums; }
+      .as-val-arrow { color: #fff; opacity: .75; }
+      .as-val-usd { font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
       .as-val-note { margin-top: 10px; font-size: 10px; opacity: .6; }
       @media (max-width: 900px) {
         .as-result-flex { flex-direction: column; }
