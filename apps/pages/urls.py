@@ -41,6 +41,7 @@ from .api import am_trial_balance      as am_tb_api
 from .api import am_center_profits     as am_cp_api
 from .api import am_cost_center        as am_cc_api
 from .api import am_account_statement   as am_stmt_api
+from .api import am_all_entries         as am_all_entries_api
 from .api import am_customers           as am_cust_api
 from .api import am_cut_prices         as am_ctp_api
 from .api import am_cut_distribution   as am_cdist_api
@@ -513,6 +514,7 @@ urlpatterns = [
     path('api/cost-centers/<int:center_id>/force-delete/',  am_cc_api.api_cost_center_force_delete,      name='api-cost-center-force-delete'),
     path('api/am/cost-center/',                             am_cc_api.api_cost_centers,                  name='api-am-cost-center'),
     path('api/account-statement/',                          am_stmt_api.api_account_statement,           name='api-account-statement'),
+    path('api/all-entries/',                                am_all_entries_api.api_all_entries,          name='api-all-entries'),
     path('api/am/center-balances/',                         am_cl_api.api_center_balances,               name='api-center-balances'),
     path('api/am/center-balances/<str:center_name>/',       am_cl_api.api_center_balance_detail,         name='api-center-balance-detail'),
     path('api/am/center-ledger/<str:center_name>/',         am_cl_api.api_center_ledger,                 name='api-center-ledger'),

@@ -6782,11 +6782,12 @@ const JRN_TYPES = {
 };
 
 function jrnInit() {
-  const today = new Date().toISOString().slice(0,10);
-  const from  = document.getElementById('jrn-date-from');
-  const to    = document.getElementById('jrn-date-to');
-  if (from && !from.value) from.value = today;
-  if (to   && !to.value)   to.value   = today;
+  // بلا تقييد بالتاريخ افتراضياً — نعرض جميع القيود عبر كل الشركات فوراً
+  const from = document.getElementById('jrn-date-from');
+  const to   = document.getElementById('jrn-date-to');
+  if (from) from.value = '';
+  if (to)   to.value   = '';
+  jrnSearch();
 }
 
 async function jrnSearch() {
