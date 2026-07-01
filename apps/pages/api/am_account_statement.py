@@ -10,7 +10,7 @@ from decimal import Decimal
 from django.http import JsonResponse
 from django.db.models import Sum
 
-from ..models import CostCenter, CenterLedger, ManagedCurrency
+from ..models import CostCenter, CenterLedger, ManagedCurrency, EntryFromTo
 from core.permissions import require_roles as _require_roles
 
 
@@ -80,15 +80,32 @@ def api_account_statement(request):
             'remarks':     '',
         })
 
-    for r in qs:
+    # ── إثراء البيان باسمَي الشركتين (الصادر/الوارد) من عملية القيد المصدر ──
+    ledger_rows = list(qs)
+    entry_ids   = [r.source_id for r in ledger_rows if r.source == 'entry' and r.source_id]
+    entry_map   = ({e.id: e for e in EntryFromTo.objects.filter(id__in=entry_ids)}
+                   if entry_ids else {})
+
+    for r in ledger_rows:
         running      += r.debit - r.credit
         total_debit  += r.debit
         total_credit += r.credit
+
+        from_center = to_center = ''
+        desc = r.note or r.ref_number or '—'
+        e = entry_map.get(r.source_id) if r.source == 'entry' else None
+        if e:
+            from_center = e.from_center   # الصادر (يخرج منه)
+            to_center   = e.to_center     # الوارد (يدخل إليه)
+            desc = f'صادر: {from_center} — وارد: {to_center}'
+
         records.append({
             'id':          r.id,
             'date':        r.created_at.strftime('%Y-%m-%d %H:%M'),
             'type':        r.get_source_display(),
-            'description': r.note or r.ref_number or '—',
+            'description': desc,
+            'fromCenter':  from_center,   # الصادر
+            'toCenter':    to_center,     # الوارد
             'debit':       float(r.debit),
             'credit':      float(r.credit),
             'balance':     float(running),

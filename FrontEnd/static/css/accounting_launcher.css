@@ -2206,6 +2206,9 @@ table.sp-table tbody td.sp-num { font-variant-numeric:tabular-nums; font-weight:
          بطاقة «الرصيد المقوّم بالدولار» بجانب كشف الحساب
          ════════════════════════════════════════════════════════════════ */
       .as-result-flex { display: flex; gap: 14px; align-items: flex-start; }
+      /* النموذج + بطاقة الرصيد المقوّم جنباً إلى جنب أعلى الشاشة */
+      .as-top-flex { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+      .as-top-flex .as-form-wrap { flex: 1 1 340px; min-width: 300px; margin: 0; }
       .as-valuation-card {
         flex: 0 0 250px; background: #0F2F6B; color: #fff;
         border-radius: 12px; padding: 16px 16px 14px;

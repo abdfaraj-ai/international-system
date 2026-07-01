@@ -5424,7 +5424,7 @@ function asRenderTable() {
   const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   if (!_asData.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">لا توجد بيانات للفترة المحددة</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">لا توجد بيانات للفترة المحددة</td></tr>';
     document.getElementById('as-totals').innerHTML = '';
     return;
   }
@@ -5439,14 +5439,15 @@ function asRenderTable() {
     totalCredit += credit;
     const balColor = balance >= 0 ? '#16A34A' : '#DC2626';
     return `<tr>
-      <td style="color:#94A3B8;font-size:11px">${i+1}</td>
-      <td style="color:#475569">${row.date||row.created_at||'—'}</td>
-      <td><span style="display:inline-block;background:#F1F5F9;color:#475569;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700">${row.type||row.entry_type||'—'}</span></td>
-      <td style="color:#1E293B;font-weight:600">${row.description||row.note||row.notes||'—'}</td>
-      <td style="color:#16A34A;font-weight:700;font-variant-numeric:tabular-nums">${debit?fmt(debit):'—'}</td>
-      <td style="color:#DC2626;font-weight:700;font-variant-numeric:tabular-nums">${credit?fmt(credit):'—'}</td>
-      <td style="color:${balColor};font-weight:800;font-variant-numeric:tabular-nums">${fmt(Math.abs(balance))} ${balance<0?'(د)':''}</td>
-      <td style="color:#64748B;font-size:11px">${row.remarks||row.memo||'—'}</td>
+      <td style="font-size:11px">${i+1}</td>
+      <td>${row.date||row.created_at||'—'}</td>
+      <td><span style="display:inline-block;background:rgba(255,255,255,.18);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700">${row.type||row.entry_type||'—'}</span></td>
+      <td style="font-weight:700">${row.fromCenter||'—'}</td>
+      <td style="font-weight:700">${row.toCenter||'—'}</td>
+      <td style="font-weight:700;font-variant-numeric:tabular-nums">${debit?fmt(debit):'—'}</td>
+      <td style="font-weight:700;font-variant-numeric:tabular-nums">${credit?fmt(credit):'—'}</td>
+      <td style="font-weight:800;font-variant-numeric:tabular-nums">${fmt(Math.abs(balance))} ${balance<0?'(د)':''}</td>
+      <td style="font-size:11px">${row.remarks||row.description||row.memo||'—'}</td>
     </tr>`;
   }).join('');
 
@@ -5469,14 +5470,14 @@ function asCopyTable() {
 
 function asExportCSV() {
   if (!_asData.length) { alToast('لا توجد بيانات','warning','⚠️'); return; }
-  const headers = ['#','التاريخ','النوع','البيان','مدين','دائن','الرصيد','ملاحظات'];
+  const headers = ['#','التاريخ','النوع','الصادر','الوارد','مدين','دائن','الرصيد','ملاحظات'];
   let balance = 0;
   const csv = [headers.join(','), ..._asData.map((row,i) => {
     const d = parseFloat(row.debit||row.us||0);
     const c = parseFloat(row.credit||row.them||0);
     balance += d - c;
-    return [i+1, row.date||'', row.type||'', row.description||row.note||'',
-      d.toFixed(2), c.toFixed(2), balance.toFixed(2), row.remarks||''].map(v=>`"${v}"`).join(',');
+    return [i+1, row.date||'', row.type||'', row.fromCenter||'', row.toCenter||'',
+      d.toFixed(2), c.toFixed(2), balance.toFixed(2), row.remarks||row.description||''].map(v=>`"${v}"`).join(',');
   })].join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('﻿' + csv);

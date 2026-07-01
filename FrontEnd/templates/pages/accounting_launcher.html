@@ -12,7 +12,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20260511e">
 <link rel="stylesheet" href="{% static 'css/fx-ticker.css' %}?v=7">
-<link rel="stylesheet" href="{% static 'css/accounting_launcher.css' %}?v=13">
+<link rel="stylesheet" href="{% static 'css/accounting_launcher.css' %}?v=14">
 <style>
   /* ── تكبير معتدل لنموذجَي القيد (من/إلى + المتقدّم) ── */
   #sp-entry-from-to > div > div[style*="max-width"],
@@ -3311,6 +3311,9 @@
     <!-- ═══════════════════════════════ كشف حساب ═══════════════════════════════ -->
     <div id="sp-account-statement" class="sp-section" style="display:none">
 
+      <!-- النموذج + بطاقة الرصيد المقوّم جنباً إلى جنب -->
+      <div class="as-top-flex">
+
       <!-- نموذج البحث -->
       <div class="as-form-wrap">
 
@@ -3401,6 +3404,11 @@
 
       </div><!-- /as-form-wrap -->
 
+        <!-- الرصيد المقوّم بالدولار (بجانب أداة الكشف) -->
+        <div id="as-valuation" class="as-valuation-card" style="display:none"></div>
+
+      </div><!-- /as-top-flex -->
+
       <!-- نتائج الكشف -->
       <div id="as-result" style="display:none">
         <div class="sp-table-bar">
@@ -3408,28 +3416,25 @@
           <button class="sp-tbar-btn" onclick="asCopyTable()">نسخ إلى الحافظة</button>
           <button class="sp-tbar-btn" onclick="asExportCSV()">CSV</button>
         </div>
-        <div class="as-result-flex">
-          <div class="sp-table-wrap" style="flex:1;min-width:0">
-            <table class="sp-table" id="as-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>التاريخ</th>
-                  <th>النوع</th>
-                  <th>البيان</th>
-                  <th>مدين</th>
-                  <th>دائن</th>
-                  <th>الرصيد</th>
-                  <th>ملاحظات</th>
-                </tr>
-              </thead>
-              <tbody id="as-tbody">
-                <tr><td colspan="8" class="sp-empty">أدخل بيانات البحث واضغط "كشف حساب"</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- الرصيد المقوّم بالدولار (بجانب الكشف) -->
-          <div id="as-valuation" class="as-valuation-card" style="display:none"></div>
+        <div class="sp-table-wrap">
+          <table class="sp-table" id="as-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>التاريخ</th>
+                <th>النوع</th>
+                <th>الصادر</th>
+                <th>الوارد</th>
+                <th>مدين</th>
+                <th>دائن</th>
+                <th>الرصيد</th>
+                <th>ملاحظات</th>
+              </tr>
+            </thead>
+            <tbody id="as-tbody">
+              <tr><td colspan="9" class="sp-empty">أدخل بيانات البحث واضغط "كشف حساب"</td></tr>
+            </tbody>
+          </table>
         </div>
         <!-- إجمالي -->
         <div class="as-totals-bar" id="as-totals"></div>
@@ -6041,5 +6046,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/fx-ticker.js' %}?v=16"></script>
-<script src="{% static 'js/accounting_launcher.js' %}?v=20"></script>
+<script src="{% static 'js/accounting_launcher.js' %}?v=21"></script>
 {% endblock %}
