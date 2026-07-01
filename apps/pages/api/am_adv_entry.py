@@ -53,7 +53,7 @@ def _to_amount(from_amt: Decimal, rate: Decimal, direction: str) -> Decimal:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_adv_entry(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -217,7 +217,7 @@ def api_am_adv_entry(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_adv_entry_detail(request, entry_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     try:

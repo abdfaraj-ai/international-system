@@ -42,7 +42,7 @@ def _parse(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_cut(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -166,7 +166,7 @@ def api_am_cut(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_cut_detail(request, cut_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     if request.method != 'GET':

@@ -9,7 +9,7 @@ from core.permissions import require_roles as _require_roles
 
 
 def api_am_audit_log(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

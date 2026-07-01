@@ -16,7 +16,7 @@ from core.permissions import require_roles as _require_roles
 @require_GET
 def api_center_balances(request):
     """GET /api/am/center-balances/ — أرصدة كل المراكز مجمّعة حسب العملة"""
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -28,7 +28,7 @@ def api_center_balances(request):
 @require_GET
 def api_center_balance_detail(request, center_name):
     """GET /api/am/center-balances/<name>/ — رصيد مركز واحد لكل عملاته"""
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -39,7 +39,7 @@ def api_center_balance_detail(request, center_name):
 @require_GET
 def api_center_ledger(request, center_name):
     """GET /api/am/center-ledger/<name>/ — كشف حساب: كل حركات المركز"""
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 

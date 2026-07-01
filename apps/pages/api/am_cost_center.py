@@ -28,7 +28,7 @@ def _serialize(c):
 
 
 def api_cost_centers(request):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -61,7 +61,7 @@ def api_cost_centers(request):
 
 
 def api_cost_center_detail(request, center_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -101,7 +101,7 @@ def api_cost_center_detail(request, center_id):
 
 
 def api_cost_center_restore(request, center_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     if request.method != 'POST':
@@ -116,7 +116,7 @@ def api_cost_center_restore(request, center_id):
 
 
 def api_cost_center_force_delete(request, center_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     if request.method != 'DELETE':

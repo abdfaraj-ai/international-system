@@ -30,7 +30,7 @@ def _parse(request):
 
 
 def api_cut_distribution(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -96,7 +96,7 @@ def api_cut_distribution(request):
 
 
 def api_cut_distribution_detail(request, dist_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

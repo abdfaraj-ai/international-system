@@ -86,7 +86,7 @@ def _journal_dict(j):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_accounts(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -162,7 +162,7 @@ def api_am_accounts(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_account_detail(request, account_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -208,7 +208,7 @@ def api_am_account_detail(request, account_id):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_journal(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -350,7 +350,7 @@ def api_am_journal(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_journal_detail(request, journal_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     if request.method != 'GET':

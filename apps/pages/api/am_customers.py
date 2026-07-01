@@ -27,7 +27,7 @@ def _serialize(c):
 
 
 def api_customers(request):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -60,7 +60,7 @@ def api_customers(request):
 
 
 def api_customer_detail(request, customer_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -100,7 +100,7 @@ def api_customer_detail(request, customer_id):
 
 
 def api_customer_restore(request, customer_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     if request.method != 'POST':
@@ -115,7 +115,7 @@ def api_customer_restore(request, customer_id):
 
 
 def api_customer_force_delete(request, customer_id):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     if request.method != 'DELETE':

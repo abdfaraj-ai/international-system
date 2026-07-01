@@ -30,7 +30,7 @@ def _parse(request):
 
 
 def api_am_exchange(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 

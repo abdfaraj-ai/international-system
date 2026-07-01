@@ -88,7 +88,7 @@ def _calc_profit(from_amt: Decimal, to_amt: Decimal,
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_entry_from_to(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -223,7 +223,7 @@ def api_am_entry_from_to(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_entry_from_to_detail(request, entry_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 

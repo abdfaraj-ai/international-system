@@ -52,7 +52,7 @@ def _zero_row(center_id, name):
 
 
 def api_center_profits(request):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

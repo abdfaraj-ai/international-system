@@ -26,7 +26,7 @@ def _parse_date(s):
 
 def api_gl_accounts(request):
     """قائمة دليل الحسابات."""
-    err = require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     accts = Account.objects.filter(is_active=True).order_by('code')
@@ -54,7 +54,7 @@ def _txn_dict(t, with_lines=False):
 
 def api_gl_journal(request):
     """GET قائمة القيود · POST قيد يومي يدوي."""
-    err = require_roles(request, 'M01')
+    err = require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -95,7 +95,7 @@ def api_gl_journal(request):
 
 def api_gl_journal_detail(request, txn_id):
     """تفاصيل قيد + سطوره · حذف (عكس)."""
-    err = require_roles(request, 'M01')
+    err = require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     try:
@@ -112,7 +112,7 @@ def api_gl_journal_detail(request, txn_id):
 
 def api_gl_trial_balance(request):
     """ميزان مراجعة من الدفتر الموحّد — متوازن (مجموع المدين = مجموع الدائن لكل عملة)."""
-    err = require_roles(request, 'M01')
+    err = require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
     df = _parse_date(request.GET.get('date_from'))
@@ -135,7 +135,7 @@ def api_gl_trial_balance(request):
 
 def api_gl_account_statement(request, code):
     """كشف حساب — كل حركات حساب معيّن + رصيده."""
-    err = require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     acc = Account.objects.filter(code=str(code).strip()).first()

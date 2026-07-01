@@ -419,168 +419,168 @@ def agent_portal_view(request):
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def accounting_launcher_view(request):
     """مشغّل النظام المحاسبي — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def general_ledger_view(request):
     """القيد اليومي ودفتر الأستاذ العام الموحّد — M01 فقط"""
     return render(request, 'pages/general_ledger.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_safes_view(request):
     """جميع الصناديق — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_agents_view(request):
     """الوكلاء — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_transit_view(request):
     """العوابر — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_customers_view(request):
     """العملاء — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_cost_center_view(request):
     """المراكز — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_trash_view(request):
     """سلة المحذوفات — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_safe_movement_view(request):
     """حركة الصناديق — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_center_profits_view(request):
     """أرباح من المراكز — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_transfer_count_view(request):
     """عدد حوالات المراكز — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_entry_from_to_view(request):
     """قيد من الى — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_advanced_entry_view(request):
     """قيد متقدم — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_settlement_move_view(request):
     """حركة تسوية — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_opening_entry_view(request):
     """قيد افتتاحي — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_receipt_voucher_view(request):
     """سند قبض — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_payment_voucher_view(request):
     """سند دفع — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_currency_exchange_view(request):
     """تبديل عملة — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_outgoing_transfer_view(request):
     """حركة صادرة — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_new_credit_view(request):
     """اعتماد جديد — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_ops_monitor_view(request):
     """مراقبة العمليات — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_entry_audit_view(request):
     """تدقيق القيود — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_trial_balance_view(request):
     """ميزان المراجعة — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')
 
 
 @ensure_csrf_cookie
-@_role_required('M01')
+@_role_required('M01', 'M02', 'M03', 'T01')
 def am_profit_per_safe_view(request):
     """أرباح من كل صندوق — M01 فقط"""
     return render(request, 'pages/accounting_launcher.html')

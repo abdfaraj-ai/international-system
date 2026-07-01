@@ -60,7 +60,7 @@ def _calc_profit(from_amt, from_fee, to_amt, to_fee, from_cur, to_cur, cut_rate,
 
 # ══════════════════════════════════════════════════════════════════════════════
 def api_am_payment_voucher(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -182,7 +182,7 @@ def api_am_payment_voucher(request):
 
 # ══════════════════════════════════════════════════════════════════════════════
 def api_am_payment_voucher_detail(request, voucher_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

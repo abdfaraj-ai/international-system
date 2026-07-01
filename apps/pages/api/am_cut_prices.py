@@ -32,7 +32,7 @@ def _parse(request):
 
 
 def api_cut_prices(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -100,7 +100,7 @@ def api_cut_prices(request):
 
 
 def api_cut_price_detail(request, price_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

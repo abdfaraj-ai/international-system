@@ -39,7 +39,7 @@ def _zero():
 
 
 def api_am_trial_balance(request):
-    err = _require_roles(request, 'M01')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

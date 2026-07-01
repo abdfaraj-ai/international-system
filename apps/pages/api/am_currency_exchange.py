@@ -39,7 +39,7 @@ def _today():
 
 # ══════════════════════════════════════════════════════════════════════════════
 def api_am_currency_exchange(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 
@@ -139,7 +139,7 @@ def api_am_currency_exchange(request):
 
 # ══════════════════════════════════════════════════════════════════════════════
 def api_am_currency_exchange_detail(request, record_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01')
     if err:
         return err
 

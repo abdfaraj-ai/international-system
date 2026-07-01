@@ -42,7 +42,7 @@ def _parse(request):
 
 def api_am_init(request):
     """يُعيد بيانات التهيئة: الفروع + الوكلاء + العملات"""
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     if request.method != 'GET':
@@ -74,7 +74,7 @@ def api_am_init(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_transfers(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -225,7 +225,7 @@ def api_am_transfers(request):
 
 def api_am_transfer_receive(request, transfer_id):
     """يُغيِّر حالة الحوالة من pending إلى completed"""
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     if request.method != 'PATCH':
@@ -262,7 +262,7 @@ def api_am_transfer_receive(request, transfer_id):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_delivery_moves(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     if request.method != 'GET':

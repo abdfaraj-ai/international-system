@@ -66,7 +66,7 @@ def _voucher_dict(v, include_rows=True):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_settlement(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -205,7 +205,7 @@ def api_am_settlement(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_settlement_detail(request, voucher_id):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
     try:

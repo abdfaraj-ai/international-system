@@ -49,7 +49,7 @@ def _fmt(d):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_statement_centers(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
@@ -96,7 +96,7 @@ def api_am_statement_centers(request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def api_am_statement(request):
-    err = _require_roles(request, 'M01', 'M02', 'M03', 'T02', 'T03')
+    err = _require_roles(request, 'M01', 'M02', 'M03', 'T01', 'T02', 'T03')
     if err:
         return err
 
