@@ -5360,7 +5360,7 @@ function asTimeRangeChange() {
   }
 }
 
-async function asLoadStatement() {
+async function asLoadStatement(isRetry) {
   const clientId    = document.getElementById('as-client')?.value || '';
   const currency    = document.getElementById('as-currency')?.value || 'dollar';
   const dateFrom    = document.getElementById('as-date-from')?.value || '';
@@ -5372,7 +5372,7 @@ async function asLoadStatement() {
   const result = document.getElementById('as-result');
   const tbody  = document.getElementById('as-tbody');
   if (result) result.style.display = 'block';
-  if (tbody)  tbody.innerHTML = '<tr><td colspan="8" class="sp-empty"><div class="sp-spinner"></div></td></tr>';
+  if (tbody)  tbody.innerHTML = '<tr><td colspan="9" class="sp-empty"><div class="sp-spinner"></div></td></tr>';
 
   const params = new URLSearchParams({
     center: clientId, currency, date_from: dateFrom, date_to: dateTo, include_unsent: inclUnsent
@@ -5383,10 +5383,21 @@ async function asLoadStatement() {
     const d = await r.json();
     _asData = Array.isArray(d) ? d : (d.records || d.results || d.entries || d.data || []);
     _asValuation = (d && d.valuation) ? d.valuation : null;
+
+    // إن كانت العملة المختارة بلا حركات لكن للمركز أرصدة بعملات أخرى → انتقل لأولها تلقائياً (مرّة واحدة)
+    if (!isRetry && !_asData.length && _asValuation && Array.isArray(_asValuation.rows) && _asValuation.rows.length) {
+      const curSel = document.getElementById('as-currency');
+      const avail  = _asValuation.rows.map(x => String(x.currency || '').toUpperCase());
+      if (curSel && !avail.includes(String(curSel.value || '').toUpperCase())) {
+        const opt = [...curSel.options].find(o => avail.includes(String(o.value || '').toUpperCase()));
+        if (opt) { curSel.value = opt.value; return asLoadStatement(true); }
+      }
+    }
+
     asRenderTable();
     asRenderValuation();
   } catch {
-    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="sp-empty">فشل تحميل البيانات</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">فشل تحميل البيانات</td></tr>';
   }
 }
 
@@ -5425,7 +5436,12 @@ function asRenderTable() {
   const fmt = n => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   if (!_asData.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="sp-empty">لا توجد بيانات للفترة المحددة</td></tr>';
+    let msg = 'لا توجد حركات بهذه العملة خلال الفترة المحددة';
+    if (_asValuation && Array.isArray(_asValuation.rows) && _asValuation.rows.length) {
+      const curs = _asValuation.rows.map(r => r.currency).join('، ');
+      msg += ` — لهذا المركز رصيد بعملات: ${curs}. اختر إحداها من قائمة «العملة».`;
+    }
+    tbody.innerHTML = `<tr><td colspan="9" class="sp-empty">${msg}</td></tr>`;
     document.getElementById('as-totals').innerHTML = '';
     return;
   }
